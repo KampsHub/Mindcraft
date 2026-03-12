@@ -54,18 +54,29 @@ export default function JournalPage() {
       setThemeTags(data.theme_tags || []);
 
       // Save entry to Supabase
-      const { error: insertError } = await supabase.from("entries").insert({
-        client_id: user.id,
-        coach_id: user.id,
-        type: "journal",
-        content: entry,
-        theme_tags: data.theme_tags || [],
-        date: new Date().toISOString().split("T")[0],
-        metadata: { reflection: data.reflection },
-      });
+      const { data: insertedEntry, error: insertError } = await supabase
+        .from("entries")
+        .insert({
+          client_id: user.id,
+          coach_id: user.id,
+          type: "journal",
+          content: entry,
+          theme_tags: data.theme_tags || [],
+          date: new Date().toISOString().split("T")[0],
+          metadata: { reflection: data.reflection },
+        })
+        .select("id")
+        .single();
 
       if (insertError) {
         console.error("Failed to save entry:", insertError);
+      } else if (insertedEntry) {
+        // Fire-and-forget: generate embedding for RAG
+        fetch("/api/embed", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ entryId: insertedEntry.id }),
+        }).catch((err) => console.warn("Embedding generation failed:", err));
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to get reflection";

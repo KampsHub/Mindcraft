@@ -1,5 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { generateQueryEmbedding } from "@/lib/embeddings";
 
 const SYSTEM_PROMPT = `## 1. Identity
 You are the daily coaching companion for a client working with All Minds on Deck. You deliver structured coaching exercises and reflections drawn from a curated framework library authored by the coach. You are not the coach. You are an extension of the coach's methodology — a reliable, thoughtful tool that keeps the work moving between live sessions.
@@ -95,6 +98,67 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // --- RAG: Retrieve similar past entries ---
+    let pastEntriesContext = "";
+
+    try {
+      const cookieStore = await cookies();
+      const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            getAll() {
+              return cookieStore.getAll();
+            },
+            setAll(cookiesToSet) {
+              try {
+                cookiesToSet.forEach(({ name, value, options }) =>
+                  cookieStore.set(name, value, options)
+                );
+              } catch {
+                // setAll can fail in read-only contexts
+              }
+            },
+          },
+        }
+      );
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user && process.env.VOYAGE_API_KEY) {
+        const queryEmbedding = await generateQueryEmbedding(entry);
+
+        const { data: similarEntries } = await supabase.rpc("match_entries", {
+          query_embedding: JSON.stringify(queryEmbedding),
+          match_client_id: user.id,
+          match_threshold: 0.7,
+          match_count: 5,
+        });
+
+        if (similarEntries && similarEntries.length > 0) {
+          pastEntriesContext = `\n\n## Relevant Past Entries\nThe following are past journal entries from this client that are thematically related to what they wrote today. Use these to identify patterns, track progress, and make your reflection more personalised. Reference specific past entries when you see connections.\n\n${similarEntries
+            .map(
+              (e: {
+                date: string;
+                type: string;
+                similarity: number;
+                content: string;
+                theme_tags: string[];
+              }) =>
+                `[${e.date}] (${e.type}, relevance: ${(e.similarity * 100).toFixed(0)}%)\n${e.content?.substring(0, 400)}${e.content && e.content.length > 400 ? "..." : ""}\nThemes: ${(e.theme_tags || []).join(", ")}`
+            )
+            .join("\n\n")}`;
+        }
+      }
+    } catch (ragError) {
+      // RAG is an enhancement, not critical — log and continue without it
+      console.warn("RAG retrieval failed, continuing without context:", ragError);
+    }
+    // --- End RAG ---
+
     const anthropic = new Anthropic({
       apiKey: process.env.CLAUDE_API_KEY!,
     });
@@ -105,7 +169,7 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: "user",
-          content: entry,
+          content: `${pastEntriesContext}\n\n## Today's Entry\n${entry}`,
         },
       ],
     });

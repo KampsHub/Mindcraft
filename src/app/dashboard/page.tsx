@@ -136,19 +136,31 @@ export default function DashboardPage() {
       }
 
       // Save as one_liner entry
-      const { error } = await supabase.from("entries").insert({
-        client_id: user.id,
-        coach_id: user.id,
-        type: "one_liner",
-        content: oneLiner,
-        theme_tags: themeTags,
-        date: new Date().toISOString().split("T")[0],
-        metadata: {},
-      });
+      const { data: insertedEntry, error } = await supabase
+        .from("entries")
+        .insert({
+          client_id: user.id,
+          coach_id: user.id,
+          type: "one_liner",
+          content: oneLiner,
+          theme_tags: themeTags,
+          date: new Date().toISOString().split("T")[0],
+          metadata: {},
+        })
+        .select("id")
+        .single();
 
       if (error) {
         console.error("Failed to save one-liner:", error);
       } else {
+        // Fire-and-forget: generate embedding for RAG
+        if (insertedEntry) {
+          fetch("/api/embed", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ entryId: insertedEntry.id }),
+          }).catch((err) => console.warn("Embedding generation failed:", err));
+        }
         setFlash("Thought captured");
         setOneLiner("");
         fetchDashboardData(user.id);

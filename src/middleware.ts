@@ -30,17 +30,20 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect /journal — redirect to login if not authenticated
-  if (!user && request.nextUrl.pathname.startsWith("/journal")) {
+  // Protect authenticated routes — redirect to login if not authenticated
+  const protectedPaths = ["/journal", "/dashboard", "/exercise", "/plan", "/intake"];
+  const isProtected = protectedPaths.some((p) => request.nextUrl.pathname.startsWith(p));
+
+  if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Redirect logged-in users away from login/signup
+  // Redirect logged-in users away from login/signup to dashboard
   if (user && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/signup")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/journal";
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
@@ -48,5 +51,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/journal/:path*", "/login", "/signup"],
+  matcher: ["/journal/:path*", "/dashboard/:path*", "/exercise/:path*", "/plan/:path*", "/intake/:path*", "/login", "/signup"],
 };

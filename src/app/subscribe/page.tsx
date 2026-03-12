@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 
-export default function SubscribePage() {
+function SubscribeContent() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -134,5 +134,13 @@ export default function SubscribePage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function SubscribePage() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: "center", padding: 120 }}><p style={{ color: "#888" }}>Loading...</p></div>}>
+      <SubscribeContent />
+    </Suspense>
   );
 }

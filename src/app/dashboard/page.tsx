@@ -324,7 +324,7 @@ export default function DashboardPage() {
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                 <span style={{
-                  fontSize: 12, color: "#888",
+                  fontSize: 12,
                   padding: "2px 8px", backgroundColor: entry.type === "one_liner" ? "#fef3c7" : "#eff6ff",
                   borderRadius: 10, border: `1px solid ${entry.type === "one_liner" ? "#fde68a" : "#bfdbfe"}`,
                   color: entry.type === "one_liner" ? "#92400e" : "#2563eb",

@@ -254,7 +254,7 @@ export default function WeeklyReviewPage() {
                 />
                 <Tooltip
                   contentStyle={{ fontSize: 13, borderRadius: 8, border: "1px solid #e2e8f0" }}
-                  formatter={(value: number) => [`${value} entries`, "Count"]}
+                  formatter={(value) => [`${value} entries`, "Count"]}
                 />
                 <Bar dataKey="count" fill="#2563eb" radius={[0, 4, 4, 0]} barSize={20} />
               </BarChart>
@@ -282,7 +282,7 @@ export default function WeeklyReviewPage() {
                 <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} width={30} />
                 <Tooltip
                   contentStyle={{ fontSize: 13, borderRadius: 8, border: "1px solid #e2e8f0" }}
-                  formatter={(value: number) => [`${value}/5`, "Rating"]}
+                  formatter={(value) => [`${value}/5`, "Rating"]}
                 />
                 <Line type="monotone" dataKey="rating" stroke="#2563eb" strokeWidth={2} dot={{ fill: "#2563eb", r: 4 }} />
               </LineChart>

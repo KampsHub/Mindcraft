@@ -89,7 +89,7 @@ export default function Home() {
       <section style={{
         position: "relative",
         textAlign: "center",
-        padding: hasVideo || hasImage ? "100px 32px 100px" : "48px 32px 64px",
+        padding: hasVideo || hasImage ? "80px 32px 100px" : "32px 32px 64px",
         maxWidth: hasVideo || hasImage ? "none" : "none",
         margin: "0 auto",
         overflow: "hidden",
@@ -128,7 +128,7 @@ export default function Home() {
               style={{ color: hasVideo || hasImage ? colors.white : colors.black }}
             />
             <TextReveal
-              text="your mind's noise."
+              text="your mind's daily noise."
               as="span"
               triggerOnMount
               delay={0.45}

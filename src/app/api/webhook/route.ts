@@ -43,12 +43,13 @@ export async function POST(request: NextRequest) {
 
       // Check if a coach referral promo code was used
       let referringCoachId: string | undefined;
-      if (session.discount?.promotion_code) {
+      const discount = session.discounts?.[0];
+      if (discount?.promotion_code) {
         try {
           const promoCodeId =
-            typeof session.discount.promotion_code === "string"
-              ? session.discount.promotion_code
-              : session.discount.promotion_code.id;
+            typeof discount.promotion_code === "string"
+              ? discount.promotion_code
+              : discount.promotion_code.id;
           const promoCode = await stripe.promotionCodes.retrieve(promoCodeId);
           if (promoCode.metadata?.type === "coach_referral" && promoCode.metadata?.coach_id) {
             referringCoachId = promoCode.metadata.coach_id;

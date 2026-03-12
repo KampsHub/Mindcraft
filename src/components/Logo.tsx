@@ -18,16 +18,17 @@ export default function Logo({ size = 90 }: { size?: number }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Mindcraft Ninja logo"
     >
-      {/* Circle — behind ninja, thicker stroke for consistent rendering at small sizes */}
+      {/* Circle — white fill ensures consistent stroke rendering */}
       <circle
         cx="100"
         cy="155"
         r="100"
+        fill="white"
         stroke={colors.black}
         strokeWidth="2.5"
       />
 
-      {/* ── Ninja head — on top of circle so stroke doesn't cut through face ── */}
+      {/* ── Ninja head — drawn on top of circle ── */}
       <g transform="translate(100, 97) scale(3)">
         {/* Head silhouette */}
         <path
@@ -38,10 +39,28 @@ export default function Logo({ size = 90 }: { size?: number }) {
         <rect x="-16" y="-15" width="32" height="8.5" rx="4" fill={colors.primary} />
         {/* Left eye */}
         <ellipse cx="-7" cy="-10.8" rx="3" ry="2" fill="white" />
-        <ellipse cx="-6.2" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black} />
+        {/* Left pupil — animated */}
+        <ellipse cx="-6.2" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
+          <animate
+            attributeName="cx"
+            values="-6.2;-8.2;-4.2;-8.2;-4.2;-8.2;-4.2;-6.2;-6.2"
+            keyTimes="0;0.08;0.20;0.32;0.44;0.56;0.68;0.75;1"
+            dur="4s"
+            repeatCount="indefinite"
+          />
+        </ellipse>
         {/* Right eye */}
         <ellipse cx="7" cy="-10.8" rx="3" ry="2" fill="white" />
-        <ellipse cx="7.8" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black} />
+        {/* Right pupil — animated */}
+        <ellipse cx="7.8" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
+          <animate
+            attributeName="cx"
+            values="7.8;5.8;9.8;5.8;9.8;5.8;9.8;7.8;7.8"
+            keyTimes="0;0.08;0.20;0.32;0.44;0.56;0.68;0.75;1"
+            dur="4s"
+            repeatCount="indefinite"
+          />
+        </ellipse>
         {/* Mask tie flowing right */}
         <path
           d="M16 -13 Q22 -15.5 26 -12 Q22 -8.5 16 -7"

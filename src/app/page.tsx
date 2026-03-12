@@ -125,6 +125,7 @@ export default function Home() {
               delay={0.2}
               stagger={0.06}
               duration={0.6}
+              slash="Cut"
               style={{ color: hasVideo || hasImage ? colors.white : colors.black }}
             />
             <TextReveal
@@ -134,7 +135,10 @@ export default function Home() {
               delay={0.45}
               stagger={0.06}
               duration={0.6}
-              distort="noise"
+              distort={[
+                { word: "mind's", duration: 0.4, repeatDelay: 4.5, delay: 5 },
+                { word: "noise", duration: 0.5, repeatDelay: 6, delay: 3 },
+              ]}
               style={{ color: colors.primary }}
             />
           </h1>

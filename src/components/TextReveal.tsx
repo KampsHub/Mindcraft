@@ -2,13 +2,23 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, type CSSProperties } from "react";
+import { colors } from "@/lib/theme";
 
 /* ── Word-by-word text reveal ────────────────────────────────────
  *  Split text into words. Each word fades + slides up with a stagger.
  *  Set triggerOnMount=true for above-the-fold hero content.
  *
- *  Uses direct initial/animate on each span for maximum reliability.
+ *  Effects per word:
+ *    distort  — repeating skew/jitter glitch (single string or array with cadences)
+ *    slash    — diagonal line sweeps top-left → bottom-right ("cut" effect)
  */
+
+interface DistortConfig {
+  word: string;
+  duration?: number;
+  repeatDelay?: number;
+  delay?: number;
+}
 
 interface TextRevealProps {
   text: string;
@@ -22,8 +32,10 @@ interface TextRevealProps {
   triggerOnMount?: boolean;
   highlight?: string;
   highlightColor?: string;
-  /** Word to apply a repeating distortion/glitch effect to */
-  distort?: string;
+  /** Word(s) to apply a repeating distortion/glitch effect to */
+  distort?: string | DistortConfig[];
+  /** Word to apply a diagonal slash/cut animation to */
+  slash?: string;
 }
 
 export default function TextReveal({
@@ -39,6 +51,7 @@ export default function TextReveal({
   highlight,
   highlightColor = "#3b82f6",
   distort,
+  slash,
 }: TextRevealProps) {
   const words = text.split(" ");
   const ref = useRef(null);
@@ -46,6 +59,13 @@ export default function TextReveal({
 
   // Determine if animation should play
   const shouldAnimate = triggerOnMount || isInView;
+
+  // Normalize distort to array of configs
+  const distortConfigs: DistortConfig[] = distort
+    ? typeof distort === "string"
+      ? [{ word: distort }]
+      : distort
+    : [];
 
   return (
     <Tag
@@ -55,7 +75,10 @@ export default function TextReveal({
     >
       {words.map((word, i) => {
         const isHighlighted = highlight && word.toLowerCase().includes(highlight.toLowerCase());
-        const isDistorted = distort && word.toLowerCase().replace(/[.,!?]$/, "").includes(distort.toLowerCase());
+        const cleanWord = word.toLowerCase().replace(/[.,!?]$/, "");
+        const distortConfig = distortConfigs.find(d => cleanWord.includes(d.word.toLowerCase()));
+        const isDistorted = !!distortConfig;
+        const isSlashed = slash && cleanWord.includes(slash.toLowerCase());
         const wordDelay = delay + i * stagger;
         return (
           <motion.span
@@ -78,17 +101,75 @@ export default function TextReveal({
               fontWeight: isHighlighted ? 700 : undefined,
             }}
           >
-            {isDistorted ? (
+            {isSlashed ? (
+              <span style={{ position: "relative", display: "inline-block" }}>
+                {word}
+                <motion.svg
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  style={{
+                    position: "absolute",
+                    top: "-10%",
+                    left: "-5%",
+                    width: "110%",
+                    height: "120%",
+                    pointerEvents: "none",
+                    overflow: "visible",
+                  }}
+                >
+                  {/* Glow behind slash */}
+                  <motion.path
+                    d="M10 0 L90 100"
+                    stroke={colors.primary}
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    fill="none"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{
+                      pathLength: [0, 0, 1, 1, 0],
+                      opacity: [0, 0.3, 0.4, 0.15, 0],
+                    }}
+                    transition={{
+                      duration: 0.8,
+                      repeat: Infinity,
+                      repeatDelay: 7,
+                      delay: 2.5,
+                      ease: "easeOut",
+                    }}
+                  />
+                  {/* Main slash line */}
+                  <motion.path
+                    d="M10 0 L90 100"
+                    stroke={colors.primary}
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    fill="none"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{
+                      pathLength: [0, 0, 1, 1, 0],
+                      opacity: [0, 0.9, 1, 0.6, 0],
+                    }}
+                    transition={{
+                      duration: 0.8,
+                      repeat: Infinity,
+                      repeatDelay: 7,
+                      delay: 2.5,
+                      ease: "easeOut",
+                    }}
+                  />
+                </motion.svg>
+              </span>
+            ) : isDistorted ? (
               <motion.span
                 animate={{
                   skewX: [0, 0, -8, 5, -3, 0, 0],
                   x: [0, 0, -2, 2, -1, 0, 0],
                 }}
                 transition={{
-                  duration: 0.5,
+                  duration: distortConfig!.duration ?? 0.5,
                   repeat: Infinity,
-                  repeatDelay: 6,
-                  delay: 3,
+                  repeatDelay: distortConfig!.repeatDelay ?? 6,
+                  delay: distortConfig!.delay ?? 3,
                   ease: "easeInOut",
                 }}
                 style={{ display: "inline-block" }}

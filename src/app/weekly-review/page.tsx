@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 
 interface Entry {
   id: string;
@@ -228,30 +229,64 @@ export default function WeeklyReviewPage() {
         </div>
       </div>
 
-      {/* Theme summary */}
+      {/* Theme bar chart */}
       {themeCounts.length > 0 && (
-        <div style={{ marginBottom: 28 }}>
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0" }}>Themes This Week</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {themeCounts.map(({ tag, count }) => {
-              const maxCount = themeCounts[0].count;
-              const pct = (count / maxCount) * 100;
-              return (
-                <div key={tag} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ fontSize: 13, color: "#555", width: 180, flexShrink: 0 }}>
-                    {tag.replace(/_/g, " ")}
-                  </span>
-                  <div style={{ flex: 1, height: 20, backgroundColor: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}>
-                    <div style={{
-                      height: "100%", width: `${pct}%`,
-                      backgroundColor: "#2563eb", borderRadius: 4,
-                      transition: "width 0.3s",
-                    }} />
-                  </div>
-                  <span style={{ fontSize: 13, color: "#888", width: 24, textAlign: "right" }}>{count}</span>
-                </div>
-              );
-            })}
+        <div style={{ marginBottom: 28 }} className="print-section">
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0" }}>Themes This Week</h2>
+          <div style={{ width: "100%", height: Math.max(200, themeCounts.length * 36) }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={themeCounts.map(({ tag, count }) => ({
+                  name: tag.replace(/_/g, " "),
+                  count,
+                }))}
+                layout="vertical"
+                margin={{ top: 0, right: 20, left: 0, bottom: 0 }}
+              >
+                <XAxis type="number" hide />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={160}
+                  tick={{ fontSize: 13, fill: "#555" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{ fontSize: 13, borderRadius: 8, border: "1px solid #e2e8f0" }}
+                  formatter={(value: number) => [`${value} entries`, "Count"]}
+                />
+                <Bar dataKey="count" fill="#2563eb" radius={[0, 4, 4, 0]} barSize={20} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
+      {/* Accountability trend (from past reviews) */}
+      {pastReviews.length > 1 && (
+        <div style={{ marginBottom: 28 }} className="print-section">
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0" }}>Accountability Trend</h2>
+          <div style={{ width: "100%", height: 160 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={[...pastReviews]
+                  .reverse()
+                  .map((r) => ({
+                    week: new Date(r.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+                    rating: r.accountability_rating,
+                  }))}
+                margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+              >
+                <XAxis dataKey="week" tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} width={30} />
+                <Tooltip
+                  contentStyle={{ fontSize: 13, borderRadius: 8, border: "1px solid #e2e8f0" }}
+                  formatter={(value: number) => [`${value}/5`, "Rating"]}
+                />
+                <Line type="monotone" dataKey="rating" stroke="#2563eb" strokeWidth={2} dot={{ fill: "#2563eb", r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}
@@ -327,20 +362,43 @@ export default function WeeklyReviewPage() {
         />
       </div>
 
-      {/* Save button */}
-      <button
-        onClick={handleSave}
-        disabled={saving || !rating}
-        style={{
-          padding: "12px 32px", fontSize: 15, fontWeight: 500, color: "#fff",
-          backgroundColor: saving || !rating ? "#999" : saved ? "#16a34a" : "#2563eb",
-          border: "none", borderRadius: 8,
-          cursor: saving || !rating ? "not-allowed" : "pointer",
-          marginBottom: 48,
-        }}
-      >
-        {saving ? "Saving..." : saved ? "Saved \u2713" : "Save review"}
-      </button>
+      {/* Save + Print buttons */}
+      <div style={{ display: "flex", gap: 12, marginBottom: 48 }}>
+        <button
+          onClick={handleSave}
+          disabled={saving || !rating}
+          style={{
+            padding: "12px 32px", fontSize: 15, fontWeight: 500, color: "#fff",
+            backgroundColor: saving || !rating ? "#999" : saved ? "#16a34a" : "#2563eb",
+            border: "none", borderRadius: 8,
+            cursor: saving || !rating ? "not-allowed" : "pointer",
+          }}
+        >
+          {saving ? "Saving..." : saved ? "Saved \u2713" : "Save review"}
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="no-print"
+          style={{
+            padding: "12px 24px", fontSize: 15, fontWeight: 500,
+            color: "#666", backgroundColor: "transparent",
+            border: "1px solid #ddd", borderRadius: 8, cursor: "pointer",
+          }}
+        >
+          Print
+        </button>
+      </div>
+
+      {/* Print styles */}
+      <style>{`
+        @media print {
+          .no-print { display: none !important; }
+          body { font-size: 12pt; }
+          button { display: none !important; }
+          textarea { border: 1px solid #ccc !important; }
+          .print-section { break-inside: avoid; }
+        }
+      `}</style>
 
       {/* Past reviews */}
       {pastReviews.length > 1 && (

@@ -292,7 +292,8 @@ export default function DashboardPage() {
           { href: "/exercise", label: "Exercise", desc: "Today's exercise" },
           { href: "/plan", label: "Plan", desc: "Your coaching plan" },
           { href: "/weekly-review", label: "Review", desc: "Reflect on your week" },
-          { href: "/intake", label: "Intake", desc: "Update your profile" },
+          { href: "/monthly-summary", label: "Monthly", desc: "Monthly patterns" },
+          { href: "/privacy", label: "Privacy", desc: "Data & consent" },
         ].map(({ href, label, desc }) => (
           <button
             key={href}

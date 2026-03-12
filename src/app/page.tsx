@@ -136,7 +136,7 @@ export default function Home() {
               stagger={0.06}
               duration={0.6}
               distort={[
-                { word: "mind's", duration: 0.4, repeatDelay: 4.5, delay: 5 },
+                { word: "daily", duration: 0.4, repeatDelay: 4.5, delay: 5 },
                 { word: "noise", duration: 0.5, repeatDelay: 6, delay: 3 },
               ]}
               style={{ color: colors.primary }}

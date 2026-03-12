@@ -113,6 +113,7 @@ export default function Home() {
         <div style={{ position: "relative", zIndex: 2, maxWidth: 800, margin: "0 auto" }}>
           {/* AMOD-style: bold headline with black highlight box */}
           <h1 style={{
+            position: "relative",
             display: "flex", flexWrap: "wrap", gap: "0 0.3em",
             justifyContent: "center", margin: "0 0 32px 0",
             fontSize: 64, fontWeight: 700, lineHeight: 1.05,
@@ -125,7 +126,6 @@ export default function Home() {
               delay={0.2}
               stagger={0.06}
               duration={0.6}
-              slash="Cut"
               style={{ color: hasVideo || hasImage ? colors.white : colors.black }}
             />
             <TextReveal
@@ -135,13 +135,49 @@ export default function Home() {
               delay={0.45}
               stagger={0.06}
               duration={0.6}
-              slash="mind's"
               distort={[
                 { word: "daily", duration: 0.4, repeatDelay: 4.5, delay: 5 },
                 { word: "noise", duration: 0.5, repeatDelay: 6, delay: 3 },
               ]}
               style={{ color: colors.primary }}
             />
+            {/* Single slash — one continuous line from "Cut" through "mind's" */}
+            <motion.svg
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                pointerEvents: "none",
+                overflow: "visible",
+              }}
+            >
+              {/* Glow flash */}
+              <motion.path
+                d="M18 18 L48 82"
+                stroke={colors.primary}
+                strokeWidth="4"
+                strokeLinecap="round"
+                fill="none"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: [0, 0.4, 0] }}
+                transition={{ duration: 1.2, delay: 2.5, ease: "easeOut" }}
+              />
+              {/* Main slash line — stays permanently */}
+              <motion.path
+                d="M18 18 L48 82"
+                stroke={colors.primary}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                fill="none"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 0.85 }}
+                transition={{ duration: 0.8, delay: 2.5, ease: "easeOut" }}
+              />
+            </motion.svg>
           </h1>
 
           <FadeIn delay={1.0} preset="blur" duration={0.9} triggerOnMount>

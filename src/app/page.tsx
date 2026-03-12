@@ -89,7 +89,7 @@ export default function Home() {
       <section style={{
         position: "relative",
         textAlign: "center",
-        padding: hasVideo || hasImage ? "120px 32px 100px" : "80px 32px 64px",
+        padding: hasVideo || hasImage ? "100px 32px 100px" : "48px 32px 64px",
         maxWidth: hasVideo || hasImage ? "none" : "none",
         margin: "0 auto",
         overflow: "hidden",

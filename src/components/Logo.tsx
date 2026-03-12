@@ -15,15 +15,21 @@ export default function Logo({ size = 90 }: { size?: number }) {
   const [lookLeft, setLookLeft] = useState(false);
 
   useEffect(() => {
+    let count = 0;
     const glance = () => {
+      if (count >= 5) return;
+      count++;
       setLookLeft(true);
       setTimeout(() => setLookLeft(false), 700);
     };
 
     // First glance 1s after load
     const firstTimer = setTimeout(glance, 1000);
-    // Then every 5s
-    const interval = setInterval(glance, 5000);
+    // Then every 5s, stop after 5 total
+    const interval = setInterval(() => {
+      if (count >= 5) { clearInterval(interval); return; }
+      glance();
+    }, 5000);
 
     return () => {
       clearTimeout(firstTimer);

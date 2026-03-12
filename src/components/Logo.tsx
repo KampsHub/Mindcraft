@@ -8,12 +8,12 @@ import { colors } from "@/lib/theme";
  */
 
 export default function Logo({ size = 90 }: { size?: number }) {
-  // Taller viewBox — ninja mostly above circle, only chin/neck inside
+  // Ninja fills upper half of circle, crown pops above. Text in lower half.
   return (
     <svg
       width={size}
-      height={size * 1.35}
-      viewBox="0 0 200 270"
+      height={size * 1.3}
+      viewBox="0 0 200 260"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Mindcraft Ninja logo"
@@ -21,15 +21,14 @@ export default function Logo({ size = 90 }: { size?: number }) {
       {/* Circle */}
       <circle
         cx="100"
-        cy="165"
+        cy="155"
         r="100"
         stroke={colors.black}
         strokeWidth="1.5"
       />
 
-      {/* ── Ninja head — 40% of circle diameter, starts at 75th percentile,
-           ~75% extends above circle, ~25% inside ── */}
-      <g transform="translate(100, 60) scale(1.95)">
+      {/* ── Ninja head — bigger, starts in middle of circle, top pops above ── */}
+      <g transform="translate(100, 115) scale(2.5)">
         {/* Head silhouette */}
         <path
           d="M0 -28 C-13 -28 -18 -20 -18 -11 C-18 -6 -16 -2.5 -12 0 L-12 7 C-12 10 -9 13 0 13 C9 13 12 10 12 7 L12 0 C16 -2.5 18 -6 18 -11 C18 -20 13 -28 0 -28Z"
@@ -56,11 +55,11 @@ export default function Logo({ size = 90 }: { size?: number }) {
       {/* ── Text inside circle ── */}
       <text
         x="100"
-        y="178"
+        y="193"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"
-        fontSize="33"
+        fontSize="35"
         fontWeight="400"
         letterSpacing="0.5"
       >
@@ -68,13 +67,13 @@ export default function Logo({ size = 90 }: { size?: number }) {
       </text>
       <text
         x="100"
-        y="208"
+        y="221"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"
-        fontSize="19"
+        fontSize="23"
         fontWeight="400"
-        letterSpacing="6"
+        letterSpacing="5"
       >
         NINJA
       </text>

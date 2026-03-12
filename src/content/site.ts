@@ -23,8 +23,8 @@ export const content = {
   // To add a hero video: put your .mp4 file in /public/images/ and update heroVideo below.
   // To use a static image instead: set heroVideo to "" and set heroImage to your image path.
   hero: {
-    headline: "You already know",
-    headlineAccent: "what needs to change.",
+    headline: "Your mind is too loud?",
+    headlineAccent: "Cut through the noise.",
     subheadline:
       "Mindcraft Ninja gives you the daily structure to actually do it. Journal, get reflections that see your real patterns, and do exercises from proven frameworks \u2014 personalised to you.",
     cta: "See how it works",

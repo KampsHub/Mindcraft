@@ -95,7 +95,7 @@ export async function POST() {
           price_data: {
             currency: "usd",
             product_data: {
-              name: "Mindcraft — Monthly",
+              name: "Mindcraft Ninja — Monthly",
               description: "Your daily coaching companion. Personalised exercises, AI-powered reflections, and pattern recognition.",
             },
             unit_amount: 2995, // $29.95

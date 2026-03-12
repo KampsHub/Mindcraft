@@ -8,7 +8,7 @@
 export const content = {
   // ── Brand ──
   brand: {
-    name: "Mindcraft",
+    name: "Mindcraft Ninja",
     companyName: "All Minds on Deck LLC",
     companyUrl: "https://allmindsondeck.org",
   },
@@ -26,7 +26,7 @@ export const content = {
     headline: "You already know",
     headlineAccent: "what needs to change.",
     subheadline:
-      "Mindcraft gives you the daily structure to actually do it. Journal, get reflections that see your real patterns, and do exercises from proven frameworks \u2014 personalised to you.",
+      "Mindcraft Ninja gives you the daily structure to actually do it. Journal, get reflections that see your real patterns, and do exercises from proven frameworks \u2014 personalised to you.",
     cta: "See how it works",
     heroVideo: "", // e.g. "/images/hero.mp4" — leave empty for no video
     heroImage: "", // e.g. "/images/hero.jpg" — fallback or standalone image
@@ -76,7 +76,7 @@ export const content = {
     userLabel: "You wrote:",
     userEntry:
       '"I keep saying yes to things I don\'t want. Then I resent everyone for it."',
-    reflectionLabel: "Mindcraft reflects:",
+    reflectionLabel: "Mindcraft Ninja reflects:",
     reflectionText:
       "This is the third time this week you've named a pattern of over-committing. The resentment isn't about them \u2014 it's the signal that a boundary was needed and didn't get set. Tomorrow's exercise will work on identifying the moment before the \"yes.\"",
   },
@@ -85,7 +85,7 @@ export const content = {
   // Visitors type a journal entry and see a simulated reflection.
   interactiveDemo: {
     headline: "Try it yourself.",
-    subheadline: "Type anything. See how Mindcraft reflects it back.",
+    subheadline: "Type anything. See how Mindcraft Ninja reflects it back.",
     placeholder: "What\u2019s on your mind right now?",
     buttonText: "See reflection",
     loadingText: "Reading your entry...",
@@ -119,7 +119,7 @@ export const content = {
   credibility: {
     headline: "Built on real frameworks. By real coaches.",
     description:
-      "Mindcraft is built by All Minds on Deck — an ICF & EMCC certified coaching practice with backgrounds in product leadership, positive psychology, and neuroscience. Every exercise comes from a proven methodology. Nothing is made up.",
+      "Mindcraft Ninja is built by All Minds on Deck — an ICF & EMCC certified coaching practice with backgrounds in product leadership, positive psychology, and neuroscience. Every exercise comes from a proven methodology. Nothing is made up.",
     stats: [
       { label: "ICF & EMCC", desc: "certified coaches" },
       { label: "12-week", desc: "structured plans" },
@@ -135,12 +135,12 @@ export const content = {
       "Daily reflections. Personalised exercises. Pattern tracking. A 12-week plan built around you. Everything you need — for less than a single coaching session.",
     interval: "/month",
     disclaimer: "Cancel anytime. Your data stays yours.",
-    cta: "Get Mindcraft",
+    cta: "Get Mindcraft Ninja",
   },
 
   // ── AMOD clients banner ──
   clientsBanner:
-    "Active All Minds on Deck coaching clients get free access to Mindcraft.",
+    "Active All Minds on Deck coaching clients get free access to Mindcraft Ninja.",
 
   // ── Subscribe page ──
   subscribe: {
@@ -433,6 +433,6 @@ export const content = {
 
   // ── Footer ──
   footer: {
-    text: "Mindcraft \u2014 built by",
+    text: "Mindcraft Ninja \u2014 built by",
   },
 };

@@ -5,18 +5,18 @@ import "./globals.css";
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Mindcraft — by All Minds on Deck",
+  title: "Mindcraft Ninja — by All Minds on Deck",
   description: "Your coaching companion. Real frameworks. Real growth. Between sessions, every day.",
   manifest: "/manifest.json",
   themeColor: "#F08E80",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Mindcraft",
+    title: "Mindcraft Ninja",
   },
 };
 

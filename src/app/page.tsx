@@ -134,6 +134,7 @@ export default function Home() {
             delay={0.6}
             stagger={0.06}
             duration={0.6}
+            distort="noise"
             style={{
               fontSize: 64, fontWeight: 700, lineHeight: 1.05,
               color: colors.primary,

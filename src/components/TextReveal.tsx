@@ -22,6 +22,8 @@ interface TextRevealProps {
   triggerOnMount?: boolean;
   highlight?: string;
   highlightColor?: string;
+  /** Word to apply a repeating distortion/glitch effect to */
+  distort?: string;
 }
 
 export default function TextReveal({
@@ -36,6 +38,7 @@ export default function TextReveal({
   triggerOnMount = false,
   highlight,
   highlightColor = "#3b82f6",
+  distort,
 }: TextRevealProps) {
   const words = text.split(" ");
   const ref = useRef(null);
@@ -52,6 +55,7 @@ export default function TextReveal({
     >
       {words.map((word, i) => {
         const isHighlighted = highlight && word.toLowerCase().includes(highlight.toLowerCase());
+        const isDistorted = distort && word.toLowerCase().replace(/[.,!?]$/, "").includes(distort.toLowerCase());
         const wordDelay = delay + i * stagger;
         return (
           <motion.span
@@ -74,7 +78,26 @@ export default function TextReveal({
               fontWeight: isHighlighted ? 700 : undefined,
             }}
           >
-            {word}
+            {isDistorted ? (
+              <motion.span
+                animate={{
+                  skewX: [0, 0, -8, 5, -3, 0, 0],
+                  x: [0, 0, -2, 2, -1, 0, 0],
+                }}
+                transition={{
+                  duration: 0.5,
+                  repeat: Infinity,
+                  repeatDelay: 6,
+                  delay: 3,
+                  ease: "easeInOut",
+                }}
+                style={{ display: "inline-block" }}
+              >
+                {word}
+              </motion.span>
+            ) : (
+              word
+            )}
           </motion.span>
         );
       })}

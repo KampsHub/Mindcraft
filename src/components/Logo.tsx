@@ -1,14 +1,39 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { colors } from "@/lib/theme";
 
 /**
  * Mindcraft Ninja logo — large ninja head at top of circle (extends above),
  * with "Mindcraft" + "NINJA" text inside. AMOD-inspired wordmark.
  *
- * Ninja is ~40% the height of the circle. ~75% inside, ~25% above.
+ * Eyes glance left 1s after load, then every 5s.
  */
 
 export default function Logo({ size = 90 }: { size?: number }) {
-  // Ninja fills upper half of circle, crown pops above. Text in lower half.
+  const [lookLeft, setLookLeft] = useState(false);
+
+  useEffect(() => {
+    const glance = () => {
+      setLookLeft(true);
+      setTimeout(() => setLookLeft(false), 400);
+    };
+
+    // First glance 1s after load
+    const firstTimer = setTimeout(glance, 1000);
+    // Then every 5s
+    const interval = setInterval(glance, 5000);
+
+    return () => {
+      clearTimeout(firstTimer);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const leftPupilCx = lookLeft ? -8.2 : -5;
+  const rightPupilCx = lookLeft ? 6 : 9.3;
+
   return (
     <svg
       width={size}
@@ -40,28 +65,26 @@ export default function Logo({ size = 90 }: { size?: number }) {
         <rect x="-16" y="-15" width="32" height="8.5" rx="4" fill={colors.primary} />
         {/* Left eye */}
         <ellipse cx="-7" cy="-10.8" rx="3" ry="2" fill="white" />
-        {/* Left pupil — glances left immediately on load, then every 10s */}
-        <ellipse cx="-5" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
-          <animate
-            attributeName="cx"
-            values="-5;-8.2;-8.2;-5;-5"
-            keyTimes="0;0.04;0.08;0.12;1"
-            dur="10s"
-            repeatCount="indefinite"
-          />
-        </ellipse>
+        {/* Left pupil — animated via Framer Motion */}
+        <motion.ellipse
+          animate={{ cx: leftPupilCx }}
+          transition={{ duration: 0.15, ease: "easeInOut" }}
+          cy={-10.8}
+          rx={1.3}
+          ry={1.3}
+          fill={colors.black}
+        />
         {/* Right eye */}
         <ellipse cx="7" cy="-10.8" rx="3" ry="2" fill="white" />
-        {/* Right pupil — glances left immediately on load, then every 10s */}
-        <ellipse cx="9.3" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
-          <animate
-            attributeName="cx"
-            values="9.3;6;6;9.3;9.3"
-            keyTimes="0;0.04;0.08;0.12;1"
-            dur="10s"
-            repeatCount="indefinite"
-          />
-        </ellipse>
+        {/* Right pupil — animated via Framer Motion */}
+        <motion.ellipse
+          animate={{ cx: rightPupilCx }}
+          transition={{ duration: 0.15, ease: "easeInOut" }}
+          cy={-10.8}
+          rx={1.3}
+          ry={1.3}
+          fill={colors.black}
+        />
         {/* Mask tie flowing right */}
         <path
           d="M16 -13 Q22 -15.5 26 -12 Q22 -8.5 16 -7"
@@ -72,7 +95,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
         />
       </g>
 
-      {/* ── Text inside circle — moved down for breathing room from circle sides ── */}
+      {/* ── Text inside circle ── */}
       <text
         x="100"
         y="180"

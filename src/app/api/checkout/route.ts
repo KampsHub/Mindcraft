@@ -89,7 +89,7 @@ export async function POST() {
     if (priceId) {
       sessionParams.line_items = [{ price: priceId, quantity: 1 }];
     } else {
-      // Fallback: create an inline price ($75/month)
+      // Fallback: create an inline price ($29.95/month)
       sessionParams.line_items = [
         {
           price_data: {
@@ -98,13 +98,16 @@ export async function POST() {
               name: "Mindcraft — Monthly",
               description: "Your daily coaching companion. Personalised exercises, AI-powered reflections, and pattern recognition.",
             },
-            unit_amount: 7500, // $75.00
+            unit_amount: 2995, // $29.95
             recurring: { interval: "month" },
           },
           quantity: 1,
         },
       ];
     }
+
+    // Allow customers to enter promotion/coupon codes at checkout
+    sessionParams.allow_promotion_codes = true;
 
     const session = await stripe.checkout.sessions.create(sessionParams);
 

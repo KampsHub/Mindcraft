@@ -41,14 +41,38 @@ export async function POST(request: NextRequest) {
       const customerEmail = session.customer_details?.email;
       const stripeCustomerId = session.customer as string;
 
+      // Check if a coach referral promo code was used
+      let referringCoachId: string | undefined;
+      if (session.discount?.promotion_code) {
+        try {
+          const promoCodeId =
+            typeof session.discount.promotion_code === "string"
+              ? session.discount.promotion_code
+              : session.discount.promotion_code.id;
+          const promoCode = await stripe.promotionCodes.retrieve(promoCodeId);
+          if (promoCode.metadata?.type === "coach_referral" && promoCode.metadata?.coach_id) {
+            referringCoachId = promoCode.metadata.coach_id;
+            console.log(`Referral detected — coach: ${referringCoachId}, code: ${promoCode.code}`);
+          }
+        } catch (err) {
+          console.error("Failed to retrieve promotion code:", err);
+        }
+      }
+
+      // Build the update payload
+      const updatePayload: Record<string, string> = {
+        subscription_status: "active",
+        stripe_customer_id: stripeCustomerId,
+      };
+      if (referringCoachId) {
+        updatePayload.coach_id = referringCoachId;
+      }
+
       if (userId) {
         // User was authenticated at checkout — update by user ID
         await supabase
           .from("clients")
-          .update({
-            subscription_status: "active",
-            stripe_customer_id: stripeCustomerId,
-          })
+          .update(updatePayload)
           .eq("id", userId);
 
         console.log(`Subscription activated for user ${userId}`);
@@ -63,16 +87,19 @@ export async function POST(request: NextRequest) {
         if (client) {
           await supabase
             .from("clients")
-            .update({
-              subscription_status: "active",
-              stripe_customer_id: stripeCustomerId,
-            })
+            .update(updatePayload)
             .eq("id", client.id);
 
           console.log(`Subscription activated for client ${client.id} (by email)`);
         } else {
           // No client row yet — will be linked when user signs up via /api/link-subscription
           console.log(`Subscription paid by ${customerEmail} — no client row yet, will link at signup`);
+          // Store referral info in Stripe customer metadata for later linking
+          if (referringCoachId) {
+            await stripe.customers.update(stripeCustomerId, {
+              metadata: { referring_coach_id: referringCoachId },
+            });
+          }
         }
       }
       break;

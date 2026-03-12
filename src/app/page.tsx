@@ -8,6 +8,7 @@ import Logo from "@/components/Logo";
 
 export default function Home() {
   const [checking, setChecking] = useState(true);
+  const [price, setPrice] = useState("...");
   const supabase = createClient();
   const router = useRouter();
 
@@ -19,6 +20,10 @@ export default function Home() {
         setChecking(false);
       }
     });
+    fetch("/api/price")
+      .then((r) => r.json())
+      .then((d) => setPrice(d.formatted))
+      .catch(() => setPrice("$29.95"));
   }, [supabase.auth, router]);
 
   if (checking) {
@@ -354,7 +359,7 @@ export default function Home() {
           <p style={{
             fontSize: 42, fontWeight: 700, color: colors.white, margin: "0 0 4px 0",
           }}>
-            $75<span style={{ fontSize: 18, fontWeight: 400, color: colors.gray400 }}>/month</span>
+            {price}<span style={{ fontSize: 18, fontWeight: 400, color: colors.gray400 }}>/month</span>
           </p>
           <p style={{ fontSize: 14, color: colors.gray400, marginBottom: 32 }}>
             Cancel anytime. Your data stays yours.

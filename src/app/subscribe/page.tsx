@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { colors, fonts, card } from "@/lib/theme";
 import Logo from "@/components/Logo";
@@ -8,8 +8,16 @@ import Logo from "@/components/Logo";
 function SubscribeContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [price, setPrice] = useState("...");
   const searchParams = useSearchParams();
   const cancelled = searchParams.get("checkout") === "cancelled";
+
+  useEffect(() => {
+    fetch("/api/price")
+      .then((r) => r.json())
+      .then((d) => setPrice(d.formatted))
+      .catch(() => setPrice("$29.95"));
+  }, []);
 
   async function handleSubscribe() {
     setLoading(true);
@@ -80,7 +88,7 @@ function SubscribeContent() {
             Monthly
           </p>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 16 }}>
-            <span style={{ fontSize: 48, fontWeight: 700, color: colors.black }}>$75</span>
+            <span style={{ fontSize: 48, fontWeight: 700, color: colors.black }}>{price}</span>
             <span style={{ fontSize: 16, color: colors.gray400 }}>/month</span>
           </div>
 

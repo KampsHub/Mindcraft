@@ -1,32 +1,35 @@
 import { colors } from "@/lib/theme";
 
 /**
- * Mindcraft Ninja logo — ninja inside the upper part of a thin circle,
- * with "Mindcraft" + "NINJA" text below. AMOD-inspired wordmark.
+ * Mindcraft Ninja logo — large ninja head at top of circle (extends above),
+ * with "Mindcraft" + "NINJA" text inside. AMOD-inspired wordmark.
+ *
+ * Ninja is ~40% the height of the circle. ~75% inside, ~25% above.
  */
 
-/** Full logo: ninja in upper circle, text below */
 export default function Logo({ size = 90 }: { size?: number }) {
+  // Taller viewBox — ninja mostly above circle, only chin/neck inside
   return (
     <svg
       width={size}
-      height={size}
-      viewBox="0 0 200 200"
+      height={size * 1.35}
+      viewBox="0 0 200 270"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Mindcraft Ninja logo"
     >
-      {/* Circle — slightly bigger to give text room */}
+      {/* Circle */}
       <circle
         cx="100"
-        cy="100"
-        r="97"
+        cy="165"
+        r="100"
         stroke={colors.black}
         strokeWidth="1.5"
       />
 
-      {/* ── Ninja head — starts in the upper part of the circle ── */}
-      <g transform="translate(100, 52) scale(0.78)">
+      {/* ── Ninja head — 40% of circle diameter, starts at 75th percentile,
+           ~75% extends above circle, ~25% inside ── */}
+      <g transform="translate(100, 60) scale(1.95)">
         {/* Head silhouette */}
         <path
           d="M0 -28 C-13 -28 -18 -20 -18 -11 C-18 -6 -16 -2.5 -12 0 L-12 7 C-12 10 -9 13 0 13 C9 13 12 10 12 7 L12 0 C16 -2.5 18 -6 18 -11 C18 -20 13 -28 0 -28Z"
@@ -40,7 +43,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
         {/* Right eye */}
         <ellipse cx="7" cy="-10.8" rx="3" ry="2" fill="white" />
         <ellipse cx="7.8" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black} />
-        {/* Mask tie */}
+        {/* Mask tie flowing right */}
         <path
           d="M16 -13 Q22 -15.5 26 -12 Q22 -8.5 16 -7"
           stroke={colors.primary}
@@ -53,7 +56,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
       {/* ── Text inside circle ── */}
       <text
         x="100"
-        y="128"
+        y="178"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"
@@ -65,7 +68,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
       </text>
       <text
         x="100"
-        y="155"
+        y="208"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"

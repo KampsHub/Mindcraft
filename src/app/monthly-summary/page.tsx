@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import Nav from "@/components/Nav";
+import { colors, fonts, card } from "@/lib/theme";
 
 interface Entry {
   id: string;
@@ -37,7 +39,7 @@ interface WeeklyReview {
   reflection: string;
 }
 
-const COLORS = ["#2563eb", "#7c3aed", "#0891b2", "#059669", "#d97706", "#dc2626", "#8b5cf6", "#06b6d4"];
+const COLORS = [colors.primary, "#7c3aed", "#0891b2", "#059669", "#d97706", colors.error, "#8b5cf6", "#06b6d4"];
 
 export default function MonthlySummaryPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -55,7 +57,6 @@ export default function MonthlySummaryPage() {
   const monthName = now.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   const fetchMonthData = useCallback(async (userId: string) => {
-    // Entries from this month
     const { data: monthEntries } = await supabase
       .from("entries")
       .select("*")
@@ -66,7 +67,6 @@ export default function MonthlySummaryPage() {
     if (monthEntries) {
       setEntries(monthEntries);
 
-      // Theme counts
       const counts: Record<string, number> = {};
       monthEntries.forEach((e) => {
         (e.theme_tags || []).forEach((tag: string) => {
@@ -80,7 +80,6 @@ export default function MonthlySummaryPage() {
       setThemeCounts(sorted);
     }
 
-    // Coaching plan
     const { data: planData } = await supabase
       .from("coaching_plans")
       .select("*")
@@ -93,7 +92,6 @@ export default function MonthlySummaryPage() {
       setPlan(planData);
     }
 
-    // Weekly reviews from this month
     const { data: reviewData } = await supabase
       .from("weekly_reviews")
       .select("*")
@@ -119,17 +117,13 @@ export default function MonthlySummaryPage() {
     });
   }, [supabase.auth, router, fetchMonthData]);
 
-  const container: React.CSSProperties = {
-    maxWidth: 720,
-    margin: "0 auto",
-    padding: "48px 24px",
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-  };
-
   if (loading) {
     return (
-      <div style={{ ...container, textAlign: "center", paddingTop: 120 }}>
-        <p style={{ color: "#888" }}>Loading your month...</p>
+      <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+        <Nav />
+        <div style={{ textAlign: "center", paddingTop: 120 }}>
+          <p style={{ color: colors.gray400 }}>Loading your month...</p>
+        </div>
       </div>
     );
   }
@@ -152,199 +146,187 @@ export default function MonthlySummaryPage() {
   const activityByDay = dayNames.map((d) => ({ day: d, entries: dayMap[d] }));
 
   return (
-    <div style={container}>
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
-        <div>
-          <h1 style={{ fontSize: 26, fontWeight: 600, margin: "0 0 4px 0" }}>Monthly Summary</h1>
-          <p style={{ fontSize: 14, color: "#888", margin: 0 }}>{monthName}</p>
-        </div>
-        <div style={{ display: "flex", gap: 8 }}>
+    <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+      <Nav />
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>
+          <div>
+            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>Monthly Summary</h1>
+            <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{monthName}</p>
+          </div>
           <button onClick={() => window.print()} className="no-print" style={{
-            padding: "8px 16px", fontSize: 13, color: "#666",
-            backgroundColor: "transparent", border: "1px solid #ddd",
+            padding: "8px 16px", fontSize: 13, color: colors.gray500,
+            backgroundColor: "transparent", border: `1px solid ${colors.gray200}`,
             borderRadius: 6, cursor: "pointer",
           }}>
             Print
           </button>
-          <button onClick={() => router.push("/dashboard")} style={{
-            padding: "8px 16px", fontSize: 13, color: "#666",
-            backgroundColor: "transparent", border: "1px solid #ddd",
-            borderRadius: 6, cursor: "pointer",
-          }}>
-            Dashboard
-          </button>
         </div>
-      </div>
 
-      {/* Month stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 10, marginBottom: 28 }}>
-        {[
-          { value: totalEntries, label: "total entries" },
-          { value: journalCount, label: "journals" },
-          { value: totalExercises, label: "exercises" },
-          { value: avgRating, label: "avg rating" },
-        ].map(({ value, label }) => (
-          <div key={label} style={{ padding: 14, border: "1px solid #e2e8f0", borderRadius: 10, textAlign: "center" }}>
-            <p style={{ fontSize: 24, fontWeight: 700, margin: "0 0 2px 0", color: "#2563eb" }}>{value}</p>
-            <p style={{ fontSize: 12, color: "#888", margin: 0 }}>{label}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Theme distribution pie chart */}
-      {themeCounts.length > 0 && (
-        <div style={{ marginBottom: 28 }} className="print-section">
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0" }}>Theme Distribution</h2>
-          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-            <div style={{ width: 200, height: 200 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={themeCounts}
-                    dataKey="count"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    innerRadius={40}
-                  >
-                    {themeCounts.map((_, i) => (
-                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={{ fontSize: 13, borderRadius: 8 }} />
-                </PieChart>
-              </ResponsiveContainer>
+        {/* Month stats */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 10, marginBottom: 28 }}>
+          {[
+            { value: totalEntries, label: "total entries" },
+            { value: journalCount, label: "journals" },
+            { value: totalExercises, label: "exercises" },
+            { value: avgRating, label: "avg rating" },
+          ].map(({ value, label }) => (
+            <div key={label} style={{ ...card, padding: 14, textAlign: "center" }}>
+              <p style={{ fontSize: 24, fontWeight: 700, margin: "0 0 2px 0", color: colors.primary }}>{value}</p>
+              <p style={{ fontSize: 12, color: colors.gray400, margin: 0 }}>{label}</p>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              {themeCounts.map(({ name, count }, i) => (
-                <div key={name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: COLORS[i % COLORS.length] }} />
-                  <span style={{ fontSize: 13, color: "#555" }}>{name} ({count})</span>
+          ))}
+        </div>
+
+        {/* Theme distribution pie chart */}
+        {themeCounts.length > 0 && (
+          <div style={{ marginBottom: 28 }} className="print-section">
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>Theme Distribution</h2>
+            <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+              <div style={{ width: 200, height: 200 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={themeCounts}
+                      dataKey="count"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      innerRadius={40}
+                    >
+                      {themeCounts.map((_, i) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ fontSize: 13, borderRadius: 8 }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {themeCounts.map(({ name, count }, i) => (
+                  <div key={name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: COLORS[i % COLORS.length] }} />
+                    <span style={{ fontSize: 13, color: colors.gray500 }}>{name} ({count})</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Activity by day of week */}
+        <div style={{ marginBottom: 28 }} className="print-section">
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>Activity by Day</h2>
+          <div style={{ width: "100%", height: 160 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={activityByDay} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                <XAxis dataKey="day" tick={{ fontSize: 12, fill: colors.gray400 }} axisLine={false} tickLine={false} />
+                <YAxis hide />
+                <Tooltip contentStyle={{ fontSize: 13, borderRadius: 8 }} />
+                <Bar dataKey="entries" fill={colors.primary} radius={[4, 4, 0, 0]} barSize={32} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Progress vs goals */}
+        {plan && plan.goals && (
+          <div style={{ marginBottom: 28 }} className="print-section">
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>Progress vs Goals</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {(plan.goals as Goal[]).map((goal, i) => {
+                const relatedEntries = entries.filter((e) =>
+                  (e.theme_tags || []).some((tag) =>
+                    goal.goal.toLowerCase().includes(tag.replace(/_/g, " "))
+                    || goal.why.toLowerCase().includes(tag.replace(/_/g, " "))
+                  )
+                ).length;
+
+                return (
+                  <div key={i} style={{ ...card, padding: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                      <p style={{ fontSize: 14, fontWeight: 500, margin: 0, color: colors.black }}>{goal.goal}</p>
+                      <span style={{
+                        fontSize: 12, padding: "2px 8px", borderRadius: 10,
+                        backgroundColor: relatedEntries > 3 ? colors.successLight : relatedEntries > 0 ? colors.warningLight : colors.gray50,
+                        color: relatedEntries > 3 ? "#166534" : relatedEntries > 0 ? "#92400e" : colors.gray400,
+                      }}>
+                        {relatedEntries} related entries
+                      </span>
+                    </div>
+                    <p style={{ fontSize: 13, color: colors.gray500, margin: 0 }}>{goal.why}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Weekly review summaries */}
+        {reviews.length > 0 && (
+          <div style={{ marginBottom: 28 }} className="print-section">
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>Weekly Reflections</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {reviews.map((review) => (
+                <div key={review.week_start} style={{ ...card, padding: 14 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: colors.black }}>
+                      Week of {new Date(review.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </span>
+                    <span style={{ fontSize: 13, color: colors.primary }}>{review.accountability_rating}/5</span>
+                  </div>
+                  {review.reflection && (
+                    <p style={{ fontSize: 14, color: colors.gray500, margin: 0, lineHeight: 1.5 }}>
+                      {review.reflection}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Activity by day of week */}
-      <div style={{ marginBottom: 28 }} className="print-section">
-        <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0" }}>Activity by Day</h2>
-        <div style={{ width: "100%", height: 160 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={activityByDay} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-              <XAxis dataKey="day" tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} />
-              <YAxis hide />
-              <Tooltip contentStyle={{ fontSize: 13, borderRadius: 8 }} />
-              <Bar dataKey="entries" fill="#2563eb" radius={[4, 4, 0, 0]} barSize={32} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Progress vs goals */}
-      {plan && plan.goals && (
-        <div style={{ marginBottom: 28 }} className="print-section">
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0" }}>Progress vs Goals</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {(plan.goals as Goal[]).map((goal, i) => {
-              // Count entries that mention themes related to this goal
-              const relatedEntries = entries.filter((e) =>
-                (e.theme_tags || []).some((tag) =>
-                  goal.goal.toLowerCase().includes(tag.replace(/_/g, " "))
-                  || goal.why.toLowerCase().includes(tag.replace(/_/g, " "))
-                )
-              ).length;
-
-              return (
-                <div key={i} style={{
-                  padding: 14, border: "1px solid #e2e8f0", borderRadius: 8,
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                    <p style={{ fontSize: 14, fontWeight: 500, margin: 0 }}>{goal.goal}</p>
-                    <span style={{
-                      fontSize: 12, padding: "2px 8px", borderRadius: 10,
-                      backgroundColor: relatedEntries > 3 ? "#f0fdf4" : relatedEntries > 0 ? "#fffbeb" : "#f8fafc",
-                      color: relatedEntries > 3 ? "#166534" : relatedEntries > 0 ? "#92400e" : "#888",
-                    }}>
-                      {relatedEntries} related entries
-                    </span>
-                  </div>
-                  <p style={{ fontSize: 13, color: "#666", margin: 0 }}>{goal.why}</p>
-                </div>
-              );
-            })}
+        {/* Shareable toggle */}
+        <div style={{
+          ...card, padding: 16,
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          marginBottom: 32,
+        }} className="no-print">
+          <div>
+            <p style={{ fontSize: 14, fontWeight: 500, margin: "0 0 2px 0", color: colors.black }}>Share with coach</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>Allow your coach to view this monthly summary</p>
           </div>
+          <button
+            onClick={() => setShareable(!shareable)}
+            style={{
+              width: 48, height: 26, borderRadius: 13,
+              backgroundColor: shareable ? colors.primary : colors.gray200,
+              border: "none", cursor: "pointer",
+              position: "relative", transition: "background-color 0.2s",
+            }}
+          >
+            <div style={{
+              width: 22, height: 22, borderRadius: 11,
+              backgroundColor: colors.white, position: "absolute",
+              top: 2, left: shareable ? 24 : 2,
+              transition: "left 0.2s",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+            }} />
+          </button>
         </div>
-      )}
 
-      {/* Weekly review summaries */}
-      {reviews.length > 0 && (
-        <div style={{ marginBottom: 28 }} className="print-section">
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0" }}>Weekly Reflections</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {reviews.map((review) => (
-              <div key={review.week_start} style={{
-                padding: 14, border: "1px solid #f0f0f0", borderRadius: 8,
-                backgroundColor: "#fafafa",
-              }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 500 }}>
-                    Week of {new Date(review.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                  </span>
-                  <span style={{ fontSize: 13, color: "#2563eb" }}>{review.accountability_rating}/5</span>
-                </div>
-                {review.reflection && (
-                  <p style={{ fontSize: 14, color: "#555", margin: 0, lineHeight: 1.5 }}>
-                    {review.reflection}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Shareable toggle */}
-      <div style={{
-        padding: 16, border: "1px solid #e2e8f0", borderRadius: 8,
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        marginBottom: 32,
-      }} className="no-print">
-        <div>
-          <p style={{ fontSize: 14, fontWeight: 500, margin: "0 0 2px 0" }}>Share with coach</p>
-          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>Allow your coach to view this monthly summary</p>
-        </div>
-        <button
-          onClick={() => setShareable(!shareable)}
-          style={{
-            width: 48, height: 26, borderRadius: 13,
-            backgroundColor: shareable ? "#2563eb" : "#ddd",
-            border: "none", cursor: "pointer",
-            position: "relative", transition: "background-color 0.2s",
-          }}
-        >
-          <div style={{
-            width: 22, height: 22, borderRadius: 11,
-            backgroundColor: "#fff", position: "absolute",
-            top: 2, left: shareable ? 24 : 2,
-            transition: "left 0.2s",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-          }} />
-        </button>
+        {/* Print styles */}
+        <style>{`
+          @media print {
+            .no-print { display: none !important; }
+            body { font-size: 11pt; }
+            button { display: none !important; }
+            .print-section { break-inside: avoid; }
+          }
+        `}</style>
       </div>
-
-      {/* Print styles */}
-      <style>{`
-        @media print {
-          .no-print { display: none !important; }
-          body { font-size: 11pt; }
-          button { display: none !important; }
-          .print-section { break-inside: avoid; }
-        }
-      `}</style>
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import Nav from "@/components/Nav";
+import { colors, fonts, card } from "@/lib/theme";
 
 interface Entry {
   id: string;
@@ -173,202 +175,175 @@ export default function DashboardPage() {
     }
   }
 
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
-  }
-
-  const container: React.CSSProperties = {
-    maxWidth: 720,
-    margin: "0 auto",
-    padding: "48px 24px",
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-  };
-
   if (!user) {
     return (
-      <div style={{ ...container, textAlign: "center", paddingTop: 120 }}>
-        <p style={{ color: "#888" }}>Loading...</p>
+      <div style={{ textAlign: "center", paddingTop: 120, fontFamily: fonts.body }}>
+        <p style={{ color: colors.gray400 }}>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div style={container}>
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-        <div>
-          <h1 style={{ fontSize: 28, fontWeight: 600, margin: "0 0 4px 0" }}>Dashboard</h1>
-          <p style={{ fontSize: 14, color: "#888", margin: 0 }}>{user.email}</p>
+    <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+      <Nav />
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
+        {/* Welcome */}
+        <div style={{ marginBottom: 28 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
+            Welcome back
+          </h1>
+          <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{user.email}</p>
         </div>
-        <button onClick={handleSignOut} style={{
-          padding: "8px 16px", fontSize: 13, color: "#666",
-          backgroundColor: "transparent", border: "1px solid #ddd",
-          borderRadius: 6, cursor: "pointer",
-        }}>
-          Sign out
-        </button>
-      </div>
 
-      {/* One-liner capture */}
-      <form onSubmit={handleOneLiner} style={{
-        padding: 20, backgroundColor: "#f8fafc", border: "1px solid #e2e8f0",
-        borderRadius: 12, marginBottom: 24,
-      }}>
-        <label style={{ display: "block", fontSize: 14, fontWeight: 500, color: "#475569", marginBottom: 8 }}>
-          Quick thought
-        </label>
-        <div style={{ display: "flex", gap: 8 }}>
-          <input
-            type="text"
-            value={oneLiner}
-            onChange={(e) => setOneLiner(e.target.value)}
-            placeholder="Capture a thought, feeling, or observation..."
-            disabled={submitting}
-            style={{
-              flex: 1, padding: "10px 14px", fontSize: 15,
-              border: "1px solid #ddd", borderRadius: 8,
-              outline: "none", boxSizing: "border-box",
-            }}
-          />
-          <button type="submit" disabled={submitting || !oneLiner.trim()} style={{
-            padding: "10px 20px", fontSize: 14, fontWeight: 500, color: "#fff",
-            backgroundColor: submitting || !oneLiner.trim() ? "#999" : "#2563eb",
-            border: "none", borderRadius: 8,
-            cursor: submitting || !oneLiner.trim() ? "not-allowed" : "pointer",
-            whiteSpace: "nowrap",
-          }}>
-            {submitting ? "..." : "Capture"}
-          </button>
-        </div>
-        {flash && (
-          <p style={{ fontSize: 13, color: "#16a34a", margin: "8px 0 0 0" }}>{flash}</p>
-        )}
-      </form>
+        {/* One-liner capture */}
+        <form onSubmit={handleOneLiner} style={{
+          ...card, padding: 20, marginBottom: 24,
+        }}>
+          <label style={{ display: "block", fontSize: 14, fontWeight: 500, color: colors.gray600, marginBottom: 8 }}>
+            Quick thought
+          </label>
+          <div style={{ display: "flex", gap: 8 }}>
+            <input
+              type="text"
+              value={oneLiner}
+              onChange={(e) => setOneLiner(e.target.value)}
+              placeholder="Capture a thought, feeling, or observation..."
+              disabled={submitting}
+              style={{
+                flex: 1, padding: "10px 14px", fontSize: 15,
+                border: `1px solid ${colors.gray200}`, borderRadius: 8,
+                outline: "none", boxSizing: "border-box",
+              }}
+            />
+            <button type="submit" disabled={submitting || !oneLiner.trim()} style={{
+              padding: "10px 20px", fontSize: 14, fontWeight: 600, color: colors.white,
+              backgroundColor: submitting || !oneLiner.trim() ? colors.gray400 : colors.primary,
+              border: "none", borderRadius: 8,
+              cursor: submitting || !oneLiner.trim() ? "not-allowed" : "pointer",
+              whiteSpace: "nowrap", transition: "background-color 0.15s",
+            }}>
+              {submitting ? "..." : "Capture"}
+            </button>
+          </div>
+          {flash && (
+            <p style={{ fontSize: 13, color: colors.success, margin: "8px 0 0 0" }}>{flash}</p>
+          )}
+        </form>
 
-      {/* Quick stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
-        <div style={{
-          padding: 16, border: "1px solid #e2e8f0", borderRadius: 10, textAlign: "center",
-        }}>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: "#2563eb" }}>{streak}</p>
-          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>day streak</p>
-        </div>
-        <div style={{
-          padding: 16, border: "1px solid #e2e8f0", borderRadius: 10, textAlign: "center",
-        }}>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: "#2563eb" }}>
-            {recentEntries.filter((e) => e.type === "journal").length}
-          </p>
-          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>entries this week</p>
-        </div>
-        <div style={{
-          padding: 16, border: "1px solid #e2e8f0", borderRadius: 10, textAlign: "center",
-        }}>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0",
-            color: todaysExercise?.completed ? "#16a34a" : "#f59e0b",
-          }}>
-            {todaysExercise ? (todaysExercise.completed ? "\u2713" : "\u2022") : "\u2014"}
-          </p>
-          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>
-            {todaysExercise ? (todaysExercise.completed ? "exercise done" : "exercise pending") : "no exercise"}
-          </p>
-        </div>
-      </div>
-
-      {/* Top themes */}
-      {topThemes.length > 0 && (
-        <div style={{ marginBottom: 24 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 10px 0", color: "#475569" }}>
-            Themes this week
-          </h3>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {topThemes.map(({ tag, count }) => (
-              <span key={tag} style={{
-                padding: "4px 12px", fontSize: 13,
-                backgroundColor: "#eff6ff", color: "#2563eb",
-                borderRadius: 16, border: "1px solid #bfdbfe",
-              }}>
-                {tag.replace(/_/g, " ")} ({count})
-              </span>
-            ))}
+        {/* Quick stats */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
+          <div style={{ ...card, padding: 16, textAlign: "center" }}>
+            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>{streak}</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>day streak</p>
+          </div>
+          <div style={{ ...card, padding: 16, textAlign: "center" }}>
+            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>
+              {recentEntries.filter((e) => e.type === "journal").length}
+            </p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>entries this week</p>
+          </div>
+          <div style={{ ...card, padding: 16, textAlign: "center" }}>
+            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0",
+              color: todaysExercise?.completed ? colors.success : colors.warning,
+            }}>
+              {todaysExercise ? (todaysExercise.completed ? "\u2713" : "\u2022") : "\u2014"}
+            </p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
+              {todaysExercise ? (todaysExercise.completed ? "exercise done" : "exercise pending") : "no exercise"}
+            </p>
           </div>
         </div>
-      )}
 
-      {/* Navigation links */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 32 }}>
-        {[
-          { href: "/journal", label: "Journal", desc: "Write today's entry" },
-          { href: "/exercise", label: "Exercise", desc: "Today's exercise" },
-          { href: "/plan", label: "Plan", desc: "Your coaching plan" },
-          { href: "/weekly-review", label: "Review", desc: "Reflect on your week" },
-          { href: "/monthly-summary", label: "Monthly", desc: "Monthly patterns" },
-          { href: "/privacy", label: "Privacy", desc: "Data & consent" },
-        ].map(({ href, label, desc }) => (
-          <button
-            key={href}
-            onClick={() => router.push(href)}
-            style={{
-              padding: 16, textAlign: "left",
-              border: "1px solid #e2e8f0", borderRadius: 10,
-              backgroundColor: "#fff", cursor: "pointer",
-              transition: "border-color 0.15s",
-            }}
-          >
-            <p style={{ fontSize: 15, fontWeight: 600, margin: "0 0 4px 0" }}>{label}</p>
-            <p style={{ fontSize: 13, color: "#888", margin: 0 }}>{desc}</p>
-          </button>
-        ))}
-      </div>
-
-      {/* Recent entries */}
-      {recentEntries.length > 0 && (
-        <div>
-          <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 12px 0", color: "#475569" }}>
-            Recent entries
-          </h3>
-          {recentEntries.slice(0, 5).map((entry) => (
-            <div key={entry.id} style={{
-              padding: 14, border: "1px solid #f0f0f0", borderRadius: 8,
-              marginBottom: 8, backgroundColor: "#fafafa",
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                <span style={{
-                  fontSize: 12,
-                  padding: "2px 8px", backgroundColor: entry.type === "one_liner" ? "#fef3c7" : "#eff6ff",
-                  borderRadius: 10, border: `1px solid ${entry.type === "one_liner" ? "#fde68a" : "#bfdbfe"}`,
-                  color: entry.type === "one_liner" ? "#92400e" : "#2563eb",
+        {/* Top themes */}
+        {topThemes.length > 0 && (
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 10px 0", color: colors.gray600 }}>
+              Themes this week
+            </h3>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+              {topThemes.map(({ tag, count }) => (
+                <span key={tag} style={{
+                  padding: "4px 12px", fontSize: 13,
+                  backgroundColor: colors.primaryLight, color: colors.primaryDark,
+                  borderRadius: 16, border: `1px solid ${colors.primaryMuted}`,
                 }}>
-                  {entry.type === "one_liner" ? "thought" : "journal"}
+                  {tag.replace(/_/g, " ")} ({count})
                 </span>
-                <span style={{ fontSize: 12, color: "#aaa" }}>{entry.date}</span>
-              </div>
-              <p style={{
-                fontSize: 14, color: "#333", margin: 0, lineHeight: 1.5,
-                overflow: "hidden", textOverflow: "ellipsis",
-                display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
-              }}>
-                {entry.content}
-              </p>
-              {entry.theme_tags?.length > 0 && (
-                <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 8 }}>
-                  {entry.theme_tags.map((tag) => (
-                    <span key={tag} style={{
-                      padding: "2px 8px", fontSize: 11,
-                      backgroundColor: "#f1f5f9", color: "#64748b",
-                      borderRadius: 10,
-                    }}>
-                      {tag.replace(/_/g, " ")}
-                    </span>
-                  ))}
-                </div>
-              )}
+              ))}
             </div>
+          </div>
+        )}
+
+        {/* Navigation links */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 32 }}>
+          {[
+            { href: "/journal", label: "Journal", desc: "Write today's entry" },
+            { href: "/exercise", label: "Exercise", desc: "Today's exercise" },
+            { href: "/plan", label: "Plan", desc: "Your coaching plan" },
+            { href: "/weekly-review", label: "Review", desc: "Reflect on your week" },
+            { href: "/monthly-summary", label: "Monthly", desc: "Monthly patterns" },
+            { href: "/privacy", label: "Privacy", desc: "Data & consent" },
+          ].map(({ href, label, desc }) => (
+            <button
+              key={href}
+              onClick={() => router.push(href)}
+              style={{
+                ...card, padding: 16, textAlign: "left",
+                cursor: "pointer", transition: "border-color 0.15s, box-shadow 0.15s",
+              }}
+            >
+              <p style={{ fontSize: 15, fontWeight: 600, margin: "0 0 4px 0", color: colors.black }}>{label}</p>
+              <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{desc}</p>
+            </button>
           ))}
         </div>
-      )}
+
+        {/* Recent entries */}
+        {recentEntries.length > 0 && (
+          <div>
+            <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 12px 0", color: colors.gray600 }}>
+              Recent entries
+            </h3>
+            {recentEntries.slice(0, 5).map((entry) => (
+              <div key={entry.id} style={{
+                ...card, padding: 14, marginBottom: 8,
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                  <span style={{
+                    fontSize: 12,
+                    padding: "2px 8px", backgroundColor: entry.type === "one_liner" ? colors.warningLight : colors.primaryLight,
+                    borderRadius: 10, border: `1px solid ${entry.type === "one_liner" ? "#fde68a" : colors.primaryMuted}`,
+                    color: entry.type === "one_liner" ? "#92400e" : colors.primaryDark,
+                  }}>
+                    {entry.type === "one_liner" ? "thought" : "journal"}
+                  </span>
+                  <span style={{ fontSize: 12, color: colors.gray300 }}>{entry.date}</span>
+                </div>
+                <p style={{
+                  fontSize: 14, color: colors.dark, margin: 0, lineHeight: 1.5,
+                  overflow: "hidden", textOverflow: "ellipsis",
+                  display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
+                }}>
+                  {entry.content}
+                </p>
+                {entry.theme_tags?.length > 0 && (
+                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 8 }}>
+                    {entry.theme_tags.map((tag) => (
+                      <span key={tag} style={{
+                        padding: "2px 8px", fontSize: 11,
+                        backgroundColor: colors.gray50, color: colors.gray600,
+                        borderRadius: 10,
+                      }}>
+                        {tag.replace(/_/g, " ")}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
   packageQuestions,
 } from "./questions";
 import type { User } from "@supabase/supabase-js";
+import { colors, fonts } from "@/lib/theme";
 
 type Step = "package" | "universal" | "specific" | "complete";
 
@@ -78,44 +79,46 @@ export default function IntakePage() {
     maxWidth: 720,
     margin: "0 auto",
     padding: "48px 24px",
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    fontFamily: fonts.body,
   };
 
   const cardStyle: React.CSSProperties = {
     padding: 24,
-    border: "1px solid #e2e8f0",
+    border: `1px solid ${colors.gray100}`,
     borderRadius: 12,
     marginBottom: 16,
     cursor: "pointer",
-    transition: "border-color 0.15s",
+    transition: "border-color 0.15s, box-shadow 0.15s",
+    backgroundColor: colors.white,
   };
 
   const btnPrimary: React.CSSProperties = {
     padding: "12px 32px",
     fontSize: 15,
-    fontWeight: 500,
-    color: "#fff",
-    backgroundColor: "#2563eb",
+    fontWeight: 600,
+    color: colors.white,
+    backgroundColor: colors.primary,
     border: "none",
     borderRadius: 8,
     cursor: "pointer",
+    transition: "background-color 0.15s",
   };
 
   const btnSecondary: React.CSSProperties = {
     ...btnPrimary,
     backgroundColor: "transparent",
-    color: "#666",
-    border: "1px solid #ddd",
+    color: colors.gray500,
+    border: `1px solid ${colors.gray200}`,
   };
 
   // ── Step 1: Package Selection ──
   if (step === "package") {
     return (
       <div style={containerStyle}>
-        <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 8 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8, color: colors.black }}>
           Welcome to Coaching Hub
         </h1>
-        <p style={{ color: "#666", marginBottom: 32, lineHeight: 1.6 }}>
+        <p style={{ color: colors.gray500, marginBottom: 32, lineHeight: 1.6 }}>
           Before we begin, tell us what brought you here. Select the path that best
           describes your current situation.
         </p>
@@ -126,14 +129,14 @@ export default function IntakePage() {
             onClick={() => setSelectedPackage(pkg.id)}
             style={{
               ...cardStyle,
-              borderColor: selectedPackage === pkg.id ? "#2563eb" : "#e2e8f0",
-              backgroundColor: selectedPackage === pkg.id ? "#eff6ff" : "#fff",
+              borderColor: selectedPackage === pkg.id ? colors.primary : colors.gray100,
+              backgroundColor: selectedPackage === pkg.id ? colors.primaryLight : colors.white,
             }}
           >
-            <h3 style={{ fontSize: 17, fontWeight: 600, marginTop: 0, marginBottom: 4 }}>
+            <h3 style={{ fontSize: 17, fontWeight: 600, marginTop: 0, marginBottom: 4, color: colors.black }}>
               {pkg.name}
             </h3>
-            <p style={{ color: "#555", margin: 0, fontSize: 14, lineHeight: 1.5 }}>
+            <p style={{ color: colors.gray500, margin: 0, fontSize: 14, lineHeight: 1.5 }}>
               {pkg.description}
             </p>
           </div>
@@ -145,7 +148,7 @@ export default function IntakePage() {
           style={{
             ...btnPrimary,
             marginTop: 16,
-            backgroundColor: !selectedPackage ? "#999" : "#2563eb",
+            backgroundColor: !selectedPackage ? colors.gray400 : colors.primary,
             cursor: !selectedPackage ? "not-allowed" : "pointer",
           }}
         >
@@ -164,20 +167,20 @@ export default function IntakePage() {
     return (
       <div style={containerStyle}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <p style={{ fontSize: 13, color: "#999", margin: 0 }}>
+          <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
             Step 2 of 3 — Getting to Know You
           </p>
-          <p style={{ fontSize: 13, color: "#999", margin: 0 }}>
+          <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
             {universalPage + 1} / {universalPages.length}
           </p>
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 4 }}>{categoryLabel}</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 4, color: colors.black }}>{categoryLabel}</h2>
         <div style={{
-          height: 4, backgroundColor: "#e2e8f0", borderRadius: 2, marginBottom: 32,
+          height: 4, backgroundColor: colors.gray100, borderRadius: 2, marginBottom: 32,
         }}>
           <div style={{
             height: 4,
-            backgroundColor: "#2563eb",
+            backgroundColor: colors.primary,
             borderRadius: 2,
             width: `${((universalPage + 1) / universalPages.length) * 100}%`,
             transition: "width 0.3s",
@@ -186,7 +189,7 @@ export default function IntakePage() {
 
         {currentQuestions.map((q) => (
           <div key={q.id} style={{ marginBottom: 28 }}>
-            <label style={{ display: "block", fontSize: 15, fontWeight: 500, marginBottom: 8, lineHeight: 1.5 }}>
+            <label style={{ display: "block", fontSize: 15, fontWeight: 500, marginBottom: 8, lineHeight: 1.5, color: colors.black }}>
               {q.question}
             </label>
             {q.type === "textarea" && (
@@ -195,7 +198,7 @@ export default function IntakePage() {
                 onChange={(e) => handleUniversalAnswer(q.id, e.target.value)}
                 rows={4}
                 style={{
-                  width: "100%", padding: 12, fontSize: 15, border: "1px solid #ddd",
+                  width: "100%", padding: 12, fontSize: 15, border: `1px solid ${colors.gray200}`,
                   borderRadius: 8, resize: "vertical", fontFamily: "inherit",
                   lineHeight: 1.6, boxSizing: "border-box",
                 }}
@@ -207,7 +210,7 @@ export default function IntakePage() {
                 value={(universalAnswers[q.id] as string) || ""}
                 onChange={(e) => handleUniversalAnswer(q.id, e.target.value)}
                 style={{
-                  width: "100%", padding: 12, fontSize: 15, border: "1px solid #ddd",
+                  width: "100%", padding: 12, fontSize: 15, border: `1px solid ${colors.gray200}`,
                   borderRadius: 8, boxSizing: "border-box",
                 }}
               />
@@ -217,10 +220,10 @@ export default function IntakePage() {
                 {q.options.map((opt) => (
                   <label key={opt} style={{
                     display: "flex", alignItems: "center", gap: 8, fontSize: 15,
-                    padding: "8px 12px", border: "1px solid #ddd", borderRadius: 8,
+                    padding: "8px 12px", border: `1px solid ${colors.gray200}`, borderRadius: 8,
                     cursor: "pointer",
-                    backgroundColor: universalAnswers[q.id] === opt ? "#eff6ff" : "#fff",
-                    borderColor: universalAnswers[q.id] === opt ? "#2563eb" : "#ddd",
+                    backgroundColor: universalAnswers[q.id] === opt ? colors.primaryLight : colors.white,
+                    borderColor: universalAnswers[q.id] === opt ? colors.primary : colors.gray200,
                   }}>
                     <input
                       type="radio"
@@ -235,7 +238,7 @@ export default function IntakePage() {
             )}
             {q.type === "ranking" && q.options && (
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <p style={{ fontSize: 13, color: "#888", margin: "0 0 8px 0" }}>
+                <p style={{ fontSize: 13, color: colors.gray400, margin: "0 0 8px 0" }}>
                   Number each item 1 (most important) to {q.options.length} (least).
                 </p>
                 {q.options.map((opt) => (
@@ -263,10 +266,10 @@ export default function IntakePage() {
                       }}
                       style={{
                         width: 48, padding: 8, fontSize: 15, textAlign: "center",
-                        border: "1px solid #ddd", borderRadius: 6,
+                        border: `1px solid ${colors.gray200}`, borderRadius: 6,
                       }}
                     />
-                    <span style={{ fontSize: 15 }}>{opt}</span>
+                    <span style={{ fontSize: 15, color: colors.dark }}>{opt}</span>
                   </div>
                 ))}
               </div>
@@ -307,22 +310,22 @@ export default function IntakePage() {
     return (
       <div style={containerStyle}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <p style={{ fontSize: 13, color: "#999", margin: 0 }}>
+          <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
             Step 3 of 3 — {pkgName}
           </p>
-          <p style={{ fontSize: 13, color: "#999", margin: 0 }}>
+          <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
             {specificPage + 1} / {specificPages.length}
           </p>
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 4 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 4, color: colors.black }}>
           About Your Situation
         </h2>
         <div style={{
-          height: 4, backgroundColor: "#e2e8f0", borderRadius: 2, marginBottom: 32,
+          height: 4, backgroundColor: colors.gray100, borderRadius: 2, marginBottom: 32,
         }}>
           <div style={{
             height: 4,
-            backgroundColor: "#2563eb",
+            backgroundColor: colors.primary,
             borderRadius: 2,
             width: `${((specificPage + 1) / specificPages.length) * 100}%`,
             transition: "width 0.3s",
@@ -331,7 +334,7 @@ export default function IntakePage() {
 
         {currentQuestions?.map((q) => (
           <div key={q.id} style={{ marginBottom: 28 }}>
-            <label style={{ display: "block", fontSize: 15, fontWeight: 500, marginBottom: 8, lineHeight: 1.5 }}>
+            <label style={{ display: "block", fontSize: 15, fontWeight: 500, marginBottom: 8, lineHeight: 1.5, color: colors.black }}>
               {q.question}
             </label>
             {q.type === "textarea" && (
@@ -340,7 +343,7 @@ export default function IntakePage() {
                 onChange={(e) => handleSpecificAnswer(q.id, e.target.value)}
                 rows={4}
                 style={{
-                  width: "100%", padding: 12, fontSize: 15, border: "1px solid #ddd",
+                  width: "100%", padding: 12, fontSize: 15, border: `1px solid ${colors.gray200}`,
                   borderRadius: 8, resize: "vertical", fontFamily: "inherit",
                   lineHeight: 1.6, boxSizing: "border-box",
                 }}
@@ -352,7 +355,7 @@ export default function IntakePage() {
                 value={(specificAnswers[q.id] as string) || ""}
                 onChange={(e) => handleSpecificAnswer(q.id, e.target.value)}
                 style={{
-                  width: "100%", padding: 12, fontSize: 15, border: "1px solid #ddd",
+                  width: "100%", padding: 12, fontSize: 15, border: `1px solid ${colors.gray200}`,
                   borderRadius: 8, boxSizing: "border-box",
                 }}
               />
@@ -378,7 +381,7 @@ export default function IntakePage() {
             disabled={saving}
             style={{
               ...btnPrimary,
-              backgroundColor: saving ? "#999" : "#2563eb",
+              backgroundColor: saving ? colors.gray400 : colors.primary,
             }}
           >
             {saving ? "Saving..." : isLastPage ? "Complete intake" : "Next"}
@@ -395,10 +398,10 @@ export default function IntakePage() {
       textAlign: "center",
       paddingTop: 120,
     }}>
-      <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 12 }}>
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: colors.black }}>
         You&apos;re all set
       </h1>
-      <p style={{ color: "#555", fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
+      <p style={{ color: colors.gray500, fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
         Your responses have been saved. Your coaching companion now has the context
         it needs to personalise your experience. Next step: generate your coaching plan.
       </p>

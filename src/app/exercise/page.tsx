@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Nav from "@/components/Nav";
+import { colors, fonts, card } from "@/lib/theme";
 
 interface Exercise {
   framework_name: string;
@@ -75,110 +77,106 @@ export default function ExercisePage() {
     setCompleted(true);
   }
 
-  const container: React.CSSProperties = {
-    maxWidth: 720, margin: "0 auto", padding: "48px 24px",
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-  };
-
   if (loading) {
-    return <div style={{ ...container, textAlign: "center", paddingTop: 120 }}>
-      <p style={{ color: "#888" }}>Loading today&apos;s exercise...</p>
-    </div>;
+    return (
+      <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+        <Nav />
+        <div style={{ textAlign: "center", paddingTop: 120 }}>
+          <p style={{ color: colors.gray400 }}>Loading today&apos;s exercise...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!exercise) {
     return (
-      <div style={{ ...container, textAlign: "center", paddingTop: 80 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 12 }}>Today&apos;s Exercise</h1>
-        <p style={{ color: "#555", fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
-          {error || "No exercise for today yet. Generate one based on your coaching plan and recent entries."}
-        </p>
-        {generating && (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 24, color: "#666" }}>
-            <div style={{
-              width: 20, height: 20, border: "2px solid #ddd", borderTopColor: "#2563eb",
-              borderRadius: "50%", animation: "spin 0.8s linear infinite",
-            }} />
-            <span>Selecting and personalising your exercise...</span>
-            <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-          </div>
-        )}
-        <button onClick={generateExercise} disabled={generating} style={{
-          padding: "12px 32px", fontSize: 15, fontWeight: 500, color: "#fff",
-          backgroundColor: generating ? "#999" : "#2563eb", border: "none",
-          borderRadius: 8, cursor: generating ? "not-allowed" : "pointer",
-        }}>
-          {generating ? "Generating..." : "Generate today's exercise"}
-        </button>
+      <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+        <Nav />
+        <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px", textAlign: "center", paddingTop: 80 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: colors.black }}>Today&apos;s Exercise</h1>
+          <p style={{ color: colors.gray500, fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
+            {error || "No exercise for today yet. Generate one based on your coaching plan and recent entries."}
+          </p>
+          {generating && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 24, color: colors.gray500 }}>
+              <div style={{
+                width: 20, height: 20, border: `2px solid ${colors.gray200}`, borderTopColor: colors.primary,
+                borderRadius: "50%", animation: "spin 0.8s linear infinite",
+              }} />
+              <span>Selecting and personalising your exercise...</span>
+              <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+            </div>
+          )}
+          <button onClick={generateExercise} disabled={generating} style={{
+            padding: "12px 32px", fontSize: 15, fontWeight: 600, color: colors.white,
+            backgroundColor: generating ? colors.gray400 : colors.primary, border: "none",
+            borderRadius: 8, cursor: generating ? "not-allowed" : "pointer",
+            transition: "background-color 0.15s",
+          }}>
+            {generating ? "Generating..." : "Generate today's exercise"}
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={container}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
-        <div>
-          <p style={{ fontSize: 13, color: "#888", margin: "0 0 4px 0" }}>
+    <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+      <Nav />
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
+        <div style={{ marginBottom: 24 }}>
+          <p style={{ fontSize: 13, color: colors.gray400, margin: "0 0 4px 0" }}>
             {exercise.framework_name} · {exercise.estimated_time}
           </p>
-          <h1 style={{ fontSize: 26, fontWeight: 600, margin: 0 }}>{exercise.title}</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0, color: colors.black }}>{exercise.title}</h1>
         </div>
-        <button onClick={() => router.push("/journal")} style={{
-          padding: "8px 16px", fontSize: 13, color: "#666", backgroundColor: "transparent",
-          border: "1px solid #ddd", borderRadius: 6, cursor: "pointer",
-        }}>
-          Go to journal
-        </button>
-      </div>
 
-      {/* Theme tags */}
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 24 }}>
-        {exercise.theme_tags.map((tag) => (
-          <span key={tag} style={{
-            padding: "3px 10px", fontSize: 12, backgroundColor: "#eff6ff",
-            color: "#2563eb", borderRadius: 12, border: "1px solid #bfdbfe",
+        {/* Theme tags */}
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 24 }}>
+          {exercise.theme_tags.map((tag) => (
+            <span key={tag} style={{
+              padding: "3px 10px", fontSize: 12, backgroundColor: colors.primaryLight,
+              color: colors.primaryDark, borderRadius: 12, border: `1px solid ${colors.primaryMuted}`,
+            }}>
+              {tag.replace(/_/g, " ")}
+            </span>
+          ))}
+        </div>
+
+        {/* Introduction */}
+        <div style={{ ...card, padding: 20, marginBottom: 24 }}>
+          <p style={{ fontSize: 16, lineHeight: 1.7, color: colors.black, margin: 0 }}>
+            {exercise.introduction}
+          </p>
+        </div>
+
+        {/* Exercise instructions */}
+        <div style={{ marginBottom: 32 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16, color: colors.black }}>The Exercise</h2>
+          <div style={{
+            fontSize: 15, lineHeight: 1.8, color: colors.dark, whiteSpace: "pre-wrap",
           }}>
-            {tag.replace(/_/g, " ")}
-          </span>
-        ))}
-      </div>
-
-      {/* Introduction */}
-      <div style={{
-        padding: 20, backgroundColor: "#f8fafc", border: "1px solid #e2e8f0",
-        borderRadius: 12, marginBottom: 24,
-      }}>
-        <p style={{ fontSize: 16, lineHeight: 1.7, color: "#1e293b", margin: 0 }}>
-          {exercise.introduction}
-        </p>
-      </div>
-
-      {/* Exercise instructions */}
-      <div style={{ marginBottom: 32 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>The Exercise</h2>
-        <div style={{
-          fontSize: 15, lineHeight: 1.8, color: "#333", whiteSpace: "pre-wrap",
-        }}>
-          {exercise.exercise}
+            {exercise.exercise}
+          </div>
         </div>
-      </div>
 
-      {/* Complete button */}
-      {completed ? (
-        <div style={{
-          padding: 16, backgroundColor: "#f0fdf4", border: "1px solid #bbf7d0",
-          borderRadius: 8, textAlign: "center", color: "#166534",
-        }}>
-          ✓ Completed — nice work. Head to your journal to process what came up.
-        </div>
-      ) : (
-        <button onClick={markComplete} style={{
-          padding: "12px 32px", fontSize: 15, fontWeight: 500, color: "#fff",
-          backgroundColor: "#16a34a", border: "none", borderRadius: 8, cursor: "pointer",
-        }}>
-          Mark as complete
-        </button>
-      )}
+        {/* Complete button */}
+        {completed ? (
+          <div style={{
+            padding: 16, backgroundColor: colors.successLight, border: "1px solid #bbf7d0",
+            borderRadius: 8, textAlign: "center", color: "#166534",
+          }}>
+            ✓ Completed — nice work. Head to your journal to process what came up.
+          </div>
+        ) : (
+          <button onClick={markComplete} style={{
+            padding: "12px 32px", fontSize: 15, fontWeight: 600, color: colors.white,
+            backgroundColor: colors.success, border: "none", borderRadius: 8, cursor: "pointer",
+          }}>
+            Mark as complete
+          </button>
+        )}
+      </div>
     </div>
   );
 }

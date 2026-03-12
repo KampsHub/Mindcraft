@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { colors, fonts } from "@/lib/theme";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -32,127 +33,126 @@ export default function SignupPage() {
     }
   }
 
+  const inputStyle: React.CSSProperties = {
+    width: "100%", padding: 12, fontSize: 15,
+    border: `1px solid ${colors.gray200}`, borderRadius: 8,
+    marginBottom: 16, boxSizing: "border-box",
+    outline: "none", transition: "border-color 0.15s",
+  };
+
   if (success) {
     return (
       <div style={{
-        maxWidth: 400,
-        margin: "0 auto",
-        padding: "80px 24px",
-        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        textAlign: "center",
+        minHeight: "100vh", display: "flex", alignItems: "center",
+        justifyContent: "center", backgroundColor: colors.gray50,
+        fontFamily: fonts.body, padding: 24,
       }}>
-        <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 8 }}>Check your email</h1>
-        <p style={{ color: "#666", lineHeight: 1.6 }}>
-          We sent a confirmation link to <strong>{email}</strong>.
-          Click it to activate your account, then come back to sign in.
-        </p>
-        <a
-          href="/login"
-          style={{
-            display: "inline-block",
-            marginTop: 24,
-            color: "#2563eb",
-            textDecoration: "none",
-            fontSize: 15,
-          }}
-        >
-          Back to sign in
-        </a>
+        <div style={{
+          width: "100%", maxWidth: 400, backgroundColor: colors.white,
+          borderRadius: 16, padding: "40px 32px",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+          border: `1px solid ${colors.gray100}`, textAlign: "center",
+        }}>
+          <div style={{
+            width: 44, height: 44, borderRadius: 12, backgroundColor: colors.success,
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            fontSize: 20, color: colors.white, marginBottom: 16,
+          }}>✓</div>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 8px 0", color: colors.black }}>
+            Check your email
+          </h1>
+          <p style={{ color: colors.gray500, lineHeight: 1.6, fontSize: 14 }}>
+            We sent a confirmation link to <strong>{email}</strong>.
+            Click it to activate your account, then come back to sign in.
+          </p>
+          <a
+            href="/login"
+            style={{
+              display: "inline-block", marginTop: 24,
+              color: colors.primary, fontWeight: 500,
+              textDecoration: "none", fontSize: 15,
+            }}
+          >
+            Back to sign in
+          </a>
+        </div>
       </div>
     );
   }
 
   return (
     <div style={{
-      maxWidth: 400,
-      margin: "0 auto",
-      padding: "80px 24px",
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      minHeight: "100vh", display: "flex", alignItems: "center",
+      justifyContent: "center", backgroundColor: colors.gray50,
+      fontFamily: fonts.body, padding: 24,
     }}>
-      <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 8 }}>Create your account</h1>
-      <p style={{ color: "#666", marginBottom: 32 }}>
-        Start your daily coaching journey.
-      </p>
-
-      <form onSubmit={handleSignup}>
-        <label style={{ display: "block", marginBottom: 4, fontSize: 14, fontWeight: 500 }}>
-          Email
-        </label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{
-            width: "100%",
-            padding: 12,
-            fontSize: 15,
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            marginBottom: 16,
-            boxSizing: "border-box",
-          }}
-        />
-
-        <label style={{ display: "block", marginBottom: 4, fontSize: 14, fontWeight: 500 }}>
-          Password
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={6}
-          style={{
-            width: "100%",
-            padding: 12,
-            fontSize: 15,
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            marginBottom: 24,
-            boxSizing: "border-box",
-          }}
-        />
-
-        {error && (
+      <div style={{
+        width: "100%", maxWidth: 400, backgroundColor: colors.white,
+        borderRadius: 16, padding: "40px 32px",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+        border: `1px solid ${colors.gray100}`,
+      }}>
+        {/* Logo */}
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{
-            padding: 12,
-            backgroundColor: "#fef2f2",
-            border: "1px solid #fecaca",
-            borderRadius: 8,
-            color: "#dc2626",
-            fontSize: 14,
-            marginBottom: 16,
-          }}>
-            {error}
-          </div>
-        )}
+            width: 44, height: 44, borderRadius: 12, backgroundColor: colors.primary,
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            fontSize: 20, fontWeight: 700, color: colors.white, marginBottom: 16,
+          }}>A</div>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
+            Create your account
+          </h1>
+          <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>
+            Start your coaching journey.
+          </p>
+        </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: "100%",
-            padding: 12,
-            fontSize: 15,
-            fontWeight: 500,
-            color: "#fff",
-            backgroundColor: loading ? "#999" : "#2563eb",
-            border: "none",
-            borderRadius: 8,
+        <form onSubmit={handleSignup}>
+          <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
+            Email
+          </label>
+          <input
+            type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+            required placeholder="you@example.com" style={inputStyle}
+          />
+
+          <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
+            Password
+          </label>
+          <input
+            type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+            required minLength={6} style={{ ...inputStyle, marginBottom: 24 }}
+          />
+
+          {error && (
+            <div style={{
+              padding: 12, backgroundColor: colors.errorLight,
+              border: "1px solid #fecaca", borderRadius: 8,
+              color: colors.error, fontSize: 13, marginBottom: 16,
+            }}>
+              {error}
+            </div>
+          )}
+
+          <button type="submit" disabled={loading} style={{
+            width: "100%", padding: 13, fontSize: 15, fontWeight: 600,
+            color: colors.white,
+            backgroundColor: loading ? colors.gray400 : colors.primary,
+            border: "none", borderRadius: 8,
             cursor: loading ? "not-allowed" : "pointer",
-          }}
-        >
-          {loading ? "Creating account..." : "Sign up"}
-        </button>
-      </form>
+            transition: "background-color 0.15s",
+          }}>
+            {loading ? "Creating account..." : "Sign up"}
+          </button>
+        </form>
 
-      <p style={{ marginTop: 24, textAlign: "center", fontSize: 14, color: "#666" }}>
-        Already have an account?{" "}
-        <a href="/login" style={{ color: "#2563eb", textDecoration: "none" }}>
-          Sign in
-        </a>
-      </p>
+        <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.gray500 }}>
+          Already have an account?{" "}
+          <a href="/login" style={{ color: colors.primary, fontWeight: 500, textDecoration: "none" }}>
+            Sign in
+          </a>
+        </p>
+      </div>
     </div>
   );
 }

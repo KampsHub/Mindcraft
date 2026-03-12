@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
+import Nav from "@/components/Nav";
+import { colors, fonts, card } from "@/lib/theme";
 
 interface Entry {
   id: string;
@@ -58,7 +60,6 @@ export default function WeeklyReviewPage() {
   const weekStart = getWeekStart();
 
   const fetchWeekData = useCallback(async (userId: string) => {
-    // Get entries from the last 7 days
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const startDate = sevenDaysAgo.toISOString().split("T")[0];
@@ -73,7 +74,6 @@ export default function WeeklyReviewPage() {
     if (weekEntries) {
       setEntries(weekEntries);
 
-      // Count themes
       const counts: Record<string, number> = {};
       weekEntries.forEach((e) => {
         (e.theme_tags || []).forEach((tag: string) => {
@@ -86,7 +86,6 @@ export default function WeeklyReviewPage() {
       setThemeCounts(sorted);
     }
 
-    // Get exercises from this week
     const { data: weekExercises } = await supabase
       .from("exercises")
       .select("*")
@@ -97,7 +96,6 @@ export default function WeeklyReviewPage() {
       setExercises(weekExercises);
     }
 
-    // Check for existing review this week
     const { data: existingReview } = await supabase
       .from("weekly_reviews")
       .select("*")
@@ -112,7 +110,6 @@ export default function WeeklyReviewPage() {
       setSaved(true);
     }
 
-    // Fetch past reviews
     const { data: reviews } = await supabase
       .from("weekly_reviews")
       .select("*")
@@ -153,7 +150,6 @@ export default function WeeklyReviewPage() {
       top_themes: themeCounts.slice(0, 5).map((t) => t.tag),
     };
 
-    // Upsert — update if review for this week already exists
     const { error } = await supabase
       .from("weekly_reviews")
       .upsert(reviewData, { onConflict: "client_id,week_start" });
@@ -167,17 +163,13 @@ export default function WeeklyReviewPage() {
     setSaving(false);
   }
 
-  const container: React.CSSProperties = {
-    maxWidth: 720,
-    margin: "0 auto",
-    padding: "48px 24px",
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-  };
-
   if (loading) {
     return (
-      <div style={{ ...container, textAlign: "center", paddingTop: 120 }}>
-        <p style={{ color: "#888" }}>Loading your week...</p>
+      <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+        <Nav />
+        <div style={{ textAlign: "center", paddingTop: 120 }}>
+          <p style={{ color: colors.gray400 }}>Loading your week...</p>
+        </div>
       </div>
     );
   }
@@ -188,258 +180,247 @@ export default function WeeklyReviewPage() {
   const exercisesTotal = exercises.length;
 
   return (
-    <div style={container}>
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
-        <div>
-          <h1 style={{ fontSize: 26, fontWeight: 600, margin: "0 0 4px 0" }}>Weekly Review</h1>
-          <p style={{ fontSize: 14, color: "#888", margin: 0 }}>
+    <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+      <Nav />
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
+        {/* Header */}
+        <div style={{ marginBottom: 28 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>Weekly Review</h1>
+          <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>
             Week of {new Date(weekStart + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
           </p>
         </div>
-        <button onClick={() => router.push("/dashboard")} style={{
-          padding: "8px 16px", fontSize: 13, color: "#666",
-          backgroundColor: "transparent", border: "1px solid #ddd",
-          borderRadius: 6, cursor: "pointer",
-        }}>
-          Dashboard
-        </button>
-      </div>
 
-      {/* Week at a glance */}
-      <div style={{
-        display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
-        gap: 12, marginBottom: 28,
-      }}>
-        <div style={{ padding: 16, border: "1px solid #e2e8f0", borderRadius: 10, textAlign: "center" }}>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: "#2563eb" }}>{journalCount}</p>
-          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>journal entries</p>
-        </div>
-        <div style={{ padding: 16, border: "1px solid #e2e8f0", borderRadius: 10, textAlign: "center" }}>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: "#2563eb" }}>{oneLinerCount}</p>
-          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>quick thoughts</p>
-        </div>
-        <div style={{ padding: 16, border: "1px solid #e2e8f0", borderRadius: 10, textAlign: "center" }}>
-          <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0",
-            color: exercisesCompleted === exercisesTotal && exercisesTotal > 0 ? "#16a34a" : "#f59e0b"
-          }}>
-            {exercisesCompleted}/{exercisesTotal}
-          </p>
-          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>exercises done</p>
-        </div>
-      </div>
-
-      {/* Theme bar chart */}
-      {themeCounts.length > 0 && (
-        <div style={{ marginBottom: 28 }} className="print-section">
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0" }}>Themes This Week</h2>
-          <div style={{ width: "100%", height: Math.max(200, themeCounts.length * 36) }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={themeCounts.map(({ tag, count }) => ({
-                  name: tag.replace(/_/g, " "),
-                  count,
-                }))}
-                layout="vertical"
-                margin={{ top: 0, right: 20, left: 0, bottom: 0 }}
-              >
-                <XAxis type="number" hide />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={160}
-                  tick={{ fontSize: 13, fill: "#555" }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={{ fontSize: 13, borderRadius: 8, border: "1px solid #e2e8f0" }}
-                  formatter={(value) => [`${value} entries`, "Count"]}
-                />
-                <Bar dataKey="count" fill="#2563eb" radius={[0, 4, 4, 0]} barSize={20} />
-              </BarChart>
-            </ResponsiveContainer>
+        {/* Week at a glance */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 28 }}>
+          <div style={{ ...card, padding: 16, textAlign: "center" }}>
+            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>{journalCount}</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>journal entries</p>
+          </div>
+          <div style={{ ...card, padding: 16, textAlign: "center" }}>
+            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>{oneLinerCount}</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>quick thoughts</p>
+          </div>
+          <div style={{ ...card, padding: 16, textAlign: "center" }}>
+            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0",
+              color: exercisesCompleted === exercisesTotal && exercisesTotal > 0 ? colors.success : colors.warning
+            }}>
+              {exercisesCompleted}/{exercisesTotal}
+            </p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>exercises done</p>
           </div>
         </div>
-      )}
 
-      {/* Accountability trend (from past reviews) */}
-      {pastReviews.length > 1 && (
-        <div style={{ marginBottom: 28 }} className="print-section">
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0" }}>Accountability Trend</h2>
-          <div style={{ width: "100%", height: 160 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={[...pastReviews]
-                  .reverse()
-                  .map((r) => ({
-                    week: new Date(r.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-                    rating: r.accountability_rating,
+        {/* Theme bar chart */}
+        {themeCounts.length > 0 && (
+          <div style={{ marginBottom: 28 }} className="print-section">
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>Themes This Week</h2>
+            <div style={{ width: "100%", height: Math.max(200, themeCounts.length * 36) }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={themeCounts.map(({ tag, count }) => ({
+                    name: tag.replace(/_/g, " "),
+                    count,
                   }))}
-                margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-              >
-                <XAxis dataKey="week" tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} />
-                <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} width={30} />
-                <Tooltip
-                  contentStyle={{ fontSize: 13, borderRadius: 8, border: "1px solid #e2e8f0" }}
-                  formatter={(value) => [`${value}/5`, "Rating"]}
-                />
-                <Line type="monotone" dataKey="rating" stroke="#2563eb" strokeWidth={2} dot={{ fill: "#2563eb", r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
+                  layout="vertical"
+                  margin={{ top: 0, right: 20, left: 0, bottom: 0 }}
+                >
+                  <XAxis type="number" hide />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    width={160}
+                    tick={{ fontSize: 13, fill: colors.gray500 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{ fontSize: 13, borderRadius: 8, border: `1px solid ${colors.gray100}` }}
+                    formatter={(value) => [`${value} entries`, "Count"]}
+                  />
+                  <Bar dataKey="count" fill={colors.primary} radius={[0, 4, 4, 0]} barSize={20} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Accountability rating */}
-      <div style={{ marginBottom: 28 }}>
-        <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0" }}>
-          How did you show up this week?
-        </h2>
-        <p style={{ fontSize: 14, color: "#666", margin: "0 0 12px 0" }}>
-          1 = barely engaged &nbsp;&middot;&nbsp; 5 = fully committed
-        </p>
-        <div style={{ display: "flex", gap: 8 }}>
-          {[1, 2, 3, 4, 5].map((n) => (
-            <button
-              key={n}
-              onClick={() => setRating(n)}
-              style={{
-                width: 48, height: 48, fontSize: 18, fontWeight: 600,
-                border: rating === n ? "2px solid #2563eb" : "1px solid #ddd",
-                borderRadius: 10,
-                backgroundColor: rating === n ? "#eff6ff" : "#fff",
-                color: rating === n ? "#2563eb" : "#888",
-                cursor: "pointer",
-                transition: "all 0.15s",
-              }}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* Accountability trend */}
+        {pastReviews.length > 1 && (
+          <div style={{ marginBottom: 28 }} className="print-section">
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>Accountability Trend</h2>
+            <div style={{ width: "100%", height: 160 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={[...pastReviews]
+                    .reverse()
+                    .map((r) => ({
+                      week: new Date(r.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+                      rating: r.accountability_rating,
+                    }))}
+                  margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                >
+                  <XAxis dataKey="week" tick={{ fontSize: 12, fill: colors.gray400 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 12, fill: colors.gray400 }} axisLine={false} tickLine={false} width={30} />
+                  <Tooltip
+                    contentStyle={{ fontSize: 13, borderRadius: 8, border: `1px solid ${colors.gray100}` }}
+                    formatter={(value) => [`${value}/5`, "Rating"]}
+                  />
+                  <Line type="monotone" dataKey="rating" stroke={colors.primary} strokeWidth={2} dot={{ fill: colors.primary, r: 4 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
 
-      {/* Reflection */}
-      <div style={{ marginBottom: 28 }}>
-        <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0" }}>
-          What stood out this week?
-        </h2>
-        <p style={{ fontSize: 14, color: "#666", margin: "0 0 12px 0" }}>
-          What did you notice, learn, or feel? What surprised you?
-        </p>
-        <textarea
-          value={reflection}
-          onChange={(e) => setReflection(e.target.value)}
-          rows={5}
-          placeholder="Write freely — this is for you."
-          style={{
-            width: "100%", padding: 14, fontSize: 15, lineHeight: 1.6,
-            border: "1px solid #ddd", borderRadius: 8,
-            resize: "vertical", fontFamily: "inherit", boxSizing: "border-box",
-          }}
-        />
-      </div>
-
-      {/* Plan adjustments */}
-      <div style={{ marginBottom: 32 }}>
-        <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0" }}>
-          Anything to adjust in your plan?
-        </h2>
-        <p style={{ fontSize: 14, color: "#666", margin: "0 0 12px 0" }}>
-          Want to shift focus, change pace, or try a different approach next week?
-        </p>
-        <textarea
-          value={planAdjustments}
-          onChange={(e) => setPlanAdjustments(e.target.value)}
-          rows={3}
-          placeholder="Optional — leave blank if the current plan feels right."
-          style={{
-            width: "100%", padding: 14, fontSize: 15, lineHeight: 1.6,
-            border: "1px solid #ddd", borderRadius: 8,
-            resize: "vertical", fontFamily: "inherit", boxSizing: "border-box",
-          }}
-        />
-      </div>
-
-      {/* Save + Print buttons */}
-      <div style={{ display: "flex", gap: 12, marginBottom: 48 }}>
-        <button
-          onClick={handleSave}
-          disabled={saving || !rating}
-          style={{
-            padding: "12px 32px", fontSize: 15, fontWeight: 500, color: "#fff",
-            backgroundColor: saving || !rating ? "#999" : saved ? "#16a34a" : "#2563eb",
-            border: "none", borderRadius: 8,
-            cursor: saving || !rating ? "not-allowed" : "pointer",
-          }}
-        >
-          {saving ? "Saving..." : saved ? "Saved \u2713" : "Save review"}
-        </button>
-        <button
-          onClick={() => window.print()}
-          className="no-print"
-          style={{
-            padding: "12px 24px", fontSize: 15, fontWeight: 500,
-            color: "#666", backgroundColor: "transparent",
-            border: "1px solid #ddd", borderRadius: 8, cursor: "pointer",
-          }}
-        >
-          Print
-        </button>
-      </div>
-
-      {/* Print styles */}
-      <style>{`
-        @media print {
-          .no-print { display: none !important; }
-          body { font-size: 12pt; }
-          button { display: none !important; }
-          textarea { border: 1px solid #ccc !important; }
-          .print-section { break-inside: avoid; }
-        }
-      `}</style>
-
-      {/* Past reviews */}
-      {pastReviews.length > 1 && (
-        <div>
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: "#475569" }}>
-            Past Reviews
+        {/* Accountability rating */}
+        <div style={{ marginBottom: 28 }}>
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
+            How did you show up this week?
           </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {pastReviews
-              .filter((r) => r.week_start !== weekStart)
-              .map((review) => (
-                <div key={review.id} style={{
-                  padding: 14, border: "1px solid #f0f0f0", borderRadius: 8,
-                  backgroundColor: "#fafafa",
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ fontSize: 14, fontWeight: 500 }}>
-                      Week of {new Date(review.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                    </span>
-                    <span style={{
-                      fontSize: 13, padding: "2px 10px", borderRadius: 10,
-                      backgroundColor: review.accountability_rating >= 4 ? "#f0fdf4" : review.accountability_rating >= 3 ? "#fffbeb" : "#fef2f2",
-                      color: review.accountability_rating >= 4 ? "#166534" : review.accountability_rating >= 3 ? "#92400e" : "#991b1b",
-                    }}>
-                      {review.accountability_rating}/5
-                    </span>
-                  </div>
-                  {review.reflection && (
-                    <p style={{
-                      fontSize: 14, color: "#555", margin: 0, lineHeight: 1.5,
-                      overflow: "hidden", textOverflow: "ellipsis",
-                      display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
-                    }}>
-                      {review.reflection}
-                    </p>
-                  )}
-                </div>
-              ))}
+          <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
+            1 = barely engaged &nbsp;&middot;&nbsp; 5 = fully committed
+          </p>
+          <div style={{ display: "flex", gap: 8 }}>
+            {[1, 2, 3, 4, 5].map((n) => (
+              <button
+                key={n}
+                onClick={() => setRating(n)}
+                style={{
+                  width: 48, height: 48, fontSize: 18, fontWeight: 600,
+                  border: rating === n ? `2px solid ${colors.primary}` : `1px solid ${colors.gray200}`,
+                  borderRadius: 10,
+                  backgroundColor: rating === n ? colors.primaryLight : colors.white,
+                  color: rating === n ? colors.primaryDark : colors.gray400,
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                }}
+              >
+                {n}
+              </button>
+            ))}
           </div>
         </div>
-      )}
+
+        {/* Reflection */}
+        <div style={{ marginBottom: 28 }}>
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
+            What stood out this week?
+          </h2>
+          <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
+            What did you notice, learn, or feel? What surprised you?
+          </p>
+          <textarea
+            value={reflection}
+            onChange={(e) => setReflection(e.target.value)}
+            rows={5}
+            placeholder="Write freely — this is for you."
+            style={{
+              width: "100%", padding: 14, fontSize: 15, lineHeight: 1.6,
+              border: `1px solid ${colors.gray200}`, borderRadius: 8,
+              resize: "vertical", fontFamily: "inherit", boxSizing: "border-box",
+            }}
+          />
+        </div>
+
+        {/* Plan adjustments */}
+        <div style={{ marginBottom: 32 }}>
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
+            Anything to adjust in your plan?
+          </h2>
+          <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
+            Want to shift focus, change pace, or try a different approach next week?
+          </p>
+          <textarea
+            value={planAdjustments}
+            onChange={(e) => setPlanAdjustments(e.target.value)}
+            rows={3}
+            placeholder="Optional — leave blank if the current plan feels right."
+            style={{
+              width: "100%", padding: 14, fontSize: 15, lineHeight: 1.6,
+              border: `1px solid ${colors.gray200}`, borderRadius: 8,
+              resize: "vertical", fontFamily: "inherit", boxSizing: "border-box",
+            }}
+          />
+        </div>
+
+        {/* Save + Print buttons */}
+        <div style={{ display: "flex", gap: 12, marginBottom: 48 }}>
+          <button
+            onClick={handleSave}
+            disabled={saving || !rating}
+            style={{
+              padding: "12px 32px", fontSize: 15, fontWeight: 600, color: colors.white,
+              backgroundColor: saving || !rating ? colors.gray400 : saved ? colors.success : colors.primary,
+              border: "none", borderRadius: 8,
+              cursor: saving || !rating ? "not-allowed" : "pointer",
+              transition: "background-color 0.15s",
+            }}
+          >
+            {saving ? "Saving..." : saved ? "Saved \u2713" : "Save review"}
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="no-print"
+            style={{
+              padding: "12px 24px", fontSize: 15, fontWeight: 600,
+              color: colors.gray500, backgroundColor: "transparent",
+              border: `1px solid ${colors.gray200}`, borderRadius: 8, cursor: "pointer",
+            }}
+          >
+            Print
+          </button>
+        </div>
+
+        {/* Print styles */}
+        <style>{`
+          @media print {
+            .no-print { display: none !important; }
+            body { font-size: 12pt; }
+            button { display: none !important; }
+            textarea { border: 1px solid #ccc !important; }
+            .print-section { break-inside: avoid; }
+          }
+        `}</style>
+
+        {/* Past reviews */}
+        {pastReviews.length > 1 && (
+          <div>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.gray600 }}>
+              Past Reviews
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {pastReviews
+                .filter((r) => r.week_start !== weekStart)
+                .map((review) => (
+                  <div key={review.id} style={{ ...card, padding: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                      <span style={{ fontSize: 14, fontWeight: 500, color: colors.black }}>
+                        Week of {new Date(review.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </span>
+                      <span style={{
+                        fontSize: 13, padding: "2px 10px", borderRadius: 10,
+                        backgroundColor: review.accountability_rating >= 4 ? colors.successLight : review.accountability_rating >= 3 ? colors.warningLight : colors.errorLight,
+                        color: review.accountability_rating >= 4 ? "#166534" : review.accountability_rating >= 3 ? "#92400e" : "#991b1b",
+                      }}>
+                        {review.accountability_rating}/5
+                      </span>
+                    </div>
+                    {review.reflection && (
+                      <p style={{
+                        fontSize: 14, color: colors.gray500, margin: 0, lineHeight: 1.5,
+                        overflow: "hidden", textOverflow: "ellipsis",
+                        display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
+                      }}>
+                        {review.reflection}
+                      </p>
+                    )}
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

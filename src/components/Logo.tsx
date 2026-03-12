@@ -1,25 +1,32 @@
 import { colors } from "@/lib/theme";
 
 /**
- * Mindcraft Ninja logo — ninja popping out above a thin circle,
- * with "Mindcraft" + "NINJA" text inside the circle.
- * Inspired by the All Minds on Deck circular wordmark.
+ * Mindcraft Ninja logo — ninja inside the upper part of a thin circle,
+ * with "Mindcraft" + "NINJA" text below. AMOD-inspired wordmark.
  */
 
-/** Full logo: ninja pops above circle, text inside */
+/** Full logo: ninja in upper circle, text below */
 export default function Logo({ size = 90 }: { size?: number }) {
-  // viewBox taller to accommodate ninja popping above the circle
   return (
     <svg
       width={size}
-      height={size * 1.15}
-      viewBox="0 0 180 207"
+      height={size}
+      viewBox="0 0 200 200"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Mindcraft Ninja logo"
     >
-      {/* ── Ninja head — pops above the circle ── */}
-      <g transform="translate(90, 32) scale(0.82)">
+      {/* Circle — slightly bigger to give text room */}
+      <circle
+        cx="100"
+        cy="100"
+        r="97"
+        stroke={colors.black}
+        strokeWidth="1.5"
+      />
+
+      {/* ── Ninja head — starts in the upper part of the circle ── */}
+      <g transform="translate(100, 52) scale(0.78)">
         {/* Head silhouette */}
         <path
           d="M0 -28 C-13 -28 -18 -20 -18 -11 C-18 -6 -16 -2.5 -12 0 L-12 7 C-12 10 -9 13 0 13 C9 13 12 10 12 7 L12 0 C16 -2.5 18 -6 18 -11 C18 -20 13 -28 0 -28Z"
@@ -33,7 +40,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
         {/* Right eye */}
         <ellipse cx="7" cy="-10.8" rx="3" ry="2" fill="white" />
         <ellipse cx="7.8" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black} />
-        {/* Mask tie flowing right */}
+        {/* Mask tie */}
         <path
           d="M16 -13 Q22 -15.5 26 -12 Q22 -8.5 16 -7"
           stroke={colors.primary}
@@ -43,37 +50,28 @@ export default function Logo({ size = 90 }: { size?: number }) {
         />
       </g>
 
-      {/* ── Circle — sits below the ninja ── */}
-      <circle
-        cx="90"
-        cy="120"
-        r="82"
-        stroke={colors.black}
-        strokeWidth="1.6"
-      />
-
       {/* ── Text inside circle ── */}
       <text
-        x="90"
-        y="118"
+        x="100"
+        y="128"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"
-        fontSize="34"
-        fontWeight="500"
+        fontSize="33"
+        fontWeight="400"
         letterSpacing="0.5"
       >
         Mindcraft
       </text>
       <text
-        x="92"
-        y="150"
+        x="100"
+        y="155"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"
-        fontSize="22"
-        fontWeight="700"
-        letterSpacing="7"
+        fontSize="19"
+        fontWeight="400"
+        letterSpacing="6"
       >
         NINJA
       </text>

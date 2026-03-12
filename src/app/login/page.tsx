@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import { content as c } from "@/content/site";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -55,24 +56,24 @@ export default function LoginPage() {
             <Logo size={44} />
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
-            Welcome back
+            {c.login.headline}
           </h1>
           <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>
-            Pick up where you left off.
+            {c.login.subheadline}
           </p>
         </div>
 
         <form onSubmit={handleLogin}>
           <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
-            Email
+            {c.login.emailLabel}
           </label>
           <input
             type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            required placeholder="you@example.com" style={inputStyle}
+            required placeholder={c.login.emailPlaceholder} style={inputStyle}
           />
 
           <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
-            Password
+            {c.login.passwordLabel}
           </label>
           <input
             type="password" value={password} onChange={(e) => setPassword(e.target.value)}
@@ -97,14 +98,14 @@ export default function LoginPage() {
             cursor: loading ? "not-allowed" : "pointer",
             transition: "background-color 0.15s",
           }}>
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? c.login.submitLoading : c.login.submitButton}
           </button>
         </form>
 
         <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.gray500 }}>
-          New here?{" "}
+          {c.login.newHere}{" "}
           <a href="/subscribe" style={{ color: colors.primary, fontWeight: 500, textDecoration: "none" }}>
-            Start your journey
+            {c.login.newHereLink}
           </a>
         </p>
       </div>

@@ -7,6 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import Nav from "@/components/Nav";
 import { colors, fonts, card } from "@/lib/theme";
+import { content as c } from "@/content/site";
 
 interface Entry {
   id: string;
@@ -122,7 +123,7 @@ export default function MonthlySummaryPage() {
       <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
         <Nav />
         <div style={{ textAlign: "center", paddingTop: 120 }}>
-          <p style={{ color: colors.gray400 }}>Loading your month...</p>
+          <p style={{ color: colors.gray400 }}>{c.monthlySummary.loadingText}</p>
         </div>
       </div>
     );
@@ -152,7 +153,7 @@ export default function MonthlySummaryPage() {
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>The Month. At a Glance.</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>{c.monthlySummary.headline}</h1>
             <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{monthName}</p>
           </div>
           <button onClick={() => window.print()} className="no-print" style={{
@@ -160,17 +161,17 @@ export default function MonthlySummaryPage() {
             backgroundColor: "transparent", border: `1px solid ${colors.gray200}`,
             borderRadius: 6, cursor: "pointer",
           }}>
-            Print
+            {c.monthlySummary.printButton}
           </button>
         </div>
 
         {/* Month stats */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 10, marginBottom: 28 }}>
           {[
-            { value: totalEntries, label: "total entries" },
-            { value: journalCount, label: "journals" },
-            { value: totalExercises, label: "exercises" },
-            { value: avgRating, label: "avg rating" },
+            { value: totalEntries, label: c.monthlySummary.stats.totalEntries },
+            { value: journalCount, label: c.monthlySummary.stats.journals },
+            { value: totalExercises, label: c.monthlySummary.stats.exercises },
+            { value: avgRating, label: c.monthlySummary.stats.avgRating },
           ].map(({ value, label }) => (
             <div key={label} style={{ ...card, padding: 14, textAlign: "center" }}>
               <p style={{ fontSize: 24, fontWeight: 700, margin: "0 0 2px 0", color: colors.primary }}>{value}</p>
@@ -182,7 +183,7 @@ export default function MonthlySummaryPage() {
         {/* Theme distribution pie chart */}
         {themeCounts.length > 0 && (
           <div style={{ marginBottom: 28 }} className="print-section">
-            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>Theme Distribution</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>{c.monthlySummary.themeDistribution}</h2>
             <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
               <div style={{ width: 200, height: 200 }}>
                 <ResponsiveContainer width="100%" height="100%">
@@ -218,7 +219,7 @@ export default function MonthlySummaryPage() {
 
         {/* Activity by day of week */}
         <div style={{ marginBottom: 28 }} className="print-section">
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>Activity by Day</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>{c.monthlySummary.activityByDay}</h2>
           <div style={{ width: "100%", height: 160 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={activityByDay} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
@@ -234,7 +235,7 @@ export default function MonthlySummaryPage() {
         {/* Progress vs goals */}
         {plan && plan.goals && (
           <div style={{ marginBottom: 28 }} className="print-section">
-            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>Progress vs Goals</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>{c.monthlySummary.progressVsGoals}</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {(plan.goals as Goal[]).map((goal, i) => {
                 const relatedEntries = entries.filter((e) =>
@@ -253,7 +254,7 @@ export default function MonthlySummaryPage() {
                         backgroundColor: relatedEntries > 3 ? colors.successLight : relatedEntries > 0 ? colors.warningLight : colors.gray50,
                         color: relatedEntries > 3 ? "#166534" : relatedEntries > 0 ? "#92400e" : colors.gray400,
                       }}>
-                        {relatedEntries} related entries
+                        {relatedEntries} {c.monthlySummary.relatedEntries}
                       </span>
                     </div>
                     <p style={{ fontSize: 13, color: colors.gray500, margin: 0 }}>{goal.why}</p>
@@ -267,7 +268,7 @@ export default function MonthlySummaryPage() {
         {/* Weekly review summaries */}
         {reviews.length > 0 && (
           <div style={{ marginBottom: 28 }} className="print-section">
-            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>Weekly Reflections</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>{c.monthlySummary.weeklyReflections}</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {reviews.map((review) => (
                 <div key={review.week_start} style={{ ...card, padding: 14 }}>
@@ -295,8 +296,8 @@ export default function MonthlySummaryPage() {
           marginBottom: 32,
         }} className="no-print">
           <div>
-            <p style={{ fontSize: 14, fontWeight: 500, margin: "0 0 2px 0", color: colors.black }}>Share with coach</p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>Allow your coach to view this monthly summary</p>
+            <p style={{ fontSize: 14, fontWeight: 500, margin: "0 0 2px 0", color: colors.black }}>{c.monthlySummary.shareWithCoach}</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.monthlySummary.shareDescription}</p>
           </div>
           <button
             onClick={() => setShareable(!shareable)}

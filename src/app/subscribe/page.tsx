@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { colors, fonts, card } from "@/lib/theme";
+import { content as c } from "@/content/site";
 import Logo from "@/components/Logo";
 
 function SubscribeContent() {
@@ -49,23 +50,22 @@ function SubscribeContent() {
       }}>
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <Logo size={32} />
-          <span style={{ fontSize: 17, fontWeight: 600, color: colors.black }}>Mindcraft</span>
+          <span style={{ fontSize: 17, fontWeight: 600, color: colors.black }}>{c.brand.name}</span>
         </a>
         <a href="/login" style={{
           fontSize: 14, fontWeight: 500, color: colors.gray500, textDecoration: "none",
         }}>
-          Already a member? Sign in
+          Already a member? {c.header.signIn}
         </a>
       </header>
 
       <div style={{ maxWidth: 560, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, color: colors.black }}>
-            Ready to do the work?
+            {c.subscribe.headline}
           </h1>
           <p style={{ fontSize: 16, color: colors.gray500, lineHeight: 1.6 }}>
-            Real coaching frameworks. Personalised exercises. AI-powered reflections.
-            Not theory — real work, every day.
+            {c.subscribe.subheadline}
           </p>
         </div>
 
@@ -75,7 +75,7 @@ function SubscribeContent() {
             borderRadius: 8, marginBottom: 24, textAlign: "center",
             fontSize: 14, color: "#92400e",
           }}>
-            Checkout was cancelled. You can try again when you&apos;re ready.
+            {c.subscribe.cancelledMessage}
           </div>
         )}
 
@@ -85,22 +85,15 @@ function SubscribeContent() {
           borderRadius: 16, textAlign: "center", marginBottom: 32,
         }}>
           <p style={{ fontSize: 13, color: colors.primaryDark, fontWeight: 600, margin: "0 0 8px 0", textTransform: "uppercase", letterSpacing: 1 }}>
-            Monthly
+            {c.subscribe.pricingLabel}
           </p>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 16 }}>
             <span style={{ fontSize: 48, fontWeight: 700, color: colors.black }}>{price}</span>
-            <span style={{ fontSize: 16, color: colors.gray400 }}>/month</span>
+            <span style={{ fontSize: 16, color: colors.gray400 }}>{c.pricing.interval}</span>
           </div>
 
           <div style={{ textAlign: "left", maxWidth: 320, margin: "0 auto 24px", display: "flex", flexDirection: "column", gap: 10 }}>
-            {[
-              "Personalised exercises from proven frameworks",
-              "AI-powered reflections — not platitudes",
-              "12-week coaching plan built around you",
-              "Pattern recognition across your entries",
-              "Weekly and monthly reviews that surface what matters",
-              "Your data. Full stop. No training, ever.",
-            ].map((feature) => (
+            {c.subscribe.features.map((feature) => (
               <div key={feature} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                 <span style={{ color: colors.success, fontSize: 16, lineHeight: 1.4 }}>{"\u2713"}</span>
                 <span style={{ fontSize: 14, color: colors.dark, lineHeight: 1.4 }}>{feature}</span>
@@ -119,7 +112,7 @@ function SubscribeContent() {
               transition: "background-color 0.15s",
             }}
           >
-            {loading ? "Redirecting to checkout..." : "Start your journey"}
+            {loading ? c.subscribe.ctaLoading : c.subscribe.cta}
           </button>
 
           {error && (
@@ -127,7 +120,7 @@ function SubscribeContent() {
           )}
 
           <p style={{ fontSize: 12, color: colors.gray400, marginTop: 12 }}>
-            Cancel anytime. No contracts. Your data stays yours.
+            {c.subscribe.disclaimer}
           </p>
         </div>
 
@@ -135,7 +128,7 @@ function SubscribeContent() {
           <a href="/" style={{
             fontSize: 14, color: colors.gray500, textDecoration: "none",
           }}>
-            &larr; Back to Mindcraft
+            &larr; Back to {c.brand.name}
           </a>
         </div>
       </div>

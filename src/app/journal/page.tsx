@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import Nav from "@/components/Nav";
 import { colors, fonts, card } from "@/lib/theme";
+import { content as c } from "@/content/site";
 
 export default function JournalPage() {
   const [entry, setEntry] = useState("");
@@ -88,10 +89,10 @@ export default function JournalPage() {
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ marginBottom: 28 }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
-            Write freely.
+            {c.journal.headline}
           </h1>
           <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>
-            No filters. Your companion reflects back what it notices — patterns, blind spots, growth edges.
+            {c.journal.subheadline}
           </p>
         </div>
 
@@ -99,7 +100,7 @@ export default function JournalPage() {
           <textarea
             value={entry}
             onChange={(e) => setEntry(e.target.value)}
-            placeholder="What's real right now? What are you noticing, feeling, working through?"
+            placeholder={c.journal.placeholder}
             rows={8}
             style={{
               width: "100%", padding: 16, fontSize: 16, lineHeight: 1.6,
@@ -121,7 +122,7 @@ export default function JournalPage() {
               transition: "background-color 0.15s",
             }}
           >
-            {loading ? "Reflecting..." : "Submit"}
+            {loading ? c.journal.submitLoading : c.journal.submitButton}
           </button>
         </form>
 
@@ -132,7 +133,7 @@ export default function JournalPage() {
               border: `2px solid ${colors.gray200}`, borderTopColor: colors.primary,
               borderRadius: "50%", animation: "spin 0.8s linear infinite",
             }} />
-            <span>Reading your entry...</span>
+            <span>{c.journal.loadingText}</span>
             <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
           </div>
         )}
@@ -154,7 +155,7 @@ export default function JournalPage() {
                 fontSize: 16, fontWeight: 600, color: colors.gray600,
                 marginBottom: 16, marginTop: 0,
               }}>
-                Coaching Reflection
+                {c.journal.reflectionHeading}
               </h2>
               <p style={{
                 fontSize: 16, lineHeight: 1.7, color: colors.black,

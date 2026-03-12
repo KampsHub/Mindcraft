@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import { content as c } from "@/content/site";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -60,11 +61,10 @@ export default function SignupPage() {
             fontSize: 20, color: colors.white, marginBottom: 16,
           }}>✓</div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 8px 0", color: colors.black }}>
-            Check your inbox
+            {c.signup.success.headline}
           </h1>
           <p style={{ color: colors.gray500, lineHeight: 1.6, fontSize: 14 }}>
-            Confirmation link sent to <strong>{email}</strong>.
-            Click it, then sign in. Your coaching plan is waiting.
+            Confirmation link sent to <strong>{email}</strong>{c.signup.success.messageAfter}
           </p>
           <a
             href="/login"
@@ -74,7 +74,7 @@ export default function SignupPage() {
               textDecoration: "none", fontSize: 15,
             }}
           >
-            Back to sign in
+            {c.signup.success.backLink}
           </a>
         </div>
       </div>
@@ -99,24 +99,24 @@ export default function SignupPage() {
             <Logo size={44} />
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
-            Create your account
+            {c.signup.headline}
           </h1>
           <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>
-            One last step. Then the real work starts.
+            {c.signup.subheadline}
           </p>
         </div>
 
         <form onSubmit={handleSignup}>
           <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
-            Email
+            {c.signup.emailLabel}
           </label>
           <input
             type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            required placeholder="you@example.com" style={inputStyle}
+            required placeholder={c.signup.emailPlaceholder} style={inputStyle}
           />
 
           <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
-            Password
+            {c.signup.passwordLabel}
           </label>
           <input
             type="password" value={password} onChange={(e) => setPassword(e.target.value)}
@@ -141,14 +141,14 @@ export default function SignupPage() {
             cursor: loading ? "not-allowed" : "pointer",
             transition: "background-color 0.15s",
           }}>
-            {loading ? "Creating account..." : "Sign up"}
+            {loading ? c.signup.submitLoading : c.signup.submitButton}
           </button>
         </form>
 
         <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.gray500 }}>
-          Already have an account?{" "}
+          {c.signup.haveAccount}{" "}
           <a href="/login" style={{ color: colors.primary, fontWeight: 500, textDecoration: "none" }}>
-            Sign in
+            {c.signup.haveAccountLink}
           </a>
         </p>
       </div>

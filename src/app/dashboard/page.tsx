@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import Nav from "@/components/Nav";
 import { colors, fonts, card } from "@/lib/theme";
+import { content as c } from "@/content/site";
 
 interface Entry {
   id: string;
@@ -166,7 +167,7 @@ export default function DashboardPage() {
             body: JSON.stringify({ entryId: insertedEntry.id }),
           }).catch((err) => console.warn("Embedding generation failed:", err));
         }
-        setFlash("Thought captured");
+        setFlash(c.dashboard.capturedFlash);
         setOneLiner("");
         fetchDashboardData(user.id);
         setTimeout(() => setFlash(""), 2000);
@@ -193,7 +194,7 @@ export default function DashboardPage() {
         {/* Welcome */}
         <div style={{ marginBottom: 28 }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
-            The work continues.
+            {c.dashboard.headline}
           </h1>
           <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{user.email}</p>
         </div>
@@ -203,14 +204,14 @@ export default function DashboardPage() {
           ...card, padding: 20, marginBottom: 24,
         }}>
           <label style={{ display: "block", fontSize: 14, fontWeight: 500, color: colors.gray600, marginBottom: 8 }}>
-            What&apos;s on your mind?
+            {c.dashboard.oneLinerLabel}
           </label>
           <div style={{ display: "flex", gap: 8 }}>
             <input
               type="text"
               value={oneLiner}
               onChange={(e) => setOneLiner(e.target.value)}
-              placeholder="A thought. A feeling. Something you noticed."
+              placeholder={c.dashboard.oneLinerPlaceholder}
               disabled={submitting}
               style={{
                 flex: 1, padding: "10px 14px", fontSize: 15,
@@ -225,7 +226,7 @@ export default function DashboardPage() {
               cursor: submitting || !oneLiner.trim() ? "not-allowed" : "pointer",
               whiteSpace: "nowrap", transition: "background-color 0.15s",
             }}>
-              {submitting ? "..." : "Capture"}
+              {submitting ? "..." : c.dashboard.captureButton}
             </button>
           </div>
           {flash && (
@@ -237,13 +238,13 @@ export default function DashboardPage() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
           <div style={{ ...card, padding: 16, textAlign: "center" }}>
             <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>{streak}</p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>day streak</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.dashboard.stats.streak}</p>
           </div>
           <div style={{ ...card, padding: 16, textAlign: "center" }}>
             <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>
               {recentEntries.filter((e) => e.type === "journal").length}
             </p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>entries this week</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.dashboard.stats.entries}</p>
           </div>
           <div style={{ ...card, padding: 16, textAlign: "center" }}>
             <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0",
@@ -252,7 +253,7 @@ export default function DashboardPage() {
               {todaysExercise ? (todaysExercise.completed ? "\u2713" : "\u2022") : "\u2014"}
             </p>
             <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
-              {todaysExercise ? (todaysExercise.completed ? "exercise done" : "exercise pending") : "no exercise"}
+              {todaysExercise ? (todaysExercise.completed ? c.dashboard.stats.exerciseDone : c.dashboard.stats.exercisePending) : c.dashboard.stats.noExercise}
             </p>
           </div>
         </div>
@@ -261,7 +262,7 @@ export default function DashboardPage() {
         {topThemes.length > 0 && (
           <div style={{ marginBottom: 24 }}>
             <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 10px 0", color: colors.gray600 }}>
-              Themes this week
+              {c.dashboard.themesHeading}
             </h3>
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
               {topThemes.map(({ tag, count }) => (
@@ -279,14 +280,7 @@ export default function DashboardPage() {
 
         {/* Navigation links */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 32 }}>
-          {[
-            { href: "/journal", label: "Journal", desc: "Write. Get seen." },
-            { href: "/exercise", label: "Exercise", desc: "Today's real work" },
-            { href: "/plan", label: "Plan", desc: "Your 12-week map" },
-            { href: "/weekly-review", label: "Review", desc: "What showed up this week" },
-            { href: "/monthly-summary", label: "Monthly", desc: "See the patterns" },
-            { href: "/privacy", label: "Privacy", desc: "Your data. Full stop." },
-          ].map(({ href, label, desc }) => (
+          {c.dashboard.navLinks.map(({ href, label, desc }) => (
             <button
               key={href}
               onClick={() => router.push(href)}
@@ -305,7 +299,7 @@ export default function DashboardPage() {
         {recentEntries.length > 0 && (
           <div>
             <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 12px 0", color: colors.gray600 }}>
-              Recent entries
+              {c.dashboard.recentEntriesHeading}
             </h3>
             {recentEntries.slice(0, 5).map((entry) => (
               <div key={entry.id} style={{
@@ -318,7 +312,7 @@ export default function DashboardPage() {
                     borderRadius: 10, border: `1px solid ${entry.type === "one_liner" ? "#fde68a" : colors.primaryMuted}`,
                     color: entry.type === "one_liner" ? "#92400e" : colors.primaryDark,
                   }}>
-                    {entry.type === "one_liner" ? "thought" : "journal"}
+                    {entry.type === "one_liner" ? c.dashboard.entryTypes.thought : c.dashboard.entryTypes.journal}
                   </span>
                   <span style={{ fontSize: 12, color: colors.gray300 }}>{entry.date}</span>
                 </div>

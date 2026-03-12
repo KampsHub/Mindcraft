@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import { colors, fonts, card } from "@/lib/theme";
+import { content as c } from "@/content/site";
 
 interface Goal {
   goal: string;
@@ -90,7 +91,7 @@ export default function PlanPage() {
       <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
         <Nav />
         <div style={{ textAlign: "center", paddingTop: 120 }}>
-          <p style={{ color: colors.gray400 }}>Loading your coaching plan...</p>
+          <p style={{ color: colors.gray400 }}>{c.plan.loadingText}</p>
         </div>
       </div>
     );
@@ -103,12 +104,10 @@ export default function PlanPage() {
         <Nav />
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px", textAlign: "center", paddingTop: 80 }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: colors.black }}>
-            Your 12-Week Map
+            {c.plan.headline}
           </h1>
           <p style={{ color: colors.gray500, fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
-            {error
-              ? error
-              : "No plan yet. Complete your intake, then we build your personalised coaching plan — frameworks matched to your situation."}
+            {error ? error : c.plan.emptyMessage}
           </p>
 
           {generating && (
@@ -118,7 +117,7 @@ export default function PlanPage() {
                 border: `2px solid ${colors.gray200}`, borderTopColor: colors.primary,
                 borderRadius: "50%", animation: "spin 0.8s linear infinite",
               }} />
-              <span>Building your plan — about 15 seconds...</span>
+              <span>{c.plan.generatingText}</span>
               <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
             </div>
           )}
@@ -135,7 +134,7 @@ export default function PlanPage() {
                 transition: "background-color 0.15s",
               }}
             >
-              {generating ? "Generating..." : "Generate my plan"}
+              {generating ? c.plan.generatingButton : c.plan.generateButton}
             </button>
             <button
               onClick={() => router.push("/intake")}
@@ -145,7 +144,7 @@ export default function PlanPage() {
                 border: `1px solid ${colors.gray200}`, borderRadius: 8, cursor: "pointer",
               }}
             >
-              Go to intake
+              {c.plan.goToIntake}
             </button>
           </div>
         </div>
@@ -154,12 +153,7 @@ export default function PlanPage() {
   }
 
   // Display the plan
-  const packageLabels: Record<string, string> = {
-    layoff: "Layoff Recovery",
-    international_move: "International Move",
-    new_manager: "New Manager",
-    general: "General Growth",
-  };
+  const packageLabels = c.plan.packageLabels;
 
   return (
     <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
@@ -168,7 +162,7 @@ export default function PlanPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
           <div>
             <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4, color: colors.black }}>
-              Your 12-Week Map
+              {c.plan.headline}
             </h1>
             <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>
               {packageLabels[plan.package] || plan.package} · Phase: {plan.current_phase}
@@ -182,7 +176,7 @@ export default function PlanPage() {
               border: "none", borderRadius: 6, cursor: "pointer",
             }}
           >
-            Start journaling
+            {c.plan.startJournaling}
           </button>
         </div>
 
@@ -194,7 +188,7 @@ export default function PlanPage() {
         </div>
 
         {/* Goals */}
-        <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: colors.black }}>Goals</h2>
+        <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: colors.black }}>{c.plan.goalsHeading}</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 36 }}>
           {plan.goals.map((g, i) => (
             <div key={i} style={{ ...card, padding: 20 }}>
@@ -209,7 +203,7 @@ export default function PlanPage() {
         </div>
 
         {/* Focus Areas */}
-        <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: colors.black }}>Focus Areas</h2>
+        <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: colors.black }}>{c.plan.focusAreasHeading}</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 36 }}>
           {plan.focus_areas.map((f, i) => (
             <div key={i} style={{ ...card, padding: 20 }}>
@@ -220,14 +214,14 @@ export default function PlanPage() {
                 {f.description}
               </p>
               <p style={{ fontSize: 12, color: colors.gray400, margin: 0, fontStyle: "italic" }}>
-                Based on: {f.related_intake}
+                {c.plan.basedOn} {f.related_intake}
               </p>
             </div>
           ))}
         </div>
 
         {/* Weekly Themes */}
-        <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: colors.black }}>12-Week Journey</h2>
+        <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: colors.black }}>{c.plan.weeklyJourneyHeading}</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 36 }}>
           {plan.weekly_themes.map((w, i) => (
             <div key={i} style={{

@@ -10,6 +10,7 @@ import {
 } from "./questions";
 import type { User } from "@supabase/supabase-js";
 import { colors, fonts } from "@/lib/theme";
+import { content as c } from "@/content/site";
 
 type Step = "package" | "universal" | "specific" | "complete";
 
@@ -116,11 +117,10 @@ export default function IntakePage() {
     return (
       <div style={containerStyle}>
         <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8, color: colors.black }}>
-          Let&apos;s build your plan.
+          {c.intake.headline}
         </h1>
         <p style={{ color: colors.gray500, marginBottom: 32, lineHeight: 1.6 }}>
-          Tell us what brought you here. We&apos;ll match you with the right frameworks
-          and build a 12-week coaching plan around your situation.
+          {c.intake.subheadline}
         </p>
 
         {packages.map((pkg) => (
@@ -152,7 +152,7 @@ export default function IntakePage() {
             cursor: !selectedPackage ? "not-allowed" : "pointer",
           }}
         >
-          Continue
+          {c.intake.continueButton}
         </button>
       </div>
     );
@@ -168,7 +168,7 @@ export default function IntakePage() {
       <div style={containerStyle}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
-            Step 2 of 3 — Getting to Know You
+            {c.intake.step2Prefix}
           </p>
           <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
             {universalPage + 1} / {universalPages.length}
@@ -239,7 +239,7 @@ export default function IntakePage() {
             {q.type === "ranking" && q.options && (
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <p style={{ fontSize: 13, color: colors.gray400, margin: "0 0 8px 0" }}>
-                  Number each item 1 (most important) to {q.options.length} (least).
+                  {c.intake.rankingHint} {q.options!.length} (least).
                 </p>
                 {q.options.map((opt) => (
                   <div key={opt} style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -282,7 +282,7 @@ export default function IntakePage() {
             onClick={() => universalPage > 0 ? setUniversalPage(universalPage - 1) : setStep("package")}
             style={btnSecondary}
           >
-            Back
+            {c.intake.backButton}
           </button>
           <button
             onClick={() => {
@@ -294,7 +294,7 @@ export default function IntakePage() {
             }}
             style={btnPrimary}
           >
-            {isLastPage ? "Continue to final questions" : "Next"}
+            {isLastPage ? c.intake.finalQuestionsButton : c.intake.nextButton}
           </button>
         </div>
       </div>
@@ -311,14 +311,14 @@ export default function IntakePage() {
       <div style={containerStyle}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
-            Step 3 of 3 — {pkgName}
+            {c.intake.step3Prefix} {pkgName}
           </p>
           <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
             {specificPage + 1} / {specificPages.length}
           </p>
         </div>
         <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 4, color: colors.black }}>
-          About Your Situation
+          {c.intake.specificHeadline}
         </h2>
         <div style={{
           height: 4, backgroundColor: colors.gray100, borderRadius: 2, marginBottom: 32,
@@ -368,7 +368,7 @@ export default function IntakePage() {
             onClick={() => specificPage > 0 ? setSpecificPage(specificPage - 1) : setStep("universal")}
             style={btnSecondary}
           >
-            Back
+            {c.intake.backButton}
           </button>
           <button
             onClick={() => {
@@ -384,7 +384,7 @@ export default function IntakePage() {
               backgroundColor: saving ? colors.gray400 : colors.primary,
             }}
           >
-            {saving ? "Saving..." : isLastPage ? "Complete intake" : "Next"}
+            {saving ? c.intake.savingButton : isLastPage ? c.intake.completeButton : c.intake.nextButton}
           </button>
         </div>
       </div>
@@ -399,17 +399,16 @@ export default function IntakePage() {
       paddingTop: 120,
     }}>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: colors.black }}>
-        Got it. Let&apos;s go.
+        {c.intake.complete.headline}
       </h1>
       <p style={{ color: colors.gray500, fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
-        Your responses are saved. Now we build your personalised 12-week coaching plan —
-        frameworks matched to your themes, exercises that fit your situation.
+        {c.intake.complete.subheadline}
       </p>
       <button
         onClick={() => router.push("/plan")}
         style={btnPrimary}
       >
-        Generate my coaching plan
+        {c.intake.complete.cta}
       </button>
     </div>
   );

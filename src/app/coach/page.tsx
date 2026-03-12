@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import Nav from "@/components/Nav";
 import { colors, fonts, card } from "@/lib/theme";
+import { content as c } from "@/content/site";
 
 interface Client {
   id: string;
@@ -141,7 +142,7 @@ export default function CoachPage() {
       <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
         <Nav />
         <div style={{ textAlign: "center", paddingTop: 120 }}>
-          <p style={{ color: colors.gray400 }}>Loading coach view...</p>
+          <p style={{ color: colors.gray400 }}>{c.coach.loadingText}</p>
         </div>
       </div>
     );
@@ -152,7 +153,7 @@ export default function CoachPage() {
       <Nav />
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>Coach Dashboard</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>{c.coach.headline}</h1>
           <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{user?.email}</p>
         </div>
 
@@ -160,11 +161,11 @@ export default function CoachPage() {
           {/* Client list */}
           <div>
             <h2 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 12px 0", color: colors.gray600 }}>
-              Clients ({clients.length})
+              {c.coach.clientsHeading} ({clients.length})
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {clients.length === 0 && (
-                <p style={{ fontSize: 14, color: colors.gray400 }}>No clients yet</p>
+                <p style={{ fontSize: 14, color: colors.gray400 }}>{c.coach.noClients}</p>
               )}
               {clients.map((client) => (
                 <button
@@ -193,11 +194,11 @@ export default function CoachPage() {
           <div>
             {!selectedClient ? (
               <div style={{ ...card, padding: 48, textAlign: "center", color: colors.gray400, border: `1px dashed ${colors.gray200}` }}>
-                <p style={{ fontSize: 15 }}>Select a client to view their details</p>
+                <p style={{ fontSize: 15 }}>{c.coach.selectClient}</p>
               </div>
             ) : loadingEntries ? (
               <div style={{ padding: 48, textAlign: "center", color: colors.gray400 }}>
-                <p>Loading client data...</p>
+                <p>{c.coach.loadingClient}</p>
               </div>
             ) : (
               <div>
@@ -215,7 +216,7 @@ export default function CoachPage() {
                 {clientPlan && (
                   <div style={{ ...card, padding: 14, marginBottom: 20 }}>
                     <h4 style={{ fontSize: 14, fontWeight: 600, margin: "0 0 8px 0", color: colors.gray600 }}>
-                      Coaching Plan
+                      {c.coach.coachingPlan}
                     </h4>
                     <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 8px 0", lineHeight: 1.5 }}>
                       {clientPlan.summary}
@@ -229,11 +230,11 @@ export default function CoachPage() {
                 {/* Enneagram data entry */}
                 <div style={{ ...card, padding: 14, marginBottom: 20 }}>
                   <h4 style={{ fontSize: 14, fontWeight: 600, margin: "0 0 10px 0", color: colors.gray600 }}>
-                    Enneagram Data
+                    {c.coach.enneagram.heading}
                   </h4>
                   <div style={{ display: "flex", gap: 12, marginBottom: 10 }}>
                     <div>
-                      <label style={{ fontSize: 12, color: colors.gray400, display: "block", marginBottom: 4 }}>Type</label>
+                      <label style={{ fontSize: 12, color: colors.gray400, display: "block", marginBottom: 4 }}>{c.coach.enneagram.typeLabel}</label>
                       <select
                         value={enneagramType}
                         onChange={(e) => setEnneagramType(e.target.value)}
@@ -249,12 +250,12 @@ export default function CoachPage() {
                       </select>
                     </div>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontSize: 12, color: colors.gray400, display: "block", marginBottom: 4 }}>Notes</label>
+                      <label style={{ fontSize: 12, color: colors.gray400, display: "block", marginBottom: 4 }}>{c.coach.enneagram.notesLabel}</label>
                       <input
                         type="text"
                         value={enneagramNotes}
                         onChange={(e) => setEnneagramNotes(e.target.value)}
-                        placeholder="Wing, instinct, observations..."
+                        placeholder={c.coach.enneagram.notesPlaceholder}
                         style={{
                           width: "100%", padding: "8px 12px", fontSize: 14,
                           border: `1px solid ${colors.gray200}`, borderRadius: 6, boxSizing: "border-box",
@@ -266,17 +267,17 @@ export default function CoachPage() {
                     padding: "6px 16px", fontSize: 13, fontWeight: 600, color: colors.white,
                     backgroundColor: colors.primary, border: "none", borderRadius: 6, cursor: "pointer",
                   }}>
-                    {savingEnneagram ? "Saving..." : "Save"}
+                    {savingEnneagram ? c.coach.enneagram.savingButton : c.coach.enneagram.saveButton}
                   </button>
                 </div>
 
                 {/* Recent entries */}
                 <div>
                   <h4 style={{ fontSize: 14, fontWeight: 600, margin: "0 0 12px 0", color: colors.gray600 }}>
-                    Recent Entries ({clientEntries.length})
+                    {c.coach.recentEntries} ({clientEntries.length})
                   </h4>
                   {clientEntries.length === 0 && (
-                    <p style={{ fontSize: 14, color: colors.gray400 }}>No entries in the last 30 days</p>
+                    <p style={{ fontSize: 14, color: colors.gray400 }}>{c.coach.noEntries}</p>
                   )}
                   {clientEntries.map((entry) => (
                     <div key={entry.id} style={{ ...card, padding: 12, marginBottom: 8 }}>

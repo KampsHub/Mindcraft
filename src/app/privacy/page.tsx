@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import Nav from "@/components/Nav";
 import { colors, fonts, card } from "@/lib/theme";
+import { content as c } from "@/content/site";
 
 interface ConsentSettings {
   ai_processing: boolean;
@@ -115,15 +116,14 @@ export default function PrivacyPage() {
       <Nav />
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>Your Data. Full Stop.</h1>
-          <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>You own everything. Control exactly how it&apos;s used.</p>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>{c.privacy.headline}</h1>
+          <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{c.privacy.subheadline}</p>
         </div>
 
         {/* Data usage explanation */}
         <div style={{ ...card, padding: 16, marginBottom: 28, lineHeight: 1.6 }}>
           <p style={{ fontSize: 14, color: colors.gray600, margin: 0 }}>
-            Your journal entries, exercises, and coaching data belong to you. Full control over
-            sharing, export, and deletion. No training on your entries. Ever.
+            {c.privacy.dataUsage}
           </p>
         </div>
 
@@ -137,17 +137,15 @@ export default function PrivacyPage() {
           }}>
             <div style={{ flex: 1, marginRight: 16 }}>
               <p style={{ fontSize: 15, fontWeight: 500, margin: "0 0 4px 0", color: colors.black }}>
-                AI Processing
+                {c.privacy.toggles.aiProcessing.title}
                 <span style={{
                   fontSize: 11, padding: "2px 8px", marginLeft: 8,
                   backgroundColor: colors.warningLight, color: "#92400e",
                   borderRadius: 10, verticalAlign: "middle",
-                }}>Required</span>
+                }}>{c.privacy.toggles.aiProcessing.badge}</span>
               </p>
               <p style={{ fontSize: 13, color: colors.gray500, margin: 0, lineHeight: 1.5 }}>
-                Your entries are processed by Claude (Anthropic) to generate coaching reflections,
-                theme tags, and exercise recommendations. This is required for the service to function.
-                Entries are not used to train AI models.
+                {c.privacy.toggles.aiProcessing.description}
               </p>
             </div>
             <Toggle checked={consent.ai_processing} onChange={() => {}} disabled />
@@ -161,16 +159,15 @@ export default function PrivacyPage() {
           }}>
             <div style={{ flex: 1, marginRight: 16 }}>
               <p style={{ fontSize: 15, fontWeight: 500, margin: "0 0 4px 0", color: colors.black }}>
-                Share with Coach
+                {c.privacy.toggles.coachSharing.title}
                 <span style={{
                   fontSize: 11, padding: "2px 8px", marginLeft: 8,
                   backgroundColor: colors.primaryLight, color: colors.primaryDark,
                   borderRadius: 10, verticalAlign: "middle",
-                }}>Optional</span>
+                }}>{c.privacy.toggles.coachSharing.badge}</span>
               </p>
               <p style={{ fontSize: 13, color: colors.gray500, margin: 0, lineHeight: 1.5 }}>
-                Allow your coach to view your journal entries, reflections, and monthly summaries.
-                Your coach can use this to personalise live sessions. You can revoke access at any time.
+                {c.privacy.toggles.coachSharing.description}
               </p>
             </div>
             <Toggle
@@ -187,17 +184,15 @@ export default function PrivacyPage() {
           }}>
             <div style={{ flex: 1, marginRight: 16 }}>
               <p style={{ fontSize: 15, fontWeight: 500, margin: "0 0 4px 0", color: colors.black }}>
-                Aggregate Analytics
+                {c.privacy.toggles.aggregateAnalytics.title}
                 <span style={{
                   fontSize: 11, padding: "2px 8px", marginLeft: 8,
                   backgroundColor: colors.primaryLight, color: colors.primaryDark,
                   borderRadius: 10, verticalAlign: "middle",
-                }}>Optional</span>
+                }}>{c.privacy.toggles.aggregateAnalytics.badge}</span>
               </p>
               <p style={{ fontSize: 13, color: colors.gray500, margin: 0, lineHeight: 1.5 }}>
-                Contribute anonymised, aggregated data to help improve the coaching framework library.
-                No individual entries are ever shared — only theme trends and usage patterns across
-                all users.
+                {c.privacy.toggles.aggregateAnalytics.description}
               </p>
             </div>
             <Toggle
@@ -209,14 +204,9 @@ export default function PrivacyPage() {
 
         {/* Data rights */}
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>Your Data Rights</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>{c.privacy.dataRights.heading}</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {[
-              { right: "Access", desc: "Download all your data at any time" },
-              { right: "Deletion", desc: "Request complete deletion of your account and all data" },
-              { right: "Portability", desc: "Export your journal entries, plans, and assessments" },
-              { right: "Rectification", desc: "Correct any inaccurate personal information" },
-            ].map(({ right, desc }) => (
+            {c.privacy.dataRights.rights.map(({ right, desc }) => (
               <div key={right} style={{ display: "flex", gap: 10, alignItems: "baseline" }}>
                 <span style={{ fontSize: 14, fontWeight: 500, width: 100, flexShrink: 0, color: colors.black }}>{right}</span>
                 <span style={{ fontSize: 14, color: colors.gray500 }}>{desc}</span>
@@ -224,7 +214,7 @@ export default function PrivacyPage() {
             ))}
           </div>
           <p style={{ fontSize: 13, color: colors.gray400, marginTop: 12 }}>
-            To exercise any of these rights, contact privacy@allmindsondeck.com
+            {c.privacy.dataRights.contactText}
           </p>
         </div>
 
@@ -240,7 +230,7 @@ export default function PrivacyPage() {
             transition: "background-color 0.15s",
           }}
         >
-          {saving ? "Saving..." : saved ? "Saved \u2713" : "Save preferences"}
+          {saving ? c.privacy.savingButton : saved ? c.privacy.savedButton : c.privacy.saveButton}
         </button>
       </div>
     </div>

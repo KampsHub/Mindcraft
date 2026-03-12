@@ -7,6 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import Nav from "@/components/Nav";
 import { colors, fonts, card } from "@/lib/theme";
+import { content as c } from "@/content/site";
 
 interface Entry {
   id: string;
@@ -168,7 +169,7 @@ export default function WeeklyReviewPage() {
       <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
         <Nav />
         <div style={{ textAlign: "center", paddingTop: 120 }}>
-          <p style={{ color: colors.gray400 }}>Loading your week...</p>
+          <p style={{ color: colors.gray400 }}>{c.weeklyReview.loadingText}</p>
         </div>
       </div>
     );
@@ -185,7 +186,7 @@ export default function WeeklyReviewPage() {
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>Weekly Review</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>{c.weeklyReview.headline}</h1>
           <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>
             Week of {new Date(weekStart + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
           </p>
@@ -195,11 +196,11 @@ export default function WeeklyReviewPage() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 28 }}>
           <div style={{ ...card, padding: 16, textAlign: "center" }}>
             <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>{journalCount}</p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>journal entries</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.weeklyReview.stats.journalEntries}</p>
           </div>
           <div style={{ ...card, padding: 16, textAlign: "center" }}>
             <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>{oneLinerCount}</p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>quick thoughts</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.weeklyReview.stats.quickThoughts}</p>
           </div>
           <div style={{ ...card, padding: 16, textAlign: "center" }}>
             <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0",
@@ -207,14 +208,14 @@ export default function WeeklyReviewPage() {
             }}>
               {exercisesCompleted}/{exercisesTotal}
             </p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>exercises done</p>
+            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.weeklyReview.stats.exercisesDone}</p>
           </div>
         </div>
 
         {/* Theme bar chart */}
         {themeCounts.length > 0 && (
           <div style={{ marginBottom: 28 }} className="print-section">
-            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>Themes This Week</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>{c.weeklyReview.themesHeading}</h2>
             <div style={{ width: "100%", height: Math.max(200, themeCounts.length * 36) }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
@@ -248,7 +249,7 @@ export default function WeeklyReviewPage() {
         {/* Accountability trend */}
         {pastReviews.length > 1 && (
           <div style={{ marginBottom: 28 }} className="print-section">
-            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>Accountability Trend</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>{c.weeklyReview.trendHeading}</h2>
             <div style={{ width: "100%", height: 160 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
@@ -276,10 +277,10 @@ export default function WeeklyReviewPage() {
         {/* Accountability rating */}
         <div style={{ marginBottom: 28 }}>
           <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
-            How did you show up?
+            {c.weeklyReview.rating.heading}
           </h2>
           <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
-            1 = barely here &nbsp;&middot;&nbsp; 5 = fully in it
+            {c.weeklyReview.rating.scale}
           </p>
           <div style={{ display: "flex", gap: 8 }}>
             {[1, 2, 3, 4, 5].map((n) => (
@@ -305,16 +306,16 @@ export default function WeeklyReviewPage() {
         {/* Reflection */}
         <div style={{ marginBottom: 28 }}>
           <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
-            What stood out?
+            {c.weeklyReview.reflection.heading}
           </h2>
           <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
-            What did you notice? What surprised you? What shifted?
+            {c.weeklyReview.reflection.subheadline}
           </p>
           <textarea
             value={reflection}
             onChange={(e) => setReflection(e.target.value)}
             rows={5}
-            placeholder="Write freely — this is for you."
+            placeholder={c.weeklyReview.reflection.placeholder}
             style={{
               width: "100%", padding: 14, fontSize: 15, lineHeight: 1.6,
               border: `1px solid ${colors.gray200}`, borderRadius: 8,
@@ -326,16 +327,16 @@ export default function WeeklyReviewPage() {
         {/* Plan adjustments */}
         <div style={{ marginBottom: 32 }}>
           <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
-            Anything to adjust?
+            {c.weeklyReview.adjustments.heading}
           </h2>
           <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
-            Shift focus? Change pace? Try a different approach next week?
+            {c.weeklyReview.adjustments.subheadline}
           </p>
           <textarea
             value={planAdjustments}
             onChange={(e) => setPlanAdjustments(e.target.value)}
             rows={3}
-            placeholder="Optional — leave blank if the current plan feels right."
+            placeholder={c.weeklyReview.adjustments.placeholder}
             style={{
               width: "100%", padding: 14, fontSize: 15, lineHeight: 1.6,
               border: `1px solid ${colors.gray200}`, borderRadius: 8,
@@ -357,7 +358,7 @@ export default function WeeklyReviewPage() {
               transition: "background-color 0.15s",
             }}
           >
-            {saving ? "Saving..." : saved ? "Saved \u2713" : "Save review"}
+            {saving ? c.weeklyReview.savingButton : saved ? c.weeklyReview.savedButton : c.weeklyReview.saveButton}
           </button>
           <button
             onClick={() => window.print()}
@@ -368,7 +369,7 @@ export default function WeeklyReviewPage() {
               border: `1px solid ${colors.gray200}`, borderRadius: 8, cursor: "pointer",
             }}
           >
-            Print
+            {c.weeklyReview.printButton}
           </button>
         </div>
 
@@ -387,7 +388,7 @@ export default function WeeklyReviewPage() {
         {pastReviews.length > 1 && (
           <div>
             <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.gray600 }}>
-              Past Reviews
+              {c.weeklyReview.pastReviewsHeading}
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {pastReviews

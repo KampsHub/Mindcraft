@@ -18,7 +18,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Mindcraft Ninja logo"
     >
-      {/* Circle — white fill ensures consistent stroke rendering */}
+      {/* Circle — white fill + geometric precision for consistent stroke */}
       <circle
         cx="100"
         cy="155"
@@ -26,6 +26,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
         fill="white"
         stroke={colors.black}
         strokeWidth="2.5"
+        shapeRendering="geometricPrecision"
       />
 
       {/* ── Ninja head — drawn on top of circle ── */}
@@ -39,25 +40,25 @@ export default function Logo({ size = 90 }: { size?: number }) {
         <rect x="-16" y="-15" width="32" height="8.5" rx="4" fill={colors.primary} />
         {/* Left eye */}
         <ellipse cx="-7" cy="-10.8" rx="3" ry="2" fill="white" />
-        {/* Left pupil — animated */}
-        <ellipse cx="-6.2" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
+        {/* Left pupil — default looking right, glances left once every 10s */}
+        <ellipse cx="-5" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
           <animate
             attributeName="cx"
-            values="-6.2;-8.2;-4.2;-8.2;-4.2;-8.2;-4.2;-6.2;-6.2"
-            keyTimes="0;0.08;0.20;0.32;0.44;0.56;0.68;0.75;1"
-            dur="4s"
+            values="-5;-5;-8.2;-8.2;-5"
+            keyTimes="0;0.88;0.92;0.96;1"
+            dur="10s"
             repeatCount="indefinite"
           />
         </ellipse>
         {/* Right eye */}
         <ellipse cx="7" cy="-10.8" rx="3" ry="2" fill="white" />
-        {/* Right pupil — animated */}
-        <ellipse cx="7.8" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
+        {/* Right pupil — default looking right, glances left once every 10s */}
+        <ellipse cx="9.3" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
           <animate
             attributeName="cx"
-            values="7.8;5.8;9.8;5.8;9.8;5.8;9.8;7.8;7.8"
-            keyTimes="0;0.08;0.20;0.32;0.44;0.56;0.68;0.75;1"
-            dur="4s"
+            values="9.3;9.3;6;6;9.3"
+            keyTimes="0;0.88;0.92;0.96;1"
+            dur="10s"
             repeatCount="indefinite"
           />
         </ellipse>
@@ -71,14 +72,14 @@ export default function Logo({ size = 90 }: { size?: number }) {
         />
       </g>
 
-      {/* ── Text inside circle ── */}
+      {/* ── Text inside circle — moved down for breathing room from circle sides ── */}
       <text
         x="100"
-        y="173"
+        y="180"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"
-        fontSize="35"
+        fontSize="33"
         fontWeight="600"
         letterSpacing="0.5"
       >
@@ -86,7 +87,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
       </text>
       <text
         x="100"
-        y="207"
+        y="212"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"

@@ -112,21 +112,6 @@ export default function Home() {
 
         <div style={{ position: "relative", zIndex: 2, maxWidth: 800, margin: "0 auto" }}>
           {/* AMOD-style: bold headline with black highlight box */}
-          <TextReveal
-            text={c.hero.headline}
-            as="h1"
-            triggerOnMount
-            delay={0.2}
-            stagger={0.06}
-            duration={0.6}
-            style={{
-              fontSize: 64, fontWeight: 700, lineHeight: 1.05,
-              color: hasVideo || hasImage ? colors.white : colors.black,
-              margin: "0 0 8px 0",
-              justifyContent: "center",
-              letterSpacing: "-0.03em",
-            }}
-          />
           <h1 style={{
             display: "flex", flexWrap: "wrap", gap: "0 0.3em",
             justifyContent: "center", margin: "0 0 32px 0",
@@ -137,7 +122,7 @@ export default function Home() {
               text="Cut through"
               as="span"
               triggerOnMount
-              delay={0.6}
+              delay={0.2}
               stagger={0.06}
               duration={0.6}
               style={{ color: hasVideo || hasImage ? colors.white : colors.black }}
@@ -146,7 +131,7 @@ export default function Home() {
               text="your mind's noise."
               as="span"
               triggerOnMount
-              delay={0.75}
+              delay={0.45}
               stagger={0.06}
               duration={0.6}
               distort="noise"

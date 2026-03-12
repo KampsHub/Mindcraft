@@ -30,8 +30,8 @@ export default function Home() {
   }
 
   return (
-    <div style={{ fontFamily: fonts.body }}>
-      {/* Header */}
+    <div style={{ fontFamily: fonts.body, backgroundColor: colors.white, color: colors.black }}>
+      {/* ── Header ── */}
       <header style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
         maxWidth: 960, margin: "0 auto", padding: "20px 24px",
@@ -40,153 +40,274 @@ export default function Home() {
           <Logo size={36} />
           <span style={{ fontSize: 17, fontWeight: 600, color: colors.black }}>Mindcraft</span>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <a href="/login" style={{
-            padding: "8px 20px", fontSize: 14, fontWeight: 500,
-            color: colors.gray600, textDecoration: "none", borderRadius: 6,
-            border: `1px solid ${colors.gray200}`,
+            fontSize: 14, fontWeight: 500,
+            color: colors.gray500, textDecoration: "none",
           }}>Sign in</a>
           <a href="/subscribe" style={{
             padding: "8px 20px", fontSize: 14, fontWeight: 600,
             color: colors.white, backgroundColor: colors.primary,
             textDecoration: "none", borderRadius: 6, border: "none",
-          }}>Get started</a>
+          }}>Get Mindcraft</a>
         </div>
       </header>
 
-      {/* Hero */}
+      {/* ── Hero: Name the gap ── */}
       <section style={{
-        textAlign: "center", padding: "80px 24px 64px",
-        maxWidth: 640, margin: "0 auto",
+        textAlign: "center", padding: "72px 24px 56px",
+        maxWidth: 680, margin: "0 auto",
+        backgroundColor: colors.white,
       }}>
-        <p style={{
-          fontSize: 13, fontWeight: 600, color: colors.primary,
-          textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 16,
-        }}>by All Minds on Deck</p>
         <h1 style={{
-          fontSize: 44, fontWeight: 700, lineHeight: 1.12,
-          color: colors.black, margin: "0 0 20px 0",
+          fontSize: 46, fontWeight: 700, lineHeight: 1.1,
+          color: colors.black, margin: "0 0 24px 0",
         }}>
-          Your growth?<br />On autopilot.
+          The session ends.<br />
+          <span style={{ color: colors.primary }}>The work doesn&apos;t.</span>
         </h1>
         <p style={{
-          fontSize: 18, color: colors.gray600, lineHeight: 1.7,
-          margin: "0 0 36px 0",
+          fontSize: 19, color: colors.gray600, lineHeight: 1.7,
+          margin: "0 0 40px 0", maxWidth: 540, marginLeft: "auto", marginRight: "auto",
         }}>
-          Real coaching frameworks. Personalised exercises. AI-powered reflections.
-          Not theory — real work, every day, between sessions.
-        </p>
-        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <a href="/subscribe" style={{
-            padding: "14px 36px", fontSize: 16, fontWeight: 600,
-            color: colors.white, backgroundColor: colors.primary,
-            borderRadius: 10, textDecoration: "none",
-            transition: "background-color 0.15s",
-          }}>Start your journey</a>
-          <a href="/login" style={{
-            padding: "14px 36px", fontSize: 16, fontWeight: 600,
-            color: colors.primary, backgroundColor: colors.white,
-            borderRadius: 10, textDecoration: "none",
-            border: `2px solid ${colors.primary}`,
-          }}>Sign in</a>
-        </div>
-      </section>
-
-      {/* Value props — AMOD voice */}
-      <section style={{
-        padding: "48px 24px 64px", backgroundColor: colors.gray50,
-      }}>
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: 20, maxWidth: 860, margin: "0 auto",
-        }}>
-          {[
-            {
-              icon: "\u270D\uFE0F",
-              title: "Journal. Get seen.",
-              desc: "Write freely. Your coaching companion reflects back what it notices — patterns, blind spots, growth edges.",
-            },
-            {
-              icon: "\uD83C\uDFAF",
-              title: "Exercises that fit.",
-              desc: "Pulled from proven frameworks, matched to your themes. Not generic homework — targeted practice.",
-            },
-            {
-              icon: "\uD83D\uDCC8",
-              title: "Track what matters.",
-              desc: "Weekly reviews. Monthly patterns. See where you're growing and where you're stuck. In days, not months.",
-            },
-            {
-              icon: "\uD83D\uDD12",
-              title: "Your data. Full stop.",
-              desc: "You own everything. Full control over sharing, export, and deletion. No training on your entries. Ever.",
-            },
-          ].map((f) => (
-            <div key={f.title} style={{
-              padding: 28, backgroundColor: colors.white, borderRadius: 12,
-              border: `1px solid ${colors.gray100}`,
-            }}>
-              <span style={{ fontSize: 28, display: "block", marginBottom: 14 }}>{f.icon}</span>
-              <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 6px 0", color: colors.black }}>{f.title}</h3>
-              <p style={{ fontSize: 14, color: colors.gray500, lineHeight: 1.6, margin: 0 }}>{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section style={{ padding: "56px 24px", maxWidth: 640, margin: "0 auto" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 700, textAlign: "center", marginBottom: 8, color: colors.black }}>
-          Not reinventing the wheel.
-        </h2>
-        <p style={{ fontSize: 16, color: colors.gray500, textAlign: "center", marginBottom: 40, lineHeight: 1.6 }}>
-          But holding the compass. Here&apos;s how it works.
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {[
-            { step: "1", title: "Subscribe & intake", desc: "Tell us what brought you here. We build your personalised 12-week coaching plan." },
-            { step: "2", title: "Journal daily", desc: "Write what's real. Your AI companion reflects back what it sees — no fluff, no platitudes." },
-            { step: "3", title: "Do the work", desc: "Targeted exercises from proven frameworks. Matched to your themes. Completed in minutes." },
-            { step: "4", title: "See the patterns", desc: "Weekly reviews and monthly summaries surface what's shifting. Discussions become decisions." },
-          ].map((item) => (
-            <div key={item.step} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 10,
-                backgroundColor: colors.primaryLight, color: colors.primaryDark,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 15, fontWeight: 700, flexShrink: 0,
-              }}>
-                {item.step}
-              </div>
-              <div>
-                <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 4px 0", color: colors.black }}>{item.title}</h3>
-                <p style={{ fontSize: 14, color: colors.gray500, margin: 0, lineHeight: 1.5 }}>{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section style={{
-        padding: "48px 24px", textAlign: "center",
-        backgroundColor: colors.black,
-      }}>
-        <h2 style={{ fontSize: 26, fontWeight: 700, color: colors.white, marginBottom: 8 }}>
-          Ready to do the work?
-        </h2>
-        <p style={{ fontSize: 15, color: colors.gray300, marginBottom: 28, lineHeight: 1.6 }}>
-          $75/month. Cancel anytime. Real frameworks. Real growth.
+          Mindcraft is your coaching companion between sessions. Journal daily, get
+          AI-powered reflections, and do targeted exercises from proven frameworks
+          — personalised to your themes.
         </p>
         <a href="/subscribe" style={{
-          padding: "14px 40px", fontSize: 16, fontWeight: 600,
-          color: colors.black, backgroundColor: colors.primary,
+          padding: "16px 44px", fontSize: 17, fontWeight: 600,
+          color: colors.white, backgroundColor: colors.primary,
           borderRadius: 10, textDecoration: "none",
           display: "inline-block",
-        }}>Start your journey</a>
+          transition: "background-color 0.15s",
+        }}>Get Mindcraft — $75/mo</a>
+        <p style={{ fontSize: 13, color: colors.gray400, marginTop: 12 }}>
+          Cancel anytime. No contracts.
+        </p>
       </section>
 
-      {/* Footer */}
+      {/* ── The Problem ── */}
+      <section style={{
+        padding: "56px 24px", backgroundColor: colors.black,
+      }}>
+        <div style={{ maxWidth: 680, margin: "0 auto" }}>
+          <h2 style={{
+            fontSize: 28, fontWeight: 700, color: colors.white,
+            marginBottom: 24, textAlign: "center", lineHeight: 1.3,
+          }}>
+            You know the pattern.
+          </h2>
+          <div style={{
+            display: "flex", flexDirection: "column", gap: 16,
+            maxWidth: 520, margin: "0 auto",
+          }}>
+            {[
+              "Great session. Real insights. You leave with clarity.",
+              "Two days later, the clarity fades. Old loops return.",
+              "By next session, you\u2019re catching your coach up instead of moving forward.",
+            ].map((line, i) => (
+              <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                <span style={{
+                  color: i === 2 ? colors.primary : colors.gray400,
+                  fontSize: 20, lineHeight: 1.4, flexShrink: 0,
+                }}>
+                  {i === 2 ? "\u2192" : "\u2022"}
+                </span>
+                <p style={{
+                  fontSize: 16, color: i === 2 ? colors.white : colors.gray300,
+                  margin: 0, lineHeight: 1.6,
+                  fontWeight: i === 2 ? 500 : 400,
+                }}>
+                  {line}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p style={{
+            fontSize: 17, color: colors.primary, fontWeight: 600,
+            textAlign: "center", marginTop: 32,
+          }}>
+            Mindcraft fills the gap.
+          </p>
+        </div>
+      </section>
+
+      {/* ── What changes ── */}
+      <section style={{ padding: "64px 24px", backgroundColor: colors.white }}>
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          <h2 style={{
+            fontSize: 28, fontWeight: 700, textAlign: "center",
+            marginBottom: 12, color: colors.black,
+          }}>
+            Not another journal app.
+          </h2>
+          <p style={{
+            fontSize: 16, color: colors.gray500, textAlign: "center",
+            marginBottom: 44, lineHeight: 1.6, maxWidth: 520, marginLeft: "auto", marginRight: "auto",
+          }}>
+            A coaching system that reads what you write, reflects back what it sees,
+            and gives you real work to do — matched to your patterns.
+          </p>
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: 20,
+          }}>
+            {[
+              {
+                title: "Write. Get seen.",
+                desc: "Journal freely. Your companion reflects back patterns, blind spots, and growth edges — not platitudes.",
+                accent: colors.primary,
+              },
+              {
+                title: "Do the real work.",
+                desc: "Targeted exercises pulled from IFS, ACT, CBT, Gottman, and positive psychology. Matched to your themes. Done in minutes.",
+                accent: "#7c3aed",
+              },
+              {
+                title: "See what\u2019s shifting.",
+                desc: "Weekly reviews and monthly summaries surface patterns across entries. Discussions with your coach become decisions.",
+                accent: "#0891b2",
+              },
+            ].map((item) => (
+              <div key={item.title} style={{
+                padding: 28, backgroundColor: colors.white, borderRadius: 12,
+                border: `1px solid ${colors.gray100}`,
+                borderTop: `3px solid ${item.accent}`,
+              }}>
+                <h3 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
+                  {item.title}
+                </h3>
+                <p style={{ fontSize: 14, color: colors.gray500, lineHeight: 1.6, margin: 0 }}>
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it works ── */}
+      <section style={{ padding: "56px 24px", backgroundColor: colors.gray50 }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <h2 style={{
+            fontSize: 28, fontWeight: 700, textAlign: "center",
+            marginBottom: 40, color: colors.black,
+          }}>
+            Three steps. Then you&apos;re in.
+          </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+            {[
+              {
+                step: "1",
+                title: "Tell us what brought you here",
+                desc: "A short intake builds your personalised 12-week coaching plan \u2014 frameworks matched to your situation.",
+              },
+              {
+                step: "2",
+                title: "Journal and do the work",
+                desc: "Write daily. Get reflections that notice what you miss. Complete exercises that move the needle \u2014 not generic homework.",
+              },
+              {
+                step: "3",
+                title: "Watch the patterns emerge",
+                desc: "Weekly reviews and monthly summaries show what\u2019s shifting. Share them with your coach or keep them for yourself.",
+              },
+            ].map((item) => (
+              <div key={item.step} style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: 12,
+                  backgroundColor: colors.primary, color: colors.white,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 16, fontWeight: 700, flexShrink: 0,
+                }}>
+                  {item.step}
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 4px 0", color: colors.black }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ fontSize: 14, color: colors.gray500, margin: 0, lineHeight: 1.6 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Credibility ── */}
+      <section style={{ padding: "56px 24px", backgroundColor: colors.white }}>
+        <div style={{ maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
+          <h2 style={{
+            fontSize: 28, fontWeight: 700, marginBottom: 12, color: colors.black,
+          }}>
+            Built by coaches. Not by a chatbot team.
+          </h2>
+          <p style={{
+            fontSize: 16, color: colors.gray500, lineHeight: 1.7,
+            marginBottom: 36, maxWidth: 560, marginLeft: "auto", marginRight: "auto",
+          }}>
+            Mindcraft is built by All Minds on Deck — an ICF &amp; EMCC certified coaching
+            practice with backgrounds in product leadership, positive psychology,
+            and neuroscience. The frameworks are real. The methodology is proven.
+          </p>
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 16, maxWidth: 560, margin: "0 auto",
+          }}>
+            {[
+              { label: "ICF & EMCC", desc: "certified coaches" },
+              { label: "12-week", desc: "structured plans" },
+              { label: "6+", desc: "proven frameworks" },
+              { label: "100%", desc: "your data" },
+            ].map(({ label, desc }) => (
+              <div key={label} style={{
+                padding: 20, backgroundColor: colors.gray50, borderRadius: 10,
+              }}>
+                <p style={{ fontSize: 22, fontWeight: 700, margin: "0 0 2px 0", color: colors.primary }}>
+                  {label}
+                </p>
+                <p style={{ fontSize: 13, color: colors.gray500, margin: 0 }}>
+                  {desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pricing CTA ── */}
+      <section style={{
+        padding: "56px 24px",
+        backgroundColor: colors.black,
+      }}>
+        <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: colors.white, marginBottom: 8 }}>
+            Less than a single session.
+          </h2>
+          <p style={{ fontSize: 16, color: colors.gray300, marginBottom: 8, lineHeight: 1.6 }}>
+            Coaching sessions cost $150&ndash;300/hr. Mindcraft gives you daily
+            support between those sessions.
+          </p>
+          <p style={{
+            fontSize: 42, fontWeight: 700, color: colors.white, margin: "24px 0 4px 0",
+          }}>
+            $75<span style={{ fontSize: 18, fontWeight: 400, color: colors.gray400 }}>/month</span>
+          </p>
+          <p style={{ fontSize: 14, color: colors.gray400, marginBottom: 32 }}>
+            Cancel anytime. No contracts. Your data stays yours.
+          </p>
+          <a href="/subscribe" style={{
+            padding: "16px 48px", fontSize: 17, fontWeight: 600,
+            color: colors.black, backgroundColor: colors.primary,
+            borderRadius: 10, textDecoration: "none",
+            display: "inline-block",
+          }}>Get Mindcraft</a>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
       <footer style={{
         padding: "32px 24px", textAlign: "center",
         borderTop: `1px solid ${colors.gray100}`,

@@ -62,12 +62,14 @@ export default function Home() {
           maxWidth: 1100, margin: "0 auto", padding: "24px 32px",
         }}
       >
-        <a href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
-          <Logo size={40} />
+        <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          <Logo size={48} />
           <span style={{
-            fontSize: 18, fontWeight: 300, color: colors.black,
-            letterSpacing: "0.02em",
-          }}>{c.brand.name}</span>
+            fontSize: 19, fontWeight: 300, color: colors.black,
+            letterSpacing: "0.01em", lineHeight: 1.1,
+          }}>
+            Mindcraft<span style={{ fontWeight: 600 }}> Ninja</span>
+          </span>
         </a>
         <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
           <a href="/login" style={{

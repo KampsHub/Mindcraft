@@ -135,6 +135,7 @@ export default function Home() {
               delay={0.45}
               stagger={0.06}
               duration={0.6}
+              slash="mind's"
               distort={[
                 { word: "daily", duration: 0.4, repeatDelay: 4.5, delay: 5 },
                 { word: "noise", duration: 0.5, repeatDelay: 6, delay: 3 },

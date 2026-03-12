@@ -286,11 +286,12 @@ export default function DashboardPage() {
       )}
 
       {/* Navigation links */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 32 }}>
         {[
           { href: "/journal", label: "Journal", desc: "Write today's entry" },
-          { href: "/exercise", label: "Exercise", desc: "Today's coaching exercise" },
-          { href: "/plan", label: "Plan", desc: "View your coaching plan" },
+          { href: "/exercise", label: "Exercise", desc: "Today's exercise" },
+          { href: "/plan", label: "Plan", desc: "Your coaching plan" },
+          { href: "/weekly-review", label: "Review", desc: "Reflect on your week" },
           { href: "/intake", label: "Intake", desc: "Update your profile" },
         ].map(({ href, label, desc }) => (
           <button

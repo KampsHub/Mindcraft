@@ -38,17 +38,42 @@ export async function POST(request: NextRequest) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.supabase_user_id;
+      const customerEmail = session.customer_details?.email;
+      const stripeCustomerId = session.customer as string;
 
       if (userId) {
+        // User was authenticated at checkout — update by user ID
         await supabase
           .from("clients")
           .update({
             subscription_status: "active",
-            stripe_customer_id: session.customer as string,
+            stripe_customer_id: stripeCustomerId,
           })
           .eq("id", userId);
 
         console.log(`Subscription activated for user ${userId}`);
+      } else if (customerEmail) {
+        // User paid before signing up — try to find by email
+        const { data: client } = await supabase
+          .from("clients")
+          .select("id")
+          .eq("email", customerEmail)
+          .single();
+
+        if (client) {
+          await supabase
+            .from("clients")
+            .update({
+              subscription_status: "active",
+              stripe_customer_id: stripeCustomerId,
+            })
+            .eq("id", client.id);
+
+          console.log(`Subscription activated for client ${client.id} (by email)`);
+        } else {
+          // No client row yet — will be linked when user signs up via /api/link-subscription
+          console.log(`Subscription paid by ${customerEmail} — no client row yet, will link at signup`);
+        }
       }
       break;
     }

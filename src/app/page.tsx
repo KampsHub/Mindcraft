@@ -53,7 +53,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* ── Hero: Name the gap ── */}
+      {/* ── Hero ── */}
       <section style={{
         textAlign: "center", padding: "72px 24px 56px",
         maxWidth: 680, margin: "0 auto",
@@ -63,16 +63,16 @@ export default function Home() {
           fontSize: 46, fontWeight: 700, lineHeight: 1.1,
           color: colors.black, margin: "0 0 24px 0",
         }}>
-          The session ends.<br />
-          <span style={{ color: colors.primary }}>The work doesn&apos;t.</span>
+          Your daily<br />
+          <span style={{ color: colors.primary }}>coaching companion.</span>
         </h1>
         <p style={{
           fontSize: 19, color: colors.gray600, lineHeight: 1.7,
           margin: "0 0 40px 0", maxWidth: 540, marginLeft: "auto", marginRight: "auto",
         }}>
-          Mindcraft is your coaching companion between sessions. Journal daily, get
-          AI-powered reflections, and do targeted exercises from proven frameworks
-          — personalised to your themes.
+          Journal daily. Get AI-powered reflections that see your patterns.
+          Do targeted exercises from proven coaching frameworks —
+          personalised to your themes.
         </p>
         <a href="/subscribe" style={{
           padding: "16px 44px", fontSize: 17, fontWeight: 600,
@@ -95,16 +95,16 @@ export default function Home() {
             fontSize: 28, fontWeight: 700, color: colors.white,
             marginBottom: 24, textAlign: "center", lineHeight: 1.3,
           }}>
-            You know the pattern.
+            Growth shouldn&apos;t depend on someone else&apos;s calendar.
           </h2>
           <div style={{
             display: "flex", flexDirection: "column", gap: 16,
             maxWidth: 520, margin: "0 auto",
           }}>
             {[
-              "Great session. Real insights. You leave with clarity.",
-              "Two days later, the clarity fades. Old loops return.",
-              "By next session, you\u2019re catching your coach up instead of moving forward.",
+              "You read the books. Watch the talks. You know what you want to change.",
+              "But insight without structure fades. Old patterns run on autopilot.",
+              "You need a system — not another app that tells you to breathe.",
             ].map((line, i) => (
               <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
                 <span style={{
@@ -127,12 +127,12 @@ export default function Home() {
             fontSize: 17, color: colors.primary, fontWeight: 600,
             textAlign: "center", marginTop: 32,
           }}>
-            Mindcraft fills the gap.
+            Mindcraft is that system.
           </p>
         </div>
       </section>
 
-      {/* ── What changes ── */}
+      {/* ── What it does ── */}
       <section style={{ padding: "64px 24px", backgroundColor: colors.white }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <h2 style={{
@@ -165,7 +165,7 @@ export default function Home() {
               },
               {
                 title: "See what\u2019s shifting.",
-                desc: "Weekly reviews and monthly summaries surface patterns across entries. Discussions with your coach become decisions.",
+                desc: "Weekly reviews and monthly summaries surface patterns across entries. Track your growth over time.",
                 accent: "#0891b2",
               },
             ].map((item) => (
@@ -199,8 +199,8 @@ export default function Home() {
             {[
               {
                 step: "1",
-                title: "Tell us what brought you here",
-                desc: "A short intake builds your personalised 12-week coaching plan \u2014 frameworks matched to your situation.",
+                title: "Tell us what you\u2019re working on",
+                desc: "A short intake builds your personalised 12-week plan \u2014 frameworks matched to your situation.",
               },
               {
                 step: "2",
@@ -210,7 +210,7 @@ export default function Home() {
               {
                 step: "3",
                 title: "Watch the patterns emerge",
-                desc: "Weekly reviews and monthly summaries show what\u2019s shifting. Share them with your coach or keep them for yourself.",
+                desc: "Weekly reviews and monthly summaries show what\u2019s shifting. Real evidence of your growth, tracked over time.",
               },
             ].map((item) => (
               <div key={item.step} style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
@@ -242,15 +242,19 @@ export default function Home() {
           <h2 style={{
             fontSize: 28, fontWeight: 700, marginBottom: 12, color: colors.black,
           }}>
-            Built by coaches. Not by a chatbot team.
+            Built on real frameworks. By real coaches.
           </h2>
           <p style={{
             fontSize: 16, color: colors.gray500, lineHeight: 1.7,
             marginBottom: 36, maxWidth: 560, marginLeft: "auto", marginRight: "auto",
           }}>
-            Mindcraft is built by All Minds on Deck — an ICF &amp; EMCC certified coaching
-            practice with backgrounds in product leadership, positive psychology,
-            and neuroscience. The frameworks are real. The methodology is proven.
+            Mindcraft is built by{" "}
+            <a href="https://allmindsondeck.org" target="_blank" rel="noopener noreferrer" style={{
+              color: colors.primary, textDecoration: "none", fontWeight: 500,
+            }}>All Minds on Deck</a>
+            {" "}&mdash; an ICF &amp; EMCC certified coaching practice with backgrounds
+            in product leadership, positive psychology, and neuroscience.
+            The methodology is proven. The frameworks are real.
           </p>
           <div style={{
             display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
@@ -284,11 +288,11 @@ export default function Home() {
       }}>
         <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ fontSize: 28, fontWeight: 700, color: colors.white, marginBottom: 8 }}>
-            Less than a single session.
+            Your growth system. $75/month.
           </h2>
           <p style={{ fontSize: 16, color: colors.gray300, marginBottom: 8, lineHeight: 1.6 }}>
-            Coaching sessions cost $150&ndash;300/hr. Mindcraft gives you daily
-            support between those sessions.
+            Daily reflections. Personalised exercises. Pattern tracking.
+            Everything you need to keep moving.
           </p>
           <p style={{
             fontSize: 42, fontWeight: 700, color: colors.white, margin: "24px 0 4px 0",
@@ -307,13 +311,34 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── AMOD clients ── */}
+      <section style={{
+        padding: "40px 24px", backgroundColor: colors.gray50,
+        textAlign: "center",
+      }}>
+        <p style={{ fontSize: 15, color: colors.gray500, margin: 0, lineHeight: 1.6 }}>
+          Active{" "}
+          <a href="https://allmindsondeck.org" target="_blank" rel="noopener noreferrer" style={{
+            color: colors.primary, textDecoration: "none", fontWeight: 500,
+          }}>All Minds on Deck</a>
+          {" "}coaching clients get free access to Mindcraft.{" "}
+          <a href="https://allmindsondeck.org" target="_blank" rel="noopener noreferrer" style={{
+            color: colors.primary, textDecoration: "none", fontWeight: 500,
+          }}>Learn more &rarr;</a>
+        </p>
+      </section>
+
       {/* ── Footer ── */}
       <footer style={{
         padding: "32px 24px", textAlign: "center",
         borderTop: `1px solid ${colors.gray100}`,
+        backgroundColor: colors.white,
       }}>
         <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
-          Mindcraft — built by All Minds on Deck LLC
+          Mindcraft &mdash; built by{" "}
+          <a href="https://allmindsondeck.org" target="_blank" rel="noopener noreferrer" style={{
+            color: colors.gray400, textDecoration: "none",
+          }}>All Minds on Deck LLC</a>
         </p>
       </footer>
     </div>

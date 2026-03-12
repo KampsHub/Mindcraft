@@ -115,6 +115,9 @@ export default function DashboardPage() {
       }
       setUser(user);
       fetchDashboardData(user.id);
+
+      // Link any pre-signup Stripe subscription to this account
+      fetch("/api/link-subscription", { method: "POST" }).catch(() => {});
     });
   }, [supabase.auth, router, fetchDashboardData]);
 

@@ -1,30 +1,15 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { createClient } from "@/lib/supabase";
-import { useRouter, useSearchParams } from "next/navigation";
-import type { User } from "@supabase/supabase-js";
-import Nav from "@/components/Nav";
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { colors, fonts, card } from "@/lib/theme";
+import Logo from "@/components/Logo";
 
 function SubscribeContent() {
-  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const supabase = createClient();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const cancelled = searchParams.get("checkout") === "cancelled";
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-      setUser(user);
-    });
-  }, [supabase.auth, router]);
 
   async function handleSubscribe() {
     setLoading(true);
@@ -49,7 +34,22 @@ function SubscribeContent() {
 
   return (
     <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
-      <Nav />
+      {/* Simple header — no Nav since user may not be logged in */}
+      <header style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        maxWidth: 960, margin: "0 auto", padding: "20px 24px",
+      }}>
+        <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          <Logo size={32} />
+          <span style={{ fontSize: 17, fontWeight: 600, color: colors.black }}>Mindcraft</span>
+        </a>
+        <a href="/login" style={{
+          fontSize: 14, fontWeight: 500, color: colors.gray500, textDecoration: "none",
+        }}>
+          Already a member? Sign in
+        </a>
+      </header>
+
       <div style={{ maxWidth: 560, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, color: colors.black }}>
@@ -57,7 +57,7 @@ function SubscribeContent() {
           </h1>
           <p style={{ fontSize: 16, color: colors.gray500, lineHeight: 1.6 }}>
             Real coaching frameworks. Personalised exercises. AI-powered reflections.
-            Not theory — real work, every day, between sessions.
+            Not theory — real work, every day.
           </p>
         </div>
 
@@ -102,7 +102,7 @@ function SubscribeContent() {
 
           <button
             onClick={handleSubscribe}
-            disabled={loading || !user}
+            disabled={loading}
             style={{
               width: "100%", padding: "14px 32px", fontSize: 16, fontWeight: 600,
               color: colors.white, backgroundColor: loading ? colors.gray400 : colors.primary,
@@ -119,17 +119,16 @@ function SubscribeContent() {
           )}
 
           <p style={{ fontSize: 12, color: colors.gray400, marginTop: 12 }}>
-            Cancel anytime. Test with card 4242 4242 4242 4242.
+            Cancel anytime. No contracts. Your data stays yours.
           </p>
         </div>
 
         <div style={{ textAlign: "center" }}>
-          <button onClick={() => router.push("/dashboard")} style={{
-            fontSize: 14, color: colors.gray500, backgroundColor: "transparent",
-            border: "none", cursor: "pointer", textDecoration: "underline",
+          <a href="/" style={{
+            fontSize: 14, color: colors.gray500, textDecoration: "none",
           }}>
-            Back to dashboard
-          </button>
+            &larr; Back to Mindcraft
+          </a>
         </div>
       </div>
     </div>

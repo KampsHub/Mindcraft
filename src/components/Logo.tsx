@@ -1,9 +1,9 @@
 import { colors } from "@/lib/theme";
 
 /**
- * Mindcraft logo — a brain/compass hybrid mark.
- * Two overlapping curves suggesting both a mind (organic shape)
- * and a compass needle (directional purpose).
+ * Mindcraft logo — circular mark inspired by the AMOD aesthetic.
+ * A coral circle with thin outer ring and a clean geometric M
+ * that suggests both a mind (two hemispheres) and craft (precision).
  */
 export default function Logo({ size = 32 }: { size?: number }) {
   return (
@@ -15,21 +15,19 @@ export default function Logo({ size = 32 }: { size?: number }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Mindcraft logo"
     >
-      {/* Background circle */}
-      <rect width="40" height="40" rx="10" fill={colors.primary} />
-
-      {/* Brain/compass mark — stylised M made of two connected arcs */}
+      {/* Thin outer ring — mirrors AMOD's circular border */}
+      <circle cx="20" cy="20" r="19.2" stroke={colors.primary} strokeWidth="1" opacity="0.35" />
+      {/* Main circle */}
+      <circle cx="20" cy="20" r="16" fill={colors.primary} />
+      {/* Geometric M — two peaks meeting at center */}
       <path
-        d="M10 28 L10 18 C10 13 14 9 18 9 C22 9 22 14 20 17 C18 20 18 14 22 9 C26 9 30 13 30 18 L30 28"
+        d="M11 27 L11 14 L20 23 L29 14 L29 27"
         stroke="white"
-        strokeWidth="2.8"
+        strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
       />
-
-      {/* Compass dot — center point of awareness */}
-      <circle cx="20" cy="30" r="2" fill="white" />
     </svg>
   );
 }

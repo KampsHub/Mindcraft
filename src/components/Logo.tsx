@@ -28,7 +28,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
       />
 
       {/* ── Ninja head — bigger, starts in middle of circle, top pops above ── */}
-      <g transform="translate(100, 109) scale(3)">
+      <g transform="translate(100, 97) scale(3)">
         {/* Head silhouette */}
         <path
           d="M0 -28 C-13 -28 -18 -20 -18 -11 C-18 -6 -16 -2.5 -12 0 L-12 7 C-12 10 -9 13 0 13 C9 13 12 10 12 7 L12 0 C16 -2.5 18 -6 18 -11 C18 -20 13 -28 0 -28Z"
@@ -55,7 +55,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
       {/* ── Text inside circle ── */}
       <text
         x="100"
-        y="193"
+        y="173"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"
@@ -67,7 +67,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
       </text>
       <text
         x="100"
-        y="221"
+        y="201"
         textAnchor="middle"
         fill={colors.black}
         fontFamily="'Space Grotesk', sans-serif"

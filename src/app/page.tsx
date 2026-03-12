@@ -127,22 +127,32 @@ export default function Home() {
               letterSpacing: "-0.03em",
             }}
           />
-          <TextReveal
-            text={c.hero.headlineAccent}
-            as="h1"
-            triggerOnMount
-            delay={0.6}
-            stagger={0.06}
-            duration={0.6}
-            distort="noise"
-            style={{
-              fontSize: 64, fontWeight: 700, lineHeight: 1.05,
-              color: colors.primary,
-              margin: "0 0 32px 0",
-              justifyContent: "center",
-              letterSpacing: "-0.03em",
-            }}
-          />
+          <h1 style={{
+            display: "flex", flexWrap: "wrap", gap: "0 0.3em",
+            justifyContent: "center", margin: "0 0 32px 0",
+            fontSize: 64, fontWeight: 700, lineHeight: 1.05,
+            letterSpacing: "-0.03em",
+          }}>
+            <TextReveal
+              text="Cut through"
+              as="span"
+              triggerOnMount
+              delay={0.6}
+              stagger={0.06}
+              duration={0.6}
+              style={{ color: hasVideo || hasImage ? colors.white : colors.black }}
+            />
+            <TextReveal
+              text="your mind's noise."
+              as="span"
+              triggerOnMount
+              delay={0.75}
+              stagger={0.06}
+              duration={0.6}
+              distort="noise"
+              style={{ color: colors.primary }}
+            />
+          </h1>
 
           <FadeIn delay={1.0} preset="blur" duration={0.9} triggerOnMount>
             <p style={{

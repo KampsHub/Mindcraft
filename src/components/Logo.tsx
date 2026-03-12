@@ -17,7 +17,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
   useEffect(() => {
     const glance = () => {
       setLookLeft(true);
-      setTimeout(() => setLookLeft(false), 400);
+      setTimeout(() => setLookLeft(false), 700);
     };
 
     // First glance 1s after load
@@ -68,7 +68,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
         {/* Left pupil — animated via Framer Motion */}
         <motion.ellipse
           animate={{ cx: leftPupilCx }}
-          transition={{ duration: 0.15, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
           cy={-10.8}
           rx={1.3}
           ry={1.3}
@@ -79,7 +79,7 @@ export default function Logo({ size = 90 }: { size?: number }) {
         {/* Right pupil — animated via Framer Motion */}
         <motion.ellipse
           animate={{ cx: rightPupilCx }}
-          transition={{ duration: 0.15, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
           cy={-10.8}
           rx={1.3}
           ry={1.3}

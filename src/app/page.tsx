@@ -49,7 +49,7 @@ export default function Home() {
             padding: "8px 20px", fontSize: 14, fontWeight: 600,
             color: colors.white, backgroundColor: colors.primary,
             textDecoration: "none", borderRadius: 6, border: "none",
-          }}>Get Mindcraft</a>
+          }}>Start free</a>
         </div>
       </header>
 
@@ -63,16 +63,16 @@ export default function Home() {
           fontSize: 46, fontWeight: 700, lineHeight: 1.1,
           color: colors.black, margin: "0 0 24px 0",
         }}>
-          Your daily<br />
-          <span style={{ color: colors.primary }}>coaching companion.</span>
+          You already know<br />
+          <span style={{ color: colors.primary }}>what needs to change.</span>
         </h1>
         <p style={{
           fontSize: 19, color: colors.gray600, lineHeight: 1.7,
-          margin: "0 0 40px 0", maxWidth: 540, marginLeft: "auto", marginRight: "auto",
+          margin: "0 0 40px 0", maxWidth: 500, marginLeft: "auto", marginRight: "auto",
         }}>
-          Journal daily. Get AI-powered reflections that see your patterns.
-          Do targeted exercises from proven coaching frameworks —
-          personalised to your themes.
+          Mindcraft gives you the daily structure to actually do it.
+          Journal, get reflections that see your real patterns,
+          and do exercises from proven frameworks — personalised to you.
         </p>
         <a href="/subscribe" style={{
           padding: "16px 44px", fontSize: 17, fontWeight: 600,
@@ -80,10 +80,7 @@ export default function Home() {
           borderRadius: 10, textDecoration: "none",
           display: "inline-block",
           transition: "background-color 0.15s",
-        }}>Get Mindcraft — $75/mo</a>
-        <p style={{ fontSize: 13, color: colors.gray400, marginTop: 12 }}>
-          Cancel anytime. No contracts.
-        </p>
+        }}>See how it works</a>
       </section>
 
       {/* ── The Problem ── */}
@@ -95,16 +92,16 @@ export default function Home() {
             fontSize: 28, fontWeight: 700, color: colors.white,
             marginBottom: 24, textAlign: "center", lineHeight: 1.3,
           }}>
-            Growth shouldn&apos;t depend on someone else&apos;s calendar.
+            The problem isn&apos;t awareness.
           </h2>
           <div style={{
             display: "flex", flexDirection: "column", gap: 16,
             maxWidth: 520, margin: "0 auto",
           }}>
             {[
-              "You read the books. Watch the talks. You know what you want to change.",
-              "But insight without structure fades. Old patterns run on autopilot.",
-              "You need a system — not another app that tells you to breathe.",
+              "You\u2019ve done the therapy. Read the books. Had the breakthroughs.",
+              "But insight without structure fades. The same loops run on autopilot.",
+              "You don\u2019t need more awareness. You need a system that works with what you already know.",
             ].map((line, i) => (
               <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
                 <span style={{
@@ -123,16 +120,24 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <p style={{
-            fontSize: 17, color: colors.primary, fontWeight: 600,
-            textAlign: "center", marginTop: 32,
-          }}>
-            Mindcraft is that system.
-          </p>
         </div>
       </section>
 
-      {/* ── What it does ── */}
+      {/* ── Who it's for ── */}
+      <section style={{
+        padding: "48px 24px", backgroundColor: colors.primaryLight,
+        textAlign: "center",
+      }}>
+        <p style={{
+          fontSize: 17, color: colors.black, margin: 0, lineHeight: 1.6,
+          maxWidth: 560, marginLeft: "auto", marginRight: "auto", fontWeight: 500,
+        }}>
+          Built for people who already do the inner work —<br />
+          and want a system to make it stick.
+        </p>
+      </section>
+
+      {/* ── What it does — with product preview ── */}
       <section style={{ padding: "64px 24px", backgroundColor: colors.white }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <h2 style={{
@@ -145,12 +150,14 @@ export default function Home() {
             fontSize: 16, color: colors.gray500, textAlign: "center",
             marginBottom: 44, lineHeight: 1.6, maxWidth: 520, marginLeft: "auto", marginRight: "auto",
           }}>
-            A coaching system that reads what you write, reflects back what it sees,
-            and gives you real work to do — matched to your patterns.
+            A system that reads what you write, reflects back what it sees,
+            and gives you real exercises — matched to your patterns.
           </p>
+
+          {/* Feature cards */}
           <div style={{
             display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: 20,
+            gap: 20, marginBottom: 48,
           }}>
             {[
               {
@@ -160,12 +167,12 @@ export default function Home() {
               },
               {
                 title: "Do the real work.",
-                desc: "Targeted exercises pulled from IFS, ACT, CBT, Gottman, and positive psychology. Matched to your themes. Done in minutes.",
+                desc: "Targeted exercises from IFS, ACT, CBT, Gottman, and positive psychology. Matched to your themes. Done in minutes.",
                 accent: "#7c3aed",
               },
               {
                 title: "See what\u2019s shifting.",
-                desc: "Weekly reviews and monthly summaries surface patterns across entries. Track your growth over time.",
+                desc: "Weekly reviews and monthly summaries surface patterns across entries. Real evidence of what\u2019s changing.",
                 accent: "#0891b2",
               },
             ].map((item) => (
@@ -183,6 +190,55 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          {/* Product preview — mock reflection */}
+          <div style={{
+            maxWidth: 560, margin: "0 auto",
+            padding: 28, backgroundColor: colors.gray50, borderRadius: 16,
+            border: `1px solid ${colors.gray100}`,
+          }}>
+            <p style={{
+              fontSize: 12, fontWeight: 600, color: colors.gray400,
+              textTransform: "uppercase", letterSpacing: 1, margin: "0 0 16px 0",
+            }}>
+              What a reflection looks like
+            </p>
+            <div style={{
+              padding: 20, backgroundColor: colors.white, borderRadius: 10,
+              border: `1px solid ${colors.gray200}`, marginBottom: 16,
+            }}>
+              <p style={{
+                fontSize: 14, color: colors.gray400, margin: "0 0 8px 0",
+                fontStyle: "italic",
+              }}>
+                You wrote:
+              </p>
+              <p style={{
+                fontSize: 15, color: colors.dark, margin: 0, lineHeight: 1.6,
+              }}>
+                &ldquo;I keep saying yes to things I don&apos;t want. Then I resent everyone for it.&rdquo;
+              </p>
+            </div>
+            <div style={{
+              padding: 20, backgroundColor: colors.primaryLight, borderRadius: 10,
+              borderLeft: `3px solid ${colors.primary}`,
+            }}>
+              <p style={{
+                fontSize: 14, color: colors.gray400, margin: "0 0 8px 0",
+                fontStyle: "italic",
+              }}>
+                Mindcraft reflects:
+              </p>
+              <p style={{
+                fontSize: 15, color: colors.dark, margin: 0, lineHeight: 1.6,
+              }}>
+                This is the third time this week you&apos;ve named a pattern of over-committing.
+                The resentment isn&apos;t about them — it&apos;s the signal that a boundary
+                was needed and didn&apos;t get set. Tomorrow&apos;s exercise will work on
+                identifying the moment before the &ldquo;yes.&rdquo;
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -193,24 +249,24 @@ export default function Home() {
             fontSize: 28, fontWeight: 700, textAlign: "center",
             marginBottom: 40, color: colors.black,
           }}>
-            Three steps. Then you&apos;re in.
+            Three steps. Five minutes a day.
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
             {[
               {
                 step: "1",
                 title: "Tell us what you\u2019re working on",
-                desc: "A short intake builds your personalised 12-week plan \u2014 frameworks matched to your situation.",
+                desc: "A short intake maps your patterns and builds a 12-week plan — frameworks matched to your situation, not a generic template.",
               },
               {
                 step: "2",
-                title: "Journal and do the work",
-                desc: "Write daily. Get reflections that notice what you miss. Complete exercises that move the needle \u2014 not generic homework.",
+                title: "Write. Reflect. Do the exercise.",
+                desc: "Each day: journal freely, get a reflection that notices what you miss, and complete an exercise that moves the needle.",
               },
               {
                 step: "3",
-                title: "Watch the patterns emerge",
-                desc: "Weekly reviews and monthly summaries show what\u2019s shifting. Real evidence of your growth, tracked over time.",
+                title: "Watch yourself change",
+                desc: "Weekly reviews and monthly summaries track what\u2019s actually shifting. Not feelings about progress — evidence of it.",
               },
             ].map((item) => (
               <div key={item.step} style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
@@ -254,7 +310,7 @@ export default function Home() {
             }}>All Minds on Deck</a>
             {" "}&mdash; an ICF &amp; EMCC certified coaching practice with backgrounds
             in product leadership, positive psychology, and neuroscience.
-            The methodology is proven. The frameworks are real.
+            Every exercise comes from a proven methodology. Nothing is made up.
           </p>
           <div style={{
             display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
@@ -281,26 +337,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Pricing CTA ── */}
+      {/* ── Pricing ── */}
       <section style={{
         padding: "56px 24px",
         backgroundColor: colors.black,
       }}>
         <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: colors.white, marginBottom: 8 }}>
-            Your growth system. $75/month.
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: colors.white, marginBottom: 12 }}>
+            Start doing the work.
           </h2>
-          <p style={{ fontSize: 16, color: colors.gray300, marginBottom: 8, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 16, color: colors.gray300, marginBottom: 32, lineHeight: 1.6 }}>
             Daily reflections. Personalised exercises. Pattern tracking.
-            Everything you need to keep moving.
+            A 12-week plan built around you. Everything you need —
+            for less than a single coaching session.
           </p>
           <p style={{
-            fontSize: 42, fontWeight: 700, color: colors.white, margin: "24px 0 4px 0",
+            fontSize: 42, fontWeight: 700, color: colors.white, margin: "0 0 4px 0",
           }}>
             $75<span style={{ fontSize: 18, fontWeight: 400, color: colors.gray400 }}>/month</span>
           </p>
           <p style={{ fontSize: 14, color: colors.gray400, marginBottom: 32 }}>
-            Cancel anytime. No contracts. Your data stays yours.
+            Cancel anytime. Your data stays yours.
           </p>
           <a href="/subscribe" style={{
             padding: "16px 48px", fontSize: 17, fontWeight: 600,

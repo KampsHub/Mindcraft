@@ -40,24 +40,24 @@ export default function Logo({ size = 90 }: { size?: number }) {
         <rect x="-16" y="-15" width="32" height="8.5" rx="4" fill={colors.primary} />
         {/* Left eye */}
         <ellipse cx="-7" cy="-10.8" rx="3" ry="2" fill="white" />
-        {/* Left pupil — default looking right, glances left once every 10s */}
+        {/* Left pupil — glances left immediately on load, then every 10s */}
         <ellipse cx="-5" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
           <animate
             attributeName="cx"
-            values="-5;-5;-8.2;-8.2;-5"
-            keyTimes="0;0.88;0.92;0.96;1"
+            values="-5;-8.2;-8.2;-5;-5"
+            keyTimes="0;0.04;0.08;0.12;1"
             dur="10s"
             repeatCount="indefinite"
           />
         </ellipse>
         {/* Right eye */}
         <ellipse cx="7" cy="-10.8" rx="3" ry="2" fill="white" />
-        {/* Right pupil — default looking right, glances left once every 10s */}
+        {/* Right pupil — glances left immediately on load, then every 10s */}
         <ellipse cx="9.3" cy="-10.8" rx="1.3" ry="1.3" fill={colors.black}>
           <animate
             attributeName="cx"
-            values="9.3;9.3;6;6;9.3"
-            keyTimes="0;0.88;0.92;0.96;1"
+            values="9.3;6;6;9.3;9.3"
+            keyTimes="0;0.04;0.08;0.12;1"
             dur="10s"
             repeatCount="indefinite"
           />

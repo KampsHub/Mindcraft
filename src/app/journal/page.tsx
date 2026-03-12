@@ -88,10 +88,10 @@ export default function JournalPage() {
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ marginBottom: 28 }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
-            Daily Journal
+            Write freely.
           </h1>
           <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>
-            Write what&apos;s on your mind. Your coaching companion will reflect back what it sees.
+            No filters. Your companion reflects back what it notices — patterns, blind spots, growth edges.
           </p>
         </div>
 
@@ -99,7 +99,7 @@ export default function JournalPage() {
           <textarea
             value={entry}
             onChange={(e) => setEntry(e.target.value)}
-            placeholder="What's happening for you today? What are you noticing, feeling, or working through?"
+            placeholder="What's real right now? What are you noticing, feeling, working through?"
             rows={8}
             style={{
               width: "100%", padding: 16, fontSize: 16, lineHeight: 1.6,
@@ -132,7 +132,7 @@ export default function JournalPage() {
               border: `2px solid ${colors.gray200}`, borderTopColor: colors.primary,
               borderRadius: "50%", animation: "spin 0.8s linear infinite",
             }} />
-            <span>Your coaching companion is reading your entry...</span>
+            <span>Reading your entry...</span>
             <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
           </div>
         )}

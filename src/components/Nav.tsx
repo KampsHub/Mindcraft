@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { colors, fonts } from "@/lib/theme";
+import Logo from "@/components/Logo";
 
 const navLinks = [
   { href: "/dashboard", label: "Home" },
@@ -46,16 +47,9 @@ export default function Nav() {
             background: "none", border: "none", cursor: "pointer", padding: 0,
           }}
         >
-          <div style={{
-            width: 32, height: 32, borderRadius: 8,
-            backgroundColor: colors.primary,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 14, fontWeight: 700, color: colors.white,
-          }}>
-            A
-          </div>
+          <Logo size={32} />
           <span style={{ fontSize: 15, fontWeight: 600, color: colors.black }}>
-            Coaching Hub
+            Mindcraft
           </span>
         </button>
 

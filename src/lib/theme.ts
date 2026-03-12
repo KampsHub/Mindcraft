@@ -1,6 +1,7 @@
 /**
- * All Minds on Deck — Design Tokens
- * Derived from allmindsondeck.org brand
+ * Mindcraft — Design Tokens
+ * Brand of All Minds on Deck
+ * Font: Space Grotesk (closest match to roc-grotesk)
  */
 
 export const colors = {
@@ -33,7 +34,7 @@ export const colors = {
 };
 
 export const fonts = {
-  body: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif",
+  body: "var(--font-space-grotesk), 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };
 
 /** Shared container styles */

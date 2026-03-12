@@ -52,12 +52,12 @@ function SubscribeContent() {
       <Nav />
       <div style={{ maxWidth: 560, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8, color: colors.black }}>
-            Coaching Hub
+          <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, color: colors.black }}>
+            Ready to do the work?
           </h1>
           <p style={{ fontSize: 16, color: colors.gray500, lineHeight: 1.6 }}>
-            Your daily coaching companion — personalised exercises, journal reflections,
-            and AI-powered insights.
+            Real coaching frameworks. Personalised exercises. AI-powered reflections.
+            Not theory — real work, every day, between sessions.
           </p>
         </div>
 
@@ -86,12 +86,12 @@ function SubscribeContent() {
 
           <div style={{ textAlign: "left", maxWidth: 320, margin: "0 auto 24px", display: "flex", flexDirection: "column", gap: 10 }}>
             {[
-              "Daily personalised coaching exercises",
-              "AI-powered journal reflections",
-              "12-week coaching plan",
-              "Theme tracking and pattern recognition",
-              "Weekly and monthly progress reviews",
-              "Privacy-first — your data stays yours",
+              "Personalised exercises from proven frameworks",
+              "AI-powered reflections — not platitudes",
+              "12-week coaching plan built around you",
+              "Pattern recognition across your entries",
+              "Weekly and monthly reviews that surface what matters",
+              "Your data. Full stop. No training, ever.",
             ].map((feature) => (
               <div key={feature} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                 <span style={{ color: colors.success, fontSize: 16, lineHeight: 1.4 }}>{"\u2713"}</span>
@@ -111,7 +111,7 @@ function SubscribeContent() {
               transition: "background-color 0.15s",
             }}
           >
-            {loading ? "Redirecting to checkout..." : "Subscribe now"}
+            {loading ? "Redirecting to checkout..." : "Start your journey"}
           </button>
 
           {error && (

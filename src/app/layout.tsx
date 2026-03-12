@@ -1,26 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Coaching Hub — All Minds on Deck",
-  description: "Your daily coaching companion — journal, exercises, and reflections.",
+  title: "Mindcraft — by All Minds on Deck",
+  description: "Your coaching companion. Real frameworks. Real growth. Between sessions, every day.",
   manifest: "/manifest.json",
-  themeColor: "#2563eb",
+  themeColor: "#F08E80",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Coaching Hub",
+    title: "Mindcraft",
   },
 };
 
@@ -36,7 +32,8 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${spaceGrotesk.variable} antialiased`}
+        style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}
       >
         {children}
         <script

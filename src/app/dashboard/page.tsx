@@ -190,7 +190,7 @@ export default function DashboardPage() {
         {/* Welcome */}
         <div style={{ marginBottom: 28 }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
-            Welcome back
+            The work continues.
           </h1>
           <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{user.email}</p>
         </div>
@@ -200,14 +200,14 @@ export default function DashboardPage() {
           ...card, padding: 20, marginBottom: 24,
         }}>
           <label style={{ display: "block", fontSize: 14, fontWeight: 500, color: colors.gray600, marginBottom: 8 }}>
-            Quick thought
+            What&apos;s on your mind?
           </label>
           <div style={{ display: "flex", gap: 8 }}>
             <input
               type="text"
               value={oneLiner}
               onChange={(e) => setOneLiner(e.target.value)}
-              placeholder="Capture a thought, feeling, or observation..."
+              placeholder="A thought. A feeling. Something you noticed."
               disabled={submitting}
               style={{
                 flex: 1, padding: "10px 14px", fontSize: 15,
@@ -277,12 +277,12 @@ export default function DashboardPage() {
         {/* Navigation links */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 32 }}>
           {[
-            { href: "/journal", label: "Journal", desc: "Write today's entry" },
-            { href: "/exercise", label: "Exercise", desc: "Today's exercise" },
-            { href: "/plan", label: "Plan", desc: "Your coaching plan" },
-            { href: "/weekly-review", label: "Review", desc: "Reflect on your week" },
-            { href: "/monthly-summary", label: "Monthly", desc: "Monthly patterns" },
-            { href: "/privacy", label: "Privacy", desc: "Data & consent" },
+            { href: "/journal", label: "Journal", desc: "Write. Get seen." },
+            { href: "/exercise", label: "Exercise", desc: "Today's real work" },
+            { href: "/plan", label: "Plan", desc: "Your 12-week map" },
+            { href: "/weekly-review", label: "Review", desc: "What showed up this week" },
+            { href: "/monthly-summary", label: "Monthly", desc: "See the patterns" },
+            { href: "/privacy", label: "Privacy", desc: "Your data. Full stop." },
           ].map(({ href, label, desc }) => (
             <button
               key={href}

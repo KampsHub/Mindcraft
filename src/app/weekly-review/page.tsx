@@ -276,10 +276,10 @@ export default function WeeklyReviewPage() {
         {/* Accountability rating */}
         <div style={{ marginBottom: 28 }}>
           <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
-            How did you show up this week?
+            How did you show up?
           </h2>
           <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
-            1 = barely engaged &nbsp;&middot;&nbsp; 5 = fully committed
+            1 = barely here &nbsp;&middot;&nbsp; 5 = fully in it
           </p>
           <div style={{ display: "flex", gap: 8 }}>
             {[1, 2, 3, 4, 5].map((n) => (
@@ -305,10 +305,10 @@ export default function WeeklyReviewPage() {
         {/* Reflection */}
         <div style={{ marginBottom: 28 }}>
           <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
-            What stood out this week?
+            What stood out?
           </h2>
           <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
-            What did you notice, learn, or feel? What surprised you?
+            What did you notice? What surprised you? What shifted?
           </p>
           <textarea
             value={reflection}
@@ -326,10 +326,10 @@ export default function WeeklyReviewPage() {
         {/* Plan adjustments */}
         <div style={{ marginBottom: 32 }}>
           <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 8px 0", color: colors.black }}>
-            Anything to adjust in your plan?
+            Anything to adjust?
           </h2>
           <p style={{ fontSize: 14, color: colors.gray500, margin: "0 0 12px 0" }}>
-            Want to shift focus, change pace, or try a different approach next week?
+            Shift focus? Change pace? Try a different approach next week?
           </p>
           <textarea
             value={planAdjustments}

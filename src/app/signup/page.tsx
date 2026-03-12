@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
+import Logo from "@/components/Logo";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -54,16 +55,16 @@ export default function SignupPage() {
           border: `1px solid ${colors.gray100}`, textAlign: "center",
         }}>
           <div style={{
-            width: 44, height: 44, borderRadius: 12, backgroundColor: colors.success,
+            width: 44, height: 44, borderRadius: "50%", backgroundColor: colors.success,
             display: "inline-flex", alignItems: "center", justifyContent: "center",
             fontSize: 20, color: colors.white, marginBottom: 16,
           }}>✓</div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 8px 0", color: colors.black }}>
-            Check your email
+            Check your inbox
           </h1>
           <p style={{ color: colors.gray500, lineHeight: 1.6, fontSize: 14 }}>
-            We sent a confirmation link to <strong>{email}</strong>.
-            Click it to activate your account, then come back to sign in.
+            Confirmation link sent to <strong>{email}</strong>.
+            Click it, then sign in. Your coaching plan is waiting.
           </p>
           <a
             href="/login"
@@ -94,16 +95,14 @@ export default function SignupPage() {
       }}>
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{
-            width: 44, height: 44, borderRadius: 12, backgroundColor: colors.primary,
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            fontSize: 20, fontWeight: 700, color: colors.white, marginBottom: 16,
-          }}>A</div>
+          <div style={{ display: "inline-block", marginBottom: 16 }}>
+            <Logo size={44} />
+          </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
             Create your account
           </h1>
           <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>
-            Start your coaching journey.
+            One last step. Then the real work starts.
           </p>
         </div>
 

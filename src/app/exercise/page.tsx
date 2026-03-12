@@ -93,9 +93,9 @@ export default function ExercisePage() {
       <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
         <Nav />
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px", textAlign: "center", paddingTop: 80 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: colors.black }}>Today&apos;s Exercise</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: colors.black }}>Do the work.</h1>
           <p style={{ color: colors.gray500, fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
-            {error || "No exercise for today yet. Generate one based on your coaching plan and recent entries."}
+            {error || "No exercise yet today. We'll pull one from proven frameworks, matched to your themes. Completed in minutes."}
           </p>
           {generating && (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 24, color: colors.gray500 }}>
@@ -103,7 +103,7 @@ export default function ExercisePage() {
                 width: 20, height: 20, border: `2px solid ${colors.gray200}`, borderTopColor: colors.primary,
                 borderRadius: "50%", animation: "spin 0.8s linear infinite",
               }} />
-              <span>Selecting and personalising your exercise...</span>
+              <span>Matching an exercise to your themes...</span>
               <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
             </div>
           )}
@@ -166,7 +166,7 @@ export default function ExercisePage() {
             padding: 16, backgroundColor: colors.successLight, border: "1px solid #bbf7d0",
             borderRadius: 8, textAlign: "center", color: "#166534",
           }}>
-            ✓ Completed — nice work. Head to your journal to process what came up.
+            ✓ Done. Head to your journal to process what came up.
           </div>
         ) : (
           <button onClick={markComplete} style={{

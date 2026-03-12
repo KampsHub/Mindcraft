@@ -152,7 +152,7 @@ export default function MonthlySummaryPage() {
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>Monthly Summary</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>The Month. At a Glance.</h1>
             <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{monthName}</p>
           </div>
           <button onClick={() => window.print()} className="no-print" style={{

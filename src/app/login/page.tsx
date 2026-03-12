@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
+import Logo from "@/components/Logo";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -50,16 +51,14 @@ export default function LoginPage() {
       }}>
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{
-            width: 44, height: 44, borderRadius: 12, backgroundColor: colors.primary,
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            fontSize: 20, fontWeight: 700, color: colors.white, marginBottom: 16,
-          }}>A</div>
+          <div style={{ display: "inline-block", marginBottom: 16 }}>
+            <Logo size={44} />
+          </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
             Welcome back
           </h1>
           <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>
-            Sign in to your coaching companion.
+            Pick up where you left off.
           </p>
         </div>
 
@@ -103,9 +102,9 @@ export default function LoginPage() {
         </form>
 
         <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.gray500 }}>
-          Don&apos;t have an account?{" "}
-          <a href="/signup" style={{ color: colors.primary, fontWeight: 500, textDecoration: "none" }}>
-            Sign up
+          New here?{" "}
+          <a href="/subscribe" style={{ color: colors.primary, fontWeight: 500, textDecoration: "none" }}>
+            Start your journey
           </a>
         </p>
       </div>

@@ -116,11 +116,11 @@ export default function IntakePage() {
     return (
       <div style={containerStyle}>
         <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8, color: colors.black }}>
-          Welcome to Coaching Hub
+          Let&apos;s build your plan.
         </h1>
         <p style={{ color: colors.gray500, marginBottom: 32, lineHeight: 1.6 }}>
-          Before we begin, tell us what brought you here. Select the path that best
-          describes your current situation.
+          Tell us what brought you here. We&apos;ll match you with the right frameworks
+          and build a 12-week coaching plan around your situation.
         </p>
 
         {packages.map((pkg) => (
@@ -399,11 +399,11 @@ export default function IntakePage() {
       paddingTop: 120,
     }}>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: colors.black }}>
-        You&apos;re all set
+        Got it. Let&apos;s go.
       </h1>
       <p style={{ color: colors.gray500, fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
-        Your responses have been saved. Your coaching companion now has the context
-        it needs to personalise your experience. Next step: generate your coaching plan.
+        Your responses are saved. Now we build your personalised 12-week coaching plan —
+        frameworks matched to your themes, exercises that fit your situation.
       </p>
       <button
         onClick={() => router.push("/plan")}

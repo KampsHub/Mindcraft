@@ -115,16 +115,15 @@ export default function PrivacyPage() {
       <Nav />
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>Privacy &amp; Consent</h1>
-          <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>Control how your data is used</p>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>Your Data. Full Stop.</h1>
+          <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>You own everything. Control exactly how it&apos;s used.</p>
         </div>
 
         {/* Data usage explanation */}
         <div style={{ ...card, padding: 16, marginBottom: 28, lineHeight: 1.6 }}>
           <p style={{ fontSize: 14, color: colors.gray600, margin: 0 }}>
-            Your journal entries, exercises, and coaching data belong to you. We use AI to generate
-            personalised reflections and exercises. Below you can control exactly how your data is
-            processed and shared.
+            Your journal entries, exercises, and coaching data belong to you. Full control over
+            sharing, export, and deletion. No training on your entries. Ever.
           </p>
         </div>
 

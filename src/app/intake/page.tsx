@@ -400,13 +400,13 @@ export default function IntakePage() {
       </h1>
       <p style={{ color: "#555", fontSize: 16, lineHeight: 1.6, maxWidth: 480, margin: "0 auto 32px" }}>
         Your responses have been saved. Your coaching companion now has the context
-        it needs to personalise your experience. Time to start journaling.
+        it needs to personalise your experience. Next step: generate your coaching plan.
       </p>
       <button
-        onClick={() => router.push("/journal")}
+        onClick={() => router.push("/plan")}
         style={btnPrimary}
       >
-        Go to your journal
+        Generate my coaching plan
       </button>
     </div>
   );

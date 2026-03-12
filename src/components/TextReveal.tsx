@@ -117,7 +117,7 @@ export default function TextReveal({
                     overflow: "visible",
                   }}
                 >
-                  {/* Glow behind slash */}
+                  {/* Glow flash — fades out after slash draws */}
                   <motion.path
                     d="M10 0 L90 100"
                     stroke={colors.primary}
@@ -125,19 +125,14 @@ export default function TextReveal({
                     strokeLinecap="round"
                     fill="none"
                     initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{
-                      pathLength: [0, 0, 1, 1, 0],
-                      opacity: [0, 0.3, 0.4, 0.15, 0],
-                    }}
+                    animate={{ pathLength: 1, opacity: [0, 0.4, 0] }}
                     transition={{
-                      duration: 0.8,
-                      repeat: Infinity,
-                      repeatDelay: 7,
+                      duration: 1.2,
                       delay: 2.5,
                       ease: "easeOut",
                     }}
                   />
-                  {/* Main slash line */}
+                  {/* Main slash line — stays permanently */}
                   <motion.path
                     d="M10 0 L90 100"
                     stroke={colors.primary}
@@ -145,14 +140,9 @@ export default function TextReveal({
                     strokeLinecap="round"
                     fill="none"
                     initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{
-                      pathLength: [0, 0, 1, 1, 0],
-                      opacity: [0, 0.9, 1, 0.6, 0],
-                    }}
+                    animate={{ pathLength: 1, opacity: 0.85 }}
                     transition={{
                       duration: 0.8,
-                      repeat: Infinity,
-                      repeatDelay: 7,
                       delay: 2.5,
                       ease: "easeOut",
                     }}

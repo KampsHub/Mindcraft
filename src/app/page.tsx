@@ -63,7 +63,7 @@ export default function Home() {
         }}
       >
         <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-          <Logo size={64} />
+          <Logo size={90} />
         </a>
         <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
           <a href="/login" style={{

@@ -12,8 +12,8 @@ export default function Logo({ size = 90 }: { size?: number }) {
   return (
     <svg
       width={size}
-      height={size * 1.3}
-      viewBox="0 0 200 260"
+      height={size * 1.25}
+      viewBox="-4 0 208 260"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Mindcraft Ninja logo"

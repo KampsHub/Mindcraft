@@ -18,7 +18,16 @@ export default function Logo({ size = 90 }: { size?: number }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Mindcraft Ninja logo"
     >
-      {/* ── Ninja head (drawn first so circle stroke overlays consistently) ── */}
+      {/* Circle — behind ninja, thicker stroke for consistent rendering at small sizes */}
+      <circle
+        cx="100"
+        cy="155"
+        r="100"
+        stroke={colors.black}
+        strokeWidth="2.5"
+      />
+
+      {/* ── Ninja head — on top of circle so stroke doesn't cut through face ── */}
       <g transform="translate(100, 97) scale(3)">
         {/* Head silhouette */}
         <path
@@ -42,15 +51,6 @@ export default function Logo({ size = 90 }: { size?: number }) {
           fill="none"
         />
       </g>
-
-      {/* Circle — on top for consistent stroke width all around */}
-      <circle
-        cx="100"
-        cy="155"
-        r="100"
-        stroke={colors.black}
-        strokeWidth="1.5"
-      />
 
       {/* ── Text inside circle ── */}
       <text

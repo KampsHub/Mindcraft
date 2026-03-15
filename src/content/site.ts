@@ -56,13 +56,13 @@ export const content = {
         number: "01",
         label: "Thread",
         title: "Your patterns from the last 2\u20133 days, named.",
-        desc: "Before you write a word, the AI reads across your recent entries and surfaces what\u2019s recurring \u2014 the themes you keep circling, the shifts you haven\u2019t noticed, the thing you\u2019re avoiding. Not a generic check-in. A mirror.",
+        desc: "Before you write a word, the system reads across your recent entries and surfaces what\u2019s recurring \u2014 the themes you keep circling, the shifts you haven\u2019t noticed, the thing you\u2019re avoiding. Not a generic check-in. A mirror.",
       },
       {
         number: "02",
         label: "Journal",
-        title: "Write what\u2019s real. AI reads what\u2019s underneath.",
-        desc: "Guided prompts matched to where you are in your program \u2014 or skip them and free-write. Either way, the AI doesn\u2019t just respond to what you typed. It reads for what you didn\u2019t say.",
+        title: "Write what\u2019s real. The system reads what\u2019s underneath.",
+        desc: "Guided prompts matched to where you are in your program \u2014 or skip them and free-write. Either way, the system doesn\u2019t just respond to what you typed. It reads for what you didn\u2019t say.",
       },
       {
         number: "03",
@@ -80,7 +80,7 @@ export const content = {
         number: "05",
         label: "Summary",
         title: "Tomorrow\u2019s thread seed. What to watch for.",
-        desc: "Each day closes with a seed for tomorrow \u2014 a pattern to notice, a question to sit with, a theme the AI will pick back up. Your story doesn\u2019t reset overnight. It builds.",
+        desc: "Each day closes with a seed for tomorrow \u2014 a pattern to notice, a question to sit with, a theme the system will pick back up. Your story doesn\u2019t reset overnight. It builds.",
       },
     ],
   },
@@ -89,7 +89,7 @@ export const content = {
   programs: {
     headline: "What\u2019s your situation?",
     subheadline:
-      "One month. One structured path. It adapts to your patterns as they emerge.",
+      "One month. One structured path. It adapts to your patterns as they emerge. Human coaches available when you need one.",
     cards: [
       {
         tag: "Layoff",
@@ -209,11 +209,11 @@ export const content = {
       },
       {
         q: "What if I\u2019m too busy?",
-        a: "The required exercises take about 5 minutes. A full session is 15\u201330 minutes. The AI adapts to the time you have \u2014 if you can only do the journal and one exercise, it adjusts. Most people find that 15 minutes of structured reflection replaces an hour of spiraling.",
+        a: "The required exercises take about 5 minutes. A full session is 15\u201330 minutes. The system adapts to the time you have \u2014 if you can only do the journal and one exercise, it adjusts. Most people find that 15 minutes of structured reflection replaces an hour of spiraling.",
       },
       {
-        q: "Does AI actually work for coaching?",
-        a: "The AI reads your entries and matches you to frameworks from neuroscience, performance psychology, and mindfulness research. It doesn\u2019t replace a human \u2014 it does the daily work most people skip between coaching sessions. And when you need more than a screen, real coaches are available who can pick up where the AI left off.",
+        q: "Does this actually work for coaching?",
+        a: "The system reads your entries and matches you to frameworks from neuroscience, performance psychology, and mindfulness research. It does the daily work most people skip between coaching sessions. And when you need more than a screen, certified coaches are available who already know your patterns and can pick up right where you are.",
       },
       {
         q: "Is this woo-woo?",
@@ -225,7 +225,7 @@ export const content = {
       },
       {
         q: "Who sees my data?",
-        a: "You. That\u2019s it. Your entries never train any AI model. No third parties. No exceptions. Export or delete everything at any time.",
+        a: "You. That\u2019s it. Your entries never train any model. No third parties. No exceptions. Export or delete everything at any time.",
       },
       {
         q: "What happens after my program month?",
@@ -250,11 +250,11 @@ export const content = {
   subscribe: {
     headline: "Ready to do the work?",
     subheadline:
-      "Real coaching frameworks. Personalised exercises. AI-powered reflections. Not theory — real work, every day.",
+      "Real coaching frameworks. Personalised exercises. Pattern-powered reflections. Not theory — real work, every day. Connect with a human coach anytime.",
     pricingLabel: "Monthly",
     features: [
       "Personalised exercises from proven frameworks",
-      "AI-powered reflections — not platitudes",
+      "Pattern-powered reflections — not platitudes",
       "4-week coaching plan built around you",
       "Pattern recognition across your entries",
       "Weekly and monthly reviews that surface what matters",
@@ -464,10 +464,10 @@ export const content = {
       "Your journal entries, exercises, and coaching data belong to you. Full control over sharing, export, and deletion. No training on your entries. Ever.",
     toggles: {
       aiProcessing: {
-        title: "AI Processing",
+        title: "System Processing",
         badge: "Required",
         description:
-          "Your entries are processed by Claude (Anthropic) to generate coaching reflections, theme tags, and exercise recommendations. This is required for the service to function. Entries are not used to train AI models.",
+          "Your entries are processed to generate coaching reflections, theme tags, and exercise recommendations. This is required for the service to function. Entries are never used to train models.",
       },
       coachSharing: {
         title: "Share with Coach",

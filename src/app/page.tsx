@@ -862,7 +862,7 @@ export default function Home() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 ),
-                title: "Your entries never train AI models.",
+                title: "Your entries never train models.",
                 desc: "Zero third-party access. No data sales. No fine-tuning on your vulnerability. Export everything or delete your account at any time \u2014 no \u2018are you sure?\u2019 dark patterns.",
               },
               {

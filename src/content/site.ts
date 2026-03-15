@@ -92,16 +92,16 @@ export const content = {
       "One month. One structured path. It adapts to your patterns as they emerge. Human coaches available when you need one.",
     cards: [
       {
-        tag: "Layoff",
-        title: "Stabilize first. Then figure out what\u2019s next.",
-        desc: "30 days of coach-designed exercises to get past the shock, find the patterns underneath it, and rebuild clarity \u2014 about the next move, and about who you are without the title.",
-        href: "/parachute",
-      },
-      {
         tag: "PIP",
         title: "Separate the panic from the actual problem.",
         desc: "30 days of coach-designed exercises to sort real feedback from fear, and build a concrete plan you can execute under pressure \u2014 not just survive.",
         href: "/jetstream",
+      },
+      {
+        tag: "Layoff",
+        title: "Stabilize first. Then figure out what\u2019s next.",
+        desc: "30 days of coach-designed exercises to get past the shock, find the patterns underneath it, and rebuild clarity \u2014 about the next move, and about who you are without the title.",
+        href: "/parachute",
       },
       {
         tag: "New Role",

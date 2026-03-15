@@ -539,8 +539,8 @@ export default function Home() {
                     <span
                       style={{
                         position: "absolute",
-                        top: 18,
-                        right: -32,
+                        top: 30,
+                        right: -50,
                         transform: "rotate(45deg)",
                         background: colors.coral,
                         color: colors.bgDeep,
@@ -549,7 +549,8 @@ export default function Home() {
                         fontSize: 11,
                         textTransform: "uppercase",
                         letterSpacing: "0.06em",
-                        padding: "6px 40px",
+                        padding: "7px 70px",
+                        textAlign: "center" as const,
                         whiteSpace: "nowrap",
                         zIndex: 1,
                       }}

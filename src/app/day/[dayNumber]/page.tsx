@@ -565,7 +565,7 @@ function DailyFlowPage() {
                 height: 4,
                 borderRadius: 100,
                 backgroundColor: completedSteps.includes(step)
-                  ? colors.success
+                  ? colors.coral
                   : step === activeStep
                   ? colors.coral
                   : colors.bgElevated,
@@ -779,7 +779,7 @@ function DailyFlowPage() {
               fontSize: 15,
               lineHeight: 1.7,
               border: journalSaved
-                ? `1px solid ${colors.success}`
+                ? `1px solid ${colors.coral}`
                 : `1px solid ${colors.borderDefault}`,
               borderRadius: 14,
               resize: "vertical",
@@ -787,7 +787,7 @@ function DailyFlowPage() {
               fontFamily: body,
               boxSizing: "border-box",
               color: colors.textPrimary,
-              backgroundColor: journalSaved ? colors.successWash : colors.bgInput,
+              backgroundColor: journalSaved ? "rgba(224, 149, 133, 0.08)" : colors.bgInput,
               transition: "border-color 0.2s, background-color 0.2s",
             }}
             onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
@@ -819,12 +819,12 @@ function DailyFlowPage() {
               </motion.button>
             ) : (
               <span style={{
-                fontSize: 13, color: colors.success, fontWeight: 600,
+                fontSize: 13, color: colors.coral, fontWeight: 600,
                 fontFamily: display, display: "flex", alignItems: "center", gap: 6,
               }}>
                 <span style={{
                   width: 20, height: 20, borderRadius: "50%",
-                  backgroundColor: colors.success,
+                  backgroundColor: colors.coral,
                   color: colors.bgDeep,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
                   fontSize: 11,

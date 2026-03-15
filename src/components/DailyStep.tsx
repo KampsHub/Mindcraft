@@ -47,7 +47,7 @@ export default function DailyStep({
           animate={{
             scale: isActive ? 1 : 1,
             backgroundColor: isCompleted
-              ? colors.success
+              ? colors.coral
               : isActive
               ? colors.coral
               : colors.bgElevated,
@@ -58,7 +58,7 @@ export default function DailyStep({
             height: 38,
             borderRadius: "50%",
             backgroundColor: isCompleted
-              ? colors.success
+              ? colors.coral
               : isActive
               ? colors.coral
               : colors.bgElevated,

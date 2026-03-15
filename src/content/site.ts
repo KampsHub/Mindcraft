@@ -87,7 +87,7 @@ export const content = {
 
   // ── Programs ──
   programs: {
-    headline: "Pick the program that fits.",
+    headline: "What\u2019s your situation?",
     subheadline:
       "One month. One structured path. It adapts to your patterns as they emerge.",
     cards: [

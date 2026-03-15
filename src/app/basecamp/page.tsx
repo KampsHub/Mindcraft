@@ -2411,7 +2411,15 @@ function ResponsiveStyles() {
 /* ═══════════════════════════════════════════════════════════
    PAGE COMPONENT — Main export
    ═══════════════════════════════════════════════════════════ */
-export default function BasecampPage() {
+export default function BasecampPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <BasecampPage />
+    </Suspense>
+  );
+}
+
+function BasecampPage() {
   return (
     <div
       style={{

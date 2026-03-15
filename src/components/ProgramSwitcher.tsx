@@ -36,7 +36,7 @@ export default function ProgramSwitcher({ currentEnrollmentId, onSwitch }: Progr
         .order("created_at", { ascending: false })
         .then(({ data }) => {
           if (data && data.length > 1) {
-            setEnrollments(data as Enrollment[]);
+            setEnrollments(data.map((e: Record<string, unknown>) => ({ ...e, programs: Array.isArray(e.programs) ? (e.programs as Record<string, unknown>[])[0] : e.programs })) as Enrollment[]);
           }
         });
     });

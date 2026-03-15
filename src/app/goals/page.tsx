@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -53,7 +53,15 @@ interface WeekRating {
   goal_ratings: Record<string, { rating: number; note: string }>;
 }
 
-export default function GoalsPage() {
+export default function GoalsPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <GoalsPage />
+    </Suspense>
+  );
+}
+
+function GoalsPage() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
   const [loading, setLoading] = useState(true);

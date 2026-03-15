@@ -3437,7 +3437,15 @@ function ResponsiveStyles() {
 /* ═══════════════════════════════════════════════════════════
    PAGE COMPONENT — Main export
    ═══════════════════════════════════════════════════════════ */
-export default function ParachutePage() {
+export default function ParachutePageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <ParachutePage />
+    </Suspense>
+  );
+}
+
+function ParachutePage() {
   return (
     <div
       style={{

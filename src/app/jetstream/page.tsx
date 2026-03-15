@@ -2307,7 +2307,15 @@ function ResponsiveStyles() {
 /* ═══════════════════════════════════════════════════════════
    PAGE COMPONENT — Main export
    ═══════════════════════════════════════════════════════════ */
-export default function JetstreamPage() {
+export default function JetstreamPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <JetstreamPage />
+    </Suspense>
+  );
+}
+
+function JetstreamPage() {
   return (
     <div
       style={{

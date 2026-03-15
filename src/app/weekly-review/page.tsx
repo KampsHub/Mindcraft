@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -120,7 +120,15 @@ function SectionHeader({ title, sectionKey, collapsed, onToggle, children }: {
   );
 }
 
-export default function WeeklyReviewPage() {
+export default function WeeklyReviewPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <WeeklyReviewPage />
+    </Suspense>
+  );
+}
+
+function WeeklyReviewPage() {
   const [user, setUser] = useState<User | null>(null);
   const [enrollment, setEnrollment] = useState<ProgramEnrollment | null>(null);
   const [activeGoals, setActiveGoals] = useState<ActiveGoal[]>([]);

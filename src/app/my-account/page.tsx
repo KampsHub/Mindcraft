@@ -80,7 +80,7 @@ export default function MyAccountPage() {
     }
 
     if (enrollRes.data) {
-      setEnrollments(enrollRes.data as ProgramEnrollment[]);
+      setEnrollments(enrollRes.data.map((e: Record<string, unknown>) => ({ ...e, programs: Array.isArray(e.programs) ? (e.programs as Record<string, unknown>[])[0] : e.programs })) as ProgramEnrollment[]);
     }
 
     setLoading(false);
@@ -98,21 +98,15 @@ export default function MyAccountPage() {
     if (!user) return;
     setSaving(true);
 
-    const updates: Promise<unknown>[] = [
-      supabase.from("consent_settings").upsert({
-        client_id: user.id,
-        ...consent,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: "client_id" }),
-    ];
+    await supabase.from("consent_settings").upsert({
+      client_id: user.id,
+      ...consent,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "client_id" });
 
     if (name !== originalName) {
-      updates.push(
-        supabase.from("clients").update({ name }).eq("id", user.id)
-      );
+      await supabase.from("clients").update({ name }).eq("id", user.id);
     }
-
-    await Promise.all(updates);
     setOriginalName(name);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);

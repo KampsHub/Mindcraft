@@ -85,7 +85,7 @@ export default function DashboardPage() {
                 .single(),
             ]);
             return {
-              enrollment: enr as ProgramEnrollment,
+              enrollment: { ...enr, programs: Array.isArray(enr.programs) ? enr.programs[0] : enr.programs } as ProgramEnrollment,
               goals: (goalsRes.data || []) as ActiveGoal[],
               todaySessionDone: !!sessionRes.data?.completed_at,
             };

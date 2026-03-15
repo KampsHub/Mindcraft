@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -103,7 +103,15 @@ interface SummaryResult {
 
 // ── Component ──
 
-export default function DailyFlowPage() {
+export default function DailyFlowPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <DailyFlowPage />
+    </Suspense>
+  );
+}
+
+function DailyFlowPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();

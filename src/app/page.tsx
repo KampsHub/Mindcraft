@@ -399,34 +399,12 @@ export default function Home() {
                 letterSpacing: "0.01em",
               }}
             >
-              You&rsquo;ve read the books. Asked mentors. Tried meditating.
-              And none of it helped with the mess that a PIP, a layoff,
-              or a new stressful role is leaving in your head. Our
-              month-long interventions are built entirely around you.
-              Where{" "}
-              <motion.span
-                animate={{
-                  skewX: [0, 0, -6, 4, -2, 0, 0],
-                  x: [0, 0, -3, 2, -1, 0, 0],
-                  opacity: [1, 1, 0.6, 0.75, 0.85, 1, 1],
-                }}
-                transition={{
-                  duration: 0.5,
-                  repeat: Infinity,
-                  repeatDelay: 4,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  display: "inline",
-                  fontStyle: "italic",
-                  fontWeight: 700,
-                  fontSize: "1.1em",
-                  position: "relative",
-                }}
-              >
-                &ldquo;it&rsquo;s me, hi, I&rsquo;m the problem&rdquo;
-              </motion.span>{" "}
-              gets the no-fluff realism it deserves.
+              A 30-day development plan built around what&rsquo;s actually
+              going on in your head. Daily journaling that catches patterns
+              you miss. Exercises from 180+ coaching frameworks, matched to
+              your blind spots. Weekly deep dives that connect the dots.
+              All of it &mdash; structured, personal, and tested in real
+              coaching settings.
             </p>
           </FadeIn>
 

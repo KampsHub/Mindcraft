@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -24,6 +25,14 @@ async function getSupabase() {
         },
       },
     }
+  );
+}
+
+/** Service-role client bypasses RLS — required for DELETE operations */
+function getAdminSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
 
@@ -97,23 +106,26 @@ export async function DELETE(request: NextRequest) {
       exportedData = await collectUserData(supabase, user.id);
     }
 
+    // Use admin client to bypass RLS for deletions
+    const admin = getAdminSupabase();
+
     // Delete in dependency order (children first, sequential to respect FK constraints)
-    const { data: enrollmentRows } = await supabase.from("program_enrollments").select("id").eq("client_id", user.id);
+    const { data: enrollmentRows } = await admin.from("program_enrollments").select("id").eq("client_id", user.id);
     const enrollmentIds = (enrollmentRows || []).map((e: { id: string }) => e.id);
 
     if (enrollmentIds.length > 0) {
-      await supabase.from("exercise_completions").delete().in("enrollment_id", enrollmentIds);
-      await supabase.from("daily_sessions").delete().in("enrollment_id", enrollmentIds);
-      await supabase.from("client_goals").delete().in("enrollment_id", enrollmentIds);
-      await supabase.from("program_enrollments").delete().eq("client_id", user.id);
+      await admin.from("exercise_completions").delete().in("enrollment_id", enrollmentIds);
+      await admin.from("daily_sessions").delete().in("enrollment_id", enrollmentIds);
+      await admin.from("client_goals").delete().in("enrollment_id", enrollmentIds);
+      await admin.from("program_enrollments").delete().eq("client_id", user.id);
     }
 
     // These may exist regardless of enrollments
-    await supabase.from("shared_summaries").delete().eq("client_id", user.id);
-    await supabase.from("entries").delete().eq("client_id", user.id);
-    await supabase.from("consent_settings").delete().eq("client_id", user.id);
+    await admin.from("shared_summaries").delete().eq("client_id", user.id);
+    await admin.from("entries").delete().eq("client_id", user.id);
+    await admin.from("consent_settings").delete().eq("client_id", user.id);
     // Client row last — all FKs should be clear now
-    const { error: deleteClientError } = await supabase.from("clients").delete().eq("id", user.id);
+    const { error: deleteClientError } = await admin.from("clients").delete().eq("id", user.id);
     if (deleteClientError) {
       console.error("Failed to delete client row:", deleteClientError);
       return NextResponse.json({ error: "Failed to delete account" }, { status: 500 });

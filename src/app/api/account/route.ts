@@ -97,24 +97,27 @@ export async function DELETE(request: NextRequest) {
       exportedData = await collectUserData(supabase, user.id);
     }
 
-    // Delete in dependency order (children first)
-    const enrollmentIds = ((await supabase.from("program_enrollments").select("id").eq("client_id", user.id)).data || []).map(e => e.id);
+    // Delete in dependency order (children first, sequential to respect FK constraints)
+    const { data: enrollmentRows } = await supabase.from("program_enrollments").select("id").eq("client_id", user.id);
+    const enrollmentIds = (enrollmentRows || []).map((e: { id: string }) => e.id);
 
     if (enrollmentIds.length > 0) {
-      await Promise.all([
-        supabase.from("exercise_completions").delete().in("enrollment_id", enrollmentIds),
-        supabase.from("daily_sessions").delete().in("enrollment_id", enrollmentIds),
-        supabase.from("client_goals").delete().in("enrollment_id", enrollmentIds),
-        supabase.from("shared_summaries").delete().eq("client_id", user.id),
-      ]);
+      await supabase.from("exercise_completions").delete().in("enrollment_id", enrollmentIds);
+      await supabase.from("daily_sessions").delete().in("enrollment_id", enrollmentIds);
+      await supabase.from("client_goals").delete().in("enrollment_id", enrollmentIds);
       await supabase.from("program_enrollments").delete().eq("client_id", user.id);
     }
 
-    await Promise.all([
-      supabase.from("entries").delete().eq("client_id", user.id),
-      supabase.from("consent_settings").delete().eq("client_id", user.id),
-      supabase.from("clients").delete().eq("id", user.id),
-    ]);
+    // These may exist regardless of enrollments
+    await supabase.from("shared_summaries").delete().eq("client_id", user.id);
+    await supabase.from("entries").delete().eq("client_id", user.id);
+    await supabase.from("consent_settings").delete().eq("client_id", user.id);
+    // Client row last — all FKs should be clear now
+    const { error: deleteClientError } = await supabase.from("clients").delete().eq("id", user.id);
+    if (deleteClientError) {
+      console.error("Failed to delete client row:", deleteClientError);
+      return NextResponse.json({ error: "Failed to delete account" }, { status: 500 });
+    }
 
     if (exportFirst && exportedData) {
       return new NextResponse(JSON.stringify(exportedData, null, 2), {

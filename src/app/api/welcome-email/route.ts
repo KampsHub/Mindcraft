@@ -66,11 +66,11 @@ export async function POST() {
           </div>
 
           <p style="font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-            Hi${user.user_metadata?.first_name ? ` ${user.user_metadata.first_name}` : ""},
+            Hello and Welcome.
           </p>
 
           <p style="font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-            Welcome. I&rsquo;m glad you&rsquo;re here.
+            I&rsquo;m glad you&rsquo;re here.
           </p>
 
           <p style="font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">

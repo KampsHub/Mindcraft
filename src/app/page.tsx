@@ -662,7 +662,7 @@ export default function Home() {
                 ),
                 tag: "Reflection",
                 title: "Yesterday\u2019s themes surface",
-                desc: "Your patterns reflected back to you: recurring themes in your journal, one\u2011liners you captured, free-flow context from throughout the day.",
+                desc: "Each morning starts with your patterns reflected back: recurring themes, shifts across days, and what your coach\u2019s AI noticed you might have missed.",
               },
               {
                 icon: (
@@ -672,8 +672,8 @@ export default function Home() {
                   </svg>
                 ),
                 tag: "Journaling",
-                title: "Free-flow journal",
-                desc: "Write freely. Prompts drawn from where you are in the program and patterns your coach\u2019s AI picked up on. Or ignore them and write what\u2019s real.",
+                title: "Write what\u2019s real",
+                desc: "Guided prompts shaped by where you are in the program \u2014 or skip them and free-write. Everything feeds into your personal development plan.",
               },
               {
                 icon: (
@@ -682,9 +682,9 @@ export default function Home() {
                     <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
                   </svg>
                 ),
-                tag: "AI Analysis",
-                title: "Your journal shapes your day",
-                desc: "Coach-designed AI reads what you wrote, picks up on emotional and cognitive patterns, and selects exercises matched to where you are right now.",
+                tag: "Your plan",
+                title: "A development plan built around you",
+                desc: "Based on common reactions and personal patterns, your program builds a structured plan with dedicated exercises \u2014 all tested in real coaching and development settings.",
               },
               {
                 icon: (
@@ -695,8 +695,8 @@ export default function Home() {
                   </svg>
                 ),
                 tag: "Exercises",
-                title: "Coached exercises + framework analysis",
-                desc: "1\u20132 required exercises per day tied to your goals, plus up to 5 optional from 180+ sourced tools.",
+                title: "Personalized exercises from 180+ frameworks",
+                desc: "Each day includes exercises matched to your opportunity areas \u2014 cognitive, somatic, relational. Sourced from proven coaching frameworks and adapted to your patterns.",
               },
               {
                 icon: (
@@ -705,9 +705,9 @@ export default function Home() {
                     <path d="m19 9-5 5-4-4-3 3" />
                   </svg>
                 ),
-                tag: "Tracking",
-                title: "Daily summary & patterns",
-                desc: "Multi-day patterns. What your coaching intelligence surfaced. Tomorrow\u2019s territory. Rate each exercise. Download your summary.",
+                tag: "Insights",
+                title: "Daily insights & weekly deep dives",
+                desc: "Daily summaries surface what\u2019s emerging. Weekly reviews go deeper \u2014 connecting patterns across days, showing what shifted, and mapping where you\u2019re headed.",
               },
             ].map((card, i) => (
               <FadeIn key={i} delay={0.08 + i * 0.08} preset="slide-up" style={{ flex: "0 1 calc(33.333% - 11px)", minWidth: 280 }}>

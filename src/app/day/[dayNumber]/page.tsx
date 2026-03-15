@@ -73,9 +73,12 @@ interface OverflowExercise {
 }
 
 interface StateAnalysis {
-  emotional_state: string;
-  cognitive_patterns: string;
-  somatic_signals: string;
+  // New prose format
+  reading?: string;
+  // Legacy category format (backwards compatible)
+  emotional_state?: string;
+  cognitive_patterns?: string;
+  somatic_signals?: string;
   key_themes: string[];
   urgency_level: string;
   goal_connections: string[];
@@ -881,17 +884,33 @@ function DailyFlowPage() {
               }}>
                 What your journal reveals
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
-                  <span style={{ fontWeight: 600, color: colors.textPrimary }}>Emotional state:</span> {stateAnalysis.emotional_state}
-                </p>
-                <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
-                  <span style={{ fontWeight: 600, color: colors.textPrimary }}>Patterns:</span> {stateAnalysis.cognitive_patterns}
-                </p>
-                {stateAnalysis.somatic_signals && (
-                  <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
-                    <span style={{ fontWeight: 600, color: colors.textPrimary }}>Body signals:</span> {stateAnalysis.somatic_signals}
-                  </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {stateAnalysis.reading ? (
+                  // New prose format — natural paragraphs
+                  stateAnalysis.reading.split("\n\n").map((para, i) => (
+                    <p key={i} style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.7, fontFamily: body }}>
+                      {para}
+                    </p>
+                  ))
+                ) : (
+                  // Legacy category format (backwards compatible)
+                  <>
+                    {stateAnalysis.emotional_state && (
+                      <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                        {stateAnalysis.emotional_state}
+                      </p>
+                    )}
+                    {stateAnalysis.cognitive_patterns && (
+                      <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                        {stateAnalysis.cognitive_patterns}
+                      </p>
+                    )}
+                    {stateAnalysis.somatic_signals && (
+                      <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                        {stateAnalysis.somatic_signals}
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             </div>

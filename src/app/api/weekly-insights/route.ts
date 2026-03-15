@@ -3,16 +3,24 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-const INSIGHTS_SYSTEM_PROMPT = `You are a pattern analyst for a structured coaching program. You receive a full week of daily session data: journal entries, exercise completions with client responses, day ratings, and the program's weekly theme.
+const INSIGHTS_SYSTEM_PROMPT = `You are the coaching companion reviewing a full week. You receive daily session data: journal entries, exercise completions with responses, day ratings, and the program's weekly theme.
 
-Your job is to extract the 4-6 most important insights from the week — things the client actually said, patterns that emerged, shifts that happened, or sticking points that persisted.
+Your job is to name the 4-6 most important things that happened this week — what someone actually said, patterns that emerged across days, shifts that happened, or sticking points that persisted.
+
+## Voice
+
+Talk TO the person. Use "you." Quote their actual words — from specific days, not paraphrased. When you name a pattern, show the evidence: "On Day 2 you wrote X. By Day 5 that had become Y."
+
+When you name a shift, name what moved. When you name a sticking point, name what stayed stuck and why that matters. Teach something about the pattern — what it protects, what it costs.
+
+Be warm and direct. No clinical labels. No motivational language. No praise.
 
 Return valid JSON (no markdown, no code fences):
 
 {
   "insights": [
     {
-      "insight": "One clear sentence about what surfaced this week.",
+      "insight": "One clear sentence — quoting their words where possible. Talk to them directly.",
       "source": "Brief attribution — 'From Day 3 journal' or 'Across Days 2-4 exercises' or 'Day 5 Saboteur Identification'",
       "type": "pattern" | "shift" | "sticking_point" | "breakthrough" | "connection"
     }
@@ -20,11 +28,11 @@ Return valid JSON (no markdown, no code fences):
 }
 
 ## Guidelines
-1. Use the client's actual words when possible — short quotes, not paraphrases.
+1. Quote their actual words — show the evidence from specific days.
 2. Prioritize patterns that span multiple days over single-day observations.
-3. "shift" = something that changed or moved. "sticking_point" = something that stayed stuck despite attention. "breakthrough" = a moment of genuine new understanding. "connection" = a link between two things the client hadn't seen before. "pattern" = a recurring theme.
+3. "shift" = something that changed or moved. "sticking_point" = something that stayed stuck despite attention. "breakthrough" = a moment of genuine new understanding. "connection" = a link between two things they hadn't seen before. "pattern" = a recurring theme.
 4. Be direct. No motivational language. No praise.
-5. Each insight should be actionable context — something a coach would want to know going into next week.
+5. Each insight should be something a coach would want to know going into next week.
 6. Maximum 6 insights. Quality over quantity.`;
 
 export async function POST(request: Request) {
@@ -167,7 +175,7 @@ Generate the key insights for Week ${weekNumber}.`;
       const summaryMessage = await anthropic.messages.create({
         model: "claude-sonnet-4-20250514",
         max_tokens: 600,
-        system: `You write concise weekly summaries for a coaching client's self-review. You receive structured insights from the week. Write a 3-5 sentence narrative paragraph that covers: key patterns noticed, journal themes, exercise engagement, and overall progress or emerging direction. Write in second person ("you"). Be direct — no praise, no motivational language. The summary should read like something a thoughtful coach would write in a case note.`,
+        system: `You write concise weekly summaries for someone reviewing their own week. Write a 3-5 sentence narrative paragraph in second person ("you"). Quote their actual words where possible. Name what moved, what stayed stuck, and what's emerging. Make connections across days they might not see. Be warm and direct — no praise, no motivational language. Talk to them like a smart colleague who knows their patterns well.`,
         messages: [{ role: "user", content: `Week ${weekNumber}: ${weekTheme.name} — "${weekTheme.title}"\nTerritory: ${weekTheme.territory}\n\nInsights:\n${(result.insights || []).map((i: { type: string; insight: string; source: string }) => `- [${i.type}] ${i.insight} (${i.source})`).join("\n")}\n\nWrite a narrative summary paragraph.` }],
       });
       const summaryBlock = summaryMessage.content.find((b) => b.type === "text");

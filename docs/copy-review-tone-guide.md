@@ -83,6 +83,18 @@ When describing patterns, avoid language that implies failure or weakness. The p
 **Bad:** "the loops you keep falling into, the things you've been avoiding"
 **Good:** "the loops that keep running, the things that are hard to look at"
 
+### The intake is a phase, not a session
+The intake is spread across the first 3 days — not a single 30-45 minute session. Frame it as a gradual getting-to-know-you process that happens at their pace. The person is already overwhelmed; don't make onboarding feel like another obligation.
+
+**Bad:** "30-45 minutes of questions a good coach asks."
+**Good:** "Over your first few days, we ask the questions a good coach asks — at your own pace."
+
+### Coach data sharing is always consent-based
+Human coaches NEVER have automatic access to a person's data. The person explicitly chooses to share their program data with a coach. Always make this clear. Never imply coaches "can see" data without mentioning consent.
+
+**Bad:** "Coaches can see your program data."
+**Good:** "If you choose to share your program data, they already know your story when you walk in."
+
 ### Don't self-congratulate
 Phrases like "the daily program holds a lot" or "the program does a lot" are the product patting itself on the back. The reader doesn't need to hear how good the program is before being told they can talk to a human.
 
@@ -158,5 +170,5 @@ Mindcraft IS:
 - Both a structured program (what research says most people need) AND a personal mirror (detecting individual patterns and blind spots)
 - Pattern detection across entries over time — not single-session responses
 - Daily adaptation based on what's emerging in the journal
-- Human coaches available who can see program data and already know the person's story
+- Human coaches available — the person chooses whether to share their program data (never automatic, never without consent)
 - Built by a certified coach who went through it herself and wished this had existed

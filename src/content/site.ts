@@ -125,8 +125,8 @@ export const content = {
       },
       {
         icon: "intake",
-        title: "A real coaching intake. Not a signup form.",
-        desc: "30\u201345 minutes of the questions a good coach asks \u2014 because that\u2019s who wrote them. What happened, what you\u2019re carrying, what you\u2019ve tried. Your goals come from your own words.",
+        title: "Three days to get to know you.",
+        desc: "Not a form. Not a quiz. Over your first few days, we ask the questions a good coach asks \u2014 because that\u2019s who wrote them. What happened, what you\u2019re carrying, what you\u2019ve tried. At your own pace. Then your goals come from your own words.",
       },
       {
         icon: "mirror",
@@ -146,7 +146,7 @@ export const content = {
       {
         icon: "human",
         title: "A human coach when you need one.",
-        desc: "Some moments need a real person. Certified coaches are available who can see your program data \u2014 so they already know your story when you walk in.",
+        desc: "Some moments need a real person. Certified coaches are available \u2014 and if you choose to share your program data, they already know your story when you walk in. Your choice, always.",
       },
     ],
   },
@@ -161,7 +161,7 @@ export const content = {
   // ── The Human Layer ──
   humanLayer: {
     headline: "Sometimes you need a real person.",
-    body: "Some moments need a human voice. We\u2019re connected to certified coaches with deep expertise in career transitions \u2014 many of them have been through it themselves. And because they can see your program data, they already know your story when you walk in. No starting from scratch.",
+    body: "Some moments need a human voice. We\u2019re connected to certified coaches with deep expertise in career transitions \u2014 many of them have been through it themselves. If you choose to share your program data, they already know your story when you walk in. No starting from scratch. No sharing without your say-so.",
     cta: "Book a session",
   },
 

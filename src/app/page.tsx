@@ -850,8 +850,8 @@ export default function Home() {
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                 ),
-                title: "Built by someone who\u2019s been where you are.",
-                desc: "Designed by a certified leadership coach who got laid off and wished something like this had existed. Not theory \u2014 frameworks from real coaching rooms, shaped by the experience of actually going through it.",
+                title: "Built by someone who\u2019s been through it.",
+                desc: "Designed by a certified leadership coach who\u2019s navigated career crises firsthand and wished something like this had existed. Not theory \u2014 frameworks from real coaching rooms, shaped by lived experience.",
               },
             ].map((item, i) => (
               <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">

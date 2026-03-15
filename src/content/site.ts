@@ -23,10 +23,10 @@ export const content = {
   // To add a hero video: put your .mp4 file in /public/images/ and update heroVideo below.
   // To use a static image instead: set heroVideo to "" and set heroImage to your image path.
   hero: {
-    headline: "Cut through",
-    headlineAccent: "the mind's noise.",
+    headline: "You\u2019re not broken.",
+    headlineAccent: "You\u2019re overwhelmed.",
     subheadline:
-      "When life spins out of control, take a month of structure and cognitive, somatic, and relational tools to work through it. Adapted to your daily patterns.",
+      "A career crisis is one of the hardest things you\u2019ll go through. This is 30 days of structure to help you see clearly again \u2014 with cognitive, somatic, and relational tools adapted to your patterns.",
     cta: "Find your program",
     heroVideo: "", // e.g. "/images/hero.mp4" — leave empty for no video
     heroImage: "", // e.g. "/images/hero.jpg" — fallback or standalone image
@@ -36,15 +36,15 @@ export const content = {
   // ── Differentiator Strip ──
   differentiator: {
     items: [
-      "Not plain journaling. Not coaching. Not a chatbot. Rather all in one.",
-      "A structured program that detects your personal patterns and adapts week by week.",
-      "250+ real frameworks. Exercises matched to your journal. A thread that builds across 30 days.",
+      "Not plain journaling. Not coaching. Not a chatbot. All of it, in one place.",
+      "A structured program that learns your patterns and meets you where you are, day by day.",
+      "250+ evidence-based frameworks. Matched to what you\u2019re actually going through.",
     ],
   },
 
   // ── Reframe Block ──
   reframe: {
-    text: "You\u2019ve read the books. Done the 1:1s. Maybe even tried meditating. But when a career moment really hits \u2014 the kind that stays with you \u2014 generic advice stops reaching. Not because something\u2019s wrong with you. Because the situation needs something more specific than a productivity hack or a blank journal page.",
+    text: "Everyone says \u201Cpush through.\u201D Update your LinkedIn. Network harder. Stay positive. But research shows that job loss, a PIP, or a disorienting new role rank among life\u2019s most stressful events. You don\u2019t need another productivity tip. You need a way to slow down, see what\u2019s actually happening inside, and work through it with real structure.",
   },
 
   // ── What a Day Looks Like ──
@@ -89,24 +89,24 @@ export const content = {
   programs: {
     headline: "What\u2019s your situation?",
     subheadline:
-      "One month. One structured path. It adapts to your patterns as they emerge. Human coaches available when you need one.",
+      "Each program is built for a specific moment. One month of guided structure to help you find your footing. Human coaches available when you need one.",
     cards: [
       {
         tag: "PIP",
-        title: "Separate the panic from the actual problem.",
-        desc: "30 days of coach-designed exercises to sort real feedback from fear, and build a concrete plan you can execute under pressure \u2014 not just survive.",
+        title: "The panic is louder than the feedback.",
+        desc: "It\u2019s hard to think clearly when your job feels on the line. This program helps you slow down, separate fear from facts, and find a grounded way forward \u2014 one day at a time.",
         href: "/jetstream",
       },
       {
         tag: "Layoff",
-        title: "Stabilize first. Then figure out what\u2019s next.",
-        desc: "30 days of coach-designed exercises to get past the shock, find the patterns underneath it, and rebuild clarity \u2014 about the next move, and about who you are without the title.",
+        title: "The job is gone. The feelings aren\u2019t.",
+        desc: "Losing a job can feel like losing your identity. This program gives you space and structure to process the shock, the shame, and the uncertainty \u2014 so you can start seeing clearly again.",
         href: "/parachute",
       },
       {
         tag: "New Role",
-        title: "The hardest part isn\u2019t the job. It\u2019s the doubt.",
-        desc: "Get grounded before imposter syndrome writes the narrative. Build real confidence in your new role, not the performed kind.",
+        title: "You got the job. So why does it feel this hard?",
+        desc: "New roles come with doubt most people don\u2019t talk about. This program helps you get grounded before imposter syndrome takes over \u2014 and build confidence that\u2019s actually yours.",
         href: "/basecamp",
       },
     ],
@@ -118,39 +118,39 @@ export const content = {
     headline: "How it works",
     items: [
       {
-        title: "Start with what you\u2019re dealing with.",
-        desc: "Choose the program that matches your moment \u2014 layoff, PIP, new role. That choice shapes your 30-day arc, your frameworks, and your intake questions. Then the program starts learning you.",
+        title: "Start with what you\u2019re going through.",
+        desc: "Choose the program that matches your moment \u2014 layoff, PIP, new role. That choice shapes everything: the coaching arc, the exercises, the intake questions. The program meets you where you are.",
       },
       {
-        title: "A real coaching intake. Not a signup form.",
-        desc: "30 to 45 minutes of the questions a good coach asks in a first session \u2014 because that\u2019s who wrote them. Your values, work history, what brought you here, what you\u2019ve already tried. This is the foundation everything builds on.",
+        title: "Tell your story. Not a signup form.",
+        desc: "30 to 45 minutes of the questions a good coach asks in a first session \u2014 because that\u2019s who wrote them. What happened, what you\u2019re carrying, what you\u2019ve already tried. This is the foundation everything builds on.",
       },
       {
         title: "Your goals. From your words, not a template.",
         desc: "Based on your intake, you\u2019ll get 3 to 6 goals \u2014 each one traced back to something you actually said. You approve, adjust, or add your own before Day 1.",
       },
       {
-        title: "15\u201330 minutes a day. Five steps that build on each other.",
-        desc: "Each daily session follows the same structure: a thread that names your patterns from recent days, a journal prompt matched to your program, 4 exercises pulled from 250+ frameworks (cognitive, somatic, relational), insights connecting the dots across entries, and a seed for tomorrow the system picks back up. It adapts to what you wrote that morning.",
+        title: "15\u201330 minutes a day. A structure you can lean on.",
+        desc: "Each daily session follows five steps: a thread that names your patterns from recent days, a journal prompt, 4 exercises from 250+ frameworks (cognitive, somatic, relational), insights connecting the dots, and a seed for tomorrow. It adapts to what you\u2019re going through \u2014 not the other way around.",
       },
       {
-        title: "Weekly goal check-ins. Monthly pattern reports.",
-        desc: "Every week, you review how you\u2019re tracking against the goals you set \u2014 what\u2019s moving, what\u2019s stuck, what needs adjusting. Monthly reports map themes across the full arc: recurring patterns, emotional shifts, behavioral change. Not metrics for metrics\u2019 sake. Real observations about real progress.",
+        title: "Weekly check-ins on the goals that matter to you.",
+        desc: "Every week, you look at what\u2019s shifting and what\u2019s stuck \u2014 against the goals you set in your own words. Monthly reports map the bigger picture: recurring patterns, emotional movement, and what\u2019s actually changing. Not to measure you. To help you see your own progress when it\u2019s hard to feel it.",
       },
     ],
   },
 
   // ── After the Month ──
   afterMonth: {
-    headline: "The program ends. You decide what\u2019s next.",
-    body: "Most people keep going. $50/month, same depth, same personalization. No lock-in. Stay because it\u2019s helping, not because we made it hard to leave.",
+    headline: "After 30 days, you decide what\u2019s next.",
+    body: "Some people feel ready to move on. Most keep going \u2014 $50/month, same depth, same personalization. No lock-in. You stay because it\u2019s helping, not because we made it hard to leave.",
     price: "$50/month",
   },
 
   // ── The Human Layer ──
   humanLayer: {
-    headline: "When you need more than a screen.",
-    body: "The daily program does a lot \u2014 but some moments call for a real person. We\u2019re connected to a network of certified coaches with deep expertise in leadership and team dynamics. Many of them have worked in tech or still do. You can export part of your data to share with a coach to get them up to speed fast.",
+    headline: "Sometimes you need a real person.",
+    body: "The daily program holds a lot \u2014 but some moments need a human voice. We\u2019re connected to certified coaches with deep expertise in career transitions and leadership. Many of them have been through it themselves. You can share your program data so they already know your story when you walk in.",
     cta: "Book a session",
   },
 
@@ -165,24 +165,24 @@ export const content = {
 
   // ── Takeaways ──
   takeaways: {
-    headline: "What you walk away with after 30 days.",
-    subheadline: "Not just insights. Tangible changes you can point to.",
+    headline: "What\u2019s different after 30 days.",
+    subheadline: "Not a fix. A shift in how you see things.",
     items: [
       {
-        title: "A map of your patterns and growth edges",
-        desc: "By Day 30, you\u2019ll have a clear picture of the recurring themes, default reactions, and blind spots that shape how you show up under pressure. Named, tracked, and connected across your entries.",
+        title: "Clarity about what\u2019s actually going on",
+        desc: "By Day 30, you\u2019ll have a clear picture of the patterns driving your reactions \u2014 the loops you keep falling into, the things you\u2019ve been avoiding, the shifts you didn\u2019t notice happening. Named, tracked, connected.",
       },
       {
-        title: "A development profile that evolved with you",
-        desc: "Your coaching plan isn\u2019t static. It adapted as your journal entries revealed new patterns. You leave with a living document: goals, frameworks used, what shifted, and what still needs attention.",
+        title: "A record of your own growth",
+        desc: "Your program adapts as your entries reveal new patterns. You leave with a living document: goals in your own words, frameworks that worked, what shifted, and what still needs attention. Proof that you moved \u2014 even when it didn\u2019t feel like it.",
       },
       {
-        title: "Real behavioral changes, not just awareness",
-        desc: "The exercises aren\u2019t theoretical. They\u2019re designed to shift how you actually respond \u2014 in meetings, in conflict, in the moments where old patterns used to run the show. Weekly reviews track whether the shifts are sticking.",
+        title: "A calmer way of responding",
+        desc: "The exercises aren\u2019t theoretical. They\u2019re designed to shift how you actually react \u2014 in the meeting, in the 2 a.m. spiral, in the moments where old patterns used to run the show. Weekly reviews help you see what\u2019s sticking.",
       },
       {
-        title: "A toolkit you keep using",
-        desc: "Every framework is cited and explained. By the end, you\u2019ll know which tools work for you \u2014 IFS parts work for that inner critic, ACT defusion for the spiraling thoughts, somatic grounding for the 2 a.m. panic. They\u2019re yours to use long after the program ends.",
+        title: "Tools that stay with you",
+        desc: "Every framework is cited and explained. By the end, you\u2019ll know which ones work for you \u2014 parts work for the inner critic, defusion for the spiraling thoughts, somatic grounding for when the body won\u2019t settle. They\u2019re yours to keep.",
       },
     ],
   },
@@ -193,27 +193,27 @@ export const content = {
     items: [
       {
         q: "How is this different from Headspace or Calm?",
-        a: "Those are meditation and mindfulness apps. Mindcraft is a coaching program \u2014 a structured 30-day path with exercises from 250+ frameworks, adapted to your patterns as they emerge. It detects what\u2019s showing up in your journal and matches you to the right tools. Different problem, different approach.",
+        a: "Those are meditation and mindfulness apps \u2014 great for general wellbeing. Mindcraft is specifically built for people going through a career crisis. It\u2019s a structured 30-day coaching program that reads your journal entries, tracks your patterns, and matches you to exercises from 250+ frameworks. Different situation, different kind of support.",
       },
       {
         q: "Is this therapy?",
-        a: "No. Therapy processes the past with a licensed clinician. This gives you daily structure for the present \u2014 specific exercises, pattern tracking, and coached reflections matched to your career situation. If you need therapy, get therapy. We\u2019re not a substitute. But if you\u2019re also in therapy, this can complement it by giving you daily practice between sessions.",
+        a: "No. If you need therapy, please get therapy \u2014 we\u2019re not a substitute. This gives you daily structure for what you\u2019re going through right now: specific exercises, pattern tracking, and reflections matched to your situation. If you\u2019re already in therapy, this can complement it by giving you daily practice between sessions.",
       },
       {
-        q: "How is this different from a journaling app like Rosebud or Reflectly?",
-        a: "A journaling app gives you a blank page and maybe a mood tracker. Mindcraft reads your entries longitudinally \u2014 tracking patterns across days, not just reflecting on today. It matches you to specific coaching exercises from real frameworks, adapts your program based on what\u2019s emerging, and builds a narrative thread across your entire month. The journal is one step in a five-step daily process, not the whole product.",
+        q: "How is this different from a journaling app?",
+        a: "A journaling app gives you a blank page. When you\u2019re overwhelmed, a blank page can feel like one more thing to figure out. Mindcraft reads your entries across days \u2014 tracking patterns, matching you to specific exercises, and building a thread across your entire month. The journal is one step in a five-step daily process, not the whole thing.",
       },
       {
         q: "How is this different from ChatGPT?",
-        a: "ChatGPT responds to what you type right now. Mindcraft knows your intake history, tracks your patterns across 30 days of entries, follows a structured coaching arc designed by certified coaches, and selects exercises from frameworks like IFS, ACT, and Gottman \u2014 not just whatever sounds helpful in the moment. It\u2019s the difference between asking a friend for advice and working with a coach who\u2019s read your file.",
+        a: "ChatGPT responds to what you type right now. Mindcraft knows your full story \u2014 your intake, your patterns across 30 days, your goals in your own words. It follows a structured coaching arc designed by certified coaches and selects exercises from real frameworks. It\u2019s the difference between venting to a friend and working with someone who\u2019s read your file.",
       },
       {
-        q: "What if I\u2019m too busy?",
-        a: "The required exercises take about 5 minutes. A full session is 15\u201330 minutes. The system adapts to the time you have \u2014 if you can only do the journal and one exercise, it adjusts. Most people find that 15 minutes of structured reflection replaces an hour of spiraling.",
+        q: "I\u2019m barely holding it together. Do I have time for this?",
+        a: "A full session is 15\u201330 minutes, but you can do just the journal and one exercise in 5. The system adjusts to what you have. Most people find that even 15 minutes of structured reflection is better than another hour of spiraling. On the hard days, the structure is what helps \u2014 you don\u2019t have to figure out what to do.",
       },
       {
-        q: "Does this actually work for coaching?",
-        a: "The system reads your entries and matches you to frameworks from neuroscience, performance psychology, and mindfulness research. It does the daily work most people skip between coaching sessions. And when you need more than a screen, certified coaches are available who already know your patterns and can pick up right where you are.",
+        q: "Does this actually work?",
+        a: "The system matches you to frameworks from neuroscience, performance psychology, and mindfulness research \u2014 the same tools used in coaching rooms. It does the daily work most people skip between sessions. And when you need more than a screen, certified coaches are available who already know your patterns.",
       },
       {
         q: "Is this woo-woo?",
@@ -229,7 +229,7 @@ export const content = {
       },
       {
         q: "What happens after my program month?",
-        a: "Keep going at $50/month with the same depth and personalization, add live coaching sessions, or stop. No contracts. No lock-in. No \u2018are you sure?\u2019 emails. You stay because it\u2019s working, not because we made it hard to leave.",
+        a: "You decide. Keep going at $50/month, add live coaching sessions, or stop. No contracts. No lock-in. No \u2018are you sure?\u2019 emails. You stay because it\u2019s helping, not because we made it hard to leave.",
       },
     ],
   },
@@ -241,16 +241,16 @@ export const content = {
 
   // ── Final CTA ──
   finalCta: {
-    headline: "You don\u2019t have to figure this out alone.",
-    subtext: "One month. One program. No contracts.",
+    headline: "You don\u2019t have to white-knuckle through this.",
+    subtext: "One month of structure. One program built for your situation.",
     primaryCta: "Find your program",
   },
 
   // ── Subscribe page ──
   subscribe: {
-    headline: "Ready to do the work?",
+    headline: "Ready to start?",
     subheadline:
-      "Real coaching frameworks. Personalised exercises. Pattern-powered reflections. Not theory — real work, every day. Connect with a human coach anytime.",
+      "30 days of structure when you need it most. Real frameworks, personalised exercises, and a program that adapts to you. Human coaches available anytime.",
     pricingLabel: "Monthly",
     features: [
       "Personalised exercises from proven frameworks",

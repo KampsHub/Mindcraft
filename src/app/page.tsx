@@ -758,8 +758,8 @@ export default function Home() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 ),
-                title: "Your entries never train models.",
-                desc: "Zero third-party access. No data sales. No fine-tuning on your vulnerability. Export everything or delete your account at any time \u2014 no \u2018are you sure?\u2019 dark patterns.",
+                title: "What you write here stays here.",
+                desc: "Your entries never train any model. Zero third-party access. No data sales. Export everything or delete your account at any time. You\u2019re sharing vulnerable things \u2014 we treat that accordingly.",
               },
               {
                 icon: (
@@ -780,8 +780,8 @@ export default function Home() {
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                 ),
-                title: "Built by a coach who\u2019s been through it.",
-                desc: "Designed by a certified leadership coach and product leader who got laid off and channeled the experience into building what she wished had existed. Real frameworks from real coaching rooms.",
+                title: "Built by someone who\u2019s been where you are.",
+                desc: "Designed by a certified leadership coach who got laid off and wished something like this had existed. Not theory \u2014 frameworks from real coaching rooms, shaped by the experience of actually going through it.",
               },
             ].map((item, i) => (
               <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">

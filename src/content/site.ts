@@ -130,12 +130,12 @@ export const content = {
         desc: "Based on your intake, you\u2019ll get 3 to 6 goals \u2014 each one traced back to something you actually said. You approve, adjust, or add your own before Day 1.",
       },
       {
-        title: "The program follows your thread.",
-        desc: "Each day\u2019s prompts and exercises adapt to your patterns as they emerge \u2014 the structured program gives you direction, your journal gives it signal. 15\u201330 minutes, and it builds across the month.",
+        title: "15\u201330 minutes a day. Five steps that build on each other.",
+        desc: "Each daily session follows the same structure: a thread that names your patterns from recent days, a journal prompt matched to your program, 4 exercises pulled from 250+ frameworks (cognitive, somatic, relational), insights connecting the dots across entries, and a seed for tomorrow the system picks back up. It adapts to what you wrote that morning.",
       },
       {
-        title: "Watch what actually shifts.",
-        desc: "Weekly reflections and monthly pattern reports track what\u2019s changing \u2014 recurring themes, emotional movement, behavioral shifts. Not metrics for metrics\u2019 sake. Real observations about real change.",
+        title: "Weekly goal check-ins. Monthly pattern reports.",
+        desc: "Every week, you review how you\u2019re tracking against the goals you set \u2014 what\u2019s moving, what\u2019s stuck, what needs adjusting. Monthly reports map themes across the full arc: recurring patterns, emotional shifts, behavioral change. Not metrics for metrics\u2019 sake. Real observations about real progress.",
       },
     ],
   },

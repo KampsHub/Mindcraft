@@ -31,6 +31,7 @@ export default function DailyStep({
         marginBottom: 28,
         opacity: isActive || isCompleted ? 1 : 0.35,
         transition: "opacity 0.4s ease",
+        position: "relative",
       }}
     >
       {/* Step header */}
@@ -42,39 +43,77 @@ export default function DailyStep({
           marginBottom: 18,
         }}
       >
-        {/* Step number circle */}
-        <motion.div
-          animate={{
-            scale: isActive ? 1 : 1,
-            backgroundColor: isCompleted
-              ? colors.coral
-              : isActive
-              ? colors.coral
-              : colors.bgElevated,
-          }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          style={{
-            width: 38,
-            height: 38,
-            borderRadius: "50%",
-            backgroundColor: isCompleted
-              ? colors.coral
-              : isActive
-              ? colors.coral
-              : colors.bgElevated,
-            color: isCompleted || isActive ? colors.bgDeep : colors.textMuted,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 14,
-            fontWeight: 700,
-            fontFamily: display,
-            flexShrink: 0,
-            letterSpacing: "-0.02em",
-          }}
-        >
-          {isCompleted ? "✓" : stepNumber}
-        </motion.div>
+        {/* Step number circle with glow */}
+        <div style={{ position: "relative", flexShrink: 0 }}>
+          {/* Warm glow ring for active step */}
+          {isActive && (
+            <motion.div
+              animate={{
+                opacity: [0.25, 0.5, 0.25],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{
+                position: "absolute",
+                inset: -6,
+                borderRadius: "50%",
+                background: `radial-gradient(circle, ${colors.coral}40 0%, transparent 70%)`,
+                pointerEvents: "none",
+              }}
+            />
+          )}
+          <motion.div
+            animate={{
+              backgroundColor: isCompleted
+                ? colors.coral
+                : isActive
+                ? colors.coral
+                : colors.bgElevated,
+              boxShadow: isActive
+                ? `0 0 20px ${colors.coral}30`
+                : isCompleted
+                ? `0 2px 8px ${colors.coral}20`
+                : "none",
+            }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: "50%",
+              backgroundColor: isCompleted
+                ? colors.coral
+                : isActive
+                ? colors.coral
+                : colors.bgElevated,
+              color: isCompleted || isActive ? colors.bgDeep : colors.textMuted,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 14,
+              fontWeight: 700,
+              fontFamily: display,
+              letterSpacing: "-0.02em",
+              position: "relative",
+              zIndex: 1,
+            }}
+          >
+            {isCompleted ? (
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 20 }}
+              >
+                ✓
+              </motion.span>
+            ) : (
+              stepNumber
+            )}
+          </motion.div>
+        </div>
 
         <div style={{ flex: 1 }}>
           <h2
@@ -110,11 +149,15 @@ export default function DailyStep({
             style={{
               fontSize: 11,
               fontWeight: 600,
-              color: colors.textMuted,
+              color: isActive ? colors.coral : colors.textMuted,
               flexShrink: 0,
               fontFamily: display,
               letterSpacing: "0.04em",
               textTransform: "uppercase",
+              padding: "4px 10px",
+              backgroundColor: isActive ? colors.coralWash : "transparent",
+              borderRadius: 6,
+              transition: "all 0.3s",
             }}
           >
             {estimatedTime}

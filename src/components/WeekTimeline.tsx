@@ -160,7 +160,7 @@ export default function WeekTimeline({ sessions, weekStartDay }: WeekTimelinePro
               {/* Completion dot */}
               <div style={{
                 width: 6, height: 6, borderRadius: "50%",
-                backgroundColor: isComplete ? colors.success : colors.bgElevated,
+                backgroundColor: isComplete ? colors.coral : colors.bgElevated,
               }} />
             </div>
           );

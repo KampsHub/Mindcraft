@@ -2,6 +2,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
+import { validateBody, generateGoalsSchema } from "@/lib/api-validation";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const GOAL_SYSTEM_PROMPT = `You are a coaching goal architect for All Minds on Deck. You receive a client's pre-start intake responses and their first 3 days of journal entries, exercise responses, and onboarding data from a structured coaching program.
 
@@ -34,14 +37,10 @@ Return valid JSON in this exact format (no markdown, no code fences):
 
 export async function POST(request: Request) {
   try {
-    const { enrollmentId } = await request.json();
-
-    if (!enrollmentId) {
-      return NextResponse.json(
-        { error: "Missing enrollmentId" },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
+    const validation = validateBody(generateGoalsSchema, body);
+    if (!validation.success) return validation.response;
+    const { enrollmentId } = validation.data;
 
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -76,6 +75,10 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
+
+    // Rate limit (AI bucket — 10 req/min)
+    const rateLimitResponse = checkRateLimit(user.id, "ai");
+    if (rateLimitResponse) return rateLimitResponse;
 
     // Fetch enrollment with program data
     const { data: enrollment, error: enrollError } = await supabase
@@ -150,6 +153,11 @@ ${
 
 Generate 6 personalized coaching goals for this client based on everything above.`;
 
+    // Fetch client profile if available (generated just before goals)
+    const profile = await getClientProfile(enrollmentId, "edges");
+    const profileContext = formatProfileForPrompt(profile, "edges");
+    const fullPrompt = profileContext + promptData;
+
     // Call Claude
     const anthropic = new Anthropic({
       apiKey: process.env.CLAUDE_API_KEY!,
@@ -159,7 +167,7 @@ Generate 6 personalized coaching goals for this client based on everything above
       model: "claude-sonnet-4-20250514",
       max_tokens: 2048,
       system: GOAL_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: promptData }],
+      messages: [{ role: "user", content: fullPrompt }],
     });
 
     const textBlock = message.content.find((block) => block.type === "text");

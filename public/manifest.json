@@ -1,11 +1,11 @@
 {
-  "name": "Coaching Hub — All Minds on Deck",
-  "short_name": "Coaching Hub",
+  "name": "Mindcraft — All Minds on Deck",
+  "short_name": "Mindcraft",
   "description": "Your daily coaching companion — journal, exercises, and reflections.",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "background_color": "#18181C",
+  "theme_color": "#18181C",
   "orientation": "portrait-primary",
   "icons": [
     {

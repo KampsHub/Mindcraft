@@ -57,40 +57,58 @@ export default function FreeFlowCapture({
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button with warm glow */}
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
+          <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1, boxShadow: "0 8px 24px rgba(224, 149, 133, 0.4)" }}
-            whileTap={{ scale: 0.92 }}
-            onClick={() => setIsOpen(true)}
             style={{
               position: "fixed",
               bottom: 28,
               right: 28,
-              width: 56,
-              height: 56,
-              borderRadius: "50%",
-              backgroundColor: colors.coral,
-              color: colors.bgDeep,
-              border: "none",
-              cursor: "pointer",
-              fontSize: 22,
-              fontWeight: 700,
-              boxShadow: "0 4px 16px rgba(224, 149, 133, 0.3)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               zIndex: 1000,
-              fontFamily: display,
             }}
-            title="Capture a thought"
           >
-            ✎
-          </motion.button>
+            {/* Warm glow pulse */}
+            <motion.div
+              animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.15, 1] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                position: "absolute",
+                inset: -8,
+                borderRadius: "50%",
+                background: `radial-gradient(circle, ${colors.coral}30 0%, transparent 70%)`,
+                pointerEvents: "none",
+              }}
+            />
+            <motion.button
+              whileHover={{ scale: 1.1, boxShadow: `0 8px 28px ${colors.coral}50` }}
+              whileTap={{ scale: 0.92 }}
+              onClick={() => setIsOpen(true)}
+              style={{
+                position: "relative",
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                background: `radial-gradient(circle at 35% 35%, ${colors.coralLight}, ${colors.coral})`,
+                color: colors.bgDeep,
+                border: "none",
+                cursor: "pointer",
+                fontSize: 22,
+                fontWeight: 700,
+                boxShadow: `0 4px 20px ${colors.coral}40`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: display,
+              }}
+              title="Capture a thought"
+            >
+              ✎
+            </motion.button>
+          </motion.div>
         )}
       </AnimatePresence>
 

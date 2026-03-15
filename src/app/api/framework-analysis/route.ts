@@ -2,6 +2,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
+import { validateBody, frameworkAnalysisSchema } from "@/lib/api-validation";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const FRAMEWORK_ANALYSIS_PROMPT = `You are the coaching companion for a structured development program. You receive multi-day journal entries, exercises, and theme history, plus a library of foundational coaching frameworks.
 
@@ -40,14 +43,10 @@ Return valid JSON (no markdown, no code fences):
 
 export async function POST(request: Request) {
   try {
-    const { enrollmentId, dayNumber } = await request.json();
-
-    if (!enrollmentId || !dayNumber) {
-      return NextResponse.json(
-        { error: "Missing enrollmentId or dayNumber" },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
+    const validation = validateBody(frameworkAnalysisSchema, body);
+    if (!validation.success) return validation.response;
+    const { enrollmentId, dayNumber } = validation.data;
 
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -72,6 +71,10 @@ export async function POST(request: Request) {
     if (authError || !user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
+
+    // Rate limit (AI bucket — 10 req/min)
+    const rateLimitResponse = checkRateLimit(user.id, "ai");
+    if (rateLimitResponse) return rateLimitResponse;
 
     // Fetch last 7 days of sessions for multi-day pattern detection
     const { data: recentSessions } = await supabase
@@ -143,13 +146,17 @@ ${candidateFrameworks.map((f) =>
 
 Select the best framework to apply to this client's multi-day pattern.`;
 
+    // Fetch client profile for personalization
+    const profile = await getClientProfile(enrollmentId, "full");
+    const profileContext = formatProfileForPrompt(profile, "full");
+
     const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1500,
       system: FRAMEWORK_ANALYSIS_PROMPT,
-      messages: [{ role: "user", content: userPrompt }],
+      messages: [{ role: "user", content: profileContext + userPrompt }],
     });
 
     const textBlock = message.content.find((b) => b.type === "text");
@@ -157,7 +164,12 @@ Select the best framework to apply to this client's multi-day pattern.`;
       return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
     }
 
-    const result = JSON.parse(textBlock.text);
+    // Strip markdown code fences if Claude wraps the JSON in ```json ... ```
+    let rawResult = textBlock.text.trim();
+    if (rawResult.startsWith("```")) {
+      rawResult = rawResult.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    }
+    const result = JSON.parse(rawResult);
 
     return NextResponse.json({
       ...result,

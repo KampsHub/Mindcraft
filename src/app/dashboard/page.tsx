@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import Nav from "@/components/Nav";
 import FadeIn from "@/components/FadeIn";
 import ProgramCard from "./ProgramCard";
-import ContactModal from "./ContactModal";
 import { colors, fonts } from "@/lib/theme";
 import ExercisesSection from "@/components/ExercisesSection";
 
@@ -38,24 +37,31 @@ interface ActiveGoal {
   status: string;
 }
 
+interface DayStatus {
+  dayNumber: number;
+  completed: boolean;
+  inProgress: boolean;
+  isCurrent: boolean;
+}
+
 interface EnrollmentWithContext {
   enrollment: ProgramEnrollment;
   goals: ActiveGoal[];
   todaySessionDone: boolean;
+  weekDays: DayStatus[];
+  weekNumber: number;
 }
 
 /* ── Quick-access links (3 per row) ── */
 const quickLinks = [
-  { href: "/mindful-journal", label: "Journal", desc: "Write freely", icon: "✎" },
-  { href: "/goals", label: "Progress", desc: "Goals & milestones", icon: "◎" },
-  { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻" },
-  { href: "/my-account", label: "My Account", desc: "Your data", icon: "◈" },
+  { href: "/mindful-journal", label: "Journal", desc: "Write freely", icon: "✎", accent: colors.coral },
+  { href: "/goals", label: "Progress", desc: "Goals & milestones", icon: "◎", accent: colors.plumLight },
+  { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻", accent: colors.plumLight },
 ];
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [enrollments, setEnrollments] = useState<EnrollmentWithContext[]>([]);
-  const [contactOpen, setContactOpen] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
@@ -71,7 +77,12 @@ export default function DashboardPage() {
       if (rawEnrollments && rawEnrollments.length > 0) {
         const enriched = await Promise.all(
           rawEnrollments.map(async (enr) => {
-            const [goalsRes, sessionRes] = await Promise.all([
+            // Calculate current week range
+            const weekNumber = Math.ceil(enr.current_day / 7);
+            const weekStart = (weekNumber - 1) * 7 + 1;
+            const weekEnd = weekNumber * 7;
+
+            const [goalsRes, sessionRes, weekSessionsRes] = await Promise.all([
               supabase
                 .from("client_goals")
                 .select("id, goal_text, status")
@@ -83,11 +94,42 @@ export default function DashboardPage() {
                 .eq("enrollment_id", enr.id)
                 .eq("day_number", enr.current_day)
                 .single(),
+              supabase
+                .from("daily_sessions")
+                .select("day_number, completed_at")
+                .eq("enrollment_id", enr.id)
+                .gte("day_number", weekStart)
+                .lte("day_number", weekEnd)
+                .order("day_number", { ascending: true }),
             ]);
+
+            // Build week day statuses
+            const completedDays = new Set(
+              (weekSessionsRes.data || [])
+                .filter((s: { completed_at: string | null }) => s.completed_at)
+                .map((s: { day_number: number }) => s.day_number)
+            );
+            const startedDays = new Set(
+              (weekSessionsRes.data || [])
+                .map((s: { day_number: number }) => s.day_number)
+            );
+
+            const weekDays: DayStatus[] = [];
+            for (let d = weekStart; d <= weekEnd; d++) {
+              weekDays.push({
+                dayNumber: d,
+                completed: completedDays.has(d),
+                inProgress: startedDays.has(d) && !completedDays.has(d),
+                isCurrent: d === enr.current_day,
+              });
+            }
+
             return {
               enrollment: { ...enr, programs: Array.isArray(enr.programs) ? enr.programs[0] : enr.programs } as ProgramEnrollment,
               goals: (goalsRes.data || []) as ActiveGoal[],
               todaySessionDone: !!sessionRes.data?.completed_at,
+              weekDays,
+              weekNumber,
             };
           })
         );
@@ -171,6 +213,8 @@ export default function DashboardPage() {
                   todaySessionDone={ctx.todaySessionDone}
                   isCompact={enrollments.length > 1}
                   onNavigate={(path) => router.push(path)}
+                  weekDays={ctx.weekDays}
+                  weekNumber={ctx.weekNumber}
                 />
               </FadeIn>
             ))}
@@ -203,15 +247,44 @@ export default function DashboardPage() {
             {quickLinks.map((link, i) => (
               <motion.button
                 key={link.href}
-                whileHover={{ y: -4, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: "rgba(224, 149, 133, 0.3)" }}
+                whileHover={{ y: -5, boxShadow: `0 12px 32px ${link.accent}18` }}
                 transition={{ type: "spring", stiffness: 300, damping: 22, delay: i * 0.03 }}
                 onClick={() => router.push(link.href)}
                 style={{
-                  ...cardStyle, padding: "18px 14px", textAlign: "center",
-                  cursor: "pointer", transition: "border-color 0.2s",
+                  ...cardStyle,
+                  padding: "22px 14px 18px",
+                  textAlign: "center",
+                  cursor: "pointer",
+                  transition: "border-color 0.2s",
+                  position: "relative",
+                  overflow: "hidden",
                 }}
               >
-                <p style={{ fontSize: 20, margin: "0 0 8px 0", lineHeight: 1, color: colors.textMuted }}>{link.icon}</p>
+                {/* Subtle warm glow */}
+                <div style={{
+                  position: "absolute",
+                  top: -20,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: 60,
+                  height: 60,
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, ${link.accent}15 0%, transparent 70%)`,
+                  pointerEvents: "none",
+                }} />
+                <div style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  backgroundColor: `${link.accent}12`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 10px",
+                  position: "relative",
+                }}>
+                  <span style={{ fontSize: 18, color: link.accent }}>{link.icon}</span>
+                </div>
                 <p style={{
                   fontFamily: display, fontSize: 14, fontWeight: 600,
                   margin: "0 0 3px 0", color: colors.textPrimary,
@@ -223,35 +296,12 @@ export default function DashboardPage() {
                 </p>
               </motion.button>
             ))}
-            {/* Contact (opens modal instead of navigating) */}
-            <motion.button
-              whileHover={{ y: -4, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: "rgba(224, 149, 133, 0.3)" }}
-              transition={{ type: "spring", stiffness: 300, damping: 22, delay: quickLinks.length * 0.03 }}
-              onClick={() => setContactOpen(true)}
-              style={{
-                ...cardStyle, padding: "18px 14px", textAlign: "center",
-                cursor: "pointer", transition: "border-color 0.2s",
-              }}
-            >
-              <p style={{ fontSize: 20, margin: "0 0 8px 0", lineHeight: 1, color: colors.textMuted }}>✉</p>
-              <p style={{
-                fontFamily: display, fontSize: 14, fontWeight: 600,
-                margin: "0 0 3px 0", color: colors.textPrimary,
-              }}>
-                Contact
-              </p>
-              <p style={{ fontSize: 12, color: colors.textMuted, margin: 0, fontFamily: body }}>
-                Get support
-              </p>
-            </motion.button>
           </div>
         </FadeIn>
 
 
       </div>
 
-      {/* ── Contact modal ── */}
-      <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );
 }

@@ -52,7 +52,7 @@ const modalityColors: Record<string, { bg: string; text: string; label: string }
   cognitive: { bg: colors.plumWash, text: colors.plumLight, label: "Cognitive" },
   somatic: { bg: colors.coralWash, text: colors.coralLight, label: "Somatic" },
   relational: { bg: "rgba(61, 40, 64, 0.5)", text: colors.plumLight, label: "Relational" },
-  integrative: { bg: colors.successWash, text: colors.success, label: "Integrative" },
+  integrative: { bg: colors.plumWash, text: colors.plumLight, label: "Integrative" },
   systems: { bg: colors.bgElevated, text: colors.textSecondary, label: "Systems" },
 };
 
@@ -361,9 +361,9 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                           >
                             <div style={{
                               width: 24, height: 24, borderRadius: "50%", flexShrink: 0,
-                              backgroundColor: colors.successWash,
+                              backgroundColor: colors.coralWash,
                               display: "flex", alignItems: "center", justifyContent: "center",
-                              color: colors.success, fontSize: 11,
+                              color: colors.coral, fontSize: 11,
                             }}>
                               ✓
                             </div>

@@ -363,7 +363,7 @@ export default function CoachPage() {
                             </span>
                             <span style={{
                               fontSize: 11, padding: "2px 8px", borderRadius: 10,
-                              backgroundColor: "rgba(106, 178, 130, 0.12)", color: "#6AB282",
+                              backgroundColor: colors.coralWash, color: colors.coral,
                             }}>
                               approved
                             </span>

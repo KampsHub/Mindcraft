@@ -10,6 +10,10 @@ import DailyStep from "@/components/DailyStep";
 import ExerciseCard from "@/components/ExerciseCard";
 import FreeFlowCapture from "@/components/FreeFlowCapture";
 import FadeIn from "@/components/FadeIn";
+import CrisisBanner from "@/components/CrisisBanner";
+import CommitmentCheckIn, { type CommitmentCheckInItem } from "@/components/CommitmentCheckIn";
+import ForTomorrowCard from "@/components/ForTomorrowCard";
+import ActivePatternChallenge, { type PatternChallengeData } from "@/components/ActivePatternChallenge";
 import { colors, fonts } from "@/lib/theme";
 
 /* ── Design tokens ── */
@@ -55,10 +59,21 @@ interface DailySession {
 }
 
 interface ThemesResult {
+  thread?: string;
   themes: string[];
   summary: string;
+  personal_prompt?: { prompt: string; context: string };
+  follow_up?: {
+    commitments: string[];
+    coaching_questions: string[];
+    highlight: string;
+  };
   patterns: { observation: string; days_observed: number; connection: string }[];
   carry_forward: string;
+  // Commitment tracking data (passthrough from API)
+  yesterday_commitments?: string[];
+  yesterday_for_tomorrow?: { watch_for?: string; try_this?: string; sit_with?: string } | null;
+  active_pattern_challenges?: PatternChallengeData[];
 }
 
 interface OverflowExercise {
@@ -70,6 +85,7 @@ interface OverflowExercise {
   estimated_minutes: number;
   originator: string;
   source_work: string;
+  why_this_works?: string;
 }
 
 interface StateAnalysis {
@@ -134,6 +150,7 @@ function DailyFlowPage() {
   const [themes, setThemes] = useState<ThemesResult | null>(null);
   const [loadingThemes, setLoadingThemes] = useState(false);
   const [themesError, setThemesError] = useState<string | null>(null);
+  const [commitmentResponses, setCommitmentResponses] = useState<CommitmentCheckInItem[]>([]);
 
   // Step 2
   const [journalContent, setJournalContent] = useState("");
@@ -143,6 +160,10 @@ function DailyFlowPage() {
   // Step 3
   const [stateAnalysis, setStateAnalysis] = useState<StateAnalysis | null>(null);
   const [overflowExercises, setOverflowExercises] = useState<OverflowExercise[]>([]);
+  const [coachingQuestions, setCoachingQuestions] = useState<string[]>([]);
+  const [reframe, setReframe] = useState<{ old_thought: string; new_thought: string; source_quote: string } | null>(null);
+  const [patternChallenge, setPatternChallenge] = useState<{ pattern: string; challenge: string; counter_move: string } | null>(null);
+  const [sequenceSuggestion, setSequenceSuggestion] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
 
   // Step 4
@@ -158,6 +179,12 @@ function DailyFlowPage() {
 
   // Review prompt
   const [showReviewPrompt, setShowReviewPrompt] = useState(false);
+
+  // Crisis banner
+  const [crisisDetectedStep3, setCrisisDetectedStep3] = useState(false);
+  const [crisisDetectedStep5, setCrisisDetectedStep5] = useState(false);
+  const [crisisDismissedStep3, setCrisisDismissedStep3] = useState(false);
+  const [crisisDismissedStep5, setCrisisDismissedStep5] = useState(false);
 
   // ── Load initial data ──
   const loadData = useCallback(async (userId: string) => {
@@ -213,10 +240,30 @@ function DailyFlowPage() {
       if (steps.includes(1)) setThemes(existingSession.step_1_themes as unknown as ThemesResult);
       if (steps.includes(3)) {
         const analysis = existingSession.step_3_analysis as Record<string, unknown>;
-        setStateAnalysis(analysis?.state_analysis as StateAnalysis);
+        const restoredAnalysis = analysis?.state_analysis as StateAnalysis;
+        setStateAnalysis(restoredAnalysis);
         setOverflowExercises((analysis?.overflow_exercises || []) as OverflowExercise[]);
+        setCoachingQuestions((analysis?.coaching_questions || []) as string[]);
+        setReframe((analysis?.reframe || null) as { old_thought: string; new_thought: string; source_quote: string } | null);
+        setPatternChallenge((analysis?.pattern_challenge || null) as { pattern: string; challenge: string; counter_move: string } | null);
+        setSequenceSuggestion((analysis?.sequence_suggestion || null) as string | null);
+        if (restoredAnalysis?.urgency_level === "high") {
+          setCrisisDetectedStep3(true);
+        }
       }
-      if (steps.includes(5)) setSummaryResult(existingSession.step_5_summary as unknown as SummaryResult);
+      if (steps.includes(5)) {
+        const restoredSummary = existingSession.step_5_summary as unknown as SummaryResult;
+        setSummaryResult(restoredSummary);
+        const summaryText = (restoredSummary?.summary || "") + (restoredSummary?.pattern_note || "");
+        if (
+          summaryText.includes("988") ||
+          summaryText.includes("741741") ||
+          summaryText.includes("Crisis Lifeline") ||
+          summaryText.includes("beyond what exercises can hold")
+        ) {
+          setCrisisDetectedStep5(true);
+        }
+      }
       // Set active step to the next incomplete one
       const nextStep = [1, 2, 3, 4, 5].find((s) => !steps.includes(s)) || 5;
       setActiveStep(nextStep);
@@ -332,6 +379,27 @@ function DailyFlowPage() {
         const data = await res.json();
         setStateAnalysis(data.state_analysis);
         setOverflowExercises(data.overflow_exercises || []);
+        setCoachingQuestions(data.coaching_questions || []);
+        setReframe(data.reframe || null);
+        setPatternChallenge(data.pattern_challenge || null);
+        setSequenceSuggestion(data.sequence_suggestion || null);
+
+        // Crisis detection -- check urgency_level
+        const isHighUrgency = data.state_analysis?.urgency_level === "high";
+        if (isHighUrgency) {
+          setCrisisDetectedStep3(true);
+          // Fire crisis notification (non-blocking)
+          fetch("/api/crisis-notify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              enrollmentId: enrollment.id,
+              dayNumber,
+              source: "process-journal",
+              action: "detected",
+            }),
+          }).catch(() => {});
+        }
 
         // Save analysis to session
         await supabase
@@ -349,8 +417,10 @@ function DailyFlowPage() {
         } : prev);
         setActiveStep(4);
 
-        // Also trigger framework analysis
-        loadFrameworkAnalysis();
+        // Also trigger framework analysis (skip if crisis)
+        if (!isHighUrgency) {
+          loadFrameworkAnalysis();
+        }
       }
     } catch (err) {
       console.error("Journal processing failed:", err);
@@ -426,6 +496,28 @@ function DailyFlowPage() {
       if (res.ok) {
         const data = await res.json();
         setSummaryResult(data);
+
+        // Crisis detection in summary -- check for crisis resource text
+        const summaryText = (data.summary || "") + (data.pattern_note || "");
+        const hasCrisisContent =
+          summaryText.includes("988") ||
+          summaryText.includes("741741") ||
+          summaryText.includes("Crisis Lifeline") ||
+          summaryText.includes("beyond what exercises can hold");
+        if (hasCrisisContent) {
+          setCrisisDetectedStep5(true);
+          // Fire crisis notification (non-blocking)
+          fetch("/api/crisis-notify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              enrollmentId: enrollment.id,
+              dayNumber,
+              source: "daily-summary",
+              action: "detected",
+            }),
+          }).catch(() => {});
+        }
 
         // Save to session
         await supabase
@@ -660,10 +752,69 @@ function DailyFlowPage() {
             border: `1px solid ${colors.borderDefault}`,
             padding: 22,
           }}>
-            <p style={{ fontSize: 14, color: colors.textBody, lineHeight: 1.65, margin: "0 0 14px 0", fontFamily: body }}>
-              {themes.summary}
-            </p>
+            {/* Thread — primary content (narrative prose) */}
+            {themes.thread ? (
+              <div style={{ marginBottom: 18 }}>
+                {themes.thread.split("\n\n").map((para, i) => (
+                  <p key={i} style={{
+                    fontSize: 14, color: colors.textBody, lineHeight: 1.75,
+                    margin: i === 0 ? "0 0 12px 0" : "12px 0",
+                    fontFamily: body,
+                  }}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p style={{ fontSize: 14, color: colors.textBody, lineHeight: 1.65, margin: "0 0 14px 0", fontFamily: body }}>
+                {themes.summary}
+              </p>
+            )}
 
+            {/* Follow-Up — commitments, coaching questions, highlight */}
+            {themes.follow_up && (themes.follow_up.commitments?.length > 0 || themes.follow_up.coaching_questions?.length > 0 || themes.follow_up.highlight) && (
+              <div style={{
+                padding: "16px 18px",
+                backgroundColor: colors.coralWash,
+                borderRadius: 12,
+                borderLeft: `3px solid ${colors.coral}`,
+                marginBottom: 16,
+              }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                  Carrying forward
+                </p>
+
+                {themes.follow_up.commitments?.length > 0 && (
+                  <div style={{ marginBottom: 10 }}>
+                    <p style={{ fontSize: 12, color: colors.textMuted, margin: "0 0 6px 0", fontFamily: body }}>You said you would:</p>
+                    {themes.follow_up.commitments.map((c, i) => (
+                      <p key={i} style={{ fontSize: 13, color: colors.textBody, margin: "4px 0", fontFamily: body, paddingLeft: 12 }}>
+                        &bull; {c}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                {themes.follow_up.coaching_questions?.length > 0 && (
+                  <div style={{ marginBottom: 10 }}>
+                    <p style={{ fontSize: 12, color: colors.textMuted, margin: "0 0 6px 0", fontFamily: body }}>From last time:</p>
+                    {themes.follow_up.coaching_questions.map((q, i) => (
+                      <p key={i} style={{ fontSize: 13, color: colors.textBody, margin: "4px 0", fontFamily: body, fontStyle: "italic", paddingLeft: 12 }}>
+                        {q}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                {themes.follow_up.highlight && (
+                  <p style={{ fontSize: 13, color: colors.textSecondary, margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
+                    {themes.follow_up.highlight}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Theme tags */}
             {themes.themes.length > 0 && (
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
                 {themes.themes.map((t, i) => (
@@ -678,6 +829,7 @@ function DailyFlowPage() {
               </div>
             )}
 
+            {/* Patterns (collapsed below themes) */}
             {themes.patterns.length > 0 && (
               <div style={{ marginBottom: 14 }}>
                 {themes.patterns.map((p, i) => (
@@ -739,6 +891,28 @@ function DailyFlowPage() {
           border: `1px solid ${colors.borderDefault}`,
           padding: 22,
         }}>
+          {/* Personal prompt — generated from Thread context */}
+          {themes?.personal_prompt && (
+            <div style={{ marginBottom: 18 }}>
+              <div style={{
+                padding: "14px 18px",
+                backgroundColor: colors.coralWash,
+                borderRadius: 12,
+                borderLeft: `3px solid ${colors.coral}`,
+                marginBottom: 8,
+              }}>
+                <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                  {themes.personal_prompt.prompt}
+                </p>
+                {themes.personal_prompt.context && (
+                  <p style={{ fontSize: 12, color: colors.textMuted, margin: "6px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
+                    {themes.personal_prompt.context}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Seed prompts */}
           {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
             <div style={{ marginBottom: 18 }}>
@@ -747,7 +921,7 @@ function DailyFlowPage() {
                 margin: "0 0 10px 0", textTransform: "uppercase",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
-                Today&apos;s prompts (optional)
+                Today&apos;s territory prompts (optional)
               </p>
               {programDay.seed_prompts.map((sp, i) => (
                 <div key={i} style={{
@@ -870,11 +1044,24 @@ function DailyFlowPage() {
             </p>
           </div>
         ) : stateAnalysis ? (
+          <div>
+            {/* Crisis Banner -- shown above analysis when urgency is high */}
+            {crisisDetectedStep3 && !crisisDismissedStep3 && enrollment && (
+              <CrisisBanner
+                onDismiss={() => setCrisisDismissedStep3(true)}
+                enrollmentId={enrollment.id}
+                dayNumber={dayNumber}
+                source="process-journal"
+              />
+            )}
           <div style={{
             backgroundColor: colors.bgSurface,
             borderRadius: 14,
             border: `1px solid ${colors.borderDefault}`,
             padding: 22,
+            ...(crisisDetectedStep3 && !crisisDismissedStep3
+              ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
+              : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
           }}>
             <div style={{ marginBottom: 18 }}>
               <p style={{
@@ -928,8 +1115,82 @@ function DailyFlowPage() {
               </div>
             )}
 
+            {/* Coaching Questions */}
+            {coachingQuestions.length > 0 && (
+              <div style={{
+                padding: "16px 18px",
+                backgroundColor: colors.plumWash,
+                borderRadius: 12,
+                borderLeft: `3px solid ${colors.plum}`,
+                marginBottom: 14,
+              }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: colors.plum, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                  Questions to sit with
+                </p>
+                {coachingQuestions.map((q, i) => (
+                  <p key={i} style={{ fontSize: 14, color: colors.textBody, margin: i === 0 ? 0 : "10px 0 0 0", lineHeight: 1.6, fontFamily: body, fontStyle: "italic" }}>
+                    {q}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {/* Reframe */}
+            {reframe && (
+              <div style={{
+                padding: "16px 18px",
+                backgroundColor: colors.coralWash,
+                borderRadius: 12,
+                marginBottom: 14,
+              }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                  Reframe
+                </p>
+                <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 8px 0", fontFamily: body, fontStyle: "italic" }}>
+                  &ldquo;{reframe.source_quote}&rdquo;
+                </p>
+                <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, fontFamily: body, textDecoration: "line-through" }}>
+                  {reframe.old_thought}
+                </p>
+                <p style={{ fontSize: 14, color: colors.textBody, margin: "6px 0 0 0", fontFamily: body, fontWeight: 600 }}>
+                  {reframe.new_thought}
+                </p>
+              </div>
+            )}
+
+            {/* Pattern Challenge */}
+            {patternChallenge && (
+              <div style={{
+                padding: "16px 18px",
+                backgroundColor: colors.bgElevated,
+                borderRadius: 12,
+                borderLeft: `3px solid ${colors.coral}`,
+                marginBottom: 14,
+              }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                  Pattern challenge
+                </p>
+                <p style={{ fontSize: 13, color: colors.textBody, margin: "0 0 8px 0", lineHeight: 1.55, fontFamily: body }}>
+                  {patternChallenge.pattern}
+                </p>
+                <p style={{ fontSize: 14, color: colors.textBody, margin: "0 0 4px 0", fontWeight: 600, fontFamily: body }}>
+                  {patternChallenge.challenge}
+                </p>
+                <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0, fontFamily: body, fontStyle: "italic" }}>
+                  Counter-move: {patternChallenge.counter_move}
+                </p>
+              </div>
+            )}
+
+            {/* Sequence suggestion */}
+            {sequenceSuggestion && (
+              <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 14px 0", fontFamily: body, fontStyle: "italic" }}>
+                {sequenceSuggestion}
+              </p>
+            )}
+
             <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 18px 0", fontFamily: body }}>
-              {overflowExercises.length} overflow exercise{overflowExercises.length !== 1 ? "s" : ""} selected based on your journal.
+              {overflowExercises.length} exercise{overflowExercises.length !== 1 ? "s" : ""} selected based on your journal.
             </p>
 
             <motion.button
@@ -946,6 +1207,7 @@ function DailyFlowPage() {
               Continue to Exercises
             </motion.button>
           </div>
+          </div>
         ) : null}
       </DailyStep>
 
@@ -958,6 +1220,11 @@ function DailyFlowPage() {
         isCompleted={completedSteps.includes(4)}
         estimatedTime="15-30 min"
       >
+        <div style={{
+          ...(crisisDetectedStep3 && !crisisDismissedStep3
+            ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
+            : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
+        }}>
         {/* Coaching Plan Exercises (Required) */}
         {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
           <div style={{ marginBottom: 22 }}>
@@ -1005,6 +1272,7 @@ function DailyFlowPage() {
                 sourceWork={ex.source_work}
                 customFraming={ex.custom_framing}
                 whySelected={ex.why_selected}
+                whyThisWorks={ex.why_this_works}
                 estimatedMinutes={ex.estimated_minutes}
                 isCompleted={completedExercises.has(ex.framework_name)}
                 onComplete={(responses, rating) =>
@@ -1112,6 +1380,7 @@ function DailyFlowPage() {
         >
           {loadingSummary ? "Generating summary..." : "Complete Exercises & Continue"}
         </motion.button>
+        </div>
       </DailyStep>
 
       {/* ═══════ STEP 5: Daily Summary ═══════ */}
@@ -1146,6 +1415,15 @@ function DailyFlowPage() {
           </div>
         ) : summaryResult ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {/* Crisis Banner -- shown above summary when crisis detected */}
+            {crisisDetectedStep5 && !crisisDismissedStep5 && enrollment && (
+              <CrisisBanner
+                onDismiss={() => setCrisisDismissedStep5(true)}
+                enrollmentId={enrollment.id}
+                dayNumber={dayNumber}
+                source="daily-summary"
+              />
+            )}
             {/* Summary */}
             <div style={{
               backgroundColor: colors.bgSurface,

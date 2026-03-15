@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import ContactModal from "@/components/ContactModal";
 
 const navLinks = [
   { href: "/dashboard", label: "Today" },
@@ -28,6 +29,7 @@ function ScrollProgress() {
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -77,21 +79,6 @@ export default function Nav() {
               {link.label}
             </button>
           ))}
-          {/* Reset Journal icon */}
-          <button
-            onClick={() => router.push("/mindful-journal")}
-            title="Reset Journal"
-            style={{
-              padding: "4px 8px",
-              background: isActive("/mindful-journal") ? colors.coralWash : "transparent",
-              border: "none", borderRadius: 6, cursor: "pointer",
-              display: "flex", alignItems: "center",
-              transition: "all 0.15s",
-              opacity: isActive("/mindful-journal") ? 1 : 0.6,
-            }}
-          >
-            <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={isActive("/mindful-journal") ? colors.coral : colors.textMuted} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </button>
           <div style={{ width: 1, height: 20, backgroundColor: colors.borderSubtle, margin: "0 8px" }} />
           <button
             onClick={() => router.push("/my-account")}
@@ -101,6 +88,17 @@ export default function Nav() {
             }}
           >
             My Account
+          </button>
+          <button
+            onClick={() => setContactOpen(true)}
+            style={{
+              padding: "6px 14px", fontSize: 13, fontWeight: 600,
+              color: colors.coral, backgroundColor: "transparent",
+              border: "none", cursor: "pointer",
+              transition: "opacity 0.15s",
+            }}
+          >
+            Contact
           </button>
         </div>
 
@@ -139,25 +137,18 @@ export default function Nav() {
               {link.label}
             </button>
           ))}
-          <button
-            onClick={() => { router.push("/mindful-journal"); setMenuOpen(false); }}
-            style={{
-              padding: "10px 12px", fontSize: 15, fontWeight: 500,
-              color: isActive("/mindful-journal") ? colors.coral : colors.textSecondary,
-              backgroundColor: isActive("/mindful-journal") ? colors.coralWash : "transparent",
-              border: "none", borderRadius: 6, cursor: "pointer", textAlign: "left",
-              display: "flex", alignItems: "center", gap: 10,
-            }}
-          >
-            <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={isActive("/mindful-journal") ? colors.coral : colors.textMuted} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            Reset Journal
-          </button>
           <div style={{ height: 1, backgroundColor: colors.borderSubtle, margin: "8px 0" }} />
           <button
             onClick={() => { router.push("/my-account"); setMenuOpen(false); }}
             style={{ padding: "10px 12px", fontSize: 14, color: colors.textMuted, backgroundColor: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
           >
             My Account
+          </button>
+          <button
+            onClick={() => { setContactOpen(true); setMenuOpen(false); }}
+            style={{ padding: "10px 12px", fontSize: 14, fontWeight: 600, color: colors.coral, backgroundColor: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
+          >
+            Contact
           </button>
         </div>
       )}
@@ -173,6 +164,53 @@ export default function Nav() {
         }
       `}</style>
     </nav>
+    <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
+
+    {/* Floating "Capture a thought" button — hidden on /day pages (FreeFlowCapture handles it there) */}
+    {!pathname.startsWith("/day/") && (
+      <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 1000 }}>
+        {/* Warm glow pulse behind the button */}
+        <motion.div
+          animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.15, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            inset: -8,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${colors.coral}30 0%, transparent 70%)`,
+            pointerEvents: "none",
+          }}
+        />
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 22 }}
+          whileHover={{ scale: 1.1, boxShadow: `0 8px 28px ${colors.coral}50` }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => router.push("/mindful-journal")}
+          title="Capture a thought"
+          style={{
+            position: "relative",
+            width: 56,
+            height: 56,
+            borderRadius: "50%",
+            background: `radial-gradient(circle at 35% 35%, ${colors.coralLight}, ${colors.coral})`,
+            color: colors.bgDeep,
+            border: "none",
+            cursor: "pointer",
+            fontSize: 22,
+            fontWeight: 700,
+            boxShadow: `0 4px 20px ${colors.coral}40`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: fonts.display,
+          }}
+        >
+          ✎
+        </motion.button>
+      </div>
+    )}
     </>
   );
 }

@@ -267,8 +267,8 @@ export default function MonthlySummaryPage() {
                         <p style={{ fontSize: 14, fontWeight: 500, margin: 0, color: colors.textPrimary }}>{goal.goal}</p>
                         <span style={{
                           fontSize: 12, padding: "2px 8px", borderRadius: 10,
-                          backgroundColor: relatedEntries > 3 ? "rgba(34,197,94,0.12)" : relatedEntries > 0 ? "rgba(245,158,11,0.12)" : colors.bgElevated,
-                          color: relatedEntries > 3 ? "#4ade80" : relatedEntries > 0 ? "#fbbf24" : colors.textMuted,
+                          backgroundColor: relatedEntries > 3 ? colors.coralWash : relatedEntries > 0 ? "rgba(245,158,11,0.12)" : colors.bgElevated,
+                          color: relatedEntries > 3 ? colors.coral : relatedEntries > 0 ? "#fbbf24" : colors.textMuted,
                         }}>
                           {relatedEntries} {c.monthlySummary.relatedEntries}
                         </span>

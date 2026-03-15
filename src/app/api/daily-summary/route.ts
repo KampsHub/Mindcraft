@@ -2,6 +2,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getClientProfile, formatProfileForPrompt, appendObservation } from "@/lib/client-profile";
+import { validateBody, dailySummarySchema } from "@/lib/api-validation";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const SUMMARY_SYSTEM_PROMPT = `You are the coaching companion closing today's session. You receive today's complete session data: journal entry, exercise completions with responses, free-flow captures, and the upcoming day's territory.
 
@@ -37,8 +40,28 @@ Return valid JSON (no markdown, no code fences):
     "territory": "What territory tomorrow covers",
     "connection": "One sentence connecting today's work to what's coming — organic, not prescriptive."
   },
-  "pattern_note": "Optional. If you see a multi-day pattern forming, name it boldly with evidence. Otherwise null."
+  "pattern_note": "Optional. If you see a multi-day pattern forming, name it boldly with evidence. Otherwise null.",
+  "for_tomorrow": {
+    "watch_for": "A specific moment or pattern to notice tomorrow — connected to what surfaced today. Concrete enough to catch in real life.",
+    "try_this": "A small behavioral experiment to carry into tomorrow. One action, under 2 minutes, verb-first.",
+    "sit_with": "A question to hold without answering. A living question that needs holding, not resolving."
+  },
+  "thread_seed": "2-3 sentences that explicitly seed tomorrow's Thread. Name what was discovered today and the open question going forward. This should be specific enough that tomorrow's Thread can build directly on it. Reference the person's words. Name the edge they are approaching. Do not give instructions — name what happened and what is emerging.",
+  "extracted_commitments": ["Things the person explicitly said they would do, in their own words. Only include genuine commitments from the journal or exercise responses — not things you suggested."]
 }
+
+## VOICE INTEGRITY — MANDATORY
+
+When you reference what this person wrote, only quote text that they actually typed in their journal entry or exercise responses. Never attribute your own analysis, reframes, or interpretations to them. Own your observations: "I see..." or "What I notice is..." — not "You said..." unless they literally said it.
+
+When generating the thread_seed and for_tomorrow:
+- Only reference what the person actually wrote or said during exercises
+- Do not attribute your exercise instructions, reframes, or analysis to them
+- The thread_seed should be built from their discoveries, not from your suggestions
+
+When generating extracted_commitments:
+- Only include things the person explicitly stated as intentions ("I will...", "I want to try...", "Tomorrow I'm going to...")
+- Never include things exercises suggested or that your analysis recommended
 
 ## Guidelines
 1. Quote their actual words — from the journal and exercise responses.
@@ -52,14 +75,10 @@ Return valid JSON (no markdown, no code fences):
 
 export async function POST(request: Request) {
   try {
-    const { enrollmentId, dayNumber, sessionId } = await request.json();
-
-    if (!enrollmentId || !dayNumber || !sessionId) {
-      return NextResponse.json(
-        { error: "Missing enrollmentId, dayNumber, or sessionId" },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
+    const validation = validateBody(dailySummarySchema, body);
+    if (!validation.success) return validation.response;
+    const { enrollmentId, dayNumber, sessionId } = validation.data;
 
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -84,6 +103,10 @@ export async function POST(request: Request) {
     if (authError || !user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
+
+    // Rate limit (AI bucket — 10 req/min)
+    const rateLimitResponse = checkRateLimit(user.id, "ai");
+    if (rateLimitResponse) return rateLimitResponse;
 
     // Fetch today's session
     const { data: session } = await supabase
@@ -194,13 +217,17 @@ Territory: ${tomorrowContext.territory}
 
 Generate today's summary for Day ${dayNumber}.`;
 
+    // Fetch client profile for personalization
+    const profile = await getClientProfile(enrollmentId, "edges");
+    const profileContext = formatProfileForPrompt(profile, "edges");
+
     const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 1500,
+      max_tokens: 2000,
       system: SUMMARY_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userPrompt }],
+      messages: [{ role: "user", content: profileContext + userPrompt }],
     });
 
     const textBlock = message.content.find((b) => b.type === "text");
@@ -208,7 +235,56 @@ Generate today's summary for Day ${dayNumber}.`;
       return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
     }
 
-    const result = JSON.parse(textBlock.text);
+    // Strip code fences if Claude wraps JSON
+    let raw = textBlock.text.trim();
+    if (raw.startsWith("```")) {
+      raw = raw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    }
+    const result = JSON.parse(raw);
+
+    // ── Daily observation extraction (background, non-blocking) ──
+    // Only run if profile exists (Day 4+) and journal content is present
+    if (profile && session.step_2_journal && dayNumber > 3) {
+      try {
+        const obsMsg = await anthropic.messages.create({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 300,
+          system: `You are noting what's new about this person based on today's session. Only note genuine observations — things that shifted, surprised, or revealed something that wasn't visible before. If nothing new surfaced today, return exactly: null
+
+Return valid JSON (no fences):
+{
+  "observation": "One sentence — what was new or shifted",
+  "evidence": "The specific words or moment that revealed it",
+  "connects_to": "Which growth edge or trait this touches, or null"
+}`,
+          messages: [{
+            role: "user",
+            content: `Today's journal:\n${session.step_2_journal}\n\nToday's summary themes: ${(result.today_themes || []).join(", ")}\n\nKnown growth edges:\n${profile.growth_edges ? JSON.stringify((profile.growth_edges as Record<string, unknown>).edges) : "none"}`,
+          }],
+        });
+
+        const obsBlock = obsMsg.content.find((b) => b.type === "text");
+        if (obsBlock && obsBlock.type === "text") {
+          let obsRaw = obsBlock.text.trim();
+          if (obsRaw.startsWith("```")) {
+            obsRaw = obsRaw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+          }
+          if (obsRaw !== "null") {
+            const obs = JSON.parse(obsRaw);
+            await appendObservation(enrollmentId, {
+              day: dayNumber,
+              date: new Date().toISOString().split("T")[0],
+              observation: obs.observation,
+              evidence: obs.evidence,
+              connects_to: obs.connects_to,
+            });
+          }
+        }
+      } catch (obsErr) {
+        // Observation extraction is supplementary — never block the summary
+        console.warn("Observation extraction failed (non-blocking):", obsErr);
+      }
+    }
 
     return NextResponse.json({
       ...result,

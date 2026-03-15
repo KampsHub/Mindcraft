@@ -235,10 +235,10 @@ export default function ExercisePage() {
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
               style={{
                 padding: 18,
-                backgroundColor: "rgba(34,197,94,0.1)",
-                border: `1px solid rgba(34,197,94,0.25)`,
+                backgroundColor: colors.coralWash,
+                border: `1px solid rgba(224, 149, 133, 0.25)`,
                 borderRadius: 14, textAlign: "center",
-                color: colors.success, fontFamily: body, fontSize: 14, fontWeight: 600,
+                color: colors.coral, fontFamily: body, fontSize: 14, fontWeight: 600,
               }}
             >
               {c.exercise.completedMessage}

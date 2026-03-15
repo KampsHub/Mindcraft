@@ -95,7 +95,7 @@ function SubscribeContent() {
           <div style={{ textAlign: "left", maxWidth: 320, margin: "0 auto 24px", display: "flex", flexDirection: "column", gap: 10 }}>
             {c.subscribe.features.map((feature) => (
               <div key={feature} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
-                <span style={{ color: colors.success, fontSize: 16, lineHeight: 1.4 }}>{"\u2713"}</span>
+                <span style={{ color: colors.coral, fontSize: 16, lineHeight: 1.4 }}>{"\u2713"}</span>
                 <span style={{ fontSize: 14, color: colors.dark, lineHeight: 1.4 }}>{feature}</span>
               </div>
             ))}

@@ -462,7 +462,7 @@ function ParachuteWelcome() {
                     width: 40,
                     height: 40,
                     borderRadius: "50%",
-                    backgroundColor: colors.success,
+                    backgroundColor: colors.coral,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",

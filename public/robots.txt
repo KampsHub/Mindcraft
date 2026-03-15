@@ -1,0 +1,21 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /login
+Disallow: /signup
+Disallow: /dashboard
+Disallow: /coach
+Disallow: /journal
+Disallow: /exercise
+Disallow: /exercises
+Disallow: /day
+Disallow: /goals
+Disallow: /intake
+Disallow: /plan
+Disallow: /my-account
+Disallow: /forgot-password
+Disallow: /reset-password
+
+Sitemap: https://mindcraft.ninja/sitemap.xml

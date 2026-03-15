@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
 import { content as c } from "@/content/site";
@@ -12,8 +12,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  useEffect(() => {
+    if (searchParams.get("message") === "password-updated") {
+      setSuccessMessage("Password updated successfully. Sign in with your new password.");
+    }
+  }, [searchParams]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -63,6 +71,16 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {successMessage && (
+          <div style={{
+            padding: 12, backgroundColor: colors.coralWash,
+            border: `1px solid rgba(224, 149, 133, 0.25)`, borderRadius: 8,
+            color: colors.coral, fontSize: 13, marginBottom: 16, textAlign: "center",
+          }}>
+            {successMessage}
+          </div>
+        )}
+
         <form onSubmit={handleLogin}>
           <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
             {c.login.emailLabel}
@@ -100,6 +118,12 @@ export default function LoginPage() {
           }}>
             {loading ? c.login.submitLoading : c.login.submitButton}
           </button>
+
+          <p style={{ marginTop: 12, textAlign: "center", fontSize: 13, color: colors.gray500 }}>
+            <a href="/forgot-password" style={{ color: colors.gray500, textDecoration: "none" }}>
+              Forgot password?
+            </a>
+          </p>
         </form>
 
         <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.gray500 }}>

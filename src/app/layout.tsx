@@ -23,8 +23,35 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mindcraft — by All Minds on Deck",
-  description: "Your coaching companion. Real frameworks. Real growth. Between sessions, every day.",
+  metadataBase: new URL("https://mindcraft.ninja"),
+  title: {
+    default: "Mindcraft — Cut Through Your Mind's Noise in 30 Days",
+    template: "%s | Mindcraft",
+  },
+  description:
+    "AI-powered coaching programs for career crises. Daily journaling, 250+ proven frameworks, pattern recognition. For layoffs, PIPs, and new roles.",
+  keywords: [
+    "coaching",
+    "career coaching",
+    "layoff support",
+    "PIP coaching",
+    "new role coaching",
+    "AI coaching",
+    "mental health",
+    "professional development",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Mindcraft",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   manifest: "/manifest.json",
   themeColor: "#18181C",
   appleWebApp: {
@@ -45,6 +72,25 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <GoogleAnalytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "Mindcraft",
+              description: "AI-powered coaching for career crises",
+              applicationCategory: "HealthApplication",
+              operatingSystem: "Web",
+              url: "https://mindcraft.ninja",
+              offers: {
+                "@type": "Offer",
+                price: "29.95",
+                priceCurrency: "USD",
+              },
+            }),
+          }}
+        />
       </head>
       <body
         className={`${spaceGrotesk.variable} ${sora.variable} ${dmSans.variable} antialiased`}

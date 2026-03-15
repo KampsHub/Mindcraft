@@ -205,6 +205,19 @@ function GoalsPage() {
     if (!enrollment) return;
     setGenerating(true);
     try {
+      // Generate client profile first (growth edges, development map, context)
+      // This feeds into goal generation for richer, more personalized goals
+      try {
+        await fetch("/api/generate-profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ enrollmentId: enrollment.id }),
+        });
+      } catch (profileErr) {
+        // Profile generation is supplementary — don't block goal generation
+        console.warn("Profile generation failed (non-blocking):", profileErr);
+      }
+
       const res = await fetch("/api/generate-goals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -582,7 +595,7 @@ function GoalsPage() {
                           const rating = review?.goal_ratings?.[goal.id]?.rating;
                           const hasRating = rating !== undefined;
                           const ratingColor = hasRating
-                            ? rating >= 8 ? colors.success
+                            ? rating >= 8 ? colors.coral
                             : rating >= 5 ? colors.coral
                             : "#fbbf24"
                             : colors.bgElevated;

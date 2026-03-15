@@ -261,7 +261,7 @@ export default function MyAccountPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {enrollments.map((enr) => {
                 const statusMap: Record<string, { label: string; bg: string; color: string }> = {
-                  active: { label: "Active", bg: colors.successWash, color: colors.success },
+                  active: { label: "Active", bg: colors.coralWash, color: colors.coral },
                   onboarding: { label: "Onboarding", bg: colors.coralWash, color: colors.coral },
                   awaiting_goals: { label: "Awaiting goals", bg: colors.warningWash, color: colors.warning },
                   pre_start: { label: "Not started", bg: colors.bgElevated, color: colors.textMuted },

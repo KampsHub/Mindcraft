@@ -21,41 +21,92 @@ interface GuidedExerciseCardProps {
 
 function BreathingCircle() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "16px 0" }}>
-      <motion.div
-        animate={{
-          scale: [1, 1.6, 1.6, 1],
-          opacity: [0.6, 1, 1, 0.6],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          times: [0, 0.33, 0.58, 1],
-          ease: "easeInOut",
-        }}
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${colors.coral} 0%, ${colors.plum} 100%)`,
-          boxShadow: `0 0 30px ${colors.coralWash}`,
-        }}
-      />
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, padding: "24px 0 16px" }}>
+      <div style={{ position: "relative", width: 100, height: 100, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {/* Outer glow ring */}
+        <motion.div
+          animate={{
+            scale: [1, 1.4, 1.4, 1],
+            opacity: [0.15, 0.3, 0.3, 0.15],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            times: [0, 0.33, 0.58, 1],
+            ease: "easeInOut",
+          }}
+          style={{
+            position: "absolute",
+            width: 100,
+            height: 100,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${colors.coral}30 0%, transparent 70%)`,
+          }}
+        />
+        {/* Middle ring */}
+        <motion.div
+          animate={{
+            scale: [1, 1.5, 1.5, 1],
+            opacity: [0.25, 0.5, 0.5, 0.25],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            times: [0, 0.33, 0.58, 1],
+            ease: "easeInOut",
+          }}
+          style={{
+            position: "absolute",
+            width: 72,
+            height: 72,
+            borderRadius: "50%",
+            border: `1px solid ${colors.coral}25`,
+          }}
+        />
+        {/* Core orb */}
+        <motion.div
+          animate={{
+            scale: [1, 1.6, 1.6, 1],
+            opacity: [0.7, 1, 1, 0.7],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            times: [0, 0.33, 0.58, 1],
+            ease: "easeInOut",
+          }}
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: "50%",
+            background: `radial-gradient(circle at 35% 35%, ${colors.coralLight}, ${colors.coral} 50%, ${colors.plum} 100%)`,
+            boxShadow: `0 0 40px ${colors.coral}35, inset 0 -4px 12px ${colors.plum}40`,
+          }}
+        />
+      </div>
+      {/* Instruction text */}
       <motion.p
         animate={{
-          opacity: [1, 1, 0.5, 0.5, 1, 1],
+          opacity: [1, 1, 0.4, 0.4, 1, 1],
         }}
         transition={{ duration: 12, repeat: Infinity, times: [0, 0.3, 0.33, 0.55, 0.58, 1] }}
         style={{
-          fontSize: 12, color: colors.textMuted, fontFamily: display,
-          fontWeight: 500, margin: 0, letterSpacing: "0.04em",
+          fontSize: 13, color: colors.textMuted, fontFamily: display,
+          fontWeight: 500, margin: 0, letterSpacing: "0.06em",
         }}
       >
         <motion.span
-          animate={{ opacity: [1, 0, 0, 0, 0, 1] }}
-          transition={{ duration: 12, repeat: Infinity, times: [0, 0.32, 0.33, 0.57, 0.58, 1] }}
+          animate={{ opacity: [1, 1, 0, 0, 0, 1] }}
+          transition={{ duration: 12, repeat: Infinity, times: [0, 0.30, 0.32, 0.56, 0.58, 1] }}
         >
           breathe in...
+        </motion.span>
+        <motion.span
+          animate={{ opacity: [0, 0, 1, 1, 0, 0] }}
+          transition={{ duration: 12, repeat: Infinity, times: [0, 0.32, 0.34, 0.56, 0.58, 1] }}
+          style={{ position: "absolute", left: "50%", transform: "translateX(-50%)" }}
+        >
+          hold...
         </motion.span>
       </motion.p>
     </div>
@@ -179,14 +230,19 @@ export default function GuidedExerciseCard({ title, icon, steps }: GuidedExercis
               paddingTop: 16,
             }}>
               {/* Progress dots */}
-              <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
+              <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center" }}>
                 {steps.map((_, i) => (
-                  <div
+                  <motion.div
                     key={i}
+                    animate={{
+                      backgroundColor: i <= currentStep ? colors.coral : colors.bgElevated,
+                      scale: i === currentStep ? 1.3 : 1,
+                      boxShadow: i === currentStep ? `0 0 8px ${colors.coral}40` : "none",
+                    }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
                     style={{
                       width: 8, height: 8, borderRadius: "50%",
                       backgroundColor: i <= currentStep ? colors.coral : colors.bgElevated,
-                      transition: "background-color 0.3s",
                     }}
                   />
                 ))}

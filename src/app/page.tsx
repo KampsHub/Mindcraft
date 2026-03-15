@@ -329,25 +329,24 @@ export default function Home() {
             style={{
               position: "relative",
               display: "flex",
-              flexWrap: "wrap",
-              gap: "0 0.3em",
-              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
               margin: "0 0 36px 0",
-              fontSize: 68,
+              fontSize: 44,
               fontWeight: 800,
-              lineHeight: 1.05,
+              lineHeight: 1.15,
               letterSpacing: "-0.03em",
               fontFamily: display,
             }}
           >
             <TextReveal
-              text="Quiet structure"
+              text={c.hero.headline}
               as="span"
               triggerOnMount
               delay={0.3}
-              stagger={0.07}
+              stagger={0.04}
               duration={0.7}
-              style={{ color: colors.textPrimary }}
+              style={{ color: colors.textSecondary, textAlign: "center" }}
             />
             <motion.span
               animate={{
@@ -361,50 +360,36 @@ export default function Home() {
                 repeatDelay: 3.5,
                 ease: "easeInOut",
               }}
-              style={{ color: colors.plumLight, display: "inline-block" }}
+              style={{ color: colors.coral, display: "inline-block", fontSize: "1.6em", marginTop: 12 }}
             >
               <TextReveal
-                text="in loud chaos."
+                text={c.hero.headlineAccent}
                 as="span"
                 triggerOnMount
-                delay={0.6}
+                delay={0.8}
                 stagger={0.07}
                 duration={0.7}
               />
             </motion.span>
-            <TextReveal
-              text="Cut through the noise within a month."
-              as="span"
-              triggerOnMount
-              delay={0.9}
-              stagger={0.07}
-              duration={0.7}
-              style={{ color: colors.textMuted, fontSize: "0.55em", fontWeight: 500, width: "100%", textAlign: "center" }}
-            />
           </h1>
 
           <FadeIn delay={1.2} preset="blur" duration={1.0} triggerOnMount>
             <p
               style={{
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: 400,
                 color: colors.textBody,
-                lineHeight: 1.7,
+                lineHeight: 1.75,
                 marginTop: 0,
                 marginBottom: 52,
                 marginLeft: "auto",
                 marginRight: "auto",
-                maxWidth: 620,
+                maxWidth: 640,
                 fontFamily: body,
                 letterSpacing: "0.01em",
               }}
             >
-              A 30-day development plan built around what&rsquo;s actually
-              going on in your head. Daily journaling that catches patterns
-              you miss. Exercises from 180+ coaching frameworks, matched to
-              your blind spots. Weekly deep dives that connect the dots.
-              All of it &mdash; structured, personal, and tested in real
-              coaching settings.
+              {c.hero.subheadline}
             </p>
           </FadeIn>
 
@@ -437,7 +422,44 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <Divider />
+      {/* ── Differentiator Strip ── */}
+      <section
+        style={{
+          padding: "48px 24px",
+          backgroundColor: colors.bgRecessed,
+          borderTop: `1px solid ${colors.borderSubtle}`,
+          borderBottom: `1px solid ${colors.borderSubtle}`,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: narrowMax,
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            textAlign: "center",
+          }}
+        >
+          {c.differentiator.items.map((line, i) => (
+            <FadeIn key={i} delay={0.1 + i * 0.12} preset="fade">
+              <p
+                style={{
+                  fontSize: i === 0 ? 16 : 15,
+                  fontWeight: i === 0 ? 700 : 400,
+                  color: i === 0 ? colors.coral : colors.textMuted,
+                  fontFamily: i === 0 ? display : body,
+                  lineHeight: 1.6,
+                  margin: 0,
+                  letterSpacing: i === 0 ? "0.02em" : undefined,
+                }}
+              >
+                {line}
+              </p>
+            </FadeIn>
+          ))}
+        </div>
+      </section>
 
       {/* ── Programs ── */}
       <section
@@ -574,8 +596,115 @@ export default function Home() {
         </div>
       </section>
 
+      <Divider accent />
+
+      {/* ── What a Day Looks Like ── */}
+      <section style={{ ...sectionPadding }}>
+        <div style={{ maxWidth: narrowMax, margin: "0 auto" }}>
+          <FadeIn preset="slide-up" duration={0.8}>
+            <div style={{ textAlign: "center", marginBottom: 56 }}>
+              <span style={{
+                display: "inline-block",
+                fontFamily: display,
+                fontWeight: 700,
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: colors.coral,
+                marginBottom: 16,
+              }}>
+                Your daily session
+              </span>
+              <h2 style={{
+                fontFamily: display,
+                fontSize: 40,
+                fontWeight: 700,
+                color: colors.textPrimary,
+                letterSpacing: "-0.03em",
+                marginBottom: 12,
+              }}>
+                {c.dailyPreview.headline}
+              </h2>
+              <p style={{
+                fontSize: 17,
+                color: colors.textMuted,
+                lineHeight: 1.7,
+                fontFamily: body,
+                margin: 0,
+              }}>
+                {c.dailyPreview.subheadline}
+              </p>
+            </div>
+          </FadeIn>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {c.dailyPreview.steps.map((step, i) => (
+              <FadeIn key={step.number} delay={0.08 + i * 0.1} preset="slide-up">
+                <div style={{
+                  display: "flex",
+                  gap: 24,
+                  padding: "28px 0",
+                  borderBottom: i < c.dailyPreview.steps.length - 1
+                    ? `1px solid ${colors.borderSubtle}`
+                    : "none",
+                }}>
+                  <div style={{
+                    flex: "0 0 48px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
+                  }}>
+                    <span style={{
+                      fontFamily: display,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: colors.coral,
+                      letterSpacing: "0.05em",
+                    }}>
+                      {step.number}
+                    </span>
+                    <span style={{
+                      fontFamily: display,
+                      fontSize: 10,
+                      fontWeight: 600,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      color: colors.textMuted,
+                    }}>
+                      {step.label}
+                    </span>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <h3 style={{
+                      fontFamily: display,
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: colors.textPrimary,
+                      lineHeight: 1.35,
+                      marginBottom: 8,
+                    }}>
+                      {step.title}
+                    </h3>
+                    <p style={{
+                      fontSize: 14,
+                      color: colors.textMuted,
+                      lineHeight: 1.65,
+                      margin: 0,
+                      fontFamily: body,
+                    }}>
+                      {step.desc}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── How It Works ── */}
-      <section id="how" style={{ ...sectionPadding }}>
+      <section id="how" style={{ ...sectionPadding, backgroundColor: colors.bgRecessed }}>
         <div style={{ maxWidth, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
             <FadeIn preset="slide-up" duration={0.8}>
@@ -601,143 +730,55 @@ export default function Home() {
                   letterSpacing: "-0.03em",
                 }}
               >
-                15&ndash;30 minutes a day.<br />Five steps. Real depth.
+                {c.steps.headline}
               </h2>
-            </FadeIn>
-            <FadeIn preset="blur" delay={0.15} duration={0.9}>
-              <p style={{
-                fontSize: 17,
-                color: colors.textMuted,
-                maxWidth: 560,
-                margin: "0 auto",
-                lineHeight: 1.7,
-                fontFamily: body,
-              }}>
-                The required exercises take about 5 minutes. The optional ones go deeper. You decide how much time you have each day.
-              </p>
             </FadeIn>
           </div>
 
-          {/* Feature cards — 2×3 grid */}
-          <div
-            className="how-grid"
-            style={{
-              display: "flex",
-              flexWrap: "wrap" as const,
-              justifyContent: "center",
-              gap: 16,
-            }}
-          >
-            {[
-              {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 16v-4" />
-                    <path d="M12 8h.01" />
-                    <path d="M8 12a4 4 0 0 1 8 0" />
-                  </svg>
-                ),
-                tag: "Reflection",
-                title: "Yesterday\u2019s themes surface",
-                desc: "Each morning starts with your patterns reflected back: recurring themes, shifts across days, and what your coach\u2019s AI noticed you might have missed.",
-              },
-              {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                    <path d="m15 5 4 4" />
-                  </svg>
-                ),
-                tag: "Journaling",
-                title: "Write what\u2019s real",
-                desc: "Guided prompts shaped by where you are in the program \u2014 or skip them and free-write. Everything feeds into your personal development plan.",
-              },
-              {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
-                    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
-                  </svg>
-                ),
-                tag: "Your plan",
-                title: "A development plan built around you",
-                desc: "Based on common reactions and personal patterns, your program builds a structured plan with dedicated exercises \u2014 all tested in real coaching and development settings.",
-              },
-              {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <circle cx="12" cy="12" r="6" />
-                    <circle cx="12" cy="12" r="2" />
-                  </svg>
-                ),
-                tag: "Exercises",
-                title: "Personalized exercises from 180+ frameworks",
-                desc: "Each day includes exercises matched to your opportunity areas \u2014 cognitive, somatic, relational. Sourced from proven coaching frameworks and adapted to your patterns.",
-              },
-              {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 3v18h18" />
-                    <path d="m19 9-5 5-4-4-3 3" />
-                  </svg>
-                ),
-                tag: "Insights",
-                title: "Daily insights & weekly deep dives",
-                desc: "Daily summaries surface what\u2019s emerging. Weekly reviews go deeper \u2014 connecting patterns across days, showing what shifted, and mapping where you\u2019re headed.",
-              },
-            ].map((card, i) => (
-              <FadeIn key={i} delay={0.08 + i * 0.08} preset="slide-up" style={{ flex: "0 1 calc(33.333% - 11px)", minWidth: 280 }}>
-                <motion.div
-                  whileHover={{
-                    y: -4,
-                    borderColor: colors.coral,
-                    boxShadow: "0 16px 32px rgba(0,0,0,0.3)",
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  style={{
-                    padding: 28,
-                    backgroundColor: colors.bgSurface,
-                    borderRadius: 16,
-                    border: `1px solid ${colors.borderDefault}`,
-                    height: "100%",
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <div style={{ marginBottom: 14 }}>{card.icon}</div>
+          {/* Steps — numbered list */}
+          <div style={{ maxWidth: narrowMax, margin: "0 auto" }}>
+            {c.steps.items.map((step, i) => (
+              <FadeIn key={i} delay={0.08 + i * 0.08} preset="slide-up">
+                <div style={{
+                  display: "flex",
+                  gap: 20,
+                  padding: "24px 0",
+                  borderBottom: i < c.steps.items.length - 1
+                    ? `1px solid ${colors.borderSubtle}`
+                    : "none",
+                }}>
                   <span style={{
-                    display: "inline-block",
+                    flex: "0 0 32px",
                     fontFamily: display,
+                    fontSize: 13,
                     fontWeight: 700,
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.1em",
-                    color: colors.textSecondary,
-                    marginBottom: 12,
+                    color: colors.coral,
+                    paddingTop: 2,
                   }}>
-                    {card.tag}
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 style={{
-                    fontFamily: display,
-                    fontSize: 17,
-                    fontWeight: 700,
-                    lineHeight: 1.35,
-                    marginBottom: 10,
-                    color: colors.textPrimary,
-                  }}>
-                    {card.title}
-                  </h3>
-                  <p style={{
-                    fontSize: 14,
-                    color: colors.textMuted,
-                    lineHeight: 1.6,
-                    margin: 0,
-                    fontFamily: body,
-                  }}>
-                    {card.desc}
-                  </p>
-                </motion.div>
+                  <div style={{ flex: 1 }}>
+                    <h3 style={{
+                      fontFamily: display,
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: colors.textPrimary,
+                      lineHeight: 1.35,
+                      marginBottom: 8,
+                    }}>
+                      {step.title}
+                    </h3>
+                    <p style={{
+                      fontSize: 14,
+                      color: colors.textMuted,
+                      lineHeight: 1.65,
+                      margin: 0,
+                      fontFamily: body,
+                    }}>
+                      {step.desc}
+                    </p>
+                  </div>
+                </div>
               </FadeIn>
             ))}
           </div>
@@ -797,8 +838,18 @@ export default function Home() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 ),
-                title: "Your data stays yours.",
-                desc: "Your journal entries never train any AI model. No third parties see your data. Export or delete everything at any time. We don\u2019t monetize your vulnerability.",
+                title: "Your entries never train AI models.",
+                desc: "Zero third-party access. No data sales. No fine-tuning on your vulnerability. Export everything or delete your account at any time \u2014 no \u2018are you sure?\u2019 dark patterns.",
+              },
+              {
+                icon: (
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                ),
+                title: "250+ frameworks. All cited and sourced.",
+                desc: "IFS, ACT, Gottman, polyvagal theory, performance psychology. Every exercise tells you where it comes from, why it was chosen for you, and how to do it \u2014 in plain language, no jargon.",
               },
               {
                 icon: (
@@ -809,18 +860,8 @@ export default function Home() {
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                 ),
-                title: "AI does the daily work. Humans are always available.",
-                desc: "The platform handles your exercises, reflections, and pattern tracking. But when you need a real conversation, you can book a live session with a coach who already knows your story.",
-              },
-              {
-                icon: (
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                  </svg>
-                ),
-                title: "Evidence-based. Not vibes.",
-                desc: "Every exercise comes from real frameworks \u2014 IFS, ACT, Gottman, polyvagal theory, performance psychology. Our coaches are trained in the same methods. Cited, sourced, and selected for your specific situation.",
+                title: "Built by a coach who\u2019s been through it.",
+                desc: "Designed by a certified leadership coach and product leader who got laid off and channeled the experience into building what she wished had existed. Real frameworks from real coaching rooms.",
               },
             ].map((item, i) => (
               <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">
@@ -989,6 +1030,117 @@ export default function Home() {
               </p>
             </div>
           </FadeIn>
+        </div>
+      </section>
+
+      {/* ── Takeaways ── */}
+      <section style={{ ...sectionPadding }}>
+        <div style={{ maxWidth, margin: "0 auto" }}>
+          <FadeIn preset="slide-up" duration={0.8}>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <span style={{
+                display: "inline-block",
+                fontFamily: display,
+                fontWeight: 700,
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: colors.coral,
+                marginBottom: 16,
+              }}>
+                After 30 days
+              </span>
+              <h2 style={{
+                fontFamily: display,
+                fontSize: 40,
+                fontWeight: 700,
+                color: colors.textPrimary,
+                letterSpacing: "-0.03em",
+                marginBottom: 12,
+              }}>
+                {c.takeaways.headline}
+              </h2>
+              <p style={{
+                fontSize: 17,
+                color: colors.textMuted,
+                maxWidth: 560,
+                margin: "0 auto",
+                lineHeight: 1.7,
+                fontFamily: body,
+              }}>
+                {c.takeaways.subheadline}
+              </p>
+            </div>
+          </FadeIn>
+
+          <div
+            className="takeaways-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 20,
+            }}
+          >
+            {c.takeaways.items.map((item, i) => (
+              <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">
+                <motion.div
+                  whileHover={{
+                    y: -4,
+                    borderColor: colors.plum,
+                    boxShadow: "0 16px 32px rgba(0,0,0,0.3)",
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                  style={{
+                    padding: 28,
+                    backgroundColor: colors.bgSurface,
+                    borderRadius: 16,
+                    border: `1px solid ${colors.borderDefault}`,
+                    height: "100%",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <div style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    background: colors.plumWash,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 16,
+                  }}>
+                    <span style={{
+                      fontFamily: display,
+                      fontSize: 14,
+                      fontWeight: 700,
+                      color: colors.plumLight,
+                    }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <h3 style={{
+                    fontFamily: display,
+                    fontSize: 17,
+                    fontWeight: 700,
+                    lineHeight: 1.35,
+                    marginBottom: 10,
+                    color: colors.textPrimary,
+                  }}>
+                    {item.title}
+                  </h3>
+                  <p style={{
+                    fontSize: 14,
+                    color: colors.textMuted,
+                    lineHeight: 1.65,
+                    margin: 0,
+                    fontFamily: body,
+                  }}>
+                    {item.desc}
+                  </p>
+                </motion.div>
+              </FadeIn>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1233,15 +1385,15 @@ export default function Home() {
         @media (max-width: 768px) {
           .nav-desktop-links { display: none !important; }
           .programs-grid { grid-template-columns: 1fr !important; }
-          .how-grid > * { flex: 0 0 100% !important; min-width: 0 !important; }
           .trust-grid { grid-template-columns: 1fr !important; }
+          .takeaways-grid { grid-template-columns: 1fr !important; }
           .faq-layout { flex-direction: column !important; gap: 32px !important; }
           .faq-header { position: static !important; flex: none !important; }
         }
         @media (min-width: 769px) and (max-width: 1024px) {
           .programs-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .how-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .takeaways-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
     </div>

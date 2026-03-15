@@ -2,10 +2,13 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
+import { validateBody, dailyThemesSchema } from "@/lib/api-validation";
+import { checkRateLimit } from "@/lib/rate-limit";
 
-const THEMES_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive yesterday's journal entry, recent exercise completions, free-flow captures, and multi-day theme history.
+const THEMES_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive the last 2-3 journal entries, exercise responses, free-flow captures, a thread seed from yesterday's summary, and today's program territory.
 
-Your job is to tell someone what surfaced yesterday — in their own words, with connections they might not see.
+Your primary output is the Thread — a narrative that traces the person's movement across their last 2-3 sessions. This is not a summary. It is a reading of where they are in their development arc.
 
 ## Voice
 
@@ -13,41 +16,58 @@ Talk TO the person, not about them. Use "you." Quote their actual words. When yo
 
 Be warm and direct. No clinical labels. No motivational language. No "great job." Engage with what their words are doing, not just what they said.
 
+## VOICE INTEGRITY — MANDATORY
+
+When you reference what this person wrote, only quote text that they actually typed in their journal entry or exercise responses. Never attribute your own analysis, reframes, or interpretations to them. Own your observations: "I see a pattern where..." not "You said..." unless they literally said it.
+
 ## What you produce
 
 Return valid JSON (no markdown, no code fences):
 
 {
+  "thread": "2-3 paragraphs of narrative prose. Re-read the last 2-3 journal entries AND exercise responses. Quote the person's actual words. Trace the movement: where did they go deeper? Where did they push back? Where did a pattern show up again? Connect the arc to today's program territory. This should feel like someone who has been reading carefully says: 'Here is the line I see across the last few days, and here is why today matters.' If a thread_seed was provided from yesterday's summary, use it as your starting point.",
+
   "themes": ["theme 1", "theme 2", "theme 3"],
-  "summary": "2-3 sentences in natural prose. Quote their words. Name what was underneath. Talk to them directly.",
+  "summary": "Brief 2-sentence summary for metadata purposes.",
+
+  "personal_prompt": {
+    "prompt": "A personally grounded journaling prompt. Use backward-looking framing: 'recently', 'the last couple of days'. Never reference 'today' as if the day has already happened. Connect to what the person wrote recently.",
+    "context": "Why this prompt fits right now — reference their recent writing."
+  },
+
+  "follow_up": {
+    "commitments": ["Things they explicitly said they would do in exercise responses or journal. Only include things they actually said — not things you suggested."],
+    "coaching_questions": ["Unanswered coaching questions from prior sessions. Only carry forward questions that the person did not respond to."],
+    "highlight": "A specific exercise response worth revisiting — something they wrote that opened something up or that they left unfinished."
+  },
+
   "patterns": [
     {
-      "observation": "A pattern across multiple days — named directly, with evidence. Quote from specific days.",
+      "observation": "A pattern across multiple days — named directly, with evidence.",
       "days_observed": 3,
-      "connection": "How this connects to their goals — stated naturally, not as a label."
+      "connection": "How this connects to their goals or growth edges."
     }
   ],
-  "carry_forward": "A living question or observation to carry into today. Not an instruction — something to notice."
+  "carry_forward": "A living question or observation to carry into today."
 }
 
 ## Guidelines
-1. Quote their actual words — show them you read carefully.
-2. Be direct. No motivational language. No "great job" or "keep going."
-3. Patterns require at least 2 days of evidence. Don't fabricate patterns from a single entry.
-4. If there's not enough data (Day 1), say so honestly and keep the summary brief.
-5. The carry_forward should be a question or observation, not an instruction.
-6. When naming patterns, teach something — why this pattern exists, what it protects, what it costs.`;
+1. The Thread is the most important output. Ground it in concrete observations from the last 2-3 sessions.
+2. Quote their actual words — show them you read carefully.
+3. Be direct. No motivational language. No "great job" or "keep going."
+4. Journal prompts are backward-looking. Use "recently," "the last couple of days" — never "today" as if the day happened.
+5. Patterns require at least 2 days of evidence. Don't fabricate patterns from a single entry.
+6. The carry_forward should be a question or observation, not an instruction.
+7. When naming patterns, teach something — why this pattern exists, what it protects, what it costs.
+8. For follow_up.commitments, only include things the person actually wrote they would do. Not things exercises suggested.
+9. For follow_up.coaching_questions, only carry forward questions that went unanswered.`;
 
 export async function POST(request: Request) {
   try {
-    const { enrollmentId, dayNumber } = await request.json();
-
-    if (!enrollmentId || !dayNumber) {
-      return NextResponse.json(
-        { error: "Missing enrollmentId or dayNumber" },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
+    const validation = validateBody(dailyThemesSchema, body);
+    if (!validation.success) return validation.response;
+    const { enrollmentId, dayNumber } = validation.data;
 
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -72,6 +92,10 @@ export async function POST(request: Request) {
     if (authError || !user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
+
+    // Rate limit (AI bucket — 10 req/min)
+    const rateLimitResponse = checkRateLimit(user.id, "ai");
+    if (rateLimitResponse) return rateLimitResponse;
 
     // Fetch yesterday's daily session (dayNumber - 1)
     const { data: yesterdaySession } = await supabase
@@ -102,14 +126,45 @@ export async function POST(request: Request) {
       .order("created_at", { ascending: false })
       .limit(10);
 
-    // Fetch theme history (last 7 sessions)
+    // Fetch last 3 sessions with full journal, analysis, and summary data (for Thread)
     const { data: recentSessions } = await supabase
       .from("daily_sessions")
-      .select("day_number, step_1_themes, step_2_journal, step_5_summary")
+      .select("id, day_number, step_1_themes, step_2_journal, step_3_analysis, step_5_summary")
       .eq("enrollment_id", enrollmentId)
       .lt("day_number", dayNumber)
       .order("day_number", { ascending: false })
-      .limit(7);
+      .limit(3);
+
+    // Fetch exercise responses from recent sessions (for Thread — what the person actually wrote)
+    const recentSessionIds = (recentSessions || []).map(s => s.id).filter(Boolean);
+    let recentExerciseResponses: Record<string, unknown>[] = [];
+    if (recentSessionIds.length > 0) {
+      const { data } = await supabase
+        .from("exercise_completions")
+        .select("daily_session_id, framework_name, responses, star_rating")
+        .in("daily_session_id", recentSessionIds)
+        .order("completed_at", { ascending: true });
+      if (data) recentExerciseResponses = data;
+    }
+
+    // Fetch today's program day for territory context
+    let todayContext = { title: "", territory: "" };
+    if (true) {
+      const { data: enrollmentData } = await supabase
+        .from("program_enrollments")
+        .select("program_id")
+        .eq("id", enrollmentId)
+        .single();
+      if (enrollmentData) {
+        const { data: todayDay } = await supabase
+          .from("program_days")
+          .select("title, territory")
+          .eq("program_id", enrollmentData.program_id)
+          .eq("day_number", dayNumber)
+          .single();
+        if (todayDay) todayContext = todayDay;
+      }
+    }
 
     // Fetch active goals
     const { data: activeGoals } = await supabase
@@ -128,10 +183,43 @@ export async function POST(request: Request) {
       });
     }
 
+    // Extract thread_seed and for_tomorrow from yesterday's summary
+    const yesterdaySummary = recentSessions?.[0]?.step_5_summary as Record<string, unknown> | null;
+    const threadSeed = yesterdaySummary?.thread_seed || null;
+    const forTomorrow = yesterdaySummary?.for_tomorrow as Record<string, unknown> | null;
+
+    // Extract coaching questions from yesterday's analysis (to carry forward if unanswered)
+    const yesterdayAnalysis = recentSessions?.[0]?.step_3_analysis as Record<string, unknown> | null;
+    const prevCoachingQuestions = (yesterdayAnalysis as Record<string, unknown> | null)?.coaching_questions || [];
+
+    // Build exercise responses text
+    const exerciseResponsesText = (recentExerciseResponses || [])
+      .map(e => `- ${e.framework_name}: ${JSON.stringify(e.responses).substring(0, 400)}`)
+      .join("\n");
+
     // Build the prompt
     const promptData = `
-## Yesterday's Journal (Day ${dayNumber - 1})
-${yesterdaySession?.step_2_journal || "No journal entry yesterday."}
+## Thread Seed from Yesterday's Summary
+${threadSeed || "No thread seed available — generate the Thread from the journal entries directly."}
+
+## For Tomorrow (from yesterday's closing)
+${forTomorrow ? `Watch for: ${(forTomorrow as Record<string, string>).watch_for || "none"}\nTry this: ${(forTomorrow as Record<string, string>).try_this || "none"}\nSit with: ${(forTomorrow as Record<string, string>).sit_with || "none"}` : "No for_tomorrow prompts from yesterday."}
+
+## Recent Journal Entries (last 2-3 sessions)
+${recentSessions && recentSessions.length > 0
+  ? recentSessions.map((s) => {
+      const summary = s.step_5_summary as Record<string, unknown> | null;
+      return `### Day ${s.day_number}\n**Journal:**\n${s.step_2_journal || "(no entry)"}\n\n**Summary:** ${summary?.summary || "(no summary)"}`;
+    }).join("\n\n---\n\n")
+  : "No prior sessions."}
+
+## Recent Exercise Responses (what the person wrote during exercises)
+${exerciseResponsesText || "No exercise responses yet."}
+
+## Previous Coaching Questions (carry forward if unanswered)
+${Array.isArray(prevCoachingQuestions) && (prevCoachingQuestions as string[]).length > 0
+  ? (prevCoachingQuestions as string[]).map(q => `- ${q}`).join("\n")
+  : "None."}
 
 ## Yesterday's Exercise Completions
 ${yesterdayExercises.length > 0
@@ -147,28 +235,28 @@ ${recentFreeFlow && recentFreeFlow.length > 0
     ).join("\n")
   : "No free-flow captures."}
 
-## Theme History (last 7 days)
-${recentSessions && recentSessions.length > 0
-  ? recentSessions.map((s) => {
-      const themes = s.step_1_themes as Record<string, unknown>;
-      return `Day ${s.day_number}: ${JSON.stringify(themes?.themes || [])}`;
-    }).join("\n")
-  : "No prior theme history."}
+## Today's Program Context
+Day ${dayNumber}: ${todayContext.title || "unknown"}
+Territory: ${todayContext.territory || "unknown"}
 
 ## Active Goals
 ${activeGoals && activeGoals.length > 0
   ? activeGoals.map((g) => `- ${g.goal_text}`).join("\n")
   : "No active goals yet."}
 
-Generate yesterday's themes summary for Day ${dayNumber}.`;
+Generate the Thread and today's themes for Day ${dayNumber}.`;
+
+    // Fetch client profile for personalization (edges depth for growth edge naming in Thread)
+    const profile = await getClientProfile(enrollmentId, "edges");
+    const profileContext = formatProfileForPrompt(profile, "edges");
 
     const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 1024,
+      max_tokens: 2048,
       system: THEMES_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: promptData }],
+      messages: [{ role: "user", content: profileContext + promptData }],
     });
 
     const textBlock = message.content.find((b) => b.type === "text");
@@ -183,9 +271,37 @@ Generate yesterday's themes summary for Day ${dayNumber}.`;
     }
     const result = JSON.parse(raw);
 
+    // ── Extract commitment tracking data from recent sessions ──
+    // Yesterday's commitments (from step_5_summary.extracted_commitments)
+    const extractedCommitments = (yesterdaySummary?.extracted_commitments as string[] | undefined) || [];
+
+    // Yesterday's for_tomorrow prompts (already extracted above)
+    // forTomorrow is already available from line ~187
+
+    // Active pattern challenges from last 3 days (from step_3_analysis.pattern_challenge)
+    const recentPatternChallenges = (recentSessions || [])
+      .filter(s => {
+        const analysis = s.step_3_analysis as Record<string, unknown> | null;
+        return analysis?.pattern_challenge;
+      })
+      .map(s => {
+        const analysis = s.step_3_analysis as Record<string, unknown>;
+        const challenge = analysis.pattern_challenge as { pattern: string; challenge: string; counter_move: string };
+        return {
+          ...challenge,
+          day_number: s.day_number,
+          days_ago: dayNumber - s.day_number,
+        };
+      })
+      .filter(pc => pc.days_ago <= 3); // Only show challenges from last 3 days
+
     return NextResponse.json({
       ...result,
       usage: message.usage,
+      // Commitment tracking data (passthrough from recent sessions)
+      yesterday_commitments: extractedCommitments,
+      yesterday_for_tomorrow: forTomorrow || null,
+      active_pattern_challenges: recentPatternChallenges,
     });
   } catch (error: unknown) {
     console.error("Error in /api/daily-themes:", error);

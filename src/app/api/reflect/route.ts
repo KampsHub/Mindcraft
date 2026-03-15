@@ -3,6 +3,9 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { generateQueryEmbedding } from "@/lib/embeddings";
+import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
+import { validateBody, reflectSchema } from "@/lib/api-validation";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const SYSTEM_PROMPT = `## 1. Identity
 You are the daily coaching companion for a client working with All Minds on Deck. You deliver structured coaching exercises and reflections drawn from a curated framework library authored by the coach. You are not the coach. You are an extension of the coach's methodology — a reliable, thoughtful tool that keeps the work moving between live sessions.
@@ -106,17 +109,14 @@ Do not include anything outside the JSON object. No markdown, no code fences, ju
 
 export async function POST(request: NextRequest) {
   try {
-    const { entry, stream: useStream } = await request.json();
-
-    if (!entry || typeof entry !== "string") {
-      return NextResponse.json(
-        { error: "Missing or invalid 'entry' field. Must be a string." },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
+    const validation = validateBody(reflectSchema, body);
+    if (!validation.success) return validation.response;
+    const { entry, stream: useStream } = validation.data;
 
     // --- RAG: Retrieve similar past entries ---
     let pastEntriesContext = "";
+    let profileContext = "";
 
     try {
       const cookieStore = await cookies();
@@ -145,6 +145,12 @@ export async function POST(request: NextRequest) {
         data: { user },
       } = await supabase.auth.getUser();
 
+      // Rate limit (AI bucket — 10 req/min) when user is authenticated
+      if (user) {
+        const rateLimitResponse = checkRateLimit(user.id, "ai");
+        if (rateLimitResponse) return rateLimitResponse;
+      }
+
       if (user && process.env.VOYAGE_API_KEY) {
         const queryEmbedding = await generateQueryEmbedding(entry);
 
@@ -170,6 +176,22 @@ export async function POST(request: NextRequest) {
             .join("\n\n")}`;
         }
       }
+
+      // Fetch client profile for personalization
+      if (user) {
+        const { data: activeEnrollment } = await supabase
+          .from("program_enrollments")
+          .select("id")
+          .eq("client_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .single();
+
+        if (activeEnrollment) {
+          const profile = await getClientProfile(activeEnrollment.id, "edges");
+          profileContext = formatProfileForPrompt(profile, "edges");
+        }
+      }
     } catch (ragError) {
       console.warn("RAG retrieval failed, continuing without context:", ragError);
     }
@@ -178,7 +200,7 @@ export async function POST(request: NextRequest) {
       apiKey: process.env.CLAUDE_API_KEY!,
     });
 
-    const userContent = `${pastEntriesContext}\n\n## Today's Entry\n${entry}`;
+    const userContent = `${profileContext}${pastEntriesContext}\n\n## Today's Entry\n${entry}`;
 
     // Streaming mode
     if (useStream) {
@@ -233,7 +255,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const parsed = JSON.parse(textBlock.text);
+    // Strip markdown code fences if Claude wraps the JSON in ```json ... ```
+    let rawReflect = textBlock.text.trim();
+    if (rawReflect.startsWith("```")) {
+      rawReflect = rawReflect.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    }
+    const parsed = JSON.parse(rawReflect);
 
     return NextResponse.json({
       reflection: parsed.reflection,

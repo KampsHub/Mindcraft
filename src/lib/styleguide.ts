@@ -50,7 +50,7 @@
 //   borderDefault (#44444C): card dividers, input borders
 //
 // Semantic:
-//   success (#6AB282 / wash 0.12): completed states, check marks
+//   success (#6AB282 / wash 0.12): momentary feedback only (flash text like "Captured!", "Saved!")
 //   warning (#D6B65D / wash 0.12): pending states, caution indicators
 //   error (#D25858 / wash 0.12): error states, destructive actions
 //   Always pair with a text label or icon — never rely on colour alone.

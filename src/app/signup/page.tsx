@@ -56,7 +56,7 @@ export default function SignupPage() {
           border: `1px solid ${colors.gray100}`, textAlign: "center",
         }}>
           <div style={{
-            width: 44, height: 44, borderRadius: "50%", backgroundColor: colors.success,
+            width: 44, height: 44, borderRadius: "50%", backgroundColor: colors.coral,
             display: "inline-flex", alignItems: "center", justifyContent: "center",
             fontSize: 20, color: colors.white, marginBottom: 16,
           }}>✓</div>

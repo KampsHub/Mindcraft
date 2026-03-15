@@ -117,6 +117,7 @@ export async function DELETE(request: NextRequest) {
       await admin.from("exercise_completions").delete().in("enrollment_id", enrollmentIds);
       await admin.from("daily_sessions").delete().in("enrollment_id", enrollmentIds);
       await admin.from("client_goals").delete().in("enrollment_id", enrollmentIds);
+      await admin.from("client_profiles").delete().in("enrollment_id", enrollmentIds);
       await admin.from("program_enrollments").delete().eq("client_id", user.id);
     }
 

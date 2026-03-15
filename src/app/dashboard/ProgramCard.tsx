@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
+import WeekProgressTracker from "@/components/WeekProgressTracker";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -10,7 +11,7 @@ const body = fonts.bodyAlt;
 const PROGRAM_ACCENTS: Record<string, { border: string; wash: string; color: string }> = {
   jetstream: { border: "rgba(224, 149, 133, 0.2)", wash: colors.coralWash, color: colors.coral },
   parachute: { border: "rgba(123, 82, 120, 0.2)", wash: colors.plumWash, color: colors.plumLight },
-  basecamp: { border: "rgba(106, 178, 130, 0.2)", wash: "rgba(106, 178, 130, 0.12)", color: colors.success },
+  basecamp: { border: "rgba(224, 149, 133, 0.2)", wash: colors.coralWash, color: colors.coralLight },
 };
 
 function getAccent(slug: string) {
@@ -32,15 +33,24 @@ interface ActiveGoal {
   status: string;
 }
 
+interface DayStatus {
+  dayNumber: number;
+  completed: boolean;
+  inProgress: boolean;
+  isCurrent: boolean;
+}
+
 interface ProgramCardProps {
   enrollment: ProgramEnrollment;
   goals: ActiveGoal[];
   todaySessionDone: boolean;
   isCompact: boolean;
   onNavigate: (path: string) => void;
+  weekDays?: DayStatus[];
+  weekNumber?: number;
 }
 
-export default function ProgramCard({ enrollment, goals, todaySessionDone, isCompact, onNavigate }: ProgramCardProps) {
+export default function ProgramCard({ enrollment, goals, todaySessionDone, isCompact, onNavigate, weekDays, weekNumber }: ProgramCardProps) {
   const [goalsOpen, setGoalsOpen] = useState(!isCompact);
   const accent = getAccent(enrollment.programs?.slug);
   const { status } = enrollment;
@@ -95,6 +105,15 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, isCom
             {todaySessionDone ? "Review Day" : "Start Session"}
           </motion.button>
         </div>
+
+        {/* Week progress tracker */}
+        {weekDays && weekDays.length > 0 && weekNumber && (
+          <WeekProgressTracker
+            days={weekDays}
+            weekNumber={weekNumber}
+            accentColor={accent.color}
+          />
+        )}
 
         {goals.length > 0 && (
           <div style={{ marginTop: 20, paddingTop: 18, borderTop: `1px solid ${colors.borderSubtle}` }}>

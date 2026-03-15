@@ -3,6 +3,8 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { logApiCall } from "@/lib/api-logger";
+import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const EXERCISE_SYSTEM_PROMPT = `You are the coaching companion selecting and delivering today's exercise. You receive:
 1. Their coaching plan (goals, focus areas, current phase)
@@ -72,6 +74,10 @@ export async function POST() {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // Rate limit (AI bucket — 10 req/min)
+    const rateLimitResponse = checkRateLimit(user.id, "ai");
+    if (rateLimitResponse) return rateLimitResponse;
+
     // Fetch coaching plan
     const { data: plan } = await supabase
       .from("coaching_plans")
@@ -127,6 +133,20 @@ export async function POST() {
       );
     }
 
+    // Fetch active enrollment for client profile personalization
+    const { data: activeEnrollment } = await supabase
+      .from("program_enrollments")
+      .select("id")
+      .eq("client_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    const profile = activeEnrollment
+      ? await getClientProfile(activeEnrollment.id, "summary")
+      : null;
+    const profileContext = formatProfileForPrompt(profile, "summary");
+
     // Build the prompt
     const userPrompt = `
 ## Client's Coaching Plan
@@ -149,7 +169,7 @@ Select the best framework and deliver a personalised exercise for today.`;
       model: "claude-sonnet-4-20250514",
       max_tokens: 1500,
       system: EXERCISE_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userPrompt }],
+      messages: [{ role: "user", content: profileContext + userPrompt }],
     });
 
     const latencyMs = Date.now() - startTime;
@@ -158,7 +178,12 @@ Select the best framework and deliver a personalised exercise for today.`;
       return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
     }
 
-    const exercise = JSON.parse(textBlock.text);
+    // Strip markdown code fences if Claude wraps the JSON in ```json ... ```
+    let rawExercise = textBlock.text.trim();
+    if (rawExercise.startsWith("```")) {
+      rawExercise = rawExercise.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    }
+    const exercise = JSON.parse(rawExercise);
 
     // Save exercise to database
     await supabase.from("exercises").insert({

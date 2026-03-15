@@ -26,7 +26,7 @@ export const content = {
     headline: "You\u2019re not broken.",
     headlineAccent: "You\u2019re overwhelmed.",
     subheadline:
-      "A career crisis is one of the hardest things you\u2019ll go through. This is 30 days of structure to help you see clearly again \u2014 with cognitive, somatic, and relational tools adapted to your patterns.",
+      "A career crisis is one of the hardest things you\u2019ll go through. This is 30 days of structure to help you see clearly again \u2014 built by a coach who\u2019s been there, grounded in real frameworks, and adapted to what you\u2019re actually dealing with.",
     cta: "Find your program",
     heroVideo: "", // e.g. "/images/hero.mp4" — leave empty for no video
     heroImage: "", // e.g. "/images/hero.jpg" — fallback or standalone image
@@ -36,15 +36,15 @@ export const content = {
   // ── Differentiator Strip ──
   differentiator: {
     items: [
-      "Not plain journaling. Not coaching. Not a chatbot. All of it, in one place.",
+      "This isn\u2019t a chatbot or a blank journal. It\u2019s a structured coaching program built for the specific crisis you\u2019re in.",
       "A structured program that learns your patterns and meets you where you are, day by day.",
-      "250+ evidence-based frameworks. Matched to what you\u2019re actually going through.",
+      "Every exercise is chosen for you \u2014 from frameworks used in real coaching rooms \u2014 based on what showed up in your journal that day.",
     ],
   },
 
   // ── Reframe Block ──
   reframe: {
-    text: "Everyone says \u201Cpush through.\u201D Update your LinkedIn. Network harder. Stay positive. But research shows that job loss, a PIP, or a disorienting new role rank among life\u2019s most stressful events. You don\u2019t need another productivity tip. You need a way to slow down, see what\u2019s actually happening inside, and work through it with real structure.",
+    text: "Everyone says \u201Cpush through.\u201D Update your LinkedIn. Network harder. Stay positive. But research shows that job loss, a PIP, or a disorienting new role rank among life\u2019s most stressful events. You don\u2019t need another productivity tip. You need a way to slow down, see what\u2019s actually happening inside, and work through it \u2014 not around it.",
   },
 
   // ── What a Day Looks Like ──
@@ -89,7 +89,7 @@ export const content = {
   programs: {
     headline: "What\u2019s your situation?",
     subheadline:
-      "Each program is built for a specific moment. One month of guided structure to help you find your footing. Human coaches available when you need one.",
+      "Each program is built for a specific moment \u2014 not a generic self-help arc. One month of structure when everything feels like chaos. Human coaches available when you need more than a screen.",
     cards: [
       {
         tag: "PIP",
@@ -131,7 +131,7 @@ export const content = {
       },
       {
         title: "15\u201330 minutes a day. Five steps.",
-        desc: "A thread naming your recent patterns, a journal prompt, 4 exercises from 250+ frameworks (cognitive, somatic, relational), insights connecting the dots, and a seed for tomorrow. It follows you \u2014 not the other way around.",
+        desc: "A thread naming your recent patterns, a journal prompt, 4 exercises matched to what you wrote, insights connecting the dots, and a seed for tomorrow. It adapts to what you\u2019re going through \u2014 not the other way around.",
       },
       {
         title: "Weekly check-ins. Monthly pattern reports.",
@@ -143,21 +143,21 @@ export const content = {
   // ── After the Month ──
   afterMonth: {
     headline: "After 30 days, you decide what\u2019s next.",
-    body: "Some people feel ready to move on. Most keep going \u2014 $50/month, same depth, same personalization. No lock-in. You stay because it\u2019s helping, not because we made it hard to leave.",
+    body: "Some people feel ready to move on. Some keep going \u2014 $50/month, same depth, same personalization. No lock-in. You stay because it\u2019s helping, not because we made it hard to leave.",
     price: "$50/month",
   },
 
   // ── The Human Layer ──
   humanLayer: {
     headline: "Sometimes you need a real person.",
-    body: "The daily program holds a lot \u2014 but some moments need a human voice. We\u2019re connected to certified coaches with deep expertise in career transitions and leadership. Many of them have been through it themselves. You can share your program data so they already know your story when you walk in.",
+    body: "Some moments need a human voice. We\u2019re connected to certified coaches with deep expertise in career transitions \u2014 many of them have been through it themselves. And because they can see your program data, they already know your story when you walk in. No starting from scratch.",
     cta: "Book a session",
   },
 
   // ── Who Built This ──
   builtBy: {
     headline: "Who built this.",
-    body: "Getting laid off sent me through an emotional rollercoaster I wasn\u2019t prepared for. As a product leader and certified coach, I channeled that experience into building what I wished had existed \u2014 a structured way to help people actually process these career-defining moments. I\u2019ve since coached people through layoffs, PIPs, and disorienting new roles, picking up frameworks and tools along the way that genuinely move the needle. I wish I\u2019d had all of this when it happened to me, because that experience stayed with me for years.",
+    body: "Getting laid off sent me through something I wasn\u2019t prepared for. The grief, the shame, the identity crisis \u2014 it stayed with me for years. As a certified coach and product leader, I\u2019ve since worked with people through layoffs, PIPs, and disorienting new roles. I kept noticing the same gap: the most structured support ended when you left the coaching session, and the daily work of actually processing what happened was left to willpower. Mindcraft is what I wished had existed when it happened to me.",
     name: "Stefanie Kamps",
     title: "Founder \u00b7 Certified Leadership Coach, Team Facilitator, and Product Manager",
     linkedin: "https://www.linkedin.com/in/stefanie-kamps/",
@@ -170,7 +170,7 @@ export const content = {
     items: [
       {
         title: "Clarity about what\u2019s actually going on",
-        desc: "By Day 30, you\u2019ll have a clear picture of the patterns driving your reactions \u2014 the loops you keep falling into, the things you\u2019ve been avoiding, the shifts you didn\u2019t notice happening. Named, tracked, connected.",
+        desc: "By Day 30, you\u2019ll have a clear picture of the patterns driving your reactions \u2014 the loops that keep running, the things that are hard to look at, the shifts you didn\u2019t notice happening. Named, tracked, connected.",
       },
       {
         title: "A record of your own growth",
@@ -193,7 +193,7 @@ export const content = {
     items: [
       {
         q: "How is this different from Headspace or Calm?",
-        a: "Those are meditation and mindfulness apps \u2014 great for general wellbeing. Mindcraft is specifically built for people going through a career crisis. It\u2019s a structured 30-day coaching program that reads your journal entries, tracks your patterns, and matches you to exercises from 250+ frameworks. Different situation, different kind of support.",
+        a: "Those are meditation and mindfulness apps \u2014 great for general wellbeing. Mindcraft is specifically built for people going through a career crisis. It\u2019s a structured 30-day coaching program that reads your journal entries, tracks your patterns, and matches you to the right exercises. Different situation, different kind of support.",
       },
       {
         q: "Is this therapy?",
@@ -213,7 +213,7 @@ export const content = {
       },
       {
         q: "Does this actually work?",
-        a: "The system matches you to frameworks from neuroscience, performance psychology, and mindfulness research \u2014 the same tools used in coaching rooms. It does the daily work most people skip between sessions. And when you need more than a screen, certified coaches are available who already know your patterns.",
+        a: "Honestly \u2014 it depends on whether you show up. But the system matches you to frameworks from neuroscience, performance psychology, and coaching \u2014 the same tools used in real coaching rooms. It does the daily work most people skip between sessions. And when you need more than a screen, certified coaches are available who already know your patterns.",
       },
       {
         q: "Is this woo-woo?",
@@ -248,7 +248,7 @@ export const content = {
 
   // ── Subscribe page ──
   subscribe: {
-    headline: "Ready to start?",
+    headline: "You don\u2019t have to figure this out alone.",
     subheadline:
       "30 days of structure when you need it most. Real frameworks, personalised exercises, and a program that adapts to you. Human coaches available anytime.",
     pricingLabel: "Monthly",
@@ -260,7 +260,7 @@ export const content = {
       "Weekly and monthly reviews that surface what matters",
       "Your data. Full stop. No training, ever.",
     ],
-    cta: "Start your journey",
+    cta: "Start your first month free",
     ctaLoading: "Redirecting to checkout...",
     disclaimer: "Cancel anytime. No contracts. Your data stays yours.",
     cancelledMessage:
@@ -283,7 +283,7 @@ export const content = {
   // ── Signup page ──
   signup: {
     headline: "Create your account",
-    subheadline: "One last step. Then the real work starts.",
+    subheadline: "One last step. Then we\u2019ll start building your plan.",
     emailLabel: "Email",
     passwordLabel: "Password",
     emailPlaceholder: "you@example.com",
@@ -324,7 +324,7 @@ export const content = {
 
   // ── Dashboard page ──
   dashboard: {
-    headline: "The work continues.",
+    headline: "Welcome back.",
     oneLinerLabel: "What\u2019s on your mind?",
     oneLinerPlaceholder: "A thought. A feeling. Something you noticed.",
     captureButton: "Capture",
@@ -339,7 +339,7 @@ export const content = {
     themesHeading: "Themes this week",
     navLinks: [
       { href: "/mindful-journal", label: "Journal", desc: "Write. Get seen." },
-      { href: "/exercise", label: "Exercise", desc: "Today\u2019s real work" },
+      { href: "/exercise", label: "Exercise", desc: "Today\u2019s exercise" },
       { href: "/plan", label: "Plan", desc: "Your 4-week map" },
       {
         href: "/weekly-review",
@@ -421,7 +421,7 @@ export const content = {
 
   // ── Exercise page ──
   exercise: {
-    headline: "Do the work.",
+    headline: "Today\u2019s exercise.",
     emptyMessage:
       "No exercise yet today. We\u2019ll pull one from proven frameworks, matched to your themes. Completed in minutes.",
     generateButton: "Generate today\u2019s exercise",

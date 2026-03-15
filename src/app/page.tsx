@@ -768,8 +768,8 @@ export default function Home() {
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                   </svg>
                 ),
-                title: "250+ frameworks. All cited and sourced.",
-                desc: "IFS, ACT, Gottman, polyvagal theory, performance psychology. Every exercise tells you where it comes from, why it was chosen for you, and how to do it \u2014 in plain language, no jargon.",
+                title: "Every exercise is cited and explained.",
+                desc: "Nothing here is made up. Every exercise comes from a real coaching, psychology, or neuroscience framework \u2014 and each one tells you where it comes from, why it was chosen for you, and how to do it. In plain language.",
               },
               {
                 icon: (

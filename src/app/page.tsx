@@ -652,39 +652,109 @@ export default function Home() {
               >
                 {c.steps.headline}
               </h2>
+              {c.steps.subheadline && (
+                <p style={{
+                  fontSize: 17,
+                  color: colors.textMuted,
+                  maxWidth: 560,
+                  margin: "0 auto",
+                  lineHeight: 1.7,
+                  fontFamily: body,
+                }}>
+                  {c.steps.subheadline}
+                </p>
+              )}
             </FadeIn>
           </div>
 
-          {/* Steps — numbered list */}
-          <div style={{ maxWidth: narrowMax, margin: "0 auto" }}>
-            {c.steps.items.map((step, i) => (
-              <FadeIn key={i} delay={0.08 + i * 0.08} preset="slide-up">
-                <div style={{
-                  display: "flex",
-                  gap: 20,
-                  padding: "24px 0",
-                  borderBottom: i < c.steps.items.length - 1
-                    ? `1px solid ${colors.borderSubtle}`
-                    : "none",
-                }}>
-                  <span style={{
-                    flex: "0 0 32px",
-                    fontFamily: display,
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: colors.coral,
-                    paddingTop: 2,
+          {/* Steps — 2×3 card grid with icons */}
+          <div
+            className="how-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 20,
+            }}
+          >
+            {c.steps.items.map((step: { icon?: string; title: string; desc: string }, i: number) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                compass: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                  </svg>
+                ),
+                intake: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                  </svg>
+                ),
+                mirror: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    <line x1="11" y1="8" x2="11" y2="14" />
+                    <line x1="8" y1="11" x2="14" y2="11" />
+                  </svg>
+                ),
+                daily: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                ),
+                progress: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                  </svg>
+                ),
+                human: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                ),
+              };
+              return (
+                <FadeIn key={i} delay={0.08 + i * 0.08} preset="slide-up">
+                  <div style={{
+                    padding: 28,
+                    backgroundColor: colors.bgSurface,
+                    borderRadius: 16,
+                    border: `1px solid ${colors.borderDefault}`,
+                    height: "100%",
+                    boxSizing: "border-box" as const,
+                    display: "flex",
+                    flexDirection: "column" as const,
+                    gap: 16,
                   }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div style={{ flex: 1 }}>
+                    <div style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 12,
+                      backgroundColor: `${colors.coral}15`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}>
+                      {step.icon && iconMap[step.icon] ? iconMap[step.icon] : (
+                        <span style={{ fontFamily: display, fontSize: 15, fontWeight: 700, color: colors.coral }}>
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                      )}
+                    </div>
                     <h3 style={{
                       fontFamily: display,
-                      fontSize: 16,
+                      fontSize: 17,
                       fontWeight: 700,
                       color: colors.textPrimary,
                       lineHeight: 1.35,
-                      marginBottom: 8,
+                      margin: 0,
                     }}>
                       {step.title}
                     </h3>
@@ -698,9 +768,9 @@ export default function Home() {
                       {step.desc}
                     </p>
                   </div>
-                </div>
-              </FadeIn>
-            ))}
+                </FadeIn>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1305,6 +1375,7 @@ export default function Home() {
         @media (max-width: 768px) {
           .nav-desktop-links { display: none !important; }
           .programs-grid { grid-template-columns: 1fr !important; }
+          .how-grid { grid-template-columns: 1fr !important; }
           .trust-grid { grid-template-columns: 1fr !important; }
           .takeaways-grid { grid-template-columns: 1fr !important; }
           .faq-layout { flex-direction: column !important; gap: 32px !important; }
@@ -1312,6 +1383,7 @@ export default function Home() {
         }
         @media (min-width: 769px) and (max-width: 1024px) {
           .programs-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .how-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .takeaways-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }

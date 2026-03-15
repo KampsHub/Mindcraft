@@ -116,26 +116,37 @@ export const content = {
   // ── How it works ──
   steps: {
     headline: "How it works",
+    subheadline: "Part structured program. Part personal mirror. A human coach when you need one.",
     items: [
       {
-        title: "Pick the program that matches your moment.",
-        desc: "Layoff, PIP, or new role. That choice shapes your coaching arc, exercises, and intake.",
+        icon: "compass",
+        title: "A program built for your situation.",
+        desc: "Each program is designed around common needs and reactions in layoffs, PIPs, and new roles \u2014 grounded in what coaching and research say actually helps. That\u2019s your foundation.",
       },
       {
-        title: "Tell your story in a real coaching intake.",
-        desc: "What happened, what you\u2019re carrying, what you\u2019ve tried. 30\u201345 minutes of the questions a good coach asks \u2014 because that\u2019s who wrote them.",
+        icon: "intake",
+        title: "A real coaching intake. Not a signup form.",
+        desc: "30\u201345 minutes of the questions a good coach asks \u2014 because that\u2019s who wrote them. What happened, what you\u2019re carrying, what you\u2019ve tried. Your goals come from your own words.",
       },
       {
-        title: "Get goals from your own words.",
-        desc: "3 to 6 goals traced back to what you actually said. You approve or adjust before Day 1.",
+        icon: "mirror",
+        title: "It sees what you can\u2019t see yet.",
+        desc: "As you journal, the system starts detecting personal patterns and blind spots that may be keeping you stuck \u2014 things that are hard to notice on your own when you\u2019re overwhelmed. It names them, tracks them, and adapts your exercises.",
       },
       {
-        title: "15\u201330 minutes a day. Five steps.",
-        desc: "A thread naming your recent patterns, a journal prompt, 4 exercises matched to what you wrote, insights connecting the dots, and a seed for tomorrow. It adapts to what you\u2019re going through \u2014 not the other way around.",
+        icon: "daily",
+        title: "15\u201330 minutes a day. A structure you can lean on.",
+        desc: "Each session: a thread naming your recent patterns, a journal prompt, 4 exercises matched to what you wrote (for your thoughts, your body, and your relationships), insights connecting the dots, and a seed for tomorrow.",
       },
       {
+        icon: "progress",
         title: "Weekly check-ins. Monthly pattern reports.",
         desc: "Track what\u2019s shifting against the goals you set. See your own progress when it\u2019s hard to feel it.",
+      },
+      {
+        icon: "human",
+        title: "A human coach when you need one.",
+        desc: "Some moments need a real person. Certified coaches are available who can see your program data \u2014 so they already know your story when you walk in.",
       },
     ],
   },

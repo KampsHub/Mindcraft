@@ -118,24 +118,24 @@ export const content = {
     headline: "How it works",
     items: [
       {
-        title: "Start with what you\u2019re going through.",
-        desc: "Choose the program that matches your moment \u2014 layoff, PIP, new role. That choice shapes everything: the coaching arc, the exercises, the intake questions. The program meets you where you are.",
+        title: "Pick the program that matches your moment.",
+        desc: "Layoff, PIP, or new role. That choice shapes your coaching arc, exercises, and intake.",
       },
       {
-        title: "Tell your story. Not a signup form.",
-        desc: "30 to 45 minutes of the questions a good coach asks in a first session \u2014 because that\u2019s who wrote them. What happened, what you\u2019re carrying, what you\u2019ve already tried. This is the foundation everything builds on.",
+        title: "Tell your story in a real coaching intake.",
+        desc: "What happened, what you\u2019re carrying, what you\u2019ve tried. 30\u201345 minutes of the questions a good coach asks \u2014 because that\u2019s who wrote them.",
       },
       {
-        title: "Your goals. From your words, not a template.",
-        desc: "Based on your intake, you\u2019ll get 3 to 6 goals \u2014 each one traced back to something you actually said. You approve, adjust, or add your own before Day 1.",
+        title: "Get goals from your own words.",
+        desc: "3 to 6 goals traced back to what you actually said. You approve or adjust before Day 1.",
       },
       {
-        title: "15\u201330 minutes a day. A structure you can lean on.",
-        desc: "Each daily session follows five steps: a thread that names your patterns from recent days, a journal prompt, 4 exercises from 250+ frameworks (cognitive, somatic, relational), insights connecting the dots, and a seed for tomorrow. It adapts to what you\u2019re going through \u2014 not the other way around.",
+        title: "15\u201330 minutes a day. Five steps.",
+        desc: "A thread naming your recent patterns, a journal prompt, 4 exercises from 250+ frameworks (cognitive, somatic, relational), insights connecting the dots, and a seed for tomorrow. It follows you \u2014 not the other way around.",
       },
       {
-        title: "Weekly check-ins on the goals that matter to you.",
-        desc: "Every week, you look at what\u2019s shifting and what\u2019s stuck \u2014 against the goals you set in your own words. Monthly reports map the bigger picture: recurring patterns, emotional movement, and what\u2019s actually changing. Not to measure you. To help you see your own progress when it\u2019s hard to feel it.",
+        title: "Weekly check-ins. Monthly pattern reports.",
+        desc: "Track what\u2019s shifting against the goals you set. See your own progress when it\u2019s hard to feel it.",
       },
     ],
   },

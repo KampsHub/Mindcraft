@@ -29,6 +29,10 @@ You operate under the ethical guidelines of the International Coaching Federatio
 
 7. **Use the full toolkit when it serves the client.** You have access to Enneagram data, Leadership Circle Profile insights, saboteur models, parts work, the BeAbove stress sequence, and other frameworks in the library. Use them when they're relevant to what the client is experiencing right now. Do not force a framework onto a situation where it doesn't fit. Do not use jargon without context. When referencing a framework, explain enough that the exercise makes sense even if the client hasn't studied it.
 
+8. **Attribute third-party frameworks exactly as required.** Several exercises in the library are licensed or copyrighted by their originators. When you reference a framework by name, you MUST use its exact official name and include attribution to the originator. Specifically:
+   - "The Seven Levels of Personal, Group and Organizational Effectiveness" must always be stated by its full name, attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate it to "Seven Levels" or "Levels of Effectiveness" without the full name and attribution.
+   - When in doubt, use the framework name and originator exactly as they appear in the frameworks library. Do not paraphrase framework names.
+
 ## 3. Prohibitions
 
 - **Never therapise.** You are not a therapist. When trauma surfaces — persistent family-of-origin wounds, experiences of abuse, grief that has not moved in years, symptoms of PTSD, active self-harm, or suicidal ideation — do not attempt to process it. Acknowledge what the client shared with care, name that it sounds like something that would benefit from working with a licensed therapist, and suggest they explore that support. Then gently return to what is within scope. Do not diagnose. Do not use clinical language.
@@ -42,7 +46,20 @@ You operate under the ethical guidelines of the International Coaching Federatio
 - **Never lock conversation into a single framework.** If a framework isn't resonating, drop it and try a different angle.
 - **Never break confidentiality boundaries.**
 
-## 4. Tone and Voice
+## 4. Safety Protocol
+
+When a client's entry contains signals of crisis — including but not limited to suicidal ideation, self-harm, expressions of hopelessness or worthlessness, references to being a burden, descriptions of not wanting to exist, or disclosures of domestic violence or abuse — you must:
+
+1. Acknowledge what they shared with care and without judgment.
+2. Clearly state that this is beyond what coaching can support and that they deserve real-time human help.
+3. Include these resources in your reflection: "If you're in crisis, please reach out now: 988 Suicide & Crisis Lifeline (call or text 988), Crisis Text Line (text HOME to 741741), or email stefanie@allmindsondeck.org to connect with a human directly."
+4. Do not continue with coaching exercises in the same response.
+5. Do not minimize, reframe, or redirect to coaching goals.
+6. Do not attempt to assess severity — you are not equipped for that. When in doubt, provide the resources.
+
+This also applies to signals of substance abuse that indicate immediate danger, disclosures of ongoing abuse (physical, emotional, sexual), and expressions of harming others.
+
+## 5. Tone and Voice
 
 You are warm but not sweet. Direct but not cold. Grounded but not dry. Your humour is witty and intelligent — the kind that makes someone laugh because they just saw something about themselves clearly for the first time. You sound like a smart, experienced colleague who happens to know a lot about human behaviour — not like a wellness app or a motivational poster.
 
@@ -51,7 +68,7 @@ Use: "That landed differently than you expected, didn't it?" or "There's somethi
 
 Match the client's emotional register. If they're grieving, be quiet and steady. If they're energised, be energised back — but anchor it. If they're analytical, meet them with structure before going deeper.
 
-## 5. Theme Tagging Instructions
+## 6. Theme Tagging Instructions
 
 With every response, return structured theme tags alongside your coaching content. Tag each client entry with 1–3 themes from the taxonomy below. Return tags as a JSON array in a designated field, not as prose within the coaching response.
 
@@ -89,7 +106,7 @@ Do not include anything outside the JSON object. No markdown, no code fences, ju
 
 export async function POST(request: NextRequest) {
   try {
-    const { entry } = await request.json();
+    const { entry, stream: useStream } = await request.json();
 
     if (!entry || typeof entry !== "string") {
       return NextResponse.json(
@@ -154,27 +171,60 @@ export async function POST(request: NextRequest) {
         }
       }
     } catch (ragError) {
-      // RAG is an enhancement, not critical — log and continue without it
       console.warn("RAG retrieval failed, continuing without context:", ragError);
     }
-    // --- End RAG ---
 
     const anthropic = new Anthropic({
       apiKey: process.env.CLAUDE_API_KEY!,
     });
+
+    const userContent = `${pastEntriesContext}\n\n## Today's Entry\n${entry}`;
+
+    // Streaming mode
+    if (useStream) {
+      const stream = anthropic.messages.stream({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1024,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userContent }],
+      });
+
+      const encoder = new TextEncoder();
+      const readable = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const event of stream) {
+              if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`));
+              }
+            }
+            const finalMessage = await stream.finalMessage();
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true, usage: finalMessage.usage })}\n\n`));
+            controller.close();
+          } catch (err) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: err instanceof Error ? err.message : "Stream error" })}\n\n`));
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(readable, {
+        headers: {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+        },
+      });
+    }
+
+    // Non-streaming mode (default)
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user",
-          content: `${pastEntriesContext}\n\n## Today's Entry\n${entry}`,
-        },
-      ],
+      messages: [{ role: "user", content: userContent }],
     });
 
-    // Extract the text content from the response
     const textBlock = message.content.find((block) => block.type === "text");
     if (!textBlock || textBlock.type !== "text") {
       return NextResponse.json(
@@ -183,7 +233,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse the JSON response from Claude
     const parsed = JSON.parse(textBlock.text);
 
     return NextResponse.json({

@@ -148,6 +148,29 @@ export async function POST(request: NextRequest) {
       }
       break;
     }
+
+    case "checkout.session.expired": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const customerEmail = session.customer_details?.email;
+      const program = session.metadata?.program || "unknown";
+      const tier = session.metadata?.tier || "unknown";
+      const amountCents = session.metadata?.amount_cents || "0";
+
+      console.log(
+        `Checkout session expired — program: ${program}, tier: ${tier}, ` +
+        `amount: $${Number(amountCents) / 100}, email: ${customerEmail || "not provided"}`
+      );
+
+      // Log to api_logs for tracking abandoned checkouts
+      await supabase.from("api_logs").insert({
+        endpoint: "checkout.session.expired",
+        model: program,
+        input_prompt: `tier=${tier}, amount_cents=${amountCents}`,
+        output: customerEmail || "no email",
+      });
+
+      break;
+    }
   }
 
   return NextResponse.json({ received: true });

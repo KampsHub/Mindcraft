@@ -2,37 +2,47 @@
 
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { createClient } from "@/lib/supabase";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
 
 const navLinks = [
-  { href: "/dashboard", label: "Home" },
-  { href: "/journal", label: "Journal" },
-  { href: "/exercise", label: "Exercise" },
-  { href: "/plan", label: "Plan" },
-  { href: "/weekly-review", label: "Review" },
+  { href: "/dashboard", label: "Today" },
+  { href: "/goals", label: "Progress" },
+  { href: "/weekly-review", label: "Insights" },
 ];
+
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  return (
+    <motion.div
+      style={{
+        position: "fixed", top: 0, left: 0, right: 0, height: 3,
+        background: `linear-gradient(90deg, ${colors.coral}, ${colors.plum})`,
+        transformOrigin: "0%", scaleX, zIndex: 200,
+      }}
+    />
+  );
+}
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const supabase = createClient();
-
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-    router.push("/login");
-  }
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   return (
+    <>
+    <ScrollProgress />
     <nav style={{
       position: "sticky", top: 0, zIndex: 50,
-      backgroundColor: colors.white,
-      borderBottom: `1px solid ${colors.gray100}`,
-      fontFamily: fonts.body,
+      background: "rgba(24,24,28,0.85)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      borderBottom: `1px solid ${colors.borderSubtle}`,
+      fontFamily: fonts.display,
     }}>
       <div style={{
         maxWidth: 960, margin: "0 auto", padding: "0 24px",
@@ -43,14 +53,11 @@ export default function Nav() {
         <button
           onClick={() => router.push("/dashboard")}
           style={{
-            display: "flex", alignItems: "center", gap: 10,
+            display: "flex", alignItems: "center", gap: 0,
             background: "none", border: "none", cursor: "pointer", padding: 0,
           }}
         >
-          <Logo size={32} />
-          <span style={{ fontSize: 15, fontWeight: 600, color: colors.black }}>
-            Mindcraft
-          </span>
+          <Logo size={14} />
         </button>
 
         {/* Desktop links */}
@@ -61,8 +68,8 @@ export default function Nav() {
               onClick={() => router.push(link.href)}
               style={{
                 padding: "6px 14px", fontSize: 14, fontWeight: 500,
-                color: isActive(link.href) ? colors.primary : colors.gray600,
-                backgroundColor: isActive(link.href) ? colors.primaryLight : "transparent",
+                color: isActive(link.href) ? colors.coral : colors.textSecondary,
+                backgroundColor: isActive(link.href) ? colors.coralWash : "transparent",
                 border: "none", borderRadius: 6, cursor: "pointer",
                 transition: "all 0.15s",
               }}
@@ -70,24 +77,30 @@ export default function Nav() {
               {link.label}
             </button>
           ))}
-          <div style={{ width: 1, height: 20, backgroundColor: colors.gray200, margin: "0 8px" }} />
+          {/* Reset Journal icon */}
           <button
-            onClick={() => router.push("/privacy")}
+            onClick={() => router.push("/mindful-journal")}
+            title="Reset Journal"
             style={{
-              padding: "6px 10px", fontSize: 13, color: colors.gray400,
-              backgroundColor: "transparent", border: "none", cursor: "pointer",
+              padding: "4px 8px",
+              background: isActive("/mindful-journal") ? colors.coralWash : "transparent",
+              border: "none", borderRadius: 6, cursor: "pointer",
+              display: "flex", alignItems: "center",
+              transition: "all 0.15s",
+              opacity: isActive("/mindful-journal") ? 1 : 0.6,
             }}
           >
-            Settings
+            <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={isActive("/mindful-journal") ? colors.coral : colors.textMuted} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
+          <div style={{ width: 1, height: 20, backgroundColor: colors.borderSubtle, margin: "0 8px" }} />
           <button
-            onClick={handleSignOut}
+            onClick={() => router.push("/my-account")}
             style={{
-              padding: "6px 10px", fontSize: 13, color: colors.gray400,
+              padding: "6px 10px", fontSize: 13, color: colors.textMuted,
               backgroundColor: "transparent", border: "none", cursor: "pointer",
             }}
           >
-            Sign out
+            My Account
           </button>
         </div>
 
@@ -97,7 +110,7 @@ export default function Nav() {
           className="nav-mobile-toggle"
           style={{
             display: "none", background: "none", border: "none",
-            cursor: "pointer", padding: 4, fontSize: 22, color: colors.black,
+            cursor: "pointer", padding: 4, fontSize: 22, color: colors.textPrimary,
           }}
         >
           {menuOpen ? "\u2715" : "\u2630"}
@@ -108,7 +121,8 @@ export default function Nav() {
       {menuOpen && (
         <div className="nav-mobile-menu" style={{
           padding: "8px 24px 16px",
-          borderTop: `1px solid ${colors.gray100}`,
+          backgroundColor: colors.bgRecessed,
+          borderTop: `1px solid ${colors.borderSubtle}`,
           display: "flex", flexDirection: "column", gap: 2,
         }}>
           {navLinks.map((link) => (
@@ -117,26 +131,33 @@ export default function Nav() {
               onClick={() => { router.push(link.href); setMenuOpen(false); }}
               style={{
                 padding: "10px 12px", fontSize: 15, fontWeight: 500,
-                color: isActive(link.href) ? colors.primary : colors.gray600,
-                backgroundColor: isActive(link.href) ? colors.primaryLight : "transparent",
+                color: isActive(link.href) ? colors.coral : colors.textSecondary,
+                backgroundColor: isActive(link.href) ? colors.coralWash : "transparent",
                 border: "none", borderRadius: 6, cursor: "pointer", textAlign: "left",
               }}
             >
               {link.label}
             </button>
           ))}
-          <div style={{ height: 1, backgroundColor: colors.gray100, margin: "8px 0" }} />
           <button
-            onClick={() => { router.push("/privacy"); setMenuOpen(false); }}
-            style={{ padding: "10px 12px", fontSize: 14, color: colors.gray400, backgroundColor: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
+            onClick={() => { router.push("/mindful-journal"); setMenuOpen(false); }}
+            style={{
+              padding: "10px 12px", fontSize: 15, fontWeight: 500,
+              color: isActive("/mindful-journal") ? colors.coral : colors.textSecondary,
+              backgroundColor: isActive("/mindful-journal") ? colors.coralWash : "transparent",
+              border: "none", borderRadius: 6, cursor: "pointer", textAlign: "left",
+              display: "flex", alignItems: "center", gap: 10,
+            }}
           >
-            Settings
+            <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={isActive("/mindful-journal") ? colors.coral : colors.textMuted} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Reset Journal
           </button>
+          <div style={{ height: 1, backgroundColor: colors.borderSubtle, margin: "8px 0" }} />
           <button
-            onClick={handleSignOut}
-            style={{ padding: "10px 12px", fontSize: 14, color: colors.gray400, backgroundColor: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
+            onClick={() => { router.push("/my-account"); setMenuOpen(false); }}
+            style={{ padding: "10px 12px", fontSize: 14, color: colors.textMuted, backgroundColor: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
           >
-            Sign out
+            My Account
           </button>
         </div>
       )}
@@ -152,5 +173,6 @@ export default function Nav() {
         }
       `}</style>
     </nav>
+    </>
   );
 }

@@ -26,6 +26,11 @@ Adapt the framework's instructions for this specific client. Reference:
 
 Do NOT just copy-paste the framework instructions. Personalise the framing, the examples, and the opening line.
 
+## Framework attribution
+When delivering an exercise, always use the exact official framework name and include the originator. Specifically:
+- "The Seven Levels of Personal, Group and Organizational Effectiveness" must always use the full name and be attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate to "Seven Levels" or "Levels of Effectiveness" without the full title and attribution.
+- For all frameworks, include the originator name in the introduction so the client sees proper attribution.
+
 ## Response format
 Return valid JSON (no markdown, no code fences):
 {
@@ -64,7 +69,7 @@ export async function POST() {
     // Fetch coaching plan
     const { data: plan } = await supabase
       .from("coaching_plans")
-      .select("*")
+      .select("id, goals, focus_areas, weekly_themes, current_phase, package")
       .eq("client_id", user.id)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -100,7 +105,7 @@ export async function POST() {
     const packageFilter = plan?.package || "general";
     const { data: frameworks } = await supabase
       .from("frameworks_library")
-      .select("*")
+      .select("id, name, category, modality, originator, source_work, difficulty_level, theme_tags, description, target_packages")
       .eq("active", true)
       .contains("target_packages", [packageFilter]);
 
@@ -160,13 +165,11 @@ Select the best framework and deliver a personalised exercise for today.`;
       date: new Date().toISOString().split("T")[0],
     });
 
-    // Log the API call
+    // Log the API call (without sensitive content for privacy)
     await logApiCall({
       clientId: user.id,
       endpoint: "/api/daily-exercise",
       model: message.model,
-      inputPrompt: userPrompt.substring(0, 5000),
-      output: textBlock.text.substring(0, 5000),
       inputTokens: message.usage.input_tokens,
       outputTokens: message.usage.output_tokens,
       latencyMs,

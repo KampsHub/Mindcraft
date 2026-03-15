@@ -26,7 +26,19 @@ export async function GET(request: Request) {
     );
 
     await supabase.auth.exchangeCodeForSession(code);
+
+    // Fire welcome email (non-blocking — don't let it delay the redirect)
+    const cookieHeader = cookieStore
+      .getAll()
+      .map((c) => `${c.name}=${c.value}`)
+      .join("; ");
+    fetch(`${origin}/api/welcome-email`, {
+      method: "POST",
+      headers: { cookie: cookieHeader },
+    }).catch(() => {
+      // Silently ignore — welcome email is best-effort
+    });
   }
 
-  return NextResponse.redirect(`${origin}/journal`);
+  return NextResponse.redirect(`${origin}/mindful-journal`);
 }

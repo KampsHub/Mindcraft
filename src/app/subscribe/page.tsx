@@ -89,7 +89,7 @@ function SubscribeContent() {
           </p>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 16 }}>
             <span style={{ fontSize: 48, fontWeight: 700, color: colors.black }}>{price}</span>
-            <span style={{ fontSize: 16, color: colors.gray400 }}>{c.pricing.interval}</span>
+            <span style={{ fontSize: 16, color: colors.gray400 }}>/month</span>
           </div>
 
           <div style={{ textAlign: "left", maxWidth: 320, margin: "0 auto 24px", display: "flex", flexDirection: "column", gap: 10 }}>

@@ -4,343 +4,254 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import { motion } from "framer-motion";
 import Nav from "@/components/Nav";
-import { colors, fonts, card } from "@/lib/theme";
-import { content as c } from "@/content/site";
+import FadeIn from "@/components/FadeIn";
+import ProgramCard from "./ProgramCard";
+import ContactModal from "./ContactModal";
+import { colors, fonts } from "@/lib/theme";
+import ExercisesSection from "@/components/ExercisesSection";
 
-interface Entry {
+/* ── Design tokens ── */
+const display = fonts.display;
+const body = fonts.bodyAlt;
+
+const cardStyle: React.CSSProperties = {
+  backgroundColor: colors.bgSurface,
+  borderRadius: 14,
+  border: `1px solid ${colors.borderDefault}`,
+};
+
+/* ── Types ── */
+interface ProgramEnrollment {
   id: string;
-  type: string;
-  content: string;
-  theme_tags: string[];
-  date: string;
-  metadata: Record<string, unknown>;
-  created_at: string;
+  program_id: string;
+  current_day: number;
+  status: string;
+  goals_approved: boolean;
+  programs: { name: string; slug: string };
 }
 
-interface Exercise {
+interface ActiveGoal {
   id: string;
-  completed: boolean;
-  date: string;
-  content: string;
+  goal_text: string;
+  status: string;
 }
+
+interface EnrollmentWithContext {
+  enrollment: ProgramEnrollment;
+  goals: ActiveGoal[];
+  todaySessionDone: boolean;
+}
+
+/* ── Quick-access links (3 per row) ── */
+const quickLinks = [
+  { href: "/mindful-journal", label: "Journal", desc: "Write freely", icon: "✎" },
+  { href: "/goals", label: "Progress", desc: "Goals & milestones", icon: "◎" },
+  { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻" },
+  { href: "/my-account", label: "My Account", desc: "Your data", icon: "◈" },
+];
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
-  const [oneLiner, setOneLiner] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [recentEntries, setRecentEntries] = useState<Entry[]>([]);
-  const [todaysExercise, setTodaysExercise] = useState<Exercise | null>(null);
-  const [streak, setStreak] = useState(0);
-  const [topThemes, setTopThemes] = useState<{ tag: string; count: number }[]>([]);
-  const [flash, setFlash] = useState("");
+  const [enrollments, setEnrollments] = useState<EnrollmentWithContext[]>([]);
+  const [contactOpen, setContactOpen] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
   const fetchDashboardData = useCallback(async (userId: string) => {
-    const today = new Date().toISOString().split("T")[0];
+    try {
+      const { data: rawEnrollments } = await supabase
+        .from("program_enrollments")
+        .select("id, program_id, current_day, status, goals_approved, created_at, programs(name, slug)")
+        .eq("client_id", userId)
+        .in("status", ["active", "onboarding", "awaiting_goals", "pre_start", "completed", "paused"])
+        .order("created_at", { ascending: false });
 
-    // Fetch recent entries (last 7 days)
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const { data: entries } = await supabase
-      .from("entries")
-      .select("*")
-      .eq("client_id", userId)
-      .gte("date", sevenDaysAgo.toISOString().split("T")[0])
-      .order("created_at", { ascending: false })
-      .limit(10);
-
-    if (entries) {
-      setRecentEntries(entries);
-
-      // Calculate top themes from recent entries
-      const themeCounts: Record<string, number> = {};
-      entries.forEach((e) => {
-        (e.theme_tags || []).forEach((tag: string) => {
-          themeCounts[tag] = (themeCounts[tag] || 0) + 1;
-        });
-      });
-      const sorted = Object.entries(themeCounts)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, 5)
-        .map(([tag, count]) => ({ tag, count }));
-      setTopThemes(sorted);
-    }
-
-    // Fetch today's exercise
-    const { data: exercise } = await supabase
-      .from("exercises")
-      .select("*")
-      .eq("date", today)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
-
-    if (exercise) {
-      setTodaysExercise(exercise);
-    }
-
-    // Calculate streak (consecutive days with journal entries)
-    const { data: allEntries } = await supabase
-      .from("entries")
-      .select("date")
-      .eq("client_id", userId)
-      .eq("type", "journal")
-      .order("date", { ascending: false })
-      .limit(30);
-
-    if (allEntries) {
-      let currentStreak = 0;
-      const checkDate = new Date();
-      const entryDates = new Set(allEntries.map((e) => e.date));
-
-      for (let i = 0; i < 30; i++) {
-        const dateStr = checkDate.toISOString().split("T")[0];
-        if (entryDates.has(dateStr)) {
-          currentStreak++;
-        } else if (i > 0) {
-          break; // streak broken
-        }
-        checkDate.setDate(checkDate.getDate() - 1);
+      if (rawEnrollments && rawEnrollments.length > 0) {
+        const enriched = await Promise.all(
+          rawEnrollments.map(async (enr) => {
+            const [goalsRes, sessionRes] = await Promise.all([
+              supabase
+                .from("client_goals")
+                .select("id, goal_text, status")
+                .eq("enrollment_id", enr.id)
+                .eq("status", "active"),
+              supabase
+                .from("daily_sessions")
+                .select("completed_at")
+                .eq("enrollment_id", enr.id)
+                .eq("day_number", enr.current_day)
+                .single(),
+            ]);
+            return {
+              enrollment: enr as ProgramEnrollment,
+              goals: (goalsRes.data || []) as ActiveGoal[],
+              todaySessionDone: !!sessionRes.data?.completed_at,
+            };
+          })
+        );
+        setEnrollments(enriched);
       }
-      setStreak(currentStreak);
+    } catch {
+      // Tables may not exist yet
     }
   }, [supabase]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push("/login");
-        return;
-      }
+      if (!user) { router.push("/login"); return; }
       setUser(user);
       fetchDashboardData(user.id);
-
-      // Link any pre-signup Stripe subscription to this account
       fetch("/api/link-subscription", { method: "POST" }).catch(() => {});
     });
   }, [supabase.auth, router, fetchDashboardData]);
 
-  async function handleOneLiner(e: React.FormEvent) {
-    e.preventDefault();
-    if (!oneLiner.trim() || !user || submitting) return;
-
-    setSubmitting(true);
-    try {
-      // Get theme tags from Claude
-      const res = await fetch("/api/reflect", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ entry: oneLiner }),
-      });
-
-      let themeTags: string[] = [];
-      if (res.ok) {
-        const data = await res.json();
-        themeTags = data.theme_tags || [];
-      }
-
-      // Save as one_liner entry
-      const { data: insertedEntry, error } = await supabase
-        .from("entries")
-        .insert({
-          client_id: user.id,
-          coach_id: user.id,
-          type: "one_liner",
-          content: oneLiner,
-          theme_tags: themeTags,
-          date: new Date().toISOString().split("T")[0],
-          metadata: {},
-        })
-        .select("id")
-        .single();
-
-      if (error) {
-        console.error("Failed to save one-liner:", error);
-      } else {
-        // Fire-and-forget: generate embedding for RAG
-        if (insertedEntry) {
-          fetch("/api/embed", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ entryId: insertedEntry.id }),
-          }).catch((err) => console.warn("Embedding generation failed:", err));
-        }
-        setFlash(c.dashboard.capturedFlash);
-        setOneLiner("");
-        fetchDashboardData(user.id);
-        setTimeout(() => setFlash(""), 2000);
-      }
-    } catch (err) {
-      console.error("Error submitting one-liner:", err);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
   if (!user) {
     return (
-      <div style={{ textAlign: "center", paddingTop: 120, fontFamily: fonts.body }}>
-        <p style={{ color: colors.gray400 }}>Loading...</p>
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: colors.bgDeep }}>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: colors.textMuted, fontFamily: body }}>
+          Loading...
+        </motion.p>
       </div>
     );
   }
 
   return (
-    <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
+    <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative" }}>
+      {/* Decorative floating dots */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 0.1, scale: 1 }}
+        transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
+        style={{
+          position: "absolute", top: "8%", right: "12%",
+          width: 180, height: 180, borderRadius: "50%",
+          background: colors.coral, pointerEvents: "none", filter: "blur(60px)",
+        }}
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 0.08, scale: 1 }}
+        transition={{ duration: 1.5, delay: 0.6, ease: "easeOut" }}
+        style={{
+          position: "absolute", top: "18%", left: "8%",
+          width: 140, height: 140, borderRadius: "50%",
+          background: colors.plum, pointerEvents: "none", filter: "blur(50px)",
+        }}
+      />
+
       <Nav />
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
-        {/* Welcome */}
-        <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
-            {c.dashboard.headline}
-          </h1>
-          <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{user.email}</p>
-        </div>
 
-        {/* One-liner capture */}
-        <form onSubmit={handleOneLiner} style={{
-          ...card, padding: 20, marginBottom: 24,
-        }}>
-          <label style={{ display: "block", fontSize: 14, fontWeight: 500, color: colors.gray600, marginBottom: 8 }}>
-            {c.dashboard.oneLinerLabel}
-          </label>
-          <div style={{ display: "flex", gap: 8 }}>
-            <input
-              type="text"
-              value={oneLiner}
-              onChange={(e) => setOneLiner(e.target.value)}
-              placeholder={c.dashboard.oneLinerPlaceholder}
-              disabled={submitting}
-              style={{
-                flex: 1, padding: "10px 14px", fontSize: 15,
-                border: `1px solid ${colors.gray200}`, borderRadius: 8,
-                outline: "none", boxSizing: "border-box",
-              }}
-            />
-            <button type="submit" disabled={submitting || !oneLiner.trim()} style={{
-              padding: "10px 20px", fontSize: 14, fontWeight: 600, color: colors.white,
-              backgroundColor: submitting || !oneLiner.trim() ? colors.gray400 : colors.primary,
-              border: "none", borderRadius: 8,
-              cursor: submitting || !oneLiner.trim() ? "not-allowed" : "pointer",
-              whiteSpace: "nowrap", transition: "background-color 0.15s",
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
+
+        {/* ── Welcome ── */}
+        <FadeIn preset="fade" duration={0.6} triggerOnMount>
+          <div style={{ marginBottom: 32 }}>
+            <h1 style={{
+              fontFamily: display, fontSize: 32, fontWeight: 700,
+              letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 6px 0",
             }}>
-              {submitting ? "..." : c.dashboard.captureButton}
-            </button>
-          </div>
-          {flash && (
-            <p style={{ fontSize: 13, color: colors.success, margin: "8px 0 0 0" }}>{flash}</p>
-          )}
-        </form>
-
-        {/* Quick stats */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
-          <div style={{ ...card, padding: 16, textAlign: "center" }}>
-            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>{streak}</p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.dashboard.stats.streak}</p>
-          </div>
-          <div style={{ ...card, padding: 16, textAlign: "center" }}>
-            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0", color: colors.primary }}>
-              {recentEntries.filter((e) => e.type === "journal").length}
-            </p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.dashboard.stats.entries}</p>
-          </div>
-          <div style={{ ...card, padding: 16, textAlign: "center" }}>
-            <p style={{ fontSize: 28, fontWeight: 700, margin: "0 0 4px 0",
-              color: todaysExercise?.completed ? colors.success : colors.warning,
-            }}>
-              {todaysExercise ? (todaysExercise.completed ? "\u2713" : "\u2022") : "\u2014"}
-            </p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>
-              {todaysExercise ? (todaysExercise.completed ? c.dashboard.stats.exerciseDone : c.dashboard.stats.exercisePending) : c.dashboard.stats.noExercise}
+              The work continues.
+            </h1>
+            <p style={{ fontSize: 14, color: colors.textMuted, margin: 0, fontFamily: body }}>
+              {user.email}
             </p>
           </div>
-        </div>
+        </FadeIn>
 
-        {/* Top themes */}
-        {topThemes.length > 0 && (
-          <div style={{ marginBottom: 24 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 10px 0", color: colors.gray600 }}>
-              {c.dashboard.themesHeading}
-            </h3>
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-              {topThemes.map(({ tag, count }) => (
-                <span key={tag} style={{
-                  padding: "4px 12px", fontSize: 13,
-                  backgroundColor: colors.primaryLight, color: colors.primaryDark,
-                  borderRadius: 16, border: `1px solid ${colors.primaryMuted}`,
-                }}>
-                  {tag.replace(/_/g, " ")} ({count})
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Navigation links */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 32 }}>
-          {c.dashboard.navLinks.map(({ href, label, desc }) => (
-            <button
-              key={href}
-              onClick={() => router.push(href)}
-              style={{
-                ...card, padding: 16, textAlign: "left",
-                cursor: "pointer", transition: "border-color 0.15s, box-shadow 0.15s",
-              }}
-            >
-              <p style={{ fontSize: 15, fontWeight: 600, margin: "0 0 4px 0", color: colors.black }}>{label}</p>
-              <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{desc}</p>
-            </button>
-          ))}
-        </div>
-
-        {/* Recent entries */}
-        {recentEntries.length > 0 && (
-          <div>
-            <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 12px 0", color: colors.gray600 }}>
-              {c.dashboard.recentEntriesHeading}
-            </h3>
-            {recentEntries.slice(0, 5).map((entry) => (
-              <div key={entry.id} style={{
-                ...card, padding: 14, marginBottom: 8,
-              }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <span style={{
-                    fontSize: 12,
-                    padding: "2px 8px", backgroundColor: entry.type === "one_liner" ? colors.warningLight : colors.primaryLight,
-                    borderRadius: 10, border: `1px solid ${entry.type === "one_liner" ? "#fde68a" : colors.primaryMuted}`,
-                    color: entry.type === "one_liner" ? "#92400e" : colors.primaryDark,
-                  }}>
-                    {entry.type === "one_liner" ? c.dashboard.entryTypes.thought : c.dashboard.entryTypes.journal}
-                  </span>
-                  <span style={{ fontSize: 12, color: colors.gray300 }}>{entry.date}</span>
-                </div>
-                <p style={{
-                  fontSize: 14, color: colors.dark, margin: 0, lineHeight: 1.5,
-                  overflow: "hidden", textOverflow: "ellipsis",
-                  display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
-                }}>
-                  {entry.content}
-                </p>
-                {entry.theme_tags?.length > 0 && (
-                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 8 }}>
-                    {entry.theme_tags.map((tag) => (
-                      <span key={tag} style={{
-                        padding: "2px 8px", fontSize: 11,
-                        backgroundColor: colors.gray50, color: colors.gray600,
-                        borderRadius: 10,
-                      }}>
-                        {tag.replace(/_/g, " ")}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+        {/* ── Program cards ── */}
+        {enrollments.length > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 28 }}>
+            {enrollments.map((ctx, i) => (
+              <FadeIn key={ctx.enrollment.id} preset="slide-up" delay={0.1 + i * 0.08} triggerOnMount>
+                <ProgramCard
+                  enrollment={ctx.enrollment}
+                  goals={ctx.goals}
+                  todaySessionDone={ctx.todaySessionDone}
+                  isCompact={enrollments.length > 1}
+                  onNavigate={(path) => router.push(path)}
+                />
+              </FadeIn>
             ))}
           </div>
         )}
+
+        {/* ── Exercises section ── */}
+        {enrollments.length > 0 && (
+          <FadeIn preset="fade" delay={0.12} triggerOnMount>
+            <ExercisesSection
+              user={user}
+              enrollment={enrollments[0]?.enrollment ? {
+                id: enrollments[0].enrollment.id,
+                program_id: enrollments[0].enrollment.program_id,
+                current_day: enrollments[0].enrollment.current_day,
+                programs: enrollments[0].enrollment.programs,
+              } : null}
+            />
+          </FadeIn>
+        )}
+
+        {/* ── Quick links (3 per row) ── */}
+        <FadeIn preset="fade" delay={0.15} triggerOnMount>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 12,
+            marginBottom: 28,
+          }}>
+            {quickLinks.map((link, i) => (
+              <motion.button
+                key={link.href}
+                whileHover={{ y: -4, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: "rgba(224, 149, 133, 0.3)" }}
+                transition={{ type: "spring", stiffness: 300, damping: 22, delay: i * 0.03 }}
+                onClick={() => router.push(link.href)}
+                style={{
+                  ...cardStyle, padding: "18px 14px", textAlign: "center",
+                  cursor: "pointer", transition: "border-color 0.2s",
+                }}
+              >
+                <p style={{ fontSize: 20, margin: "0 0 8px 0", lineHeight: 1, color: colors.textMuted }}>{link.icon}</p>
+                <p style={{
+                  fontFamily: display, fontSize: 14, fontWeight: 600,
+                  margin: "0 0 3px 0", color: colors.textPrimary,
+                }}>
+                  {link.label}
+                </p>
+                <p style={{ fontSize: 12, color: colors.textMuted, margin: 0, fontFamily: body }}>
+                  {link.desc}
+                </p>
+              </motion.button>
+            ))}
+            {/* Contact (opens modal instead of navigating) */}
+            <motion.button
+              whileHover={{ y: -4, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: "rgba(224, 149, 133, 0.3)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 22, delay: quickLinks.length * 0.03 }}
+              onClick={() => setContactOpen(true)}
+              style={{
+                ...cardStyle, padding: "18px 14px", textAlign: "center",
+                cursor: "pointer", transition: "border-color 0.2s",
+              }}
+            >
+              <p style={{ fontSize: 20, margin: "0 0 8px 0", lineHeight: 1, color: colors.textMuted }}>✉</p>
+              <p style={{
+                fontFamily: display, fontSize: 14, fontWeight: 600,
+                margin: "0 0 3px 0", color: colors.textPrimary,
+              }}>
+                Contact
+              </p>
+              <p style={{ fontSize: 12, color: colors.textMuted, margin: 0, fontFamily: body }}>
+                Get support
+              </p>
+            </motion.button>
+          </div>
+        </FadeIn>
+
+
       </div>
+
+      {/* ── Contact modal ── */}
+      <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );
 }

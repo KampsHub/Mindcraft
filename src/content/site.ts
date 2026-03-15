@@ -8,7 +8,7 @@
 export const content = {
   // ── Brand ──
   brand: {
-    name: "Mindcraft Ninja",
+    name: "Mindcraft",
     companyName: "All Minds on Deck LLC",
     companyUrl: "https://allmindsondeck.org",
   },
@@ -26,121 +26,150 @@ export const content = {
     headline: "Too much going on?",
     headlineAccent: "Cut through your mind's noise.",
     subheadline:
-      "Mindcraft Ninja gives you the daily structure to actually do it. Journal, get reflections that see your real patterns, and do exercises from proven frameworks \u2014 personalised to you.",
+      "Mindcraft gives you the daily structure to actually do it. Journal, get reflections that see your real patterns, and do exercises from proven frameworks \u2014 personalised to you.",
     cta: "See how it works",
     heroVideo: "", // e.g. "/images/hero.mp4" — leave empty for no video
     heroImage: "", // e.g. "/images/hero.jpg" — fallback or standalone image
     heroPoster: "", // poster image for video (shown while loading)
   },
 
-  // ── The Problem ──
-  problem: {
-    headline: "The problem isn't awareness.",
-    points: [
-      "You've done the therapy. Read the books. Had the breakthroughs.",
-      "But insight without structure fades. The same loops run on autopilot.",
-      "You don't need more awareness. You need a system that works with what you already know.",
-    ],
+  // ── Reframe Block ──
+  reframe: {
+    text: "You\u2019ve read the books. Done the 1:1s. Maybe even tried meditating. But when you\u2019re spiraling on a PIP, frozen after a layoff, or white-knuckling through a role you didn\u2019t see coming \u2014 the generic advice stops reaching. Not because something\u2019s wrong with you. Because the situation needs something more specific than a productivity hack or a blank journal page.",
   },
 
-  // ── Who it's for ──
-  audience: {
-    line1: "Built for people who already do the inner work —",
-    line2: "and want a system to make it stick.",
-  },
-
-  // ── What it does ──
-  features: {
-    headline: "Not another journal app.",
+  // ── Programs ──
+  programs: {
+    headline: "What brought you here?",
     subheadline:
-      "A system that reads what you write, reflects back what it sees, and gives you real exercises — matched to your patterns.",
+      "One month. One program. Built around what you\u2019re actually dealing with.",
     cards: [
       {
-        title: "Write. Get seen.",
-        desc: "Journal freely. Your companion reflects back patterns, blind spots, and growth edges — not platitudes.",
+        tag: "Layoff",
+        title: "Stabilize first. Then figure out what\u2019s next.",
+        desc: "30 days of coach-designed exercises to get past the shock, find the patterns underneath it, and rebuild clarity \u2014 about the next move, and about who you are without the title.",
+        href: "/parachute",
       },
       {
-        title: "Do the real work.",
-        desc: "Targeted exercises from IFS, ACT, CBT, Gottman, and positive psychology. Matched to your themes. Done in minutes.",
+        tag: "PIP",
+        title: "Separate the panic from the actual problem.",
+        desc: "30 days of coach-designed exercises to sort real feedback from fear, and build a concrete plan you can execute under pressure \u2014 not just survive.",
+        href: "/jetstream",
       },
       {
-        title: "See what's shifting.",
-        desc: "Weekly reviews and monthly summaries surface patterns across entries. Real evidence of what's changing.",
+        tag: "New Role",
+        title: "The hardest part isn\u2019t the job. It\u2019s the doubt.",
+        desc: "Get grounded before imposter syndrome writes the narrative. Build real confidence in your new role, not the performed kind.",
+        href: "/basecamp",
       },
     ],
-  },
-
-  // ── Product Preview (mock reflection) ──
-  preview: {
-    label: "What a reflection looks like",
-    userLabel: "You wrote:",
-    userEntry:
-      '"I keep saying yes to things I don\'t want. Then I resent everyone for it."',
-    reflectionLabel: "Mindcraft Ninja reflects:",
-    reflectionText:
-      "This is the third time this week you've named a pattern of over-committing. The resentment isn't about them \u2014 it's the signal that a boundary was needed and didn't get set. Tomorrow's exercise will work on identifying the moment before the \"yes.\"",
-  },
-
-  // ── Interactive Demo (homepage) ──
-  // Visitors type a journal entry and see a simulated reflection.
-  interactiveDemo: {
-    headline: "Try it yourself.",
-    subheadline: "Type anything. See how Mindcraft Ninja reflects it back.",
-    placeholder: "What\u2019s on your mind right now?",
-    buttonText: "See reflection",
-    loadingText: "Reading your entry...",
-    sampleReflections: [
-      "You\u2019re naming a pattern here \u2014 the gap between what you want and what you do. That tension is the starting point, not the problem. Tomorrow\u2019s exercise will help you map the moment before the decision.",
-      "There\u2019s a theme across your last few entries: a pull between connection and protection. Neither is wrong. The work is learning when each one serves you.",
-      "Notice how you frame this \u2014 \u201cI should\u201d vs \u201cI want.\u201d That split usually signals a boundary that needs setting. We\u2019ll work on identifying the voice behind the \u201cshould\u201d tomorrow.",
-    ],
+    cta: "Find your program",
   },
 
   // ── How it works ──
   steps: {
-    headline: "Three steps. Five minutes a day.",
+    headline: "How it works",
     items: [
       {
-        title: "Tell us what you're working on",
-        desc: "A short intake maps your patterns and builds a 12-week plan — frameworks matched to your situation, not a generic template.",
+        title: "Pick your situation.",
+        desc: "No personality quiz. You choose the program that matches your moment. That choice shapes your 30-day arc, your exercises, and your intake.",
       },
       {
-        title: "Write. Reflect. Do the exercise.",
-        desc: "Each day: journal freely, get a reflection that notices what you miss, and complete an exercise that moves the needle.",
+        title: "A real intake. Not a signup form.",
+        desc: "30 to 45 minutes. Your values, work history, what brought you here, what you\u2019ve already tried. The kind of questions a good coach asks in a first session \u2014 because that\u2019s who wrote them.",
       },
       {
-        title: "Watch yourself change",
-        desc: "Weekly reviews and monthly summaries track what's actually shifting. Not feelings about progress — evidence of it.",
+        title: "Your goals. Backed by your own words.",
+        desc: "Based on your intake, you\u2019ll get 3 to 6 goals \u2014 each one showing you why it was chosen. You approve, adjust, or add your own before Day 1.",
+      },
+      {
+        title: "One structured day at a time.",
+        desc: "15 to 30 minutes a day. Each session picks from exercises designed by certified coaches \u2014 based on what\u2019s actually coming up in your entries that day. Some days the program leads. Some days your reality does.",
+      },
+      {
+        title: "Designed by coaches. Without the fluff.",
+        desc: "Neuroscience, IFS, performance psychology, and mindfulness \u2014 not because they sound impressive, but because they\u2019ve been tested in the rooms where these situations actually happen.",
+      },
+      {
+        title: "Notice what shifts.",
+        desc: "Weekly reflections. Monthly pattern reports. Not metrics for the sake of metrics \u2014 just honest observations about recurring themes, emotional movement, and what keeps coming up.",
       },
     ],
   },
 
-  // ── Credibility ──
-  credibility: {
-    headline: "Built on real frameworks. By real coaches.",
-    description:
-      "Mindcraft Ninja is built by All Minds on Deck — an ICF & EMCC certified coaching practice with backgrounds in product leadership, positive psychology, and neuroscience. Every exercise comes from a proven methodology. Nothing is made up.",
-    stats: [
-      { label: "ICF & EMCC", desc: "certified coaches" },
-      { label: "12-week", desc: "structured plans" },
-      { label: "6+", desc: "proven frameworks" },
-      { label: "100%", desc: "your data" },
+  // ── After the Month ──
+  afterMonth: {
+    headline: "The program ends. You decide what\u2019s next.",
+    body: "Most people keep going. $50/month, same depth, same personalization. No lock-in. Stay because it\u2019s helping, not because we made it hard to leave.",
+    price: "$50/month",
+  },
+
+  // ── The Human Layer ──
+  humanLayer: {
+    headline: "When you need more than a screen.",
+    body: "The daily program does a lot \u2014 but some moments call for a real person. We\u2019re connected to a network of certified coaches with deep expertise in leadership and team dynamics. Many of them have worked in tech or still do. You can export part of your data to share with a coach to get them up to speed fast.",
+    cta: "Book a session",
+  },
+
+  // ── Who Built This ──
+  builtBy: {
+    headline: "Who built this.",
+    body: "Getting laid off sent me through an emotional rollercoaster I wasn\u2019t prepared for. As a product leader and certified coach, I channeled that experience into building what I wished had existed \u2014 a structured way to help people actually process these career-defining moments. I\u2019ve since coached people through layoffs, PIPs, and disorienting new roles, picking up frameworks and tools along the way that genuinely move the needle. I wish I\u2019d had all of this when it happened to me, because that experience stayed with me for years.",
+    name: "Stefanie Kamps",
+    title: "Founder \u00b7 Certified Leadership Coach, Team Facilitator, and Product Manager",
+    linkedin: "https://www.linkedin.com/in/stefanie-kamps/",
+  },
+
+  // ── FAQ ──
+  faq: {
+    headline: "FAQ",
+    items: [
+      {
+        q: "Is this therapy?",
+        a: "No. Therapy processes the past. This gives you structure for the present. If you need therapy, get therapy. We\u2019re not a substitute.",
+      },
+      {
+        q: "Is this woo-woo?",
+        a: "No. The frameworks come from neuroscience, IFS, ACT, and Gottman research. Evidence-based, cited, and selected for your situation \u2014 not pulled from a quote calendar.",
+      },
+      {
+        q: "How is this different from a journaling app?",
+        a: "A journaling app gives you a blank page and hopes for the best. This gives you the right exercise for today, reads your patterns across entries, and adapts your program as you go.",
+      },
+      {
+        q: "How is this different from ChatGPT?",
+        a: "ChatGPT responds to what you type. This knows what to give you next based on where you are in your program, what patterns are showing up, and what you\u2019re avoiding.",
+      },
+      {
+        q: "Does AI actually work for this?",
+        a: "The AI reads your entries and matches you to frameworks from neuroscience, performance psychology, and mindfulness research. It doesn\u2019t replace a human \u2014 it does the daily work that most people skip.",
+      },
+      {
+        q: "Can my company pay?",
+        a: "Yes. Many companies cover this under professional development or coaching budgets.",
+      },
+      {
+        q: "Who sees my data?",
+        a: "You. That\u2019s it. Your entries never train any model. No third parties. No exceptions.",
+      },
+      {
+        q: "What happens after my program month?",
+        a: "Keep going at $50/month, add live sessions, or stop. No contracts. No \u2018are you sure?\u2019 emails.",
+      },
     ],
   },
 
-  // ── Pricing ──
-  pricing: {
-    headline: "Start doing the work.",
-    subheadline:
-      "Daily reflections. Personalised exercises. Pattern tracking. A 12-week plan built around you. Everything you need — for less than a single coaching session.",
-    interval: "/month",
-    disclaimer: "Cancel anytime. Your data stays yours.",
-    cta: "Get Mindcraft Ninja",
+  // ── Checkout ──
+  checkout: {
+    cancelledMessage: "Checkout was cancelled. No charge was made. You can try again whenever you\u2019re ready.",
   },
 
-  // ── AMOD clients banner ──
-  clientsBanner:
-    "Active All Minds on Deck coaching clients get free access to Mindcraft Ninja.",
+  // ── Final CTA ──
+  finalCta: {
+    headline: "You don\u2019t have to figure this out alone.",
+    subtext: "One month. One program. No contracts.",
+    primaryCta: "Find your program",
+  },
 
   // ── Subscribe page ──
   subscribe: {
@@ -151,7 +180,7 @@ export const content = {
     features: [
       "Personalised exercises from proven frameworks",
       "AI-powered reflections — not platitudes",
-      "12-week coaching plan built around you",
+      "4-week coaching plan built around you",
       "Pattern recognition across your entries",
       "Weekly and monthly reviews that surface what matters",
       "Your data. Full stop. No training, ever.",
@@ -190,7 +219,7 @@ export const content = {
     success: {
       headline: "Check your inbox",
       messageAfter:
-        ". Click it, then sign in. Your coaching plan is waiting.",
+        ". We\u2019ve sent you a verification link to confirm your Mindcraft account. Click it, then sign in \u2014 your coaching plan is waiting.",
       backLink: "Back to sign in",
     },
   },
@@ -199,7 +228,7 @@ export const content = {
   intake: {
     headline: "Let\u2019s build your plan.",
     subheadline:
-      "Tell us what brought you here. We\u2019ll match you with the right frameworks and build a 12-week coaching plan around your situation.",
+      "Tell us what brought you here. We\u2019ll match you with the right frameworks and build a 4-week coaching plan around your situation.",
     step2Prefix: "Step 2 of 3 \u2014 Getting to Know You",
     step3Prefix: "Step 3 of 3 \u2014",
     specificHeadline: "About Your Situation",
@@ -213,7 +242,7 @@ export const content = {
     complete: {
       headline: "Got it. Let\u2019s go.",
       subheadline:
-        "Your responses are saved. Now we build your personalised 12-week coaching plan \u2014 frameworks matched to your themes, exercises that fit your situation.",
+        "Your responses are saved. Now we build your personalised 4-week coaching plan \u2014 frameworks matched to your themes, exercises that fit your situation.",
       cta: "Generate my coaching plan",
     },
   },
@@ -234,9 +263,9 @@ export const content = {
     },
     themesHeading: "Themes this week",
     navLinks: [
-      { href: "/journal", label: "Journal", desc: "Write. Get seen." },
+      { href: "/mindful-journal", label: "Journal", desc: "Write. Get seen." },
       { href: "/exercise", label: "Exercise", desc: "Today\u2019s real work" },
-      { href: "/plan", label: "Plan", desc: "Your 12-week map" },
+      { href: "/plan", label: "Plan", desc: "Your 4-week map" },
       {
         href: "/weekly-review",
         label: "Review",
@@ -251,6 +280,36 @@ export const content = {
     ],
     recentEntriesHeading: "Recent entries",
     entryTypes: { thought: "thought", journal: "journal" },
+    contact: {
+      heading: "Get in touch",
+      issueTypes: [
+        "Technical problem",
+        "Feedback on an exercise",
+        "Feedback on insights and summaries",
+        "Question for a Coach",
+      ],
+      messagePlaceholder: "Tell us what's on your mind...",
+      submitButton: "Send",
+      submittingButton: "Sending...",
+      successHeading: "Message sent",
+      successMessage: "Got it. We'll get back to you within 48 hours at the latest.",
+    },
+    upsell: {
+      sectionHeading: "Go deeper",
+      enneagram: {
+        badge: "Deepest insight",
+        title: "Add Enneagram",
+        description: "The IEQ9 assessment + 1-hour debrief with a certified coach. Your results refine every exercise and goal.",
+        price: "$275",
+        cta: "Learn more",
+      },
+      coaching: {
+        badge: "Human support",
+        title: "1:1 Coaching",
+        description: "A 3-month partnership with a certified coach who already knows your patterns from the program.",
+        cta: "Apply",
+      },
+    },
   },
 
   // ── Journal page ──
@@ -264,6 +323,25 @@ export const content = {
     submitLoading: "Reflecting...",
     loadingText: "Reading your entry...",
     reflectionHeading: "Coaching Reflection",
+  },
+
+  // ── Mindful Journal page ──
+  mindfulJournal: {
+    headline: "Mindful Journal",
+    subheadline:
+      "Notice what you\u2019re feeling, what you need, and what\u2019s alive in your body.",
+    placeholder:
+      "Write freely. What\u2019s present for you right now?",
+    submitButton: "Save entry",
+    submitLoading: "Saving...",
+    savedMessage: "Entry saved \u2014 it will be part of your next summary.",
+    feelingsSatisfiedTitle: "Feelings \u2014 needs satisfied",
+    feelingsUnsatisfiedTitle: "Feelings \u2014 needs not satisfied",
+    needsTitle: "Needs",
+    somaticTitle: "Somatic sensations",
+    groundingHeading: "Grounding exercises",
+    attribution:
+      "Feelings and Needs inventories adapted from the work of Marshall B. Rosenberg and the Center for Nonviolent Communication (CNVC), as compiled by Nati Beltran and colleagues. Somatic sensations list developed collaboratively by NVC practitioners. Used with gratitude.",
   },
 
   // ── Exercise page ──
@@ -283,7 +361,7 @@ export const content = {
 
   // ── Plan page ──
   plan: {
-    headline: "Your 12-Week Map",
+    headline: "Your 4-Week Map",
     emptyMessage:
       "No plan yet. Complete your intake, then we build your personalised coaching plan \u2014 frameworks matched to your situation.",
     generatingText: "Building your plan \u2014 about 15 seconds...",
@@ -293,14 +371,13 @@ export const content = {
     startJournaling: "Start journaling",
     packageLabels: {
       layoff: "Layoff Recovery",
-      international_move: "International Move",
-      new_manager: "New Manager",
-      general: "General Growth",
+      new_role: "New Role",
+      performance_plan: "Performance Plan",
     } as Record<string, string>,
     goalsHeading: "Goals",
     focusAreasHeading: "Focus Areas",
     basedOn: "Based on:",
-    weeklyJourneyHeading: "12-Week Journey",
+    weeklyJourneyHeading: "4-Week Journey",
     loadingText: "Loading your coaching plan...",
   },
 
@@ -348,7 +425,7 @@ export const content = {
         },
       ],
       contactText:
-        "To exercise any of these rights, contact privacy@allmindsondeck.com",
+        "To exercise any of these rights, contact stefanie@allmindsondeck.org",
     },
     saveButton: "Save preferences",
     savingButton: "Saving...",
@@ -431,8 +508,28 @@ export const content = {
     loadingText: "Loading coach view...",
   },
 
+  // ── Interactive Demo ──
+  interactiveDemo: {
+    sampleReflections: [
+      "There's something interesting in how you described that situation \u2014 the language shifts from 'I chose' to 'it happened to me' halfway through. That's worth sitting with.",
+      "You mentioned control three times without naming it. What would it look like to let go of just one of those things this week?",
+      "The anger you're describing has a different texture than last week's. It sounds less like reaction and more like clarity. That's movement.",
+      "You're holding two things that feel contradictory \u2014 wanting to be seen and wanting to disappear. Both are real. Neither needs to win right now.",
+    ],
+    placeholder: "What\u2019s on your mind right now? Write a sentence or two.",
+    buttonText: "Get reflection",
+    loadingText: "Reading your entry...",
+  },
+
+  // ── Preview ──
+  preview: {
+    reflectionLabel: "Coaching Reflection",
+  },
+
   // ── Footer ──
   footer: {
-    text: "Mindcraft Ninja \u2014 built by",
+    text: "Mindcraft \u2014 built by",
+    copyright: "\u00a9 2026 Mindcraft",
+    privacyLink: "Privacy Policy",
   },
 };

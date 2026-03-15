@@ -5,9 +5,14 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import Nav from "@/components/Nav";
-import { colors, fonts, card } from "@/lib/theme";
+import PageShell from "@/components/PageShell";
+import PillButton from "@/components/PillButton";
+import FadeIn from "@/components/FadeIn";
+import { motion } from "framer-motion";
+import { colors, fonts } from "@/lib/theme";
 import { content as c } from "@/content/site";
+
+const display = fonts.display;
 
 interface Entry {
   id: string;
@@ -40,7 +45,7 @@ interface WeeklyReview {
   reflection: string;
 }
 
-const COLORS = [colors.primary, "#7c3aed", "#0891b2", "#059669", "#d97706", colors.error, "#8b5cf6", "#06b6d4"];
+const COLORS = [colors.coral, colors.plum, "#818cf8", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#38bdf8"];
 
 export default function MonthlySummaryPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -120,12 +125,11 @@ export default function MonthlySummaryPage() {
 
   if (loading) {
     return (
-      <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
-        <Nav />
-        <div style={{ textAlign: "center", paddingTop: 120 }}>
-          <p style={{ color: colors.gray400 }}>{c.monthlySummary.loadingText}</p>
+      <PageShell>
+        <div style={{ textAlign: "center", paddingTop: 80 }}>
+          <p style={{ color: colors.textMuted }}>{c.monthlySummary.loadingText}</p>
         </div>
-      </div>
+      </PageShell>
     );
   }
 
@@ -147,43 +151,46 @@ export default function MonthlySummaryPage() {
   const activityByDay = dayNames.map((d) => ({ day: d, entries: dayMap[d] }));
 
   return (
-    <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
-      <Nav />
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
-        {/* Header */}
+    <PageShell>
+      {/* Header */}
+      <FadeIn preset="fade" delay={0}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>{c.monthlySummary.headline}</h1>
-            <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>{monthName}</p>
+            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.textPrimary, fontFamily: display, letterSpacing: "-0.02em" }}>
+              {c.monthlySummary.headline}
+            </h1>
+            <p style={{ fontSize: 14, color: colors.textMuted, margin: 0 }}>{monthName}</p>
           </div>
-          <button onClick={() => window.print()} className="no-print" style={{
-            padding: "8px 16px", fontSize: 13, color: colors.gray500,
-            backgroundColor: "transparent", border: `1px solid ${colors.gray200}`,
-            borderRadius: 6, cursor: "pointer",
-          }}>
+          <PillButton variant="ghost" size="sm" onClick={() => window.print()}>
             {c.monthlySummary.printButton}
-          </button>
+          </PillButton>
         </div>
+      </FadeIn>
 
-        {/* Month stats */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 10, marginBottom: 28 }}>
-          {[
-            { value: totalEntries, label: c.monthlySummary.stats.totalEntries },
-            { value: journalCount, label: c.monthlySummary.stats.journals },
-            { value: totalExercises, label: c.monthlySummary.stats.exercises },
-            { value: avgRating, label: c.monthlySummary.stats.avgRating },
-          ].map(({ value, label }) => (
-            <div key={label} style={{ ...card, padding: 14, textAlign: "center" }}>
-              <p style={{ fontSize: 24, fontWeight: 700, margin: "0 0 2px 0", color: colors.primary }}>{value}</p>
-              <p style={{ fontSize: 12, color: colors.gray400, margin: 0 }}>{label}</p>
+      {/* Month stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 10, marginBottom: 28 }}>
+        {[
+          { value: totalEntries, label: c.monthlySummary.stats.totalEntries },
+          { value: journalCount, label: c.monthlySummary.stats.journals },
+          { value: totalExercises, label: c.monthlySummary.stats.exercises },
+          { value: avgRating, label: c.monthlySummary.stats.avgRating },
+        ].map(({ value, label }, i) => (
+          <FadeIn key={label} preset="slide-up" delay={0.08 * i}>
+            <div style={{ backgroundColor: colors.bgSurface, borderRadius: 14, border: `1px solid ${colors.borderDefault}`, padding: 14, textAlign: "center" }}>
+              <p style={{ fontSize: 24, fontWeight: 700, margin: "0 0 2px 0", color: colors.coral }}>{value}</p>
+              <p style={{ fontSize: 12, color: colors.textMuted, margin: 0 }}>{label}</p>
             </div>
-          ))}
-        </div>
+          </FadeIn>
+        ))}
+      </div>
 
-        {/* Theme distribution pie chart */}
-        {themeCounts.length > 0 && (
+      {/* Theme distribution pie chart */}
+      {themeCounts.length > 0 && (
+        <FadeIn preset="slide-up" delay={0.1}>
           <div style={{ marginBottom: 28 }} className="print-section">
-            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>{c.monthlySummary.themeDistribution}</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.textPrimary, fontFamily: display, letterSpacing: "-0.02em" }}>
+              {c.monthlySummary.themeDistribution}
+            </h2>
             <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
               <div style={{ width: 200, height: 200 }}>
                 <ResponsiveContainer width="100%" height="100%">
@@ -201,7 +208,7 @@ export default function MonthlySummaryPage() {
                         <Cell key={i} fill={COLORS[i % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ fontSize: 13, borderRadius: 8 }} />
+                    <Tooltip contentStyle={{ fontSize: 13, borderRadius: 8, backgroundColor: colors.bgElevated, border: `1px solid ${colors.borderDefault}`, color: colors.textPrimary }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -209,33 +216,41 @@ export default function MonthlySummaryPage() {
                 {themeCounts.map(({ name, count }, i) => (
                   <div key={name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: COLORS[i % COLORS.length] }} />
-                    <span style={{ fontSize: 13, color: colors.gray500 }}>{name} ({count})</span>
+                    <span style={{ fontSize: 13, color: colors.textSecondary }}>{name} ({count})</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        )}
+        </FadeIn>
+      )}
 
-        {/* Activity by day of week */}
+      {/* Activity by day of week */}
+      <FadeIn preset="slide-up" delay={0.15}>
         <div style={{ marginBottom: 28 }} className="print-section">
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.black }}>{c.monthlySummary.activityByDay}</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 16px 0", color: colors.textPrimary, fontFamily: display, letterSpacing: "-0.02em" }}>
+            {c.monthlySummary.activityByDay}
+          </h2>
           <div style={{ width: "100%", height: 160 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={activityByDay} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                <XAxis dataKey="day" tick={{ fontSize: 12, fill: colors.gray400 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="day" tick={{ fontSize: 12, fill: colors.textMuted }} axisLine={false} tickLine={false} />
                 <YAxis hide />
-                <Tooltip contentStyle={{ fontSize: 13, borderRadius: 8 }} />
-                <Bar dataKey="entries" fill={colors.primary} radius={[4, 4, 0, 0]} barSize={32} />
+                <Tooltip contentStyle={{ fontSize: 13, borderRadius: 8, backgroundColor: colors.bgElevated, border: `1px solid ${colors.borderDefault}`, color: colors.textPrimary }} />
+                <Bar dataKey="entries" fill={colors.coral} radius={[4, 4, 0, 0]} barSize={32} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
+      </FadeIn>
 
-        {/* Progress vs goals */}
-        {plan && plan.goals && (
+      {/* Progress vs goals */}
+      {plan && plan.goals && (
+        <FadeIn preset="slide-up" delay={0.2}>
           <div style={{ marginBottom: 28 }} className="print-section">
-            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>{c.monthlySummary.progressVsGoals}</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.textPrimary, fontFamily: display, letterSpacing: "-0.02em" }}>
+              {c.monthlySummary.progressVsGoals}
+            </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {(plan.goals as Goal[]).map((goal, i) => {
                 const relatedEntries = entries.filter((e) =>
@@ -246,88 +261,101 @@ export default function MonthlySummaryPage() {
                 ).length;
 
                 return (
-                  <div key={i} style={{ ...card, padding: 14 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                      <p style={{ fontSize: 14, fontWeight: 500, margin: 0, color: colors.black }}>{goal.goal}</p>
-                      <span style={{
-                        fontSize: 12, padding: "2px 8px", borderRadius: 10,
-                        backgroundColor: relatedEntries > 3 ? colors.successLight : relatedEntries > 0 ? colors.warningLight : colors.gray50,
-                        color: relatedEntries > 3 ? "#166534" : relatedEntries > 0 ? "#92400e" : colors.gray400,
-                      }}>
-                        {relatedEntries} {c.monthlySummary.relatedEntries}
-                      </span>
+                  <FadeIn key={i} preset="slide-up" delay={0.22 + 0.06 * i}>
+                    <div style={{ backgroundColor: colors.bgSurface, borderRadius: 14, border: `1px solid ${colors.borderDefault}`, padding: 14 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                        <p style={{ fontSize: 14, fontWeight: 500, margin: 0, color: colors.textPrimary }}>{goal.goal}</p>
+                        <span style={{
+                          fontSize: 12, padding: "2px 8px", borderRadius: 10,
+                          backgroundColor: relatedEntries > 3 ? "rgba(34,197,94,0.12)" : relatedEntries > 0 ? "rgba(245,158,11,0.12)" : colors.bgElevated,
+                          color: relatedEntries > 3 ? "#4ade80" : relatedEntries > 0 ? "#fbbf24" : colors.textMuted,
+                        }}>
+                          {relatedEntries} {c.monthlySummary.relatedEntries}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0 }}>{goal.why}</p>
                     </div>
-                    <p style={{ fontSize: 13, color: colors.gray500, margin: 0 }}>{goal.why}</p>
-                  </div>
+                  </FadeIn>
                 );
               })}
             </div>
           </div>
-        )}
+        </FadeIn>
+      )}
 
-        {/* Weekly review summaries */}
-        {reviews.length > 0 && (
+      {/* Weekly review summaries */}
+      {reviews.length > 0 && (
+        <FadeIn preset="slide-up" delay={0.25}>
           <div style={{ marginBottom: 28 }} className="print-section">
-            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.black }}>{c.monthlySummary.weeklyReflections}</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 12px 0", color: colors.textPrimary, fontFamily: display, letterSpacing: "-0.02em" }}>
+              {c.monthlySummary.weeklyReflections}
+            </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {reviews.map((review) => (
-                <div key={review.week_start} style={{ ...card, padding: 14 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <span style={{ fontSize: 13, fontWeight: 500, color: colors.black }}>
-                      Week of {new Date(review.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                    </span>
-                    <span style={{ fontSize: 13, color: colors.primary }}>{review.accountability_rating}/5</span>
+              {reviews.map((review, i) => (
+                <FadeIn key={review.week_start} preset="slide-up" delay={0.27 + 0.06 * i}>
+                  <div style={{ backgroundColor: colors.bgSurface, borderRadius: 14, border: `1px solid ${colors.borderDefault}`, padding: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: colors.textPrimary }}>
+                        Week of {new Date(review.week_start + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </span>
+                      <span style={{ fontSize: 13, color: colors.coral }}>{review.accountability_rating}/5</span>
+                    </div>
+                    {review.reflection && (
+                      <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, lineHeight: 1.5 }}>
+                        {review.reflection}
+                      </p>
+                    )}
                   </div>
-                  {review.reflection && (
-                    <p style={{ fontSize: 14, color: colors.gray500, margin: 0, lineHeight: 1.5 }}>
-                      {review.reflection}
-                    </p>
-                  )}
-                </div>
+                </FadeIn>
               ))}
             </div>
           </div>
-        )}
+        </FadeIn>
+      )}
 
-        {/* Shareable toggle */}
+      {/* Shareable toggle */}
+      <FadeIn preset="fade" delay={0.3}>
         <div style={{
-          ...card, padding: 16,
+          backgroundColor: colors.bgSurface, borderRadius: 14, border: `1px solid ${colors.borderDefault}`, padding: 16,
           display: "flex", justifyContent: "space-between", alignItems: "center",
           marginBottom: 32,
         }} className="no-print">
           <div>
-            <p style={{ fontSize: 14, fontWeight: 500, margin: "0 0 2px 0", color: colors.black }}>{c.monthlySummary.shareWithCoach}</p>
-            <p style={{ fontSize: 13, color: colors.gray400, margin: 0 }}>{c.monthlySummary.shareDescription}</p>
+            <p style={{ fontSize: 14, fontWeight: 500, margin: "0 0 2px 0", color: colors.textPrimary }}>{c.monthlySummary.shareWithCoach}</p>
+            <p style={{ fontSize: 13, color: colors.textMuted, margin: 0 }}>{c.monthlySummary.shareDescription}</p>
           </div>
           <button
             onClick={() => setShareable(!shareable)}
             style={{
               width: 48, height: 26, borderRadius: 13,
-              backgroundColor: shareable ? colors.primary : colors.gray200,
+              backgroundColor: shareable ? colors.coral : colors.bgElevated,
               border: "none", cursor: "pointer",
-              position: "relative", transition: "background-color 0.2s",
+              position: "relative", padding: 0,
             }}
           >
-            <div style={{
-              width: 22, height: 22, borderRadius: 11,
-              backgroundColor: colors.white, position: "absolute",
-              top: 2, left: shareable ? 24 : 2,
-              transition: "left 0.2s",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-            }} />
+            <motion.div
+              layout
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              style={{
+                width: 22, height: 22, borderRadius: 11,
+                backgroundColor: colors.textPrimary, position: "absolute",
+                top: 2, left: shareable ? 24 : 2,
+                boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+              }}
+            />
           </button>
         </div>
+      </FadeIn>
 
-        {/* Print styles */}
-        <style>{`
-          @media print {
-            .no-print { display: none !important; }
-            body { font-size: 11pt; }
-            button { display: none !important; }
-            .print-section { break-inside: avoid; }
-          }
-        `}</style>
-      </div>
-    </div>
+      {/* Print styles */}
+      <style>{`
+        @media print {
+          .no-print { display: none !important; }
+          body { font-size: 11pt; }
+          button { display: none !important; }
+          .print-section { break-inside: avoid; }
+        }
+      `}</style>
+    </PageShell>
   );
 }

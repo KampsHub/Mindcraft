@@ -4,9 +4,16 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import Nav from "@/components/Nav";
-import { colors, fonts, card } from "@/lib/theme";
+import { motion, AnimatePresence } from "framer-motion";
+import PageShell from "@/components/PageShell";
+import FadeIn from "@/components/FadeIn";
+import PillButton from "@/components/PillButton";
+import { colors, fonts } from "@/lib/theme";
 import { content as c } from "@/content/site";
+
+/* ── Design tokens ── */
+const display = fonts.display;
+const body = fonts.bodyAlt;
 
 export default function JournalPage() {
   const [entry, setEntry] = useState("");
@@ -34,7 +41,6 @@ export default function JournalPage() {
     setThemeTags([]);
 
     try {
-      // Get coaching reflection from Claude
       const res = await fetch("/api/reflect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,7 +56,6 @@ export default function JournalPage() {
       setReflection(data.reflection);
       setThemeTags(data.theme_tags || []);
 
-      // Save entry to Supabase
       const { data: insertedEntry, error: insertError } = await supabase
         .from("entries")
         .insert({
@@ -68,12 +73,15 @@ export default function JournalPage() {
       if (insertError) {
         console.error("Failed to save entry:", insertError);
       } else if (insertedEntry) {
-        // Fire-and-forget: generate embedding for RAG
-        fetch("/api/embed", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ entryId: insertedEntry.id }),
-        }).catch((err) => console.warn("Embedding generation failed:", err));
+        try {
+          await fetch("/api/embed", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ entryId: insertedEntry.id }),
+          });
+        } catch {
+          // Embedding is non-blocking
+        }
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to get reflection";
@@ -83,19 +91,25 @@ export default function JournalPage() {
     }
   }
 
+  const wordCount = entry.split(/\s+/).filter(Boolean).length;
+
   return (
-    <div style={{ backgroundColor: colors.gray50, minHeight: "100vh", fontFamily: fonts.body }}>
-      <Nav />
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px" }}>
+    <PageShell blobVariant="journal">
+      <FadeIn preset="fade" triggerOnMount>
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
+          <h1 style={{
+            fontFamily: display, fontSize: 32, fontWeight: 700,
+            letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 6px 0",
+          }}>
             {c.journal.headline}
           </h1>
-          <p style={{ fontSize: 14, color: colors.gray400, margin: 0 }}>
+          <p style={{ fontSize: 14, color: colors.textMuted, margin: 0, fontFamily: body }}>
             {c.journal.subheadline}
           </p>
         </div>
+      </FadeIn>
 
+      <FadeIn preset="slide-up" delay={0.1} triggerOnMount>
         <form onSubmit={handleSubmit}>
           <textarea
             value={entry}
@@ -103,84 +117,130 @@ export default function JournalPage() {
             placeholder={c.journal.placeholder}
             rows={8}
             style={{
-              width: "100%", padding: 16, fontSize: 16, lineHeight: 1.6,
-              border: `1px solid ${colors.gray200}`, borderRadius: 10,
+              width: "100%", padding: 18, fontSize: 15, lineHeight: 1.7,
+              border: `1px solid ${colors.borderDefault}`, borderRadius: 14,
               resize: "vertical", outline: "none", boxSizing: "border-box",
-              fontFamily: "inherit", backgroundColor: colors.white,
+              fontFamily: body, backgroundColor: colors.bgInput,
+              color: colors.textPrimary,
+              transition: "border-color 0.2s",
             }}
+            onFocus={(e) => { e.target.style.borderColor = colors.coral; }}
+            onBlur={(e) => { e.target.style.borderColor = colors.borderDefault; }}
             disabled={loading}
           />
-          <button
-            type="submit"
-            disabled={loading || !entry.trim()}
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
+            <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: body }}>
+              {entry.length > 0 ? `${wordCount} words` : ""}
+            </span>
+
+            <PillButton type="submit" disabled={loading || !entry.trim()}>
+              {loading ? c.journal.submitLoading : c.journal.submitButton}
+            </PillButton>
+          </div>
+        </form>
+      </FadeIn>
+
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
             style={{
-              marginTop: 16, padding: "12px 32px", fontSize: 15, fontWeight: 600,
-              color: colors.white,
-              backgroundColor: loading || !entry.trim() ? colors.gray400 : colors.primary,
-              border: "none", borderRadius: 8,
-              cursor: loading || !entry.trim() ? "not-allowed" : "pointer",
-              transition: "background-color 0.15s",
+              marginTop: 32, display: "flex", alignItems: "center", gap: 14,
+              color: colors.textMuted, fontFamily: body,
             }}
           >
-            {loading ? c.journal.submitLoading : c.journal.submitButton}
-          </button>
-        </form>
-
-        {loading && (
-          <div style={{ marginTop: 32, display: "flex", alignItems: "center", gap: 12, color: colors.gray500 }}>
-            <div style={{
-              width: 20, height: 20,
-              border: `2px solid ${colors.gray200}`, borderTopColor: colors.primary,
-              borderRadius: "50%", animation: "spin 0.8s linear infinite",
-            }} />
-            <span>{c.journal.loadingText}</span>
-            <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-          </div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              style={{
+                width: 20, height: 20, borderRadius: "50%",
+                border: `2px solid ${colors.borderDefault}`,
+                borderTopColor: colors.coral, flexShrink: 0,
+              }}
+            />
+            <span style={{ fontSize: 14 }}>{c.journal.loadingText}</span>
+          </motion.div>
         )}
+      </AnimatePresence>
 
+      <AnimatePresence>
         {error && (
-          <div style={{
-            marginTop: 24, padding: 16,
-            backgroundColor: colors.errorLight, border: "1px solid #fecaca",
-            borderRadius: 8, color: colors.error, fontSize: 14,
-          }}>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            style={{
+              marginTop: 24, padding: 18,
+              backgroundColor: colors.errorWash,
+              border: `1px solid ${colors.error}`,
+              borderRadius: 12, color: colors.error, fontSize: 14,
+              fontFamily: body, lineHeight: 1.5,
+            }}
+          >
             {error}
-          </div>
+          </motion.div>
         )}
+      </AnimatePresence>
 
+      <AnimatePresence>
         {reflection && (
-          <div style={{ marginTop: 32 }}>
-            <div style={{ ...card, padding: 24 }}>
-              <h2 style={{
-                fontSize: 16, fontWeight: 600, color: colors.gray600,
-                marginBottom: 16, marginTop: 0,
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.1 }}
+            style={{ marginTop: 32 }}
+          >
+            <motion.div
+              whileHover={{ y: -2, borderColor: "rgba(224, 149, 133, 0.2)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              style={{
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14,
+                border: `1px solid ${colors.borderDefault}`,
+                padding: 24,
+                transition: "border-color 0.2s",
+              }}
+            >
+              <p style={{
+                fontSize: 11, fontWeight: 700, color: colors.textMuted,
+                margin: "0 0 14px 0", textTransform: "uppercase",
+                letterSpacing: "0.08em", fontFamily: display,
               }}>
                 {c.journal.reflectionHeading}
-              </h2>
+              </p>
               <p style={{
-                fontSize: 16, lineHeight: 1.7, color: colors.black,
-                margin: 0, whiteSpace: "pre-wrap",
+                fontSize: 15, lineHeight: 1.7, color: colors.textBody,
+                margin: 0, whiteSpace: "pre-wrap", fontFamily: body,
               }}>
                 {reflection}
               </p>
-            </div>
+            </motion.div>
 
             {themeTags.length > 0 && (
-              <div style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {themeTags.map((tag) => (
-                  <span key={tag} style={{
-                    padding: "4px 12px", fontSize: 13,
-                    backgroundColor: colors.primaryLight, color: colors.primaryDark,
-                    borderRadius: 16, border: `1px solid ${colors.primaryMuted}`,
-                  }}>
+              <div style={{ marginTop: 14, display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {themeTags.map((tag, i) => (
+                  <motion.span
+                    key={tag}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20, delay: i * 0.06 }}
+                    style={{
+                      padding: "4px 12px", fontSize: 12, fontWeight: 600,
+                      backgroundColor: colors.plumWash, color: colors.plumLight,
+                      borderRadius: 100, fontFamily: display,
+                    }}
+                  >
                     {tag.replace(/_/g, " ")}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         )}
-      </div>
-    </div>
+      </AnimatePresence>
+    </PageShell>
   );
 }

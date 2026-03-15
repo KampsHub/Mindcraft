@@ -250,137 +250,92 @@ export const packageQuestions: Record<string, typeof universalQuestions> = {
     },
   ],
 
-  international_move: [
+  new_role: [
     {
-      id: "move_where",
-      category: "Move Context",
+      id: "newrole_context",
+      category: "New Role Context",
       question:
-        "Where are you moving from and to? Is this your first international move?",
+        "What is the context of this transition? Were you recruited, did you apply, is this an internal move, or are you returning from leave?",
       type: "textarea",
     },
     {
-      id: "move_leaving",
-      category: "Move Context",
+      id: "newrole_details",
+      category: "New Role Context",
       question:
-        "What are you leaving behind that matters most — people, routines, a version of yourself?",
+        "What is your new role? Include title, function, team size, and whether you are remote, hybrid, or in-person.",
       type: "textarea",
     },
     {
-      id: "move_identity",
-      category: "Move Context",
+      id: "newrole_culture",
+      category: "New Role Context",
       question:
-        "How do you think this move will change who you are — or who people see you as?",
+        "What do you already know about the culture? What feels different from where you came from — pace, communication norms, hierarchy, how decisions get made?",
       type: "textarea",
     },
     {
-      id: "move_language",
-      category: "Move Context",
+      id: "newrole_manager",
+      category: "New Role Context",
       question:
-        "Will you be operating in a second language? How does that affect how you show up?",
+        "What are your first impressions of your manager? What do you think they need from you?",
       type: "textarea",
     },
     {
-      id: "move_relationship",
-      category: "Move Context",
+      id: "newrole_emotional",
+      category: "New Role Context",
       question:
-        "If you're moving with a partner or family, how is the move affecting your relationship dynamics?",
+        "How would you describe your emotional starting point — excited, anxious, both, numb, cautious, relieved, pressured?",
       type: "textarea",
     },
     {
-      id: "move_grief",
-      category: "Move Context",
+      id: "newrole_relationship",
+      category: "New Role Context",
       question:
-        "What part of this transition are you not allowing yourself to grieve?",
-      type: "textarea",
-    },
-  ],
-
-  new_manager: [
-    {
-      id: "manager_context",
-      category: "New Manager Context",
-      question:
-        "How long have you been in this role? Is this your first management position?",
-      type: "short",
-    },
-    {
-      id: "manager_surprise",
-      category: "New Manager Context",
-      question:
-        "What has surprised you most about managing people — what nobody warned you about?",
-      type: "textarea",
-    },
-    {
-      id: "manager_authority",
-      category: "New Manager Context",
-      question:
-        "How comfortable are you with authority? Do you tend to over-assert or under-assert when you have power?",
-      type: "textarea",
-    },
-    {
-      id: "manager_conflict",
-      category: "New Manager Context",
-      question:
-        "What's the hardest conversation you've had to have as a manager — or the one you've been avoiding?",
-      type: "textarea",
-    },
-    {
-      id: "manager_model",
-      category: "New Manager Context",
-      question:
-        "Who was the best manager you ever had? What specifically did they do that worked for you?",
-      type: "textarea",
-    },
-    {
-      id: "manager_identity",
-      category: "New Manager Context",
-      question:
-        "What kind of manager do you want to be — and what kind are you afraid of becoming?",
+        "How is this transition affecting the people closest to you — partner, family, close friends? Where is the stress landing at home?",
       type: "textarea",
     },
   ],
 
-  general: [
+  performance_plan: [
     {
-      id: "general_stuck",
-      category: "Growth Context",
+      id: "pip_timeline",
+      category: "PIP Context",
       question:
-        "Where do you feel most stuck right now — and how long have you felt that way?",
+        "When was the PIP issued? What preceded it — how was it delivered, and what is the formal duration?",
       type: "textarea",
     },
     {
-      id: "general_wheel",
-      category: "Growth Context",
+      id: "pip_reasons",
+      category: "PIP Context",
       question:
-        "Rate your satisfaction (1–10) in each area: Career, Relationships, Health, Fun, Personal Growth, Finances, Family, Spirituality.",
+        "What are the stated reasons on the PIP document? Be as specific as you can — verbatim if possible.",
       type: "textarea",
     },
     {
-      id: "general_pattern",
-      category: "Growth Context",
+      id: "pip_honest",
+      category: "PIP Context",
       question:
-        "If there's one thing you keep bumping into — the same kind of problem showing up in different contexts — what is it?",
+        "Your honest assessment: which feedback is valid, which is political, and which you genuinely cannot tell?",
       type: "textarea",
     },
     {
-      id: "general_admire",
-      category: "Growth Context",
+      id: "pip_manager",
+      category: "PIP Context",
       question:
-        "Who do you admire — and what specifically do you admire about them?",
+        "Describe your manager relationship history. When did it shift? What did you notice? What did you ignore?",
       type: "textarea",
     },
     {
-      id: "general_courage",
-      category: "Growth Context",
+      id: "pip_financial",
+      category: "PIP Context",
       question:
-        "What would you do differently if you weren't afraid of the consequences?",
+        "Financial runway: roughly how many months can you sustain current spending if you lost this income? Who knows about the PIP, and who is helping?",
       type: "textarea",
     },
     {
-      id: "general_ready",
-      category: "Growth Context",
+      id: "pip_relationship",
+      category: "PIP Context",
       question:
-        "What do you think you already know about yourself that you haven't acted on yet?",
+        "How is this PIP affecting your partner, family, or close friendships? Where are you withdrawing? If single, where is isolation showing up?",
       type: "textarea",
     },
   ],
@@ -394,21 +349,15 @@ export const packages = [
       "Navigate the emotional, professional, and identity dimensions of job loss. Rebuild from a grounded place.",
   },
   {
-    id: "international_move",
-    name: "International Move",
+    id: "performance_plan",
+    name: "Performance Improvement Plan",
     description:
-      "Process the grief, excitement, and identity shifts that come with relocating across cultures.",
+      "Stay clear-headed during a PIP. Separate performance gaps from emotional spirals. Build optionality while meeting requirements.",
   },
   {
-    id: "new_manager",
-    name: "New Manager",
+    id: "new_role",
+    name: "New Role",
     description:
-      "Develop your leadership identity, handle authority, and navigate the transition from peer to boss.",
-  },
-  {
-    id: "general",
-    name: "General Growth",
-    description:
-      "For anyone ready to look at their patterns, values, and growth edges — no specific life event required.",
+      "Navigate the transition wave of a new job with strategic clarity and self-awareness. Read the culture, know your patterns, establish from alignment.",
   },
 ];

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 const PLAN_SYSTEM_PROMPT = `You are a coaching plan architect for All Minds on Deck. You receive a client's intake responses — their values, family patterns, identity, relationship style, saboteurs, work context, goals, and package-specific answers.
 
-Your job is to generate a personalised 12-week coaching plan. This plan will guide what exercises and frameworks the coaching companion delivers daily.
+Your job is to generate a personalised 4-week (30-day) coaching plan. This plan will guide what exercises and frameworks the coaching companion delivers daily.
 
 ## What you produce
 
@@ -28,7 +28,7 @@ Return valid JSON in this exact format (no markdown, no code fences):
   ],
   "weekly_themes": [
     {
-      "weeks": "1-2",
+      "weeks": "1",
       "theme": "Theme name",
       "description": "What the client will work on and why it comes first",
       "frameworks": ["Framework or tool suggestions from coaching methodology"]
@@ -41,7 +41,7 @@ Return valid JSON in this exact format (no markdown, no code fences):
 
 1. Generate 3-5 goals. Make them specific to this person — reference their actual words from the intake.
 2. Generate 3-4 focus areas. These are the recurring threads the coaching will return to.
-3. Generate 6 weekly theme blocks (covering 12 weeks as pairs). Sequence them intentionally — foundation first, deeper work in the middle, integration at the end.
+3. Generate 4 weekly theme blocks (one per week of the 30-day program). Sequence them intentionally — foundation first, deeper work in the middle, integration at the end.
 4. The plan should feel like it was written by someone who read every word of the intake carefully. No generic coaching language.
 5. For the weekly themes, suggest specific frameworks: parts work, Enneagram patterns, saboteur identification, values clarification, boundary work, narrative reframing, somatic awareness, Wheel of Life, leadership presence, differentiation, cognitive reframes, grief processing — whichever are relevant.
 6. Name patterns you see across their responses. If their family-of-origin answers connect to their relationship patterns or work frustrations, say so.
@@ -105,7 +105,7 @@ ${JSON.stringify(intake.universal, null, 2)}
 ## Package-Specific Responses
 ${JSON.stringify(intake.package_specific, null, 2)}
 
-Generate a personalised 12-week coaching plan for this client.`;
+Generate a personalised 4-week coaching plan for this client.`;
 
     // Call Claude
     const anthropic = new Anthropic({

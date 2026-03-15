@@ -169,7 +169,12 @@ Generate yesterday's themes summary for Day ${dayNumber}.`;
       return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
     }
 
-    const result = JSON.parse(textBlock.text);
+    // Strip markdown code fences if Claude wraps the JSON in ```json ... ```
+    let raw = textBlock.text.trim();
+    if (raw.startsWith("```")) {
+      raw = raw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    }
+    const result = JSON.parse(raw);
 
     return NextResponse.json({
       ...result,

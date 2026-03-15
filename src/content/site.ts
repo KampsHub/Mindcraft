@@ -23,10 +23,10 @@ export const content = {
   // To add a hero video: put your .mp4 file in /public/images/ and update heroVideo below.
   // To use a static image instead: set heroVideo to "" and set heroImage to your image path.
   hero: {
-    headline: "Laid off. Put on a PIP. Thrown into a role you didn\u2019t see coming.",
-    headlineAccent: "Now what?",
+    headline: "You know something needs to shift.",
+    headlineAccent: "Let\u2019s start.",
     subheadline:
-      "A 30-day coaching program matched to your exact situation. 250+ real frameworks. Daily exercises adapted to what\u2019s actually showing up.",
+      "A 30-day coaching program that learns your patterns and adapts to what\u2019s actually showing up. Structured enough to hold you. Flexible enough to follow your thread.",
     cta: "Find your program",
     heroVideo: "", // e.g. "/images/hero.mp4" — leave empty for no video
     heroImage: "", // e.g. "/images/hero.jpg" — fallback or standalone image
@@ -37,14 +37,14 @@ export const content = {
   differentiator: {
     items: [
       "Not meditation. Not therapy. Not a chatbot.",
-      "A structured coaching program for the career moment you\u2019re in.",
-      "250+ real frameworks. Exercises matched to your journal. Patterns tracked across weeks.",
+      "A structured program that detects your personal patterns and adapts week by week.",
+      "250+ real frameworks. Exercises matched to your journal. A thread that builds across 30 days.",
     ],
   },
 
   // ── Reframe Block ──
   reframe: {
-    text: "You\u2019ve read the books. Done the 1:1s. Maybe even tried meditating. But when you\u2019re spiraling on a PIP, frozen after a layoff, or white-knuckling through a role you didn\u2019t see coming \u2014 the generic advice stops reaching. Not because something\u2019s wrong with you. Because the situation needs something more specific than a productivity hack or a blank journal page.",
+    text: "You\u2019ve read the books. Done the 1:1s. Maybe even tried meditating. But when a career moment really hits \u2014 the kind that stays with you \u2014 generic advice stops reaching. Not because something\u2019s wrong with you. Because the situation needs something more specific than a productivity hack or a blank journal page.",
   },
 
   // ── What a Day Looks Like ──
@@ -87,9 +87,9 @@ export const content = {
 
   // ── Programs ──
   programs: {
-    headline: "What brought you here?",
+    headline: "Pick the program that fits.",
     subheadline:
-      "One month. One program. Built around what you\u2019re actually dealing with.",
+      "One month. One structured path. It adapts to your patterns as they emerge.",
     cards: [
       {
         tag: "Layoff",
@@ -118,8 +118,8 @@ export const content = {
     headline: "How it works",
     items: [
       {
-        title: "Pick your situation. Not a personality type.",
-        desc: "No quiz. No archetype. You choose the program that matches your actual moment \u2014 layoff, PIP, new role. That choice shapes your entire 30-day arc, your frameworks, and your intake questions.",
+        title: "Start with what you\u2019re dealing with.",
+        desc: "Choose the program that matches your moment \u2014 layoff, PIP, new role. That choice shapes your 30-day arc, your frameworks, and your intake questions. Then the program starts learning you.",
       },
       {
         title: "A real coaching intake. Not a signup form.",
@@ -130,8 +130,8 @@ export const content = {
         desc: "Based on your intake, you\u2019ll get 3 to 6 goals \u2014 each one traced back to something you actually said. You approve, adjust, or add your own before Day 1.",
       },
       {
-        title: "Daily sessions adapt to what\u2019s showing up.",
-        desc: "Each day\u2019s journal prompts and exercises respond to where you actually are \u2014 not a pre-set curriculum. The daily flow is 15\u201330 minutes and builds on itself across the month.",
+        title: "The program follows your thread.",
+        desc: "Each day\u2019s prompts and exercises adapt to your patterns as they emerge \u2014 the structured program gives you direction, your journal gives it signal. 15\u201330 minutes, and it builds across the month.",
       },
       {
         title: "Watch what actually shifts.",
@@ -193,7 +193,7 @@ export const content = {
     items: [
       {
         q: "How is this different from Headspace or Calm?",
-        a: "Those are meditation and mindfulness apps. We\u2019re a coaching program. Headspace teaches you to breathe. Mindcraft gives you a 30-day structured plan to process a layoff, survive a PIP, or build real confidence in a new role \u2014 with exercises from 250+ coaching frameworks adapted to what\u2019s showing up in your journal entries. Different problem, different tool.",
+        a: "Those are meditation and mindfulness apps. Mindcraft is a coaching program \u2014 a structured 30-day path with exercises from 250+ frameworks, adapted to your patterns as they emerge. It detects what\u2019s showing up in your journal and matches you to the right tools. Different problem, different approach.",
       },
       {
         q: "Is this therapy?",

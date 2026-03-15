@@ -36,7 +36,7 @@ export const content = {
   // ── Differentiator Strip ──
   differentiator: {
     items: [
-      "Not meditation. Not therapy. Not a chatbot.",
+      "Not plain journaling. Not coaching. Not a chatbot. Rather all in one.",
       "A structured program that detects your personal patterns and adapts week by week.",
       "250+ real frameworks. Exercises matched to your journal. A thread that builds across 30 days.",
     ],

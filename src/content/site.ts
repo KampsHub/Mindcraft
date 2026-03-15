@@ -23,10 +23,10 @@ export const content = {
   // To add a hero video: put your .mp4 file in /public/images/ and update heroVideo below.
   // To use a static image instead: set heroVideo to "" and set heroImage to your image path.
   hero: {
-    headline: "A coaching program that follows you.",
-    headlineAccent: "Not the other way around.",
+    headline: "Cut through",
+    headlineAccent: "the mind's noise.",
     subheadline:
-      "30 days of structure, calm, and real tools — adapted daily to your patterns.",
+      "When life spins out of control, take a month of structure and cognitive, somatic, and relational tools to work through it. Adapted to your daily patterns.",
     cta: "Find your program",
     heroVideo: "", // e.g. "/images/hero.mp4" — leave empty for no video
     heroImage: "", // e.g. "/images/hero.jpg" — fallback or standalone image

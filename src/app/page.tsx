@@ -531,8 +531,32 @@ export default function Home() {
                     cursor: "pointer",
                     display: "flex",
                     flexDirection: "column",
+                    position: "relative",
+                    overflow: "hidden",
                   }}
                 >
+                  {card.tag === "Layoff" && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: 18,
+                        right: -32,
+                        transform: "rotate(45deg)",
+                        background: colors.coral,
+                        color: colors.bgDeep,
+                        fontFamily: display,
+                        fontWeight: 700,
+                        fontSize: 11,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.06em",
+                        padding: "6px 40px",
+                        whiteSpace: "nowrap",
+                        zIndex: 1,
+                      }}
+                    >
+                      Sliding scale
+                    </span>
+                  )}
                   <span
                     style={{
                       display: "inline-block",

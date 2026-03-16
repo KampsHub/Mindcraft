@@ -73,6 +73,7 @@ export const fonts = {
   body: "var(--font-space-grotesk), 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
   display: "var(--font-sora), 'Sora', -apple-system, sans-serif",
   bodyAlt: "var(--font-dm-sans), 'DM Sans', -apple-system, sans-serif",
+  serif: "var(--font-playfair), 'Playfair Display', Georgia, 'Times New Roman', serif",
 };
 
 /** Shared container styles */

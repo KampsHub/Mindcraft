@@ -13,6 +13,7 @@ import TextReveal from "@/components/TextReveal";
 /* ── Shared styles ── */
 const display = fonts.display;
 const body = fonts.bodyAlt;
+const serif = fonts.serif;
 
 const sectionPadding = { padding: "96px 24px" } as const;
 const maxWidth = 1120;
@@ -97,6 +98,430 @@ function FloatingDot({
         filter: `blur(${blur}px)`,
       }}
     />
+  );
+}
+
+/* ── Stats Bar (below hero) ── */
+function StatsBar() {
+  return (
+    <section
+      style={{
+        padding: "0 24px",
+        marginTop: -48,
+        position: "relative",
+        zIndex: 2,
+      }}
+    >
+      <FadeIn preset="slide-up" delay={1.8} triggerOnMount>
+        <div
+          style={{
+            maxWidth: 680,
+            margin: "0 auto",
+            background: "rgba(51,51,57,0.55)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: `1px solid rgba(224,149,133,0.15)`,
+            borderRadius: 16,
+            padding: "28px 40px",
+          }}
+        >
+          <div
+            className="stats-bar-grid"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 0,
+            }}
+          >
+            {c.statsBar.items.map((item, i) => (
+              <div key={i} style={{ display: "contents" }}>
+                {i > 0 && (
+                  <div
+                    className="stats-bar-divider"
+                    style={{
+                      width: 1,
+                      height: 40,
+                      background: `linear-gradient(180deg, transparent, rgba(224,149,133,0.3), transparent)`,
+                      margin: "0 32px",
+                      flexShrink: 0,
+                    }}
+                  />
+                )}
+                <div style={{ textAlign: "center", flex: 1 }}>
+                  <div
+                    style={{
+                      fontFamily: serif,
+                      fontSize: 28,
+                      fontWeight: 600,
+                      color: colors.coral,
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {item.number}
+                    {item.unit && (
+                      <span
+                        style={{
+                          fontSize: 14,
+                          fontWeight: 400,
+                          color: colors.coralLight,
+                          marginLeft: 4,
+                          fontFamily: body,
+                          letterSpacing: "0.02em",
+                        }}
+                      >
+                        {item.unit}
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: colors.textMuted,
+                      fontFamily: display,
+                      letterSpacing: "0.04em",
+                      textTransform: "uppercase" as const,
+                      marginTop: 6,
+                    }}
+                  >
+                    {item.label}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </FadeIn>
+    </section>
+  );
+}
+
+/* ── Pain-Point Marquee ── */
+function PainPointMarquee() {
+  const row1 = c.marquee.row1;
+  const row2 = c.marquee.row2;
+
+  const MarqueeItem = ({ text }: { text: string }) => (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        whiteSpace: "nowrap",
+        padding: "0 12px",
+        fontSize: 15,
+        fontFamily: body,
+        color: colors.textMuted,
+        letterSpacing: "0.01em",
+      }}
+    >
+      {text}
+      <span
+        style={{
+          display: "inline-block",
+          width: 4,
+          height: 4,
+          borderRadius: "50%",
+          background: colors.coral,
+          opacity: 0.4,
+          marginLeft: 24,
+          flexShrink: 0,
+        }}
+      />
+    </span>
+  );
+
+  return (
+    <section
+      className="marquee-section"
+      style={{
+        padding: "96px 0",
+        backgroundColor: colors.bgDeep,
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Edge fade gradients */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: 120,
+          background: `linear-gradient(90deg, ${colors.bgDeep}, transparent)`,
+          zIndex: 2,
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: 120,
+          background: `linear-gradient(270deg, ${colors.bgDeep}, transparent)`,
+          zIndex: 2,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Row 1 — scrolls left */}
+      <div style={{ overflow: "hidden", marginBottom: 16 }}>
+        <div className="marquee-track-left">
+          {[...row1, ...row1, ...row1, ...row1].map((text, i) => (
+            <MarqueeItem key={`r1-${i}`} text={text} />
+          ))}
+        </div>
+      </div>
+
+      {/* Center: breathing circle + text */}
+      <FadeIn preset="fade" duration={1.2}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "48px 24px",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          <div
+            className="breathe-circle"
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, ${colors.coral} 0%, rgba(224,149,133,0.15) 70%, transparent 100%)`,
+              marginBottom: 24,
+            }}
+          />
+          <p
+            style={{
+              fontFamily: serif,
+              fontStyle: "italic",
+              fontSize: 22,
+              fontWeight: 400,
+              color: colors.textPrimary,
+              letterSpacing: "-0.01em",
+              margin: 0,
+            }}
+          >
+            {c.marquee.centerText}
+          </p>
+        </div>
+      </FadeIn>
+
+      {/* Row 2 — scrolls right */}
+      <div style={{ overflow: "hidden", marginTop: 16 }}>
+        <div className="marquee-track-right">
+          {[...row2, ...row2, ...row2, ...row2].map((text, i) => (
+            <MarqueeItem key={`r2-${i}`} text={text} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Comparison Table ── */
+function ComparisonTable() {
+  const comp = c.comparison;
+
+  return (
+    <section
+      style={{
+        ...sectionPadding,
+        backgroundColor: colors.bgRecessed,
+      }}
+    >
+      <div style={{ maxWidth: 900, margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: 64 }}>
+          <FadeIn preset="slide-up" duration={0.8}>
+            <h2
+              style={{
+                fontFamily: serif,
+                fontStyle: "italic",
+                fontSize: 42,
+                fontWeight: 500,
+                lineHeight: 1.15,
+                marginBottom: 16,
+                color: colors.textPrimary,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {comp.headline}
+            </h2>
+          </FadeIn>
+          <FadeIn preset="blur" delay={0.2} duration={0.9}>
+            <p
+              style={{
+                fontSize: 17,
+                color: colors.textMuted,
+                maxWidth: 500,
+                margin: "0 auto",
+                lineHeight: 1.7,
+                fontFamily: body,
+              }}
+            >
+              {comp.subheadline}
+            </p>
+          </FadeIn>
+        </div>
+
+        {/* Table */}
+        <FadeIn preset="slide-up" delay={0.3}>
+          <div
+            style={{
+              borderRadius: 16,
+              overflow: "hidden",
+              border: `1px solid ${colors.borderDefault}`,
+              backgroundColor: colors.bgSurface,
+            }}
+          >
+            {/* Column headers */}
+            <div
+              className="comparison-header-row"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.6fr repeat(3, 1fr)",
+                borderBottom: `1px solid ${colors.borderSubtle}`,
+              }}
+            >
+              <div style={{ padding: "20px 28px" }} />
+              {comp.columns.map((col, i) => (
+                <div
+                  key={col}
+                  style={{
+                    padding: "20px 16px",
+                    textAlign: "center",
+                    fontFamily: display,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    textTransform: "uppercase" as const,
+                    letterSpacing: "0.08em",
+                    color: i === 2 ? colors.coral : colors.textMuted,
+                    ...(i === 2
+                      ? {
+                          background: `linear-gradient(180deg, rgba(224,149,133,0.1) 0%, rgba(224,149,133,0.04) 100%)`,
+                        }
+                      : {}),
+                  }}
+                >
+                  {col}
+                </div>
+              ))}
+            </div>
+
+            {/* Rows */}
+            {comp.rows.map((row, ri) => (
+              <div
+                key={ri}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1.6fr repeat(3, 1fr)",
+                  borderBottom:
+                    ri < comp.rows.length - 1
+                      ? `1px solid ${colors.borderSubtle}`
+                      : "none",
+                  transition: "background 0.15s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = `rgba(224,149,133,0.03)`)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "transparent")
+                }
+              >
+                {/* Feature name */}
+                <div
+                  style={{
+                    padding: "18px 28px",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: colors.textBody,
+                    fontFamily: body,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {row.feature}
+                </div>
+                {/* Values */}
+                {row.values.map((val, ci) => (
+                  <div
+                    key={ci}
+                    style={{
+                      padding: "18px 16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      ...(ci === 2
+                        ? {
+                            background: `linear-gradient(180deg, rgba(224,149,133,0.06) 0%, rgba(224,149,133,0.02) 100%)`,
+                          }
+                        : {}),
+                    }}
+                  >
+                    {val ? (
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                      >
+                        <circle
+                          cx="10"
+                          cy="10"
+                          r="10"
+                          fill={
+                            ci === 2
+                              ? colors.coral
+                              : "rgba(224,149,133,0.2)"
+                          }
+                        />
+                        <path
+                          d="M6 10l3 3 5-5"
+                          stroke={ci === 2 ? colors.bgDeep : colors.coral}
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                      >
+                        <circle
+                          cx="10"
+                          cy="10"
+                          r="10"
+                          fill="rgba(68,68,76,0.4)"
+                        />
+                        <path
+                          d="M7 7l6 6M13 7l-6 6"
+                          stroke={colors.textMuted}
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+      </div>
+    </section>
   );
 }
 
@@ -346,7 +771,7 @@ export default function Home() {
               delay={0.3}
               stagger={0.04}
               duration={0.7}
-              style={{ color: colors.textSecondary, textAlign: "center" }}
+              style={{ color: colors.textSecondary, textAlign: "center", fontFamily: serif, fontStyle: "italic", fontWeight: 500 }}
             />
             <motion.span
               animate={{
@@ -421,6 +846,9 @@ export default function Home() {
 
         </motion.div>
       </section>
+
+      {/* ── Stats Bar ── */}
+      <StatsBar />
 
       {/* ── Differentiator Strip ── */}
       <section
@@ -620,6 +1048,12 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* ── Pain-Point Marquee ── */}
+      <PainPointMarquee />
+
+      {/* ── Comparison Table ── */}
+      <ComparisonTable />
 
       <Divider accent />
 
@@ -902,12 +1336,13 @@ export default function Home() {
           <FadeIn preset="slide-up" duration={0.8}>
             <h2
               style={{
-                fontFamily: display,
+                fontFamily: serif,
+                fontStyle: "italic",
                 fontSize: 40,
-                fontWeight: 700,
+                fontWeight: 500,
                 marginBottom: 20,
                 color: colors.textPrimary,
-                letterSpacing: "-0.03em",
+                letterSpacing: "-0.02em",
               }}
             >
               {c.humanLayer.headline}
@@ -1041,11 +1476,12 @@ export default function Home() {
                 After 30 days
               </span>
               <h2 style={{
-                fontFamily: display,
+                fontFamily: serif,
+                fontStyle: "italic",
                 fontSize: 40,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: colors.textPrimary,
-                letterSpacing: "-0.03em",
+                letterSpacing: "-0.02em",
                 marginBottom: 12,
               }}>
                 {c.takeaways.headline}
@@ -1262,12 +1698,13 @@ export default function Home() {
           <FadeIn preset="slide-up" duration={0.8}>
             <h2
               style={{
-                fontFamily: display,
+                fontFamily: serif,
+                fontStyle: "italic",
                 fontSize: 48,
-                fontWeight: 700,
+                fontWeight: 500,
                 marginBottom: 8,
                 color: colors.textPrimary,
-                letterSpacing: "-0.03em",
+                letterSpacing: "-0.02em",
               }}
             >
               {c.finalCta.headline}

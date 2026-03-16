@@ -250,6 +250,81 @@ export const content = {
     cancelledMessage: "Checkout was cancelled. No charge was made. You can try again whenever you\u2019re ready.",
   },
 
+  // ── Stats Bar (below hero) ──
+  statsBar: {
+    items: [
+      { number: "15", unit: "min/day", label: "Structured daily practice" },
+      { number: "250+", unit: "", label: "Evidence-based frameworks" },
+      { number: "30", unit: "days", label: "One program, one transformation" },
+    ],
+  },
+
+  // ── Pain-Point Marquee ──
+  marquee: {
+    centerText: "There\u2019s a pattern underneath.",
+    row1: [
+      "Sunday dread",
+      "3 a.m. thought spirals",
+      "Snapping at the people you love",
+      "Knowing what to do but not doing it",
+      "Feeling fine but never good",
+      "Refreshing LinkedIn like it\u2019s a slot machine",
+      "The identity crisis nobody warned you about",
+      "Performing confidence you don\u2019t feel",
+    ],
+    row2: [
+      "Avoiding the hard conversation",
+      "Numbing out after work",
+      "Comparing yourself to everyone",
+      "The shame spiral after a bad meeting",
+      "Imposter syndrome on repeat",
+      "Can\u2019t stop rehearsing what you should have said",
+      "Carrying it alone because you don\u2019t want to burden anyone",
+      "Waking up already exhausted",
+    ],
+  },
+
+  // ── Comparison Table ──
+  comparison: {
+    headline: "Not another wellness app.",
+    subheadline: "See how Mindcraft compares to what you\u2019ve probably already tried.",
+    columns: ["Meditation apps", "Traditional therapy", "Mindcraft"],
+    rows: [
+      {
+        feature: "Personalized to your patterns",
+        values: [false, true, true],
+      },
+      {
+        feature: "Available when you need it",
+        values: [true, false, true],
+      },
+      {
+        feature: "Builds lasting skills, not dependency",
+        values: [false, false, true],
+      },
+      {
+        feature: "Structured program with an endpoint",
+        values: [false, false, true],
+      },
+      {
+        feature: "Human coach available",
+        values: [false, true, true],
+      },
+      {
+        feature: "Tracks your patterns over time",
+        values: [false, false, true],
+      },
+      {
+        feature: "Evidence-based frameworks cited",
+        values: [false, true, true],
+      },
+      {
+        feature: "Under $2/day",
+        values: [true, false, true],
+      },
+    ],
+  },
+
   // ── Final CTA ──
   finalCta: {
     headline: "You don\u2019t have to white-knuckle through this.",

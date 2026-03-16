@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Sora, DM_Sans } from "next/font/google";
+import { Space_Grotesk, Sora, DM_Sans, Playfair_Display } from "next/font/google";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
@@ -19,6 +19,13 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+  style: ["normal", "italic"],
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
 });
 
@@ -93,7 +100,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${sora.variable} ${dmSans.variable} antialiased`}
+        className={`${spaceGrotesk.variable} ${sora.variable} ${dmSans.variable} ${playfair.variable} antialiased`}
         style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}
       >
         {children}

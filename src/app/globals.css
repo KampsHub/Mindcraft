@@ -46,3 +46,62 @@ body {
   box-shadow: 0 2px 8px rgba(224, 149, 133, 0.4);
   border: 2px solid #18181C;
 }
+
+/* ── Scrolling Marquee ── */
+@keyframes marquee-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.marquee-track-left {
+  display: flex;
+  animation: marquee-left 45s linear infinite;
+  will-change: transform;
+}
+.marquee-track-right {
+  display: flex;
+  animation: marquee-right 50s linear infinite;
+  will-change: transform;
+}
+.marquee-track-left:hover,
+.marquee-track-right:hover {
+  animation-play-state: paused;
+}
+
+/* ── Breathing Circle ── */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.18); opacity: 0.85; }
+}
+.breathe-circle {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* ── Stats Bar responsive ── */
+@media (max-width: 640px) {
+  .stats-bar-grid {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+  .stats-bar-divider {
+    display: none !important;
+  }
+  .marquee-section {
+    padding: 64px 24px !important;
+  }
+  .comparison-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .comparison-header-row {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .comparison-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

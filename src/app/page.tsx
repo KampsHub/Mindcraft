@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import { content as c } from "@/content/site";
+import { trackEvent } from "@/components/GoogleAnalytics";
 import Logo from "@/components/Logo";
 import FadeIn from "@/components/FadeIn";
 import TextReveal from "@/components/TextReveal";
@@ -1089,6 +1090,10 @@ export default function Home() {
     });
   }, [supabase.auth, router]);
 
+  useEffect(() => {
+    trackEvent("homescreen_view", {});
+  }, []);
+
   if (checking) {
     return (
       <div
@@ -1544,7 +1549,7 @@ export default function Home() {
           >
             {c.programs.cards.map((card: { tag: string; title: string; desc: string; href: string; modules?: string[] }, i) => (
               <FadeIn key={card.tag} delay={0.15 + i * 0.12} preset="slide-up">
-                <a href={card.href} style={{ textDecoration: "none", color: "inherit", display: "block", height: "100%" }}>
+                <a href={card.href} onClick={() => trackEvent("homescreen_program_click", { program: card.tag.toLowerCase().replace(" ", "_") })} style={{ textDecoration: "none", color: "inherit", display: "block", height: "100%" }}>
                 <motion.div
                   whileHover={{
                     y: -6,

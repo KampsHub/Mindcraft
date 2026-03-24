@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import { createClient } from "@/lib/supabase";
+import { trackEvent } from "@/components/GoogleAnalytics";
 import Logo from "@/components/Logo";
 
 const display = fonts.display;
@@ -56,6 +57,10 @@ function ParachuteWelcome() {
       .then((data) => {
         setVerified(data.paid === true);
         setTier(data.tier || "standard");
+        if (data.paid) {
+          const tierLabel = (data.tier || "standard") === "pay_what_you_can" ? "pay_what_you_can" : (data.tier || "standard") === "pay_it_forward" ? "pay_it_forward" : "standard";
+          trackEvent(`layoff_${tierLabel}_purchase`, { tier: data.tier || "standard", amount: data.amountPaid });
+        }
       })
       .catch(() => setVerified(false));
   }, [searchParams]);

@@ -413,6 +413,7 @@ function Hero() {
           >
             <a
               href="/intake"
+              onClick={() => trackEvent("pip_hero_cta_click", {})}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -1383,6 +1384,7 @@ function Pricing() {
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   useEffect(() => {
+    trackEvent("pip_page_view", {});
     if (cancelled) {
       trackEvent("checkout_cancelled", { program: "jetstream" });
     }
@@ -1390,6 +1392,8 @@ function Pricing() {
 
   const handleCheckout = async (tier: string) => {
     setCheckoutLoading(tier);
+    trackEvent("pip_price_click", { tier });
+    trackEvent("pip_begin_checkout", { tier });
     trackEvent("begin_checkout", { package: "performance_plan", tier });
     try {
       const res = await fetch("/api/checkout/jetstream", {

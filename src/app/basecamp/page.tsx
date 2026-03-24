@@ -428,6 +428,7 @@ function Hero() {
           >
             <a
               href="/intake"
+              onClick={() => trackEvent("new_role_hero_cta_click", {})}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -1253,6 +1254,7 @@ function Pricing() {
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   useEffect(() => {
+    trackEvent("new_role_page_view", {});
     if (cancelled) {
       trackEvent("checkout_cancelled", { program: "basecamp" });
     }
@@ -1260,6 +1262,8 @@ function Pricing() {
 
   const handleCheckout = async (tier: string) => {
     setCheckoutLoading(tier);
+    trackEvent("new_role_price_click", { tier });
+    trackEvent("new_role_begin_checkout", { tier });
     trackEvent("begin_checkout", { package: "new_role", tier });
     try {
       const res = await fetch("/api/checkout/basecamp", {

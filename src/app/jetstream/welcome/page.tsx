@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import { createClient } from "@/lib/supabase";
+import { trackEvent } from "@/components/GoogleAnalytics";
 import Logo from "@/components/Logo";
 
 const display = fonts.display;
@@ -56,6 +57,9 @@ function JetstreamWelcome() {
       .then((data) => {
         setVerified(data.paid === true);
         setTier(data.tier || "standard");
+        if (data.paid) {
+          trackEvent("pip_purchase", { tier: data.tier || "standard", amount: data.amountPaid });
+        }
       })
       .catch(() => setVerified(false));
   }, [searchParams]);

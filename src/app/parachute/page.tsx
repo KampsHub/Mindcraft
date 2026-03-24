@@ -429,6 +429,7 @@ function Hero() {
           >
             <a
               href="#pricing"
+              onClick={() => trackEvent("layoff_hero_cta_click", {})}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -1833,6 +1834,7 @@ function Pricing() {
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   useEffect(() => {
+    trackEvent("layoff_page_view", {});
     if (cancelled) {
       trackEvent("checkout_cancelled", { program: "parachute" });
     }
@@ -1840,6 +1842,8 @@ function Pricing() {
 
   const handleCheckout = async (tier: string, amount?: number) => {
     setCheckoutLoading(tier);
+    const tierLabel = tier === "pay_what_you_can" ? "pay_what_you_can" : tier === "pay_it_forward" ? "pay_it_forward" : "standard";
+    trackEvent(`layoff_${tierLabel}_begin_checkout`, { tier, price: amount ? `$${amount}` : tier });
     trackEvent("begin_checkout", { package: "layoff", tier, price: amount ? `$${amount}` : tier });
     try {
       const res = await fetch("/api/checkout/parachute", {
@@ -2008,6 +2012,7 @@ function Pricing() {
           {tiers.map((tier, i) => (
             <FadeIn key={tier.name} preset="slide-up" delay={0.1 + i * 0.06} style={{ display: "flex" }}>
               <div
+                onClick={() => trackEvent(`layoff_${tier.key}_price_click`, { tier: tier.key, price: tier.price })}
                 style={{
                   padding: 28,
                   border: tier.highlight

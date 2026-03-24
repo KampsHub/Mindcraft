@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 
 const PRODUCTS: Record<string, { productId: string; min: number; max: number }> = {
-  standard:  { productId: "prod_U96nMyeKgvlabr",  min: 7500,  max: 7500  },
+  standard:  { productId: "prod_U96nMyeKgvlabr",  min: 4900,  max: 4900  },
   enneagram: { productId: "prod_U96n8cj9PYR3V7",  min: 34900, max: 34900 },
 };
 
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
     }
 
-    const cents = tier === "standard" ? 7500 : 34900;
+    const cents = tier === "standard" ? 4900 : 34900;
 
     if (cents < product.min || cents > product.max) {
       return NextResponse.json(

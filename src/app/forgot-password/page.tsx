@@ -151,7 +151,7 @@ export default function ForgotPasswordPage() {
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ display: "inline-block", marginBottom: 16 }}>
-            <Logo size={44} />
+            <Logo size={20} />
           </div>
           <h1
             style={{

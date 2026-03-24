@@ -79,13 +79,20 @@
 //
 // Type Scale:
 //   Hero headline: 56px, fontWeight 800, display font, lineHeight 1.1
-//   Section heading: 36-40px, fontWeight 700, display font
+//   Section heading (structural): 40-44px, fontWeight 700, display font — for sections describing features, steps, mechanics
+//   Section heading (emotional): 40-48px, fontWeight 500, serif font, fontStyle italic — for sections evoking feeling, reflection, or transformation
 //   Page heading (h1): 24-26px, fontWeight 700, body font
 //   Card heading: 15-16px, fontWeight 600, body font
 //   Body text: 14-15px, fontWeight 400, lineHeight 1.6-1.7
 //   Small text: 13px, lineHeight 1.5
 //   Labels/badges: 10-12px, fontWeight 600-700, textTransform uppercase, letterSpacing 0.5-1
+//   Section label (above heading): 11px, fontWeight 700, display font, uppercase, letterSpacing 0.08em, color coral
 //   Metadata: 12-13px, color textMuted
+//
+// Heading font rules:
+//   display (Sora) = structural, factual, action-oriented headings
+//   serif (italic) = emotional, reflective, human-tone headings
+//   NEVER mix: don't use serif for feature descriptions or display for emotional invitations
 
 // ── 3. SPACING ──
 //

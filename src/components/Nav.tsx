@@ -53,7 +53,7 @@ export default function Nav() {
       }}>
         {/* Logo */}
         <button
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push("/")}
           style={{
             display: "flex", alignItems: "center", gap: 0,
             background: "none", border: "none", cursor: "pointer", padding: 0,
@@ -70,7 +70,7 @@ export default function Nav() {
               onClick={() => router.push(link.href)}
               style={{
                 padding: "6px 14px", fontSize: 14, fontWeight: 500,
-                color: isActive(link.href) ? colors.coral : colors.textSecondary,
+                color: isActive(link.href) ? colors.coral : "#ffffff",
                 backgroundColor: isActive(link.href) ? colors.coralWash : "transparent",
                 border: "none", borderRadius: 6, cursor: "pointer",
                 transition: "all 0.15s",
@@ -83,7 +83,7 @@ export default function Nav() {
           <button
             onClick={() => router.push("/my-account")}
             style={{
-              padding: "6px 10px", fontSize: 13, color: colors.textMuted,
+              padding: "6px 10px", fontSize: 13, color: "#ffffff",
               backgroundColor: "transparent", border: "none", cursor: "pointer",
             }}
           >
@@ -129,7 +129,7 @@ export default function Nav() {
               onClick={() => { router.push(link.href); setMenuOpen(false); }}
               style={{
                 padding: "10px 12px", fontSize: 15, fontWeight: 500,
-                color: isActive(link.href) ? colors.coral : colors.textSecondary,
+                color: isActive(link.href) ? colors.coral : "#ffffff",
                 backgroundColor: isActive(link.href) ? colors.coralWash : "transparent",
                 border: "none", borderRadius: 6, cursor: "pointer", textAlign: "left",
               }}
@@ -140,7 +140,7 @@ export default function Nav() {
           <div style={{ height: 1, backgroundColor: colors.borderSubtle, margin: "8px 0" }} />
           <button
             onClick={() => { router.push("/my-account"); setMenuOpen(false); }}
-            style={{ padding: "10px 12px", fontSize: 14, color: colors.textMuted, backgroundColor: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
+            style={{ padding: "10px 12px", fontSize: 14, color: "#ffffff", backgroundColor: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
           >
             My Account
           </button>

@@ -6,14 +6,14 @@ export async function GET() {
   const priceId = process.env.STRIPE_PRICE_ID;
 
   if (!stripeKey || !priceId) {
-    return NextResponse.json({ formatted: "$29.95", amount: 2995 });
+    return NextResponse.json({ formatted: "$49", amount: 4900 });
   }
 
   try {
     const stripe = new Stripe(stripeKey);
     const price = await stripe.prices.retrieve(priceId);
 
-    const amount = price.unit_amount ?? 2995;
+    const amount = price.unit_amount ?? 4900;
     const formatted =
       amount % 100 === 0
         ? `$${amount / 100}`
@@ -28,6 +28,6 @@ export async function GET() {
       }
     );
   } catch {
-    return NextResponse.json({ formatted: "$29.95", amount: 2995 });
+    return NextResponse.json({ formatted: "$49", amount: 4900 });
   }
 }

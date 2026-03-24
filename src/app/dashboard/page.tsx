@@ -55,8 +55,8 @@ interface EnrollmentWithContext {
 /* ── Quick-access links (3 per row) ── */
 const quickLinks = [
   { href: "/mindful-journal", label: "Journal", desc: "Write freely", icon: "✎", accent: colors.coral },
-  { href: "/goals", label: "Progress", desc: "Goals & milestones", icon: "◎", accent: colors.plumLight },
-  { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻", accent: colors.plumLight },
+  { href: "/goals", label: "Progress", desc: "Goals & milestones", icon: "◎", accent: colors.coral },
+  { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻", accent: colors.coral },
 ];
 
 export default function DashboardPage() {
@@ -202,6 +202,51 @@ export default function DashboardPage() {
           </div>
         </FadeIn>
 
+        {/* ── No program yet ── */}
+        {enrollments.length === 0 && (
+          <FadeIn preset="slide-up" delay={0.1} triggerOnMount>
+            <div style={{
+              padding: "48px 32px",
+              borderRadius: 16,
+              border: `1px solid ${colors.borderDefault}`,
+              backgroundColor: colors.bgSurface,
+              textAlign: "center",
+              marginBottom: 28,
+            }}>
+              <p style={{
+                fontFamily: display, fontSize: 22, fontWeight: 700,
+                color: colors.textPrimary, margin: "0 0 12px 0",
+              }}>
+                No program yet.
+              </p>
+              <p style={{
+                fontSize: 15, color: colors.textSecondary, lineHeight: 1.6,
+                margin: "0 0 24px 0", maxWidth: 400, marginLeft: "auto", marginRight: "auto",
+              }}>
+                Choose a program that fits where you are right now. Each one is 30 days of structured, personalized coaching.
+              </p>
+              <button
+                onClick={() => { window.location.assign("/#programs"); }}
+                style={{
+                  display: "inline-block",
+                  padding: "12px 32px",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  color: "#ffffff",
+                  backgroundColor: colors.coral,
+                  borderRadius: 8,
+                  textDecoration: "none",
+                  transition: "opacity 0.2s",
+                  border: "none",
+                }}
+              >
+                Explore programs
+              </button>
+            </div>
+          </FadeIn>
+        )}
+
         {/* ── Program cards ── */}
         {enrollments.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 28 }}>
@@ -301,6 +346,28 @@ export default function DashboardPage() {
 
 
       </div>
+
+      {/* Footer */}
+      <footer style={{ padding: "48px 24px", borderTop: `1px solid ${colors.borderSubtle}` }}>
+        <div style={{
+          maxWidth: 720, margin: "0 auto",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          flexWrap: "wrap", gap: 16,
+        }}>
+          <div style={{ display: "flex", gap: 24, fontSize: 13, color: "#ffffff", alignItems: "center", fontFamily: body }}>
+            <span>
+              &copy; 2026 All Minds on Deck &middot; Made with{" "}
+              <span style={{ color: colors.coral, fontSize: 18 }}>&#9829;</span> by{" "}
+              <a href="https://allmindsondeck.com" target="_blank" rel="noopener noreferrer"
+                style={{ color: "#ffffff", textDecoration: "underline" }}>
+                All Minds On Deck
+              </a>
+            </span>
+            <a href="/privacy" style={{ color: "#ffffff", textDecoration: "none" }}>Privacy</a>
+            <a href="/contact" style={{ color: "#ffffff", textDecoration: "none" }}>Contact</a>
+          </div>
+        </div>
+      </footer>
 
     </div>
   );

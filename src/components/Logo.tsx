@@ -7,25 +7,13 @@ import { colors, fonts } from "@/lib/theme";
  */
 function LogoMark({ size }: { size: number }) {
   return (
-    <svg
+    <img
+      src="/mindcraft-logo.svg"
+      alt=""
       width={size}
       height={size}
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
       style={{ display: "block", flexShrink: 0 }}
-    >
-      {/* Plum circle — left */}
-      <circle cx="12" cy="16" r="10" fill={colors.plum} opacity={0.85} />
-      {/* Coral circle — right, overlapping */}
-      <circle cx="20" cy="16" r="10" fill={colors.coral} opacity={0.85} />
-      {/* Blend intersection */}
-      <path
-        d="M16.47 7.13A10 10 0 0 0 12 26a10 10 0 0 0 4.47-18.87Z"
-        fill={colors.plumLight}
-        opacity={0.5}
-      />
-    </svg>
+    />
   );
 }
 
@@ -33,7 +21,7 @@ function LogoMark({ size }: { size: number }) {
  * Mindcraft logo — geometric mark + typographic wordmark.
  */
 export default function Logo({ size = 20 }: { size?: number }) {
-  const iconSize = size * 1.4;
+  const iconSize = size * 4;
   return (
     <span
       aria-label="Mindcraft"
@@ -49,12 +37,12 @@ export default function Logo({ size = 20 }: { size?: number }) {
       <span
         style={{
           fontFamily: fonts.display,
-          fontSize: size,
+          fontSize: size * 1.2,
           fontWeight: 800,
           letterSpacing: "-0.02em",
           lineHeight: 1,
           display: "inline-flex",
-          alignItems: "baseline",
+          alignItems: "center",
         }}
       >
         <span style={{ color: colors.textPrimary }}>mindcraft</span>

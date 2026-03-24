@@ -96,7 +96,7 @@ export default function SignupPage() {
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ display: "inline-block", marginBottom: 16 }}>
-            <Logo size={44} />
+            <Logo size={20} />
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
             {c.signup.headline}

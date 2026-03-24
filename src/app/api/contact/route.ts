@@ -1,75 +1,37 @@
-import { Resend } from "resend";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const ISSUE_TYPES = [
-  "Technical problem",
-  "Feedback on an exercise",
-  "Feedback on insights and summaries",
-  "Question for a Coach",
-] as const;
-
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { issueType, message } = await request.json();
+    const { name, email, message } = await req.json();
 
-    if (!issueType || !ISSUE_TYPES.includes(issueType)) {
-      return NextResponse.json({ error: "Invalid issue type." }, { status: 400 });
-    }
-    if (!message || typeof message !== "string" || message.trim().length === 0) {
-      return NextResponse.json({ error: "Message is required." }, { status: 400 });
+    if (!name || !email || !message) {
+      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
 
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() { return cookieStore.getAll(); },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch { /* read-only context */ }
-          },
-        },
-      }
-    );
+    const CONTACT_EMAIL = "stefanie@allmindsondeck.com";
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+    // If Supabase service role is available, store the message
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (supabaseUrl && supabaseKey) {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      await supabase.from("contact_messages").insert({
+        name,
+        email,
+        message,
+        to_email: CONTACT_EMAIL,
+        created_at: new Date().toISOString(),
+      });
+    } else {
+      console.log("\n=== CONTACT FORM ===\nFrom: " + name + " <" + email + ">\nTo: " + CONTACT_EMAIL + "\nMessage: " + message + "\n====================\n");
     }
-
-    const resendKey = process.env.RESEND_API_KEY;
-    if (!resendKey) {
-      console.warn("RESEND_API_KEY not set — contact message logged but not emailed");
-      console.log(`[Contact] ${issueType} from ${user.email}: ${message.trim()}`);
-      return NextResponse.json({ success: true });
-    }
-
-    const resend = new Resend(resendKey);
-
-    await resend.emails.send({
-      from: "Mindcraft <noreply@allmindsondeck.org>",
-      to: "stefanie@allmindsondeck.org",
-      subject: `[Mindcraft] ${issueType} from ${user.email}`,
-      text: [
-        `Issue type: ${issueType}`,
-        `From: ${user.email}`,
-        `User ID: ${user.id}`,
-        "",
-        "Message:",
-        message.trim(),
-      ].join("\n"),
-    });
 
     return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error("Contact form error:", err);
-    return NextResponse.json({ error: "Failed to send message." }, { status: 500 });
+  } catch (error) {
+    console.error("Contact form error:", error);
+    return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
   }
 }

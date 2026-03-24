@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/quality-audit",
+      "schedule": "0 16 * * 1"
+    }
+  ]
+}

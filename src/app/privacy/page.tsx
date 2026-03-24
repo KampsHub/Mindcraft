@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function PrivacyRedirect() {
   const router = useRouter();
   useEffect(() => {
-    router.replace("/my-account");
+    router.replace("/privacy-policy");
   }, [router]);
   return null;
 }

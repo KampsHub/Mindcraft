@@ -15,6 +15,7 @@ import CommitmentCheckIn, { type CommitmentCheckInItem } from "@/components/Comm
 import ForTomorrowCard from "@/components/ForTomorrowCard";
 import ActivePatternChallenge, { type PatternChallengeData } from "@/components/ActivePatternChallenge";
 import { colors, fonts } from "@/lib/theme";
+import FlagButton from "@/components/FlagButton";
 
 /* ── Design tokens ── */
 const display = fonts.display;
@@ -753,6 +754,9 @@ function DailyFlowPage() {
             padding: 22,
           }}>
             {/* Thread — primary content (narrative prose) */}
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 4 }}>
+              <FlagButton outputType="themes" dailySessionId={session?.id} />
+            </div>
             {themes.thread ? (
               <div style={{ marginBottom: 18 }}>
                 {themes.thread.split("\n\n").map((para, i) => (
@@ -1064,13 +1068,16 @@ function DailyFlowPage() {
               : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
           }}>
             <div style={{ marginBottom: 18 }}>
-              <p style={{
-                fontSize: 11, fontWeight: 700, color: colors.textMuted,
-                margin: "0 0 12px 0", textTransform: "uppercase",
-                letterSpacing: "0.08em", fontFamily: display,
-              }}>
-                What your journal reveals
-              </p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                <p style={{
+                  fontSize: 11, fontWeight: 700, color: colors.textMuted,
+                  margin: 0, textTransform: "uppercase",
+                  letterSpacing: "0.08em", fontFamily: display,
+                }}>
+                  What your journal reveals
+                </p>
+                <FlagButton outputType="reflection" dailySessionId={session?.id} />
+              </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {stateAnalysis.reading ? (
                   // New prose format — natural paragraphs
@@ -1143,9 +1150,12 @@ function DailyFlowPage() {
                 borderRadius: 12,
                 marginBottom: 14,
               }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
-                  Reframe
-                </p>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                    Reframe
+                  </p>
+                  <FlagButton outputType="reframe" dailySessionId={session?.id} />
+                </div>
                 <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 8px 0", fontFamily: body, fontStyle: "italic" }}>
                   &ldquo;{reframe.source_quote}&rdquo;
                 </p>
@@ -1244,6 +1254,7 @@ function DailyFlowPage() {
                 estimatedMinutes={ex.duration_min}
                 isRequired={true}
                 isCompleted={completedExercises.has(ex.name)}
+                dailySessionId={session?.id}
                 onComplete={(responses, rating) =>
                   handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
                 }
@@ -1275,6 +1286,7 @@ function DailyFlowPage() {
                 whyThisWorks={ex.why_this_works}
                 estimatedMinutes={ex.estimated_minutes}
                 isCompleted={completedExercises.has(ex.framework_name)}
+                dailySessionId={session?.id}
                 onComplete={(responses, rating) =>
                   handleExerciseComplete(
                     ex.framework_name, "overflow", ex.modality,
@@ -1350,6 +1362,7 @@ function DailyFlowPage() {
                 type="framework_analysis"
                 instructions="Write what comes up as you sit with this framework and the reflection question above."
                 isCompleted={completedExercises.has(`Reflect: ${frameworkAnalysis.framework_name}`)}
+                dailySessionId={session?.id}
                 onComplete={(responses, rating) =>
                   handleExerciseComplete(
                     `Reflect: ${frameworkAnalysis.framework_name}`,
@@ -1431,6 +1444,9 @@ function DailyFlowPage() {
               border: `1px solid ${colors.borderDefault}`,
               padding: 22,
             }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 4 }}>
+                <FlagButton outputType="summary" dailySessionId={session?.id} />
+              </div>
               <p style={{ fontSize: 14, color: colors.textBody, lineHeight: 1.7, margin: "0 0 14px 0", fontFamily: body }}>
                 {summaryResult.summary}
               </p>

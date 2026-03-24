@@ -52,6 +52,17 @@ export const reflectSchema = z.object({
   stream: z.boolean().optional(),
 });
 
+export const qualityFlagSchema = z.object({
+  outputType: z.enum([
+    "reflection", "exercise", "summary", "themes", "plan",
+    "weekly_insight", "framework_analysis", "reframe", "coaching_question",
+  ]),
+  frameworkName: z.string().max(200).optional(),
+  dailySessionId: sessionIdSchema.optional(),
+  flagReason: z.enum(["off_tone", "inaccurate", "unhelpful", "confusing", "inappropriate", "other"]),
+  userComment: z.string().max(500).optional(),
+});
+
 // ── Validation wrapper ──
 // Parses an unknown body against a Zod schema.
 // Returns typed data on success, or a 400 NextResponse on failure.

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Sora, DM_Sans, Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
@@ -30,7 +31,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mindcraft.ninja"),
+  metadataBase: new URL("https://mindcraft.ing"),
   title: {
     default: "Mindcraft — Cut Through Your Mind's Noise in 30 Days",
     template: "%s | Mindcraft",
@@ -89,7 +90,7 @@ export default function RootLayout({
               description: "AI-powered coaching for career crises",
               applicationCategory: "HealthApplication",
               operatingSystem: "Web",
-              url: "https://mindcraft.ninja",
+              url: "https://mindcraft.ing",
               offers: {
                 "@type": "Offer",
                 price: "29.95",
@@ -104,6 +105,7 @@ export default function RootLayout({
         style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}
       >
         {children}
+        <Analytics />
         <script
           dangerouslySetInnerHTML={{
             __html: `

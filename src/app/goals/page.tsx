@@ -296,7 +296,7 @@ function GoalsPage() {
           <p style={{ fontSize: 15, color: colors.textMuted, lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
             You need to start a program first. Your goals are generated after completing Days 1-3.
           </p>
-          <PillButton onClick={() => router.push("/intake")} size="lg">
+          <PillButton onClick={() => router.push("/#programs")} size="lg">
             Start a Program
           </PillButton>
         </FadeIn>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 import Nav from "@/components/Nav";
@@ -23,16 +23,16 @@ const cardStyle: React.CSSProperties = {
 
 /* ── Attribution sources ── */
 const attributionSources = [
-  { id: "google", label: "Google", icon: "🔍" },
-  { id: "linkedin", label: "LinkedIn", icon: "💼" },
-  { id: "reddit", label: "Reddit", icon: "💬" },
-  { id: "tiktok", label: "TikTok", icon: "🎵" },
-  { id: "friend", label: "Friend", icon: "👥" },
-  { id: "facebook", label: "Facebook", icon: "📘" },
-  { id: "instagram", label: "Instagram", icon: "📷" },
-  { id: "youtube", label: "YouTube", icon: "▶️" },
-  { id: "x_twitter", label: "X (Twitter)", icon: "𝕏" },
-  { id: "podcast", label: "Podcast", icon: "🎙️" },
+  { id: "google", label: "Google", icon: "" },
+  { id: "linkedin", label: "LinkedIn", icon: "" },
+  { id: "reddit", label: "Reddit", icon: "" },
+  { id: "tiktok", label: "TikTok", icon: "" },
+  { id: "friend", label: "Friend", icon: "" },
+  { id: "facebook", label: "Facebook", icon: "" },
+  { id: "instagram", label: "Instagram", icon: "" },
+  { id: "youtube", label: "YouTube", icon: "" },
+  { id: "x_twitter", label: "X (Twitter)", icon: "" },
+  { id: "podcast", label: "Podcast", icon: "" },
 ];
 
 /* ── Types ── */
@@ -78,6 +78,7 @@ const Shell = ({ children }: { children: React.ReactNode }) => (
 /* ── Component ── */
 
 export default function IntakePage() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<Step>("attribution");
   const [programs, setPrograms] = useState<Program[]>([]);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
@@ -104,11 +105,21 @@ export default function IntakePage() {
         .eq("active", true)
         .order("created_at");
 
-      if (progs) setPrograms(progs);
+      if (progs) {
+        setPrograms(progs);
+        // Auto-select program from URL param (e.g. /intake?program=parachute)
+        const programSlug = searchParams.get("program");
+        if (programSlug) {
+          const match = progs.find((p: Program) => p.slug === programSlug);
+          if (match) {
+            setSelectedProgram(match);
+          }
+        }
+      }
       setLoading(false);
     }
     init();
-  }, [supabase]);
+  }, [supabase, searchParams]);
 
   // Initialize consent defaults when program is selected
   useEffect(() => {
@@ -139,21 +150,45 @@ export default function IntakePage() {
       attribution: attribution === "other" ? attributionOther : attribution,
     };
 
-    const { error } = await supabase
+    // Try to update an existing pre_start enrollment first
+    const { data: existing } = await supabase
       .from("program_enrollments")
-      .insert({
-        client_id: user.id,
-        program_id: selectedProgram.id,
-        status: "onboarding",
-        current_day: 1,
-        pre_start_data: preStartData,
-        started_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
+      .select("id")
+      .eq("client_id", user.id)
+      .eq("program_id", selectedProgram.id)
+      .in("status", ["pre_start", "onboarding"])
+      .maybeSingle();
+
+    let error;
+    if (existing) {
+      // Update the existing enrollment created at welcome
+      const result = await supabase
+        .from("program_enrollments")
+        .update({
+          status: "onboarding",
+          pre_start_data: preStartData,
+        })
+        .eq("id", existing.id);
+      error = result.error;
+    } else {
+      // No existing enrollment - create one
+      const result = await supabase
+        .from("program_enrollments")
+        .insert({
+          client_id: user.id,
+          program_id: selectedProgram.id,
+          status: "onboarding",
+          current_day: 1,
+          pre_start_data: preStartData,
+          started_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+      error = result.error;
+    }
 
     if (error) {
-      console.error("Failed to create enrollment:", error);
+      console.error("Failed to save enrollment:", error);
       if (error.code === "23505") {
         alert("You are already enrolled in this program. Redirecting to your dashboard.");
         router.push("/dashboard");
@@ -179,8 +214,11 @@ export default function IntakePage() {
   }
 
   /* ── Progress indicator ── */
-  const steps = ["Source", "Program", "Intake", "Consent", "Start"];
-  const stepIndex = step === "attribution" ? 0 : step === "program" ? 1 : step === "intake" ? 2 : step === "consent" ? 3 : 4;
+  const hasProgramParam = !!searchParams.get("program");
+  const steps = hasProgramParam ? ["Source", "Intake", "Consent", "Start"] : ["Source", "Program", "Intake", "Consent", "Start"];
+  const stepIndex = hasProgramParam
+    ? (step === "attribution" ? 0 : step === "intake" ? 1 : step === "consent" ? 2 : 3)
+    : (step === "attribution" ? 0 : step === "program" ? 1 : step === "intake" ? 2 : step === "consent" ? 3 : 4);
 
   /* ── Loading ── */
   if (loading) {
@@ -309,7 +347,7 @@ export default function IntakePage() {
               onClick={() => {
                 if (attribution) {
                   trackEvent("attribution_source", { source: attribution === "other" ? attributionOther : attribution });
-                  setStep("program");
+                  setStep(selectedProgram ? "intake" : "program");
                 }
               }}
               disabled={!attribution}
@@ -489,7 +527,7 @@ export default function IntakePage() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => setStep("program")}
+            onClick={() => setStep(searchParams.get("program") ? "attribution" : "program")}
             style={{
               padding: "6px 16px", fontSize: 13, fontWeight: 600,
               color: colors.textMuted, backgroundColor: colors.bgSurface,

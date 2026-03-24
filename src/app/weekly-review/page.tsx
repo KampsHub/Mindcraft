@@ -576,7 +576,7 @@ function WeeklyReviewPage() {
           <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.6 }}>
             Start a program to access your weekly review.
           </p>
-          <PillButton onClick={() => router.push("/intake")} style={{ marginTop: 20 }}>
+          <PillButton onClick={() => router.push("/#programs")} style={{ marginTop: 20 }}>
             Start a Program
           </PillButton>
         </div>

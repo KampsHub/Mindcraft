@@ -60,6 +60,45 @@ function BasecampWelcome() {
       .catch(() => setVerified(false));
   }, [searchParams]);
 
+  async function createEnrollmentIfNeeded(userId: string, userEmail: string) {
+    const { data: existingClient } = await supabase
+      .from("clients").select("id").eq("id", userId).maybeSingle();
+
+    if (!existingClient) {
+      const { error: clientError } = await supabase
+        .from("clients")
+        .insert({ id: userId, email: userEmail, name: userEmail.split("@")[0], subscription_status: "active" });
+      if (clientError) {
+        console.error("Failed to create client row:", clientError);
+        await fetch("/api/create-enrollment", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ program: "basecamp" }),
+        });
+        return;
+      }
+    }
+
+    const { data: program } = await supabase.from("programs").select("id").eq("slug", "basecamp").single();
+    if (!program) return;
+
+    const { data: existing } = await supabase
+      .from("program_enrollments").select("id")
+      .eq("client_id", userId).eq("program_id", program.id).maybeSingle();
+    if (existing) return;
+
+    const { error: enrollError } = await supabase
+      .from("program_enrollments")
+      .insert({ client_id: userId, program_id: program.id, status: "pre_start", current_day: 1, started_at: new Date().toISOString() });
+
+    if (enrollError) {
+      console.error("Failed to create enrollment:", enrollError);
+      await fetch("/api/create-enrollment", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ program: "basecamp" }),
+      });
+    }
+  }
+
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -74,11 +113,11 @@ function BasecampWelcome() {
     });
 
     if (error) {
-      // If user already exists, try signing them in directly
       if (error.message.toLowerCase().includes("already") || error.message.toLowerCase().includes("registered")) {
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-        if (!signInError) {
-          router.push("/intake");
+        const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ email, password });
+        if (!signInError && signInData.user) {
+          await createEnrollmentIfNeeded(signInData.user.id, signInData.user.email || email);
+          router.push("/intake?program=basecamp");
           return;
         }
         setError("An account with this email already exists. Switch to the \"I have an account\" tab to sign in.");
@@ -89,8 +128,9 @@ function BasecampWelcome() {
       return;
     }
 
-    if (data.session) {
-      router.push("/intake");
+    if (data.session && data.user) {
+      await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
+      router.push("/intake?program=basecamp");
       return;
     }
 
@@ -103,7 +143,7 @@ function BasecampWelcome() {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       setError(error.message);
@@ -111,7 +151,10 @@ function BasecampWelcome() {
       return;
     }
 
-    router.push("/intake");
+    if (data.user) {
+      await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
+    }
+    router.push("/intake?program=basecamp");
   }
 
   const inputStyle: React.CSSProperties = {

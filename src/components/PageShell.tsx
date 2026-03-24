@@ -73,20 +73,27 @@ export default function PageShell({
       <footer style={{ padding: "48px 24px", borderTop: `1px solid ${colors.borderSubtle}` }}>
         <div style={{
           maxWidth, margin: "0 auto",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
+          display: "flex", alignItems: "center", justifyContent: "center",
           flexWrap: "wrap", gap: 16,
         }}>
-          <a href="/dashboard" style={{ textDecoration: "none" }}>
-            <Logo size={16} />
-          </a>
-          <div style={{ display: "flex", gap: 24, fontSize: 13, color: colors.textMuted }}>
-            <span>{c.footer.copyright}</span>
-            <a href={c.brand.companyUrl} target="_blank" rel="noopener noreferrer"
-              style={{ color: colors.textMuted, textDecoration: "none" }}>
-              All Minds on Deck
+          <div style={{ display: "flex", gap: 24, fontSize: 13, color: "#ffffff", alignItems: "center" }}>
+            <span>
+              {c.footer.copyright} &middot; Made with{" "}
+              <span style={{ color: colors.coral, fontSize: 18 }}>&#9829;</span> by{" "}
+              <a
+                href="https://allmindsondeck.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#ffffff", textDecoration: "underline" }}
+              >
+                All Minds On Deck
+              </a>
+            </span>
+            <a href="/privacy" style={{ color: "#ffffff", textDecoration: "none" }}>
+              Privacy
             </a>
-            <a href="/privacy-policy" style={{ color: colors.textMuted, textDecoration: "none" }}>
-              {c.footer.privacyLink}
+            <a href="/contact" style={{ color: "#ffffff", textDecoration: "none" }}>
+              Contact
             </a>
           </div>
         </div>

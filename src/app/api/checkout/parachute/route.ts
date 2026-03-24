@@ -2,9 +2,9 @@ import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 
 const PRODUCTS: Record<string, { productId: string; min: number; max: number }> = {
-  standard:         { productId: "prod_U95TWPCUggnbs3", min: 7500,  max: 7500  },
-  pay_what_you_can: { productId: "prod_U95UKkYNo24wBL", min: 3500,  max: 7400  },
-  pay_it_forward:   { productId: "prod_U95UMTnT09pyPs", min: 7600,  max: 12500 },
+  standard:         { productId: "prod_U95TWPCUggnbs3", min: 4900,  max: 4900  },
+  pay_what_you_can: { productId: "prod_U95UKkYNo24wBL", min: 2900,  max: 4800  },
+  pay_it_forward:   { productId: "prod_U95UMTnT09pyPs", min: 5000,  max: 6900  },
   enneagram:        { productId: "prod_U95VluMgqykEjV", min: 34900, max: 34900 },
 };
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
 
     // For fixed-price tiers, use the fixed amount; for sliding scale, use the provided amount
-    const cents = tier === "standard" ? 7500
+    const cents = tier === "standard" ? 4900
                : tier === "enneagram" ? 34900
                : Math.round((amount || 0) * 100);
 

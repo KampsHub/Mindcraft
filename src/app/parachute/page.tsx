@@ -209,7 +209,7 @@ function GlowButton({ href, children, variant = "coral" }: { href: string; child
         borderRadius: 8,
         textDecoration: "none",
         backgroundColor: bg,
-        color: colors.bgDeep,
+        color: "#ffffff",
         border: "none",
       }}
     >
@@ -257,7 +257,7 @@ function Nav() {
             fontFamily: body,
             fontSize: 14,
             fontWeight: 500,
-            color: colors.textMuted,
+            color: "#ffffff",
             textDecoration: "none",
             transition: "color 0.2s",
           }}
@@ -270,7 +270,7 @@ function Nav() {
             fontFamily: body,
             fontSize: 14,
             fontWeight: 600,
-            color: colors.bgDeep,
+            color: "#ffffff",
             backgroundColor: colors.coral,
             padding: "10px 24px",
             borderRadius: 8,
@@ -278,7 +278,7 @@ function Nav() {
             transition: "all 0.2s",
           }}
         >
-          Sliding scale from $35
+          Sliding scale from $29
         </a>
         </div>
       </div>
@@ -297,9 +297,24 @@ function Hero() {
         paddingTop: 140,
         paddingBottom: 80,
         background: colors.bgDeep,
+        position: "relative" as const,
+        overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: narrowMax, margin: "0 auto" }}>
+      <img
+        src="/hero-parachute.jpg"
+        alt=""
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: 0,
+          opacity: 0.5,
+        }}
+      />
+      <div style={{ maxWidth: narrowMax, margin: "0 auto", position: "relative" as const, zIndex: 1 }}>
         <FadeIn preset="fade" triggerOnMount delay={0.1}>
           <p
             style={{
@@ -402,64 +417,6 @@ function Hero() {
           </p>
         </FadeIn>
 
-        <FadeIn preset="fade" triggerOnMount delay={0.5}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column" as const,
-              gap: 6,
-              marginBottom: 36,
-              paddingLeft: 2,
-            }}
-          >
-            {[
-              "Not a networking course.",
-              "Not interview prep.",
-              "Not a resilience program.",
-              "Not \"come back stronger\".",
-            ].map((line) => (
-              <p
-                key={line}
-                style={{
-                  fontFamily: body,
-                  fontSize: 14,
-                  color: colors.textMuted,
-                  margin: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-              >
-                <span
-                  style={{
-                    color: colors.coral,
-                    fontSize: 11,
-                    opacity: 0.7,
-                  }}
-                >
-                  ✕
-                </span>
-                {line}
-              </p>
-            ))}
-            <p
-              style={{
-                fontFamily: body,
-                fontSize: 15,
-                color: colors.textPrimary,
-                margin: "8px 0 0",
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <span style={{ color: colors.coral, fontSize: 13 }}>✓</span>
-              Thirty days to process what happened, rebuild the narrative
-              on your terms, and walk into whatever comes next — clear,
-              grounded, and yours.
-            </p>
-          </div>
-        </FadeIn>
 
         <FadeIn preset="slide-up" triggerOnMount delay={0.55}>
           <div
@@ -483,12 +440,12 @@ function Hero() {
                 borderRadius: 8,
                 textDecoration: "none",
                 backgroundColor: colors.coral,
-                color: colors.bgDeep,
+                color: "#ffffff",
                 transition: "all 0.2s",
                 border: "none",
               }}
             >
-              Sliding scale from $35
+              Sliding scale from $29
             </a>
             <a
               href="#how"
@@ -633,22 +590,6 @@ function Problem() {
   return (
     <section style={{ ...sectionPadding, background: colors.bgDeep, borderTop: `3px solid ${colors.coral}` }}>
       <div style={{ maxWidth: narrowMax, margin: "0 auto" }}>
-        <FadeIn preset="fade">
-          <h2
-            style={{
-              fontFamily: display,
-              fontSize: "clamp(30px, 4vw, 42px)",
-              lineHeight: 1.15,
-              color: colors.textPrimary,
-              marginBottom: 40,
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            How it works
-          </h2>
-        </FadeIn>
-
         <FadeIn preset="fade">
           <p
             style={{
@@ -1300,51 +1241,75 @@ function HowItWorks() {
   return (
     <section
       id="how"
-      style={{ ...sectionPadding, background: colors.bgRecessed }}
+      style={{ ...sectionPadding, background: colors.bgRecessed, position: "relative" as const, overflow: "hidden" }}
     >
-      <div style={{ maxWidth: narrowMax, margin: "0 auto" }}>
+      <img
+        src="/arc-bg.jpg"
+        alt=""
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: 0,
+          opacity: 0.8,
+        }}
+      />
+      <div style={{ maxWidth: narrowMax, margin: "0 auto", position: "relative" as const, zIndex: 1 }}>
         {/* The arc — 4 weeks */}
         <FadeIn preset="fade" delay={0.25}>
-          <div style={{ marginBottom: 56, borderBottom: `1px solid ${colors.borderSubtle}`, paddingBottom: 48 }}>
-            <p
-              style={{
-                fontFamily: body,
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: 2,
-                textTransform: "uppercase" as const,
-                color: colors.coral,
-                marginBottom: 14,
-              }}
-            >
-              The arc
-            </p>
-            <h3
-              style={{
-                fontFamily: display,
-                fontSize: "clamp(22px, 3vw, 30px)",
-                lineHeight: 1.2,
-                color: colors.textPrimary,
-                marginBottom: 12,
-                fontWeight: 700,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              Four weeks. Four territories.
-            </h3>
-            <p
-              style={{
-                fontFamily: body,
-                fontSize: 15,
-                color: colors.textSecondary,
-                lineHeight: 1.7,
-                maxWidth: 580,
-                marginBottom: 28,
-              }}
-            >
-              Each week goes somewhere specific. Your goals stay with you
-              the whole way.
-            </p>
+          <div style={{
+            marginBottom: 56,
+            borderBottom: `1px solid ${colors.borderSubtle}`,
+            paddingBottom: 48,
+          }}>
+            <div style={{
+              background: "rgba(20, 19, 24, 0.4)",
+              borderRadius: 12,
+              padding: "28px 32px",
+              marginBottom: 28,
+              maxWidth: 580,
+            }}>
+              <p
+                style={{
+                  fontFamily: body,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: 2,
+                  textTransform: "uppercase" as const,
+                  color: colors.coral,
+                  marginBottom: 14,
+                }}
+              >
+                The arc
+              </p>
+              <h3
+                style={{
+                  fontFamily: display,
+                  fontSize: "clamp(22px, 3vw, 30px)",
+                  lineHeight: 1.2,
+                  color: colors.textPrimary,
+                  marginBottom: 12,
+                  fontWeight: 700,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                Four weeks. Four territories.
+              </h3>
+              <p
+                style={{
+                  fontFamily: body,
+                  fontSize: 15,
+                  color: "#ffffff",
+                  lineHeight: 1.7,
+                  margin: 0,
+                }}
+              >
+                Each week goes somewhere specific. Your goals stay with you
+                the whole way.
+              </p>
+            </div>
             <div
               className="parachute-arc-grid"
               style={{
@@ -1365,13 +1330,13 @@ function HowItWorks() {
                       padding: 22,
                       border: `1px solid ${colors.borderDefault}`,
                       borderRadius: 10,
-                      backgroundColor: colors.bgSurface,
+                      backgroundColor: "rgba(20, 19, 24, 0.4)",
                       height: "100%",
                     }}
                   >
                     <p style={{ fontFamily: body, fontSize: 10, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, color: colors.coral, marginBottom: 8 }}>{w.week}</p>
                     <h4 style={{ fontFamily: display, fontSize: 18, fontWeight: 600, color: colors.textPrimary, marginBottom: 8 }}>{w.title}</h4>
-                    <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, lineHeight: 1.55 }}>{w.desc}</p>
+                    <p style={{ fontFamily: body, fontSize: 13, color: "#ffffff", lineHeight: 1.55 }}>{w.desc}</p>
                   </div>
                 </FadeIn>
               ))}
@@ -1380,56 +1345,57 @@ function HowItWorks() {
         </FadeIn>
 
         <FadeIn preset="fade">
-          <p
-            style={{
-              fontFamily: body,
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: 2,
-              textTransform: "uppercase" as const,
-              color: colors.coral,
-              marginBottom: 14,
-            }}
-          >
-            Your daily flow
-          </p>
-        </FadeIn>
-
-        <FadeIn preset="slide-up">
-          <h3
-            style={{
-              fontFamily: display,
-              fontSize: "clamp(22px, 3vw, 30px)",
-              lineHeight: 1.2,
-              color: colors.textPrimary,
-              marginBottom: 20,
-              fontWeight: 700,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            15-30 minutes a day. Five steps.
-          </h3>
-        </FadeIn>
-
-        <FadeIn preset="slide-up" delay={0.1}>
-          <p
-            style={{
-              fontFamily: body,
-              fontSize: 17,
-              color: colors.textSecondary,
-              lineHeight: 1.7,
-              maxWidth: 580,
-              marginBottom: 40,
-            }}
-          >
-            The required exercises take about 5 minutes. The optional ones go
-            deeper. You decide how much time you have each day.
-          </p>
+          <div style={{
+            background: "rgba(20, 19, 24, 0.4)",
+            borderRadius: 12,
+            padding: "28px 32px",
+            marginBottom: 40,
+            maxWidth: 580,
+          }}>
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: 2,
+                textTransform: "uppercase" as const,
+                color: colors.coral,
+                marginBottom: 14,
+              }}
+            >
+              Your daily flow
+            </p>
+            <h3
+              style={{
+                fontFamily: display,
+                fontSize: "clamp(22px, 3vw, 30px)",
+                lineHeight: 1.2,
+                color: colors.textPrimary,
+                marginBottom: 12,
+                fontWeight: 700,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              15-30 minutes a day. Five steps.
+            </h3>
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 17,
+                color: "#ffffff",
+                lineHeight: 1.7,
+                margin: 0,
+              }}
+            >
+              The required exercises take about 5 minutes. The optional ones go
+              deeper. You decide how much time you have each day.
+            </p>
+          </div>
         </FadeIn>
 
         {/* Interactive step selector */}
         <FadeIn preset="slide-up">
-          <div style={{ marginTop: 40 }}>
+          <div style={{ marginTop: 40, background: "rgba(20, 19, 24, 0.4)", borderRadius: 14, padding: "24px 24px 28px" }}>
             {/* Step number tabs */}
             <div style={{ display: "flex", gap: 8, marginBottom: 0 }}>
               {steps.map((step) => (
@@ -1444,7 +1410,7 @@ function HowItWorks() {
                       ? `3px solid ${colors.coral}`
                       : `1px solid ${colors.borderSubtle}`,
                     background: activeStep === step.num
-                      ? colors.bgSurface
+                      ? "rgba(20, 19, 24, 0.4)"
                       : "transparent",
                     borderRadius: activeStep === step.num ? "10px 10px 0 0" : 0,
                     cursor: "pointer",
@@ -1479,7 +1445,7 @@ function HowItWorks() {
                       fontFamily: body,
                       fontSize: 10,
                       fontWeight: 600,
-                      color: activeStep === step.num ? colors.textPrimary : colors.textMuted,
+                      color: activeStep === step.num ? "#ffffff" : "rgba(255,255,255,0.7)",
                       letterSpacing: 0.5,
                       textAlign: "center" as const,
                       lineHeight: 1.3,
@@ -1514,7 +1480,7 @@ function HowItWorks() {
                   transition={{ duration: 0.25 }}
                   style={{
                     padding: "32px 28px",
-                    backgroundColor: colors.bgSurface,
+                    backgroundColor: "rgba(20, 19, 24, 0.4)",
                     borderRadius: "0 0 14px 14px",
                     border: `1px solid ${colors.borderDefault}`,
                     borderTop: "none",
@@ -1535,26 +1501,26 @@ function HowItWorks() {
                   </h4>
 
                   {step.num === 4 ? (
-                    <div style={{ fontFamily: body, fontSize: 14, color: colors.textMuted, lineHeight: 1.7 }}>
+                    <div style={{ fontFamily: body, fontSize: 14, color: "#ffffff", lineHeight: 1.7 }}>
                       <p style={{ marginBottom: 12 }}>
-                        <strong style={{ color: colors.textBody }}>Coaching plan exercises</strong>{" "}
+                        <strong style={{ color: "#ffffff" }}>Coaching plan exercises</strong>{" "}
                         <span style={{ display: "inline-block", fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" as const, color: colors.coral, background: colors.coralWash, padding: "2px 7px", borderRadius: 3, marginLeft: 6 }}>Required</span>{" "}
                         — 1-2 per day, tied to your goals and the program arc.
                       </p>
                       <p style={{ marginBottom: 12 }}>
-                        <strong style={{ color: colors.textBody }}>Overflow exercises</strong>{" "}
-                        <span style={{ display: "inline-block", fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" as const, color: colors.textMuted, background: "rgba(255,255,255,0.05)", padding: "2px 7px", borderRadius: 3, marginLeft: 6 }}>Optional</span>{" "}
+                        <strong style={{ color: "#ffffff" }}>Overflow exercises</strong>{" "}
+                        <span style={{ display: "inline-block", fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" as const, color: "#ffffff", background: "rgba(255,255,255,0.1)", padding: "2px 7px", borderRadius: 3, marginLeft: 6 }}>Optional</span>{" "}
                         — up to 5, one per modality, selected from a library of 250+ sourced tools based on your journal.
                       </p>
                       <p style={{ marginBottom: 12 }}>
-                        <strong style={{ color: colors.textBody }}>Framework analysis</strong> — a named psychological framework applied to a pattern in your recent entries. Every day.
+                        <strong style={{ color: "#ffffff" }}>Framework analysis</strong> — a named psychological framework applied to a pattern in your recent entries. Every day.
                       </p>
                       <p>
-                        <strong style={{ color: colors.textBody }}>Goal accountability</strong> — your earlier reflections connected back to your active goals.
+                        <strong style={{ color: "#ffffff" }}>Goal accountability</strong> — your earlier reflections connected back to your active goals.
                       </p>
                     </div>
                   ) : (
-                    <p style={{ fontFamily: body, fontSize: 15, color: colors.textBody, lineHeight: 1.7, margin: 0 }}>
+                    <p style={{ fontFamily: body, fontSize: 15, color: "#ffffff", lineHeight: 1.7, margin: 0 }}>
                       {step.desc}
                     </p>
                   )}
@@ -1580,12 +1546,12 @@ function HowItWorks() {
                 borderRadius: 8,
                 textDecoration: "none",
                 backgroundColor: colors.coral,
-                color: colors.bgDeep,
+                color: "#ffffff",
                 transition: "all 0.2s",
                 border: "none",
               }}
             >
-              Sliding scale from $35
+              Sliding scale from $29
             </a>
           </div>
         </FadeIn>
@@ -1860,8 +1826,8 @@ function Pricing() {
   const cancelled = searchParams.get("checkout") === "cancelled";
   const [dismissCancelled, setDismissCancelled] = useState(false);
   const [slidingAmounts, setSlidingAmounts] = useState<Record<string, number>>({
-    pay_what_you_can: 50,
-    pay_it_forward: 100,
+    pay_what_you_can: 39,
+    pay_it_forward: 59,
   });
   const [touchedSlider, setTouchedSlider] = useState<Record<string, boolean>>({});
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
@@ -1894,36 +1860,36 @@ function Pricing() {
   const tiers = [
     {
       key: "pay_what_you_can",
-      price: "$35–74",
+      price: "$29–48",
       name: "Pay what you can",
       desc: "Money is tight right now. Pick any amount in this range — no proof, no questions asked.",
       highlight: false,
       badge: null,
       sliding: true,
-      min: 35,
-      max: 74,
+      min: 29,
+      max: 48,
     },
     {
       key: "standard",
-      price: "$75",
+      price: "$49",
       name: "Standard",
       desc: "Less than a drip coffee a day for 30 days of structured coaching.",
       highlight: true,
       badge: "Most common",
       sliding: false,
-      min: 75,
-      max: 75,
+      min: 49,
+      max: 49,
     },
     {
       key: "pay_it_forward",
-      price: "$76–125",
+      price: "$50–69",
       name: "Pay it forward",
       desc: "You have room and want to help make the lower tier possible. Your extra contribution directly funds access for someone who needs it.",
       highlight: false,
       badge: null,
       sliding: true,
-      min: 76,
-      max: 125,
+      min: 50,
+      max: 69,
     },
   ];
 
@@ -2065,7 +2031,7 @@ function Pricing() {
                       top: -13,
                       left: 20,
                       backgroundColor: colors.coral,
-                      color: colors.bgDeep,
+                      color: "#ffffff",
                       fontFamily: body,
                       fontSize: 9,
                       fontWeight: 700,
@@ -2258,7 +2224,7 @@ function Pricing() {
                   borderRadius: 8,
                   cursor: checkoutLoading === "enneagram" ? "wait" : "pointer",
                   backgroundColor: colors.plumLight,
-                  color: colors.bgDeep,
+                  color: "#ffffff",
                   border: "none",
                   transition: "all 0.2s",
                   whiteSpace: "nowrap" as const,
@@ -2445,6 +2411,29 @@ function DataPrivacy() {
             ))}
           </div>
         </FadeIn>
+
+        <div style={{ textAlign: "center", marginTop: 48, marginBottom: 16 }}>
+          <a
+            href="/intake"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              fontFamily: body,
+              fontSize: 15,
+              fontWeight: 600,
+              padding: "14px 32px",
+              borderRadius: 50,
+              textDecoration: "none",
+              backgroundColor: colors.coral,
+              color: "#ffffff",
+              transition: "all 0.2s",
+              border: "none",
+            }}
+          >
+            Get started
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -2462,7 +2451,7 @@ function AfterProgram() {
     },
     {
       num: 2,
-      title: "Continue with daily coaching — $35/month",
+      title: "Continue with daily coaching — $49/month",
       desc: "Daily journaling with exercises from the full content library. No fixed arc. Your complete history informs and personalizes ongoing growth work.",
     },
     {
@@ -2674,7 +2663,7 @@ function FAQ() {
     {
       topic: "Pricing",
       q: "Why a sliding scale?",
-      a: "Layoffs hit your finances. We did not want cost to be the reason someone cannot access this program. The standard price is $75. If that is too much right now, pick anything from $35-74 — no proof, no questions. If you have room, the $76-125 tier helps fund access for people in financial hardship. Everyone gets the exact same program.",
+      a: "Layoffs hit your finances. We did not want cost to be the reason someone cannot access this program. The standard price is $49. If that is too much right now, pick anything from $29-48 — no proof, no questions. If you have room, the $50-69 tier helps fund access for people in financial hardship. Everyone gets the exact same program.",
     },
     {
       topic: "Pricing",
@@ -2714,7 +2703,7 @@ function FAQ() {
     {
       topic: "The program",
       q: "What happens after the 30 days?",
-      a: "Three options: start another program (like New Role), continue with daily coaching for $35/month with no fixed arc, or end and download all your data. Your history, values work, and assessment data carry forward if you continue.",
+      a: "Three options: start another program (like New Role), continue with daily coaching for $49/month with no fixed arc, or end and download all your data. Your history, values work, and assessment data carry forward if you continue.",
     },
     {
       topic: "Data & privacy",
@@ -3088,6 +3077,29 @@ function Outcomes() {
             </FadeIn>
           ))}
         </div>
+
+        <div style={{ textAlign: "center", marginTop: 48, marginBottom: 16 }}>
+          <a
+            href="/intake"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              fontFamily: body,
+              fontSize: 15,
+              fontWeight: 600,
+              padding: "14px 32px",
+              borderRadius: 50,
+              textDecoration: "none",
+              backgroundColor: colors.coral,
+              color: "#ffffff",
+              transition: "all 0.2s",
+              border: "none",
+            }}
+          >
+            Get started
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -3137,20 +3149,6 @@ function Founder() {
               worked with dozens of people through job loss and high-pressure work
               situations. And did I witness emotional rollercoasters and come-back
               stories.
-            </p>
-            <p
-              style={{
-                fontFamily: body,
-                fontSize: 15,
-                color: colors.textBody,
-                lineHeight: 1.75,
-                marginBottom: 12,
-              }}
-            >
-              Having moved to the US from Germany, it has been hard to watch the
-              American corporate system at play. It can be brutal, cunning,
-              dehumanizing, self-righteous. I know what it does to you when you
-              lose a job you loved. It took years to change the internal story.
             </p>
             <p
               style={{
@@ -3327,12 +3325,12 @@ function FinalCTA() {
               borderRadius: 8,
               textDecoration: "none",
               backgroundColor: colors.coral,
-              color: colors.bgDeep,
+              color: "#ffffff",
               transition: "all 0.2s",
               border: "none",
             }}
           >
-            Sliding scale from $35
+            Sliding scale from $29
           </a>
           <p
             style={{
@@ -3357,38 +3355,52 @@ function Footer() {
   return (
     <footer
       style={{
-        padding: "40px 24px",
-        textAlign: "center" as const,
-        fontFamily: body,
-        fontSize: 13,
-        color: colors.textMuted,
+        padding: "48px 24px",
         borderTop: `1px solid ${colors.borderSubtle}`,
         background: colors.bgDeep,
       }}
     >
-      <p>
-        &copy; 2026 All Minds on Deck LLC &middot;{" "}
-        <a
-          href="/privacy"
-          style={{ color: colors.textMuted, textDecoration: "underline" }}
+      <div
+        style={{
+          maxWidth,
+          margin: "0 auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexWrap: "wrap" as const,
+          gap: 16,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            gap: 24,
+            fontSize: 13,
+            fontFamily: body,
+            color: "#ffffff",
+            alignItems: "center",
+          }}
         >
-          Privacy
-        </a>{" "}
-        &middot;{" "}
-        <a
-          href="/terms"
-          style={{ color: colors.textMuted, textDecoration: "underline" }}
-        >
-          Terms
-        </a>{" "}
-        &middot;{" "}
-        <a
-          href="mailto:stefanie@allmindsondeck.org"
-          style={{ color: colors.textMuted, textDecoration: "underline" }}
-        >
-          Contact
-        </a>
-      </p>
+          <span>
+            &copy; 2026 All Minds on Deck &middot; Made with{" "}
+            <span style={{ color: colors.coral, fontSize: 18 }}>&#9829;</span> by{" "}
+            <a
+              href="https://allmindsondeck.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#ffffff", textDecoration: "underline" }}
+            >
+              All Minds On Deck
+            </a>
+          </span>
+          <a href="/privacy" style={{ color: "#ffffff", textDecoration: "none" }}>
+            Privacy
+          </a>
+          <a href="/contact" style={{ color: "#ffffff", textDecoration: "none" }}>
+            Contact
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }

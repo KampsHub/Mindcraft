@@ -7,6 +7,7 @@ import MultiPartExerciseCard, { type ExercisePart } from "@/components/MultiPart
 import SpectrumSelector from "@/components/SpectrumSelector";
 import BodyMap, { type BodyMarker } from "@/components/BodyMap";
 import EmotionChips from "@/components/EmotionChips";
+import FlagButton from "@/components/FlagButton";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -42,6 +43,8 @@ interface ExerciseCardProps {
   parts?: ExercisePart[];
   /** Config for spectrum selector */
   spectrumConfig?: SpectrumConfig;
+  /** Daily session ID for flagging */
+  dailySessionId?: string;
 }
 
 const modalityConfig: Record<string, { bg: string; text: string; label: string; stripe: string; icon: string }> = {
@@ -101,6 +104,7 @@ export default function ExerciseCard({
   inputType = "text",
   parts,
   spectrumConfig,
+  dailySessionId,
 }: ExerciseCardProps) {
   const [expanded, setExpanded] = useState(type === "coaching_plan");
   const [response, setResponse] = useState(existingResponses?.main || "");
@@ -695,21 +699,28 @@ export default function ExerciseCard({
           >
             {existingResponses.main}
           </p>
-          {existingRating && (
-            <div style={{ display: "flex", gap: 3, marginTop: 8 }}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  style={{
-                    fontSize: 12,
-                    color: star <= existingRating ? (mod ? mod.text : colors.coral) : colors.borderDefault,
-                  }}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
-          )}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+            {existingRating ? (
+              <div style={{ display: "flex", gap: 3 }}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    style={{
+                      fontSize: 12,
+                      color: star <= existingRating ? (mod ? mod.text : colors.coral) : colors.borderDefault,
+                    }}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+            ) : <div />}
+            <FlagButton
+              outputType="exercise"
+              frameworkName={name}
+              dailySessionId={dailySessionId}
+            />
+          </div>
         </div>
       )}
     </motion.div>

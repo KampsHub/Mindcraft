@@ -15,7 +15,7 @@ const display = fonts.display;
 const body = fonts.bodyAlt;
 const serif = fonts.serif;
 
-const sectionPadding = { padding: "96px 24px" } as const;
+const sectionPadding = { paddingTop: 96, paddingBottom: 96, paddingLeft: 24, paddingRight: 24 } as const;
 const maxWidth = 1120;
 const narrowMax = 700;
 
@@ -65,6 +65,50 @@ function Divider({ accent = false }: { accent?: boolean }) {
   );
 }
 
+/* ── Curved SVG Section Divider ── */
+type DividerVariant = "wave" | "slope" | "ripple" | "tilt";
+
+function SectionDivider({
+  variant = "wave",
+  flip = false,
+  fromColor = "#18181C",
+  toColor = "#18181C",
+  height = 60,
+}: {
+  variant?: DividerVariant;
+  flip?: boolean;
+  fromColor?: string;
+  toColor?: string;
+  height?: number;
+}) {
+  const paths: Record<DividerVariant, string> = {
+    wave: "M0,55 C180,40 360,70 540,55 C720,40 900,70 1080,55 C1260,40 1350,65 1440,55 L1440,100 L0,100 Z",
+    slope: "M0,60 Q360,40 720,50 Q1080,60 1440,42 L1440,100 L0,100 Z",
+    ripple: "M0,50 C120,38 240,62 360,50 C480,38 600,62 720,50 C840,38 960,62 1080,50 C1200,38 1320,62 1440,50 L1440,100 L0,100 Z",
+    tilt: "M0,58 C240,42 480,55 720,40 C960,52 1200,38 1440,48 L1440,100 L0,100 Z",
+  };
+  return (
+    <div style={{
+      width: "100%",
+      overflow: "hidden",
+      lineHeight: 0,
+      transform: flip ? "scaleY(-1)" : undefined,
+      marginTop: -1,
+      marginBottom: -1,
+    }}>
+      <svg viewBox="0 0 1440 100" preserveAspectRatio="none" style={{ width: "100%", height, display: "block" }}>
+        {fromColor !== "transparent" && <rect width="1440" height="100" fill={fromColor} />}
+        <path d={paths[variant]} fill={toColor} />
+      </svg>
+    </div>
+  );
+}
+
+/* Legacy alias */
+function WaveDivider({ flip = false, color = "#2a2a30" }: { flip?: boolean; color?: string }) {
+  return <SectionDivider variant="wave" flip={flip} toColor={color} />;
+}
+
 /* ── Floating Accent Dot (decorative) ── */
 function FloatingDot({
   top,
@@ -107,91 +151,75 @@ function StatsBar() {
     <section
       style={{
         padding: "0 24px",
-        marginTop: -48,
+        marginTop: -72,
         position: "relative",
         zIndex: 2,
       }}
     >
       <FadeIn preset="slide-up" delay={1.8} triggerOnMount>
         <div
+          className="stats-bar-grid"
           style={{
-            maxWidth: 680,
+            maxWidth: 780,
             margin: "0 auto",
-            background: "rgba(51,51,57,0.55)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: `1px solid rgba(224,149,133,0.15)`,
-            borderRadius: 16,
-            padding: "28px 40px",
+            display: "flex",
+            justifyContent: "center",
+            gap: 16,
           }}
         >
-          <div
-            className="stats-bar-grid"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 0,
-            }}
-          >
-            {c.statsBar.items.map((item, i) => (
-              <div key={i} style={{ display: "contents" }}>
-                {i > 0 && (
-                  <div
-                    className="stats-bar-divider"
+          {c.statsBar.items.map((item, i) => (
+            <div
+              key={i}
+              style={{
+                flex: 1,
+                background: "#3a3a42",
+                borderRadius: 12,
+                padding: 24,
+                textAlign: "center",
+                borderTop: `3px solid ${colors.coral}`,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: display,
+                  fontSize: 36,
+                  fontWeight: 700,
+                  color: colors.coral,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.1,
+                }}
+              >
+                {item.number}
+                {item.unit && (
+                  <span
                     style={{
-                      width: 1,
-                      height: 40,
-                      background: `linear-gradient(180deg, transparent, rgba(224,149,133,0.3), transparent)`,
-                      margin: "0 32px",
-                      flexShrink: 0,
+                      fontSize: 16,
+                      fontWeight: 400,
+                      color: colors.coralLight,
+                      marginLeft: 4,
+                      fontFamily: body,
+                      letterSpacing: "0.02em",
                     }}
-                  />
+                  >
+                    {item.unit}
+                  </span>
                 )}
-                <div style={{ textAlign: "center", flex: 1 }}>
-                  <div
-                    style={{
-                      fontFamily: serif,
-                      fontSize: 28,
-                      fontWeight: 600,
-                      color: colors.coral,
-                      letterSpacing: "-0.02em",
-                      lineHeight: 1.1,
-                    }}
-                  >
-                    {item.number}
-                    {item.unit && (
-                      <span
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 400,
-                          color: colors.coralLight,
-                          marginLeft: 4,
-                          fontFamily: body,
-                          letterSpacing: "0.02em",
-                        }}
-                      >
-                        {item.unit}
-                      </span>
-                    )}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 500,
-                      color: colors.textMuted,
-                      fontFamily: display,
-                      letterSpacing: "0.04em",
-                      textTransform: "uppercase" as const,
-                      marginTop: 6,
-                    }}
-                  >
-                    {item.label}
-                  </div>
-                </div>
               </div>
-            ))}
-          </div>
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: colors.textMuted,
+                  fontFamily: display,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase" as const,
+                  marginTop: 8,
+                }}
+              >
+                {item.label}
+              </div>
+            </div>
+          ))}
         </div>
       </FadeIn>
     </section>
@@ -200,8 +228,7 @@ function StatsBar() {
 
 /* ── Pain-Point Marquee ── */
 function PainPointMarquee() {
-  const row1 = c.marquee.row1;
-  const row2 = c.marquee.row2;
+  const { row1, row2, row3, row4, row5, circles } = c.marquee;
 
   const MarqueeItem = ({ text }: { text: string }) => (
     <span
@@ -209,26 +236,24 @@ function PainPointMarquee() {
         display: "inline-flex",
         alignItems: "center",
         whiteSpace: "nowrap",
-        padding: "0 12px",
-        fontSize: 15,
-        fontFamily: body,
-        color: colors.textMuted,
-        letterSpacing: "0.01em",
+        padding: "0 8px",
       }}
     >
-      {text}
       <span
         style={{
           display: "inline-block",
-          width: 4,
-          height: 4,
-          borderRadius: "50%",
-          background: colors.coral,
-          opacity: 0.4,
-          marginLeft: 24,
-          flexShrink: 0,
+          padding: "10px 20px",
+          borderRadius: 10,
+          backgroundColor: "rgba(255,255,255,0.04)",
+          border: `1px solid rgba(255,255,255,0.08)`,
+          fontSize: 14,
+          fontFamily: body,
+          color: colors.textMuted,
+          letterSpacing: "0.01em",
         }}
-      />
+      >
+        {text}
+      </span>
     </span>
   );
 
@@ -268,62 +293,165 @@ function PainPointMarquee() {
         }}
       />
 
-      {/* Row 1 — scrolls left */}
-      <div style={{ overflow: "hidden", marginBottom: 16 }}>
-        <div className="marquee-track-left">
-          {[...row1, ...row1, ...row1, ...row1].map((text, i) => (
-            <MarqueeItem key={`r1-${i}`} text={text} />
+      {/* Section title */}
+      <FadeIn preset="fade" duration={1}>
+        <h2
+          style={{
+            fontFamily: display,
+            fontSize: "clamp(32px, 5vw, 52px)",
+            fontWeight: 700,
+            color: colors.black,
+            textAlign: "center",
+            marginBottom: 40,
+          }}
+        >
+          Look underneath.
+        </h2>
+      </FadeIn>
+
+      {/* All 4 rows with circles spanning full height */}
+      <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 8 }}>
+        {/* Row 1 — scrolls left */}
+        <div style={{ overflow: "hidden" }}>
+          <div className="marquee-track-left">
+            {[...row1, ...row1, ...row1, ...row1].map((text, i) => (
+              <MarqueeItem key={`r1-${i}`} text={text} />
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 — scrolls right */}
+        <div style={{ overflow: "hidden" }}>
+          <div className="marquee-track-right">
+            {[...row2, ...row2, ...row2, ...row2].map((text, i) => (
+              <MarqueeItem key={`r2-${i}`} text={text} />
+            ))}
+          </div>
+        </div>
+
+        {/* Row 3 — scrolls left */}
+        <div style={{ overflow: "hidden" }}>
+          <div className="marquee-track-left" style={{ animationDuration: "22s" }}>
+            {[...row3, ...row3, ...row3, ...row3].map((text, i) => (
+              <MarqueeItem key={`r3-${i}`} text={text} />
+            ))}
+          </div>
+        </div>
+
+        {/* Row 4 — scrolls right */}
+        <div style={{ overflow: "hidden" }}>
+          <div className="marquee-track-right" style={{ animationDuration: "19s" }}>
+            {[...row4, ...row4, ...row4, ...row4].map((text, i) => (
+              <MarqueeItem key={`r4-${i}`} text={text} />
+            ))}
+          </div>
+        </div>
+
+        {/* Row 5 — scrolls left */}
+        <div style={{ overflow: "hidden" }}>
+          <div className="marquee-track-left" style={{ animationDuration: "24s" }}>
+            {[...row5, ...row5, ...row5, ...row5].map((text, i) => (
+              <MarqueeItem key={`r5-${i}`} text={text} />
+            ))}
+          </div>
+        </div>
+
+        {/* Circles — spanning top of row 1 to bottom of row 5 */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 40,
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        >
+          {circles.map((_, i) => (
+            <motion.div
+              key={`circle-${i}`}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 + i * 0.15 }}
+              viewport={{ once: true }}
+            >
+              <div
+                className="breathe-circle"
+                style={{
+                  width: i === 1 ? 280 : 250,
+                  height: i === 1 ? 280 : 250,
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, ${colors.coral} 0%, rgba(196,148,58,${i === 1 ? "0.28" : "0.15"}) 50%, transparent 100%)`,
+                  animationDelay: `${i * 0.8}s`,
+                }}
+              />
+            </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Center: breathing circle + text */}
-      <FadeIn preset="fade" duration={1.2}>
+      {/* Labels — centered under each circle */}
+      <FadeIn preset="fade" duration={0.8}>
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
             justifyContent: "center",
-            padding: "48px 24px",
-            position: "relative",
-            zIndex: 1,
+            gap: 40,
+            paddingTop: 48,
           }}
         >
-          <div
-            className="breathe-circle"
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, ${colors.coral} 0%, rgba(224,149,133,0.15) 70%, transparent 100%)`,
-              marginBottom: 24,
-            }}
-          />
-          <p
-            style={{
-              fontFamily: serif,
-              fontStyle: "italic",
-              fontSize: 22,
-              fontWeight: 400,
-              color: colors.textPrimary,
-              letterSpacing: "-0.01em",
-              margin: 0,
-            }}
-          >
-            {c.marquee.centerText}
-          </p>
+          {circles.map((label, i) => (
+            <motion.span
+              key={label}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 + i * 0.15 }}
+              viewport={{ once: true }}
+              style={{
+                fontFamily: display,
+                fontSize: 16,
+                fontWeight: 700,
+                color: colors.coral,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase" as const,
+                textAlign: "center",
+                lineHeight: 1.3,
+                width: i === 1 ? 280 : 250,
+              }}
+            >
+              {label}
+            </motion.span>
+          ))}
         </div>
       </FadeIn>
 
-      {/* Row 2 — scrolls right */}
-      <div style={{ overflow: "hidden", marginTop: 16 }}>
-        <div className="marquee-track-right">
-          {[...row2, ...row2, ...row2, ...row2].map((text, i) => (
-            <MarqueeItem key={`r2-${i}`} text={text} />
-          ))}
+      {/* CTA */}
+      <FadeIn preset="fade" delay={0.5} duration={0.8}>
+        <div style={{ textAlign: "center", marginTop: 40 }}>
+          <a
+            href="#programs"
+            style={{
+              display: "inline-block",
+              padding: "14px 36px",
+              backgroundColor: colors.coral,
+              color: "#ffffff",
+              fontFamily: display,
+              fontSize: 15,
+              fontWeight: 700,
+              borderRadius: 50,
+              textDecoration: "none",
+              letterSpacing: "0.02em",
+            }}
+          >
+            Find your program
+          </a>
         </div>
-      </div>
+      </FadeIn>
     </section>
   );
 }
@@ -331,6 +459,29 @@ function PainPointMarquee() {
 /* ── Comparison Table ── */
 function ComparisonTable() {
   const comp = c.comparison;
+  const colCount = comp.columns.length;
+  const lastCol = colCount - 1;
+
+  const CheckIcon = ({ highlight }: { highlight: boolean }) => (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="10" fill={highlight ? colors.coral : "rgba(196,148,58,0.2)"} />
+      <path d="M6 10l3 3 5-5" stroke={highlight ? colors.bgDeep : colors.coral} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+
+  const XIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="10" fill="rgba(68,68,76,0.4)" />
+      <path d="M7 7l6 6M13 7l-6 6" stroke={colors.textMuted} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+
+  const PartialIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="10" fill="rgba(196,148,58,0.12)" />
+      <path d="M6 10h8" stroke={colors.coral} strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+    </svg>
+  );
 
   return (
     <section
@@ -339,20 +490,19 @@ function ComparisonTable() {
         backgroundColor: colors.bgRecessed,
       }}
     >
-      <div style={{ maxWidth: 900, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 64 }}>
           <FadeIn preset="slide-up" duration={0.8}>
             <h2
               style={{
-                fontFamily: serif,
-                fontStyle: "italic",
-                fontSize: 42,
-                fontWeight: 500,
+                fontFamily: display,
+                fontSize: "clamp(32px, 5vw, 52px)",
+                fontWeight: 700,
                 lineHeight: 1.15,
                 marginBottom: 16,
                 color: colors.textPrimary,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.03em",
               }}
             >
               {comp.headline}
@@ -361,9 +511,9 @@ function ComparisonTable() {
           <FadeIn preset="blur" delay={0.2} duration={0.9}>
             <p
               style={{
-                fontSize: 17,
-                color: colors.textMuted,
-                maxWidth: 500,
+                fontSize: 16,
+                color: colors.textBody,
+                maxWidth: 680,
                 margin: "0 auto",
                 lineHeight: 1.7,
                 fontFamily: body,
@@ -389,26 +539,28 @@ function ComparisonTable() {
               className="comparison-header-row"
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.6fr repeat(3, 1fr)",
+                gridTemplateColumns: `1.8fr repeat(${colCount}, 1fr)`,
                 borderBottom: `1px solid ${colors.borderSubtle}`,
               }}
             >
-              <div style={{ padding: "20px 28px" }} />
+              <div style={{ padding: "20px 24px" }} />
               {comp.columns.map((col, i) => (
                 <div
                   key={col}
                   style={{
-                    padding: "20px 16px",
+                    padding: "20px 12px",
                     textAlign: "center",
                     fontFamily: display,
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: 700,
                     textTransform: "uppercase" as const,
                     letterSpacing: "0.08em",
-                    color: i === 2 ? colors.coral : colors.textMuted,
-                    ...(i === 2
+                    color: i === lastCol ? colors.coral : colors.textMuted,
+                    ...(i === lastCol
                       ? {
-                          background: `linear-gradient(180deg, rgba(224,149,133,0.1) 0%, rgba(224,149,133,0.04) 100%)`,
+                          background: `linear-gradient(180deg, rgba(196,148,58,0.15) 0%, rgba(196,148,58,0.06) 100%)`,
+                          borderTop: `3px solid ${colors.coral}`,
+                          fontSize: 13,
                         }
                       : {}),
                   }}
@@ -419,107 +571,485 @@ function ComparisonTable() {
             </div>
 
             {/* Rows */}
-            {comp.rows.map((row, ri) => (
-              <div
-                key={ri}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1.6fr repeat(3, 1fr)",
-                  borderBottom:
-                    ri < comp.rows.length - 1
-                      ? `1px solid ${colors.borderSubtle}`
-                      : "none",
-                  transition: "background 0.15s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = `rgba(224,149,133,0.03)`)
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "transparent")
-                }
-              >
-                {/* Feature name */}
-                <div
-                  style={{
-                    padding: "18px 28px",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    color: colors.textBody,
-                    fontFamily: body,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  {row.feature}
-                </div>
-                {/* Values */}
-                {row.values.map((val, ci) => (
-                  <div
-                    key={ci}
+            {comp.rows.map((row: { group?: string; feature?: string; values?: (boolean | "partial" | string)[] }, ri: number) => {
+              // Group header row
+              if ("group" in row && row.group) {
+                return (
+                  <motion.div
+                    key={ri}
+                    initial={{ opacity: 0, x: -40, scale: 0.95 }}
+                    whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.6, delay: 0.1, type: "spring", stiffness: 200, damping: 20 }}
                     style={{
-                      padding: "18px 16px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      ...(ci === 2
-                        ? {
-                            background: `linear-gradient(180deg, rgba(224,149,133,0.06) 0%, rgba(224,149,133,0.02) 100%)`,
-                          }
-                        : {}),
+                      padding: "16px 24px",
+                      borderBottom: `1px solid ${colors.borderSubtle}`,
+                      backgroundColor: colors.bgRecessed,
+                      position: "relative",
+                      overflow: "hidden",
                     }}
                   >
-                    {val ? (
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                      >
-                        <circle
-                          cx="10"
-                          cy="10"
-                          r="10"
-                          fill={
-                            ci === 2
-                              ? colors.coral
-                              : "rgba(224,149,133,0.2)"
-                          }
-                        />
-                        <path
-                          d="M6 10l3 3 5-5"
-                          stroke={ci === 2 ? colors.bgDeep : colors.coral}
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                      >
-                        <circle
-                          cx="10"
-                          cy="10"
-                          r="10"
-                          fill="rgba(68,68,76,0.4)"
-                        />
-                        <path
-                          d="M7 7l6 6M13 7l-6 6"
-                          stroke={colors.textMuted}
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    )}
+                    <motion.div
+                      initial={{ x: "-100%" }}
+                      whileInView={{ x: "0%" }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: `linear-gradient(90deg, ${colors.coral}18 0%, transparent 100%)`,
+                        zIndex: 0,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: display,
+                        fontSize: 12,
+                        fontWeight: 700,
+                        textTransform: "uppercase" as const,
+                        letterSpacing: "0.08em",
+                        color: colors.coral,
+                        position: "relative",
+                        zIndex: 1,
+                      }}
+                    >
+                      {row.group}
+                    </span>
+                  </motion.div>
+                );
+              }
+
+              // Feature row
+              return (
+                <div
+                  key={ri}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: `1.8fr repeat(${colCount}, 1fr)`,
+                    borderBottom:
+                      ri < comp.rows.length - 1
+                        ? `1px solid ${colors.borderSubtle}`
+                        : "none",
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = `rgba(196,148,58,0.03)`)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "transparent")
+                  }
+                >
+                  {/* Feature name */}
+                  <div
+                    style={{
+                      padding: "16px 24px",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: colors.textBody,
+                      fontFamily: body,
+                      display: "flex",
+                      alignItems: "center",
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {row.feature}
                   </div>
-                ))}
-              </div>
-            ))}
+                  {/* Values */}
+                  {row.values?.map((val, ci) => {
+                    const isLast = ci === lastCol;
+                    const cellContent = typeof val === "string" && val !== "partial" ? (
+                      <span
+                        style={{
+                          fontFamily: display,
+                          fontSize: 13,
+                          fontWeight: isLast ? 700 : 500,
+                          color: isLast ? colors.coral : colors.textBody,
+                          textAlign: "center",
+                          lineHeight: 1.3,
+                        }}
+                      >
+                        {val}
+                      </span>
+                    ) : val === "partial" ? (
+                      <PartialIcon />
+                    ) : val ? (
+                      <CheckIcon highlight={isLast} />
+                    ) : (
+                      <XIcon />
+                    );
+
+                    if (isLast) {
+                      return (
+                        <motion.div
+                          key={ci}
+                          initial={{ opacity: 0, scale: 0.7 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true, margin: "-30px" }}
+                          transition={{ type: "spring", stiffness: 400, damping: 20, delay: 0.2 }}
+                          style={{
+                            padding: "16px 12px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            background: `linear-gradient(180deg, rgba(196,148,58,0.10) 0%, rgba(196,148,58,0.04) 100%)`,
+                          }}
+                        >
+                          {cellContent}
+                        </motion.div>
+                      );
+                    }
+                    return (
+                      <div
+                        key={ci}
+                        style={{
+                          padding: "16px 12px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {cellContent}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
           </div>
         </FadeIn>
+
+        {/* CTA */}
+        <FadeIn preset="fade" delay={0.4} duration={0.8}>
+          <div style={{ textAlign: "center", marginTop: 40 }}>
+            <a
+              href="#programs"
+              style={{
+                display: "inline-block",
+                padding: "14px 36px",
+                backgroundColor: colors.coral,
+                color: "#ffffff",
+                fontFamily: display,
+                fontSize: 15,
+                fontWeight: 700,
+                borderRadius: 50,
+                textDecoration: "none",
+                letterSpacing: "0.02em",
+              }}
+            >
+              See programs
+            </a>
+          </div>
+        </FadeIn>
+
+        {/* Footnote */}
+        {comp.footnote && (
+          <FadeIn preset="fade" delay={0.5} duration={1}>
+            <p
+              style={{
+                fontSize: 14,
+                color: colors.textMuted,
+                textAlign: "center",
+                maxWidth: 640,
+                margin: "32px auto 0",
+                lineHeight: 1.7,
+                fontFamily: body,
+              }}
+            >
+              {comp.footnote}
+            </p>
+          </FadeIn>
+        )}
+
+      </div>
+    </section>
+  );
+}
+
+/* ── Pricing Section ── */
+function PricingSection() {
+  const p = c.pricing;
+  return (
+    <section style={{ ...sectionPadding, backgroundColor: colors.bgDeep }}>
+      <div style={{ maxWidth: 780, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <FadeIn preset="slide-up" duration={0.8}>
+            <h2 style={{
+              fontFamily: display,
+              fontSize: "clamp(32px, 5vw, 52px)",
+              fontWeight: 700,
+              marginBottom: 12,
+              color: colors.textPrimary,
+              letterSpacing: "-0.03em",
+            }}>
+              {p.headline}
+            </h2>
+          </FadeIn>
+          <FadeIn preset="blur" delay={0.15}>
+            <p style={{
+              fontSize: 17,
+              color: colors.textMuted,
+              fontFamily: body,
+              lineHeight: 1.7,
+            }}>
+              {p.subheadline}
+            </p>
+          </FadeIn>
+        </div>
+
+        <div
+          className="pricing-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 20,
+            marginBottom: 32,
+          }}
+        >
+          {p.tiers.map((tier: { name: string; price: string; period: string; desc: string; cta: string; highlighted: boolean }, i: number) => (
+            <FadeIn key={tier.name} delay={0.2 + i * 0.15} preset="slide-up">
+              <motion.div
+                whileHover={{ y: -4, boxShadow: tier.highlighted ? "0 20px 60px rgba(196,148,58,0.15)" : "0 16px 32px rgba(0,0,0,0.3)" }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                style={{
+                  padding: 36,
+                  borderRadius: 20,
+                  border: tier.highlighted
+                    ? `2px solid rgba(196,148,58,0.4)`
+                    : `1px solid ${colors.borderDefault}`,
+                  backgroundColor: tier.highlighted ? `rgba(196,148,58,0.06)` : colors.bgSurface,
+                  height: "100%",
+                  boxSizing: "border-box" as const,
+                  display: "flex",
+                  flexDirection: "column" as const,
+                  position: "relative" as const,
+                  overflow: "hidden",
+                }}
+              >
+                {tier.highlighted && (
+                  <div style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 3,
+                    background: `linear-gradient(90deg, ${colors.coral}, ${colors.plum})`,
+                  }} />
+                )}
+                <span style={{
+                  fontFamily: display,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  textTransform: "uppercase" as const,
+                  letterSpacing: "0.1em",
+                  color: tier.highlighted ? colors.coral : colors.textMuted,
+                  marginBottom: 16,
+                }}>
+                  {tier.name}
+                </span>
+                <div style={{ marginBottom: 16 }}>
+                  <span style={{
+                    fontFamily: display,
+                    fontSize: 48,
+                    fontWeight: 600,
+                    color: tier.highlighted ? colors.coral : colors.textPrimary,
+                    letterSpacing: "-0.03em",
+                  }}>
+                    {tier.price}
+                  </span>
+                  {tier.period && (
+                    <span style={{
+                      fontSize: 16,
+                      color: colors.textMuted,
+                      fontFamily: body,
+                      marginLeft: 4,
+                    }}>
+                      {tier.period}
+                    </span>
+                  )}
+                </div>
+                <p style={{
+                  fontSize: 14,
+                  color: colors.textMuted,
+                  lineHeight: 1.65,
+                  fontFamily: body,
+                  flex: 1,
+                  marginBottom: 24,
+                }}>
+                  {tier.desc}
+                </p>
+                <motion.a
+                  href={tier.highlighted ? "/subscribe" : "#programs"}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  style={{
+                    padding: "14px 32px",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    fontFamily: display,
+                    textDecoration: "none",
+                    display: "inline-block",
+                    textAlign: "center" as const,
+                    borderRadius: 100,
+                    ...(tier.highlighted
+                      ? { backgroundColor: colors.coral, color: "#ffffff" }
+                      : { backgroundColor: "transparent", color: colors.coral, border: `2px solid ${colors.coral}` }),
+                  }}
+                >
+                  {tier.cta}
+                </motion.a>
+              </motion.div>
+            </FadeIn>
+          ))}
+        </div>
+
+        <FadeIn preset="fade" delay={0.4}>
+          <p style={{
+            textAlign: "center",
+            fontSize: 13,
+            color: colors.textMuted,
+            fontFamily: body,
+            lineHeight: 1.6,
+          }}>
+            {p.footer}
+          </p>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+
+/* ── Social Proof (harbor bg) ── */
+function SocialProof() {
+  const sp = c.socialProof;
+  return (
+    <section style={{ paddingTop: 48, paddingLeft: 24, paddingRight: 24, paddingBottom: 140, position: "relative", overflow: "hidden" }}>
+      <img
+        src="/harbor-bg.jpg"
+        alt=""
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          opacity: 0.8,
+          zIndex: 0,
+        }}
+      />
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: `linear-gradient(180deg, rgba(24,24,28,0.35) 0%, rgba(24,24,28,0.4) 100%)`,
+        zIndex: 0,
+      }} />
+      <div style={{ maxWidth, margin: "0 auto", position: "relative", zIndex: 1 }}>
+
+        <FadeIn preset="slide-up" duration={0.8}>
+          <h2
+            style={{
+              fontFamily: display,
+              fontSize: "clamp(32px, 5vw, 52px)",
+              fontWeight: 700,
+              lineHeight: 1.15,
+              marginBottom: 48,
+              color: colors.textPrimary,
+              letterSpacing: "-0.03em",
+              textAlign: "center",
+            }}
+          >
+            {sp.headline}
+          </h2>
+        </FadeIn>
+
+        <div
+          className="social-proof-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 20,
+          }}
+        >
+          {sp.items.map((item: { quote: string; attribution: string; tag: string }, i: number) => (
+            <FadeIn key={i} delay={0.15 + i * 0.12} preset="slide-up">
+              <motion.div
+                whileHover={{ y: -4, borderColor: colors.plum }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                style={{
+                  padding: 28,
+                  backgroundColor: "rgba(38, 38, 44, 0.75)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  borderRadius: 16,
+                  border: `1px solid ${colors.borderDefault}`,
+                  height: "100%",
+                  boxSizing: "border-box" as const,
+                  display: "flex",
+                  flexDirection: "column" as const,
+                }}
+              >
+                {/* Quote mark */}
+                <span style={{
+                  fontFamily: display,
+                  fontSize: 48,
+                  lineHeight: 1,
+                  color: colors.coral,
+                  opacity: 0.4,
+                  marginBottom: 8,
+                  display: "block",
+                }}>
+                  &ldquo;
+                </span>
+                <p style={{
+                  fontSize: 14,
+                  color: colors.textSecondary,
+                  lineHeight: 1.7,
+                  fontFamily: body,
+                  fontStyle: "italic",
+                  flex: 1,
+                  marginBottom: 20,
+                }}>
+                  {item.quote}
+                </p>
+                <div style={{
+                  borderTop: `1px solid ${colors.borderSubtle}`,
+                  paddingTop: 16,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
+                }}>
+                  <span style={{
+                    fontSize: 12,
+                    color: colors.textMuted,
+                    fontFamily: body,
+                  }}>
+                    {item.attribution}
+                  </span>
+                  <span style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    fontFamily: display,
+                    textTransform: "uppercase" as const,
+                    letterSpacing: "0.08em",
+                    color: colors.coral,
+                    background: colors.coralWash,
+                    padding: "3px 8px",
+                    borderRadius: 100,
+                    flexShrink: 0,
+                  }}>
+                    {item.tag}
+                  </span>
+                </div>
+              </motion.div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+      {/* Wave divider embedded so bg image rounds out */}
+      <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, zIndex: 2 }}>
+        <SectionDivider variant="tilt" fromColor="transparent" toColor={colors.bgDeep} height={50} />
       </div>
     </section>
   );
@@ -528,6 +1058,7 @@ function ComparisonTable() {
 export default function Home() {
   const [checking, setChecking] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeFaqTopic, setActiveFaqTopic] = useState("The program");
   const supabase = createClient();
   const router = useRouter();
 
@@ -538,6 +1069,17 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 0.25], [1, 0.95]);
 
   useEffect(() => {
+    // If user navigated here with a hash (e.g. /#programs), skip the dashboard redirect
+    const hasHash = window.location.hash && window.location.hash.length > 1;
+    if (hasHash) {
+      setChecking(false);
+      // Scroll to the hash target after a short delay for animations
+      setTimeout(() => {
+        const el = document.querySelector(window.location.hash);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+      return;
+    }
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) {
         router.push("/dashboard");
@@ -630,11 +1172,11 @@ export default function Home() {
               <motion.a
                 key={label}
                 href={href}
-                whileHover={{ color: colors.textPrimary }}
+                whileHover={{ color: colors.coral }}
                 style={{
                   fontSize: 14,
                   fontWeight: 500,
-                  color: colors.textMuted,
+                  color: "#ffffff",
                   textDecoration: "none",
                   fontFamily: display,
                   transition: "color 0.2s",
@@ -645,11 +1187,11 @@ export default function Home() {
             ))}
             <motion.a
               href="/login"
-              whileHover={{ color: colors.textPrimary }}
+              whileHover={{ color: colors.coral }}
               style={{
                 fontSize: 14,
                 fontWeight: 500,
-                color: colors.textMuted,
+                color: "#ffffff",
                 textDecoration: "none",
                 fontFamily: display,
                 transition: "color 0.2s",
@@ -669,7 +1211,7 @@ export default function Home() {
                 padding: "10px 24px",
                 fontSize: 13,
                 fontWeight: 600,
-                color: colors.bgDeep,
+                color: "#ffffff",
                 backgroundColor: colors.coral,
                 textDecoration: "none",
                 borderRadius: 100,
@@ -691,60 +1233,62 @@ export default function Home() {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "140px 24px 100px",
+          padding: "80px 24px 100px",
           position: "relative",
           overflow: "hidden",
         }}
       >
+        {/* Hero background video */}
+        {c.hero.heroVideo && (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/hero-poster.jpg"
+            src={c.hero.heroVideo}
+            onCanPlay={(e) => (e.currentTarget.style.opacity = "1")}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 0,
+              opacity: 1,
+              transition: "opacity 0.5s ease",
+            }}
+          />
+        )}
+        {/* Dark overlay for text legibility */}
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          background: `linear-gradient(180deg, rgba(24,24,28,0.35) 0%, rgba(24,24,28,0.55) 100%)`,
+          zIndex: 0,
+        }} />
+
         {/* Animated gradient background */}
         <motion.div
           animate={{
             background: [
-              "radial-gradient(ellipse at 30% 40%, rgba(232,116,97,0.07) 0%, transparent 70%)",
-              "radial-gradient(ellipse at 70% 60%, rgba(232,116,97,0.07) 0%, transparent 70%)",
-              "radial-gradient(ellipse at 30% 40%, rgba(232,116,97,0.07) 0%, transparent 70%)",
+              "radial-gradient(ellipse at 30% 40%, rgba(196,148,58,0.07) 0%, transparent 70%)",
+              "radial-gradient(ellipse at 70% 60%, rgba(196,148,58,0.07) 0%, transparent 70%)",
+              "radial-gradient(ellipse at 30% 40%, rgba(196,148,58,0.07) 0%, transparent 70%)",
             ],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+          style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}
         />
 
-        {/* Floating decorative dots */}
-        <FloatingDot
-          top="15%"
-          left="8%"
-          size={8}
-          delay={0.8}
-          color={colors.accent}
-        />
-        <FloatingDot
-          top="70%"
-          left="85%"
-          size={12}
-          delay={1.2}
-          color={colors.primary}
-        />
-        <FloatingDot
-          top="25%"
-          left="90%"
-          size={6}
-          delay={1.5}
-          color={colors.accent}
-        />
-        <FloatingDot
-          top="80%"
-          left="12%"
-          size={10}
-          delay={2.0}
-          color={colors.primary}
-        />
 
         <motion.div
           style={{
             maxWidth: 760,
             margin: "0 auto",
             position: "relative",
-            zIndex: 1,
+            zIndex: 2,
             y: heroY,
             opacity: heroOpacity,
             scale: heroScale,
@@ -762,6 +1306,11 @@ export default function Home() {
               lineHeight: 1.15,
               letterSpacing: "-0.03em",
               fontFamily: display,
+              backgroundColor: "rgba(24, 24, 28, 0.70)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+              borderRadius: 12,
+              padding: "24px 32px",
             }}
           >
             <TextReveal
@@ -771,7 +1320,7 @@ export default function Home() {
               delay={0.3}
               stagger={0.04}
               duration={0.7}
-              style={{ color: colors.textSecondary, textAlign: "center", fontFamily: serif, fontStyle: "italic", fontWeight: 500 }}
+              style={{ color: colors.textSecondary, textAlign: "center", fontFamily: display, fontWeight: 700 }}
             />
             <motion.span
               animate={{
@@ -785,7 +1334,7 @@ export default function Home() {
                 repeatDelay: 3.5,
                 ease: "easeInOut",
               }}
-              style={{ color: colors.coral, display: "inline-block", fontSize: "1.6em", marginTop: 12 }}
+              style={{ color: colors.coral, display: "flex", justifyContent: "center", width: "100%", fontSize: "1.6em", marginTop: 12 }}
             >
               <TextReveal
                 text={c.hero.headlineAccent}
@@ -794,6 +1343,7 @@ export default function Home() {
                 delay={0.8}
                 stagger={0.07}
                 duration={0.7}
+                style={{ justifyContent: "center" }}
               />
             </motion.span>
           </h1>
@@ -812,6 +1362,11 @@ export default function Home() {
                 maxWidth: 640,
                 fontFamily: body,
                 letterSpacing: "0.01em",
+                backgroundColor: "rgba(24, 24, 28, 0.70)",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+                borderRadius: 12,
+                padding: "16px 24px",
               }}
             >
               {c.hero.subheadline}
@@ -831,7 +1386,7 @@ export default function Home() {
                 padding: "18px 48px",
                 fontSize: 16,
                 fontWeight: 600,
-                color: colors.bgDeep,
+                color: "#ffffff",
                 backgroundColor: colors.coral,
                 borderRadius: 100,
                 textDecoration: "none",
@@ -852,30 +1407,58 @@ export default function Home() {
 
       {/* ── Differentiator Strip ── */}
       <section
+        className="differentiator-section"
         style={{
-          padding: "48px 24px",
-          backgroundColor: colors.bgRecessed,
-          borderTop: `1px solid ${colors.borderSubtle}`,
-          borderBottom: `1px solid ${colors.borderSubtle}`,
+          padding: "80px 24px",
+          backgroundColor: "#E4DDE2",
+          width: "100vw",
+          marginLeft: "calc(-50vw + 50%)",
         }}
       >
         <div
+          className="differentiator-layout"
           style={{
-            maxWidth: narrowMax,
+            maxWidth,
             margin: "0 auto",
             display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            textAlign: "center",
+            alignItems: "center",
+            gap: 48,
           }}
         >
-          {c.differentiator.items.map((line, i) => (
-            <FadeIn key={i} delay={0.1 + i * 0.12} preset="fade">
-              <p
+          {/* Left column — text items */}
+          {/* Left column — bold statement */}
+          <div style={{ flex: "0 0 40%" }}>
+            <motion.p
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              style={{
+                fontFamily: display,
+                fontSize: "clamp(36px, 5vw, 56px)",
+                fontWeight: 800,
+                color: colors.coral,
+                lineHeight: 1.1,
+                letterSpacing: "-0.03em",
+                margin: 0,
+                textAlign: "left",
+              }}
+            >
+              When life keeps giving you lemons...
+            </motion.p>
+          </div>
+          <div style={{ flex: "0 0 60%", display: "flex", flexDirection: "column", gap: 24 }}>
+            {c.differentiator.items.map((line, i) => (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: 0.15 + i * 0.15, ease: "easeOut" }}
                 style={{
-                  fontSize: i === 0 ? 16 : 15,
+                  fontSize: i === 0 ? 17 : 15,
                   fontWeight: i === 0 ? 700 : 400,
-                  color: i === 0 ? colors.coral : colors.textMuted,
+                  color: i === 0 ? colors.coral : colors.bgDeep,
                   fontFamily: i === 0 ? display : body,
                   lineHeight: 1.6,
                   margin: 0,
@@ -883,9 +1466,9 @@ export default function Home() {
                 }}
               >
                 {line}
-              </p>
-            </FadeIn>
-          ))}
+              </motion.p>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -893,17 +1476,32 @@ export default function Home() {
       <section
         id="programs"
         style={{
-          ...sectionPadding,
-          backgroundColor: colors.bgRecessed,
+          paddingTop: 96,
+          paddingLeft: 24,
+          paddingRight: 24,
+          paddingBottom: 140,
           position: "relative",
+          overflow: "hidden",
         }}
       >
-        <div style={{ maxWidth, margin: "0 auto", textAlign: "center" }}>
+        <img
+          src="/ocean-bg.jpg"
+          alt=""
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: 0,
+          }}
+        />
+        <div style={{ maxWidth, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
           <FadeIn preset="slide-up" duration={0.8}>
             <h2
               style={{
                 fontFamily: display,
-                fontSize: 44,
+                fontSize: "clamp(32px, 5vw, 52px)",
                 fontWeight: 700,
                 lineHeight: 1.15,
                 marginBottom: 16,
@@ -918,11 +1516,16 @@ export default function Home() {
             <p
               style={{
                 fontSize: 17,
-                color: colors.textMuted,
-                maxWidth: 600,
+                color: colors.textSecondary,
                 margin: "0 auto 56px",
                 lineHeight: 1.7,
                 fontFamily: body,
+                maxWidth: 640,
+                backgroundColor: "rgba(24, 24, 28, 0.80)",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+                borderRadius: 12,
+                padding: "16px 24px",
               }}
             >
               {c.programs.subheadline}
@@ -939,7 +1542,7 @@ export default function Home() {
               textAlign: "left",
             }}
           >
-            {c.programs.cards.map((card, i) => (
+            {c.programs.cards.map((card: { tag: string; title: string; desc: string; href: string; modules?: string[] }, i) => (
               <FadeIn key={card.tag} delay={0.15 + i * 0.12} preset="slide-up">
                 <a href={card.href} style={{ textDecoration: "none", color: "inherit", display: "block", height: "100%" }}>
                 <motion.div
@@ -951,7 +1554,9 @@ export default function Home() {
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
                     padding: 32,
-                    backgroundColor: colors.bgSurface,
+                    backgroundColor: "rgba(24, 24, 28, 0.70)",
+                    backdropFilter: "blur(6px)",
+                    WebkitBackdropFilter: "blur(6px)",
                     borderRadius: 16,
                     border: `1px solid ${colors.borderDefault}`,
                     height: "100%",
@@ -962,47 +1567,41 @@ export default function Home() {
                     position: "relative",
                     overflow: "hidden",
                   }}
+                  className="program-card"
                 >
-                  {card.tag === "Layoff" && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        top: 30,
-                        right: -50,
-                        transform: "rotate(45deg)",
-                        background: colors.coral,
-                        color: colors.bgDeep,
-                        fontFamily: display,
-                        fontWeight: 700,
-                        fontSize: 11,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.06em",
-                        padding: "7px 70px",
-                        textAlign: "center" as const,
-                        whiteSpace: "nowrap",
-                        zIndex: 1,
-                      }}
-                    >
-                      Sliding scale
-                    </span>
-                  )}
                   <span
                     style={{
-                      display: "inline-block",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 12,
                       background: colors.coralWash,
                       color: colors.coral,
                       fontFamily: display,
                       fontWeight: 700,
-                      fontSize: 15,
+                      fontSize: 20,
                       textTransform: "uppercase",
-                      letterSpacing: "0.12em",
-                      padding: "8px 18px",
+                      letterSpacing: "0.14em",
+                      padding: "10px 18px",
                       borderRadius: 100,
                       marginBottom: 22,
-                      alignSelf: "flex-start",
+                      textAlign: "center" as const,
                     }}
                   >
                     {card.tag}
+                    {card.tag === "Layoff" && (
+                      <span style={{
+                        fontSize: 9,
+                        fontWeight: 700,
+                        letterSpacing: "0.08em",
+                        background: colors.coral,
+                        color: "#ffffff",
+                        padding: "4px 10px",
+                        borderRadius: 20,
+                      }}>
+                        Sliding scale
+                      </span>
+                    )}
                   </span>
                   <h3
                     style={{
@@ -1012,6 +1611,7 @@ export default function Home() {
                       lineHeight: 1.35,
                       marginBottom: 12,
                       color: colors.textPrimary,
+                      textAlign: "center" as const,
                     }}
                   >
                     {card.title}
@@ -1019,27 +1619,82 @@ export default function Home() {
                   <p
                     style={{
                       fontSize: 15,
-                      color: colors.textMuted,
+                      color: "#ffffff",
                       lineHeight: 1.65,
-                      marginBottom: 24,
+                      marginBottom: 20,
                       fontFamily: body,
                       flex: 1,
+                      textAlign: "center" as const,
                     }}
                   >
                     {card.desc}
                   </p>
-                  <span
+
+                  {/* Depth peek — modules preview */}
+                  {card.modules && (
+                    <div
+                      className="program-peek"
+                      style={{
+                        borderTop: `1px solid ${colors.borderSubtle}`,
+                        paddingTop: 16,
+                        marginBottom: 20,
+                      }}
+                    >
+                      <span style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        fontFamily: display,
+                        textTransform: "uppercase" as const,
+                        letterSpacing: "0.1em",
+                        color: "rgba(255,255,255,0.7)",
+                        display: "block",
+                        marginBottom: 10,
+                      }}>
+                        What we&rsquo;ll work on
+                      </span>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                        {card.modules.map((mod: string, mi: number) => (
+                          <span
+                            key={mi}
+                            style={{
+                              fontSize: 11,
+                              fontFamily: body,
+                              color: "#ffffff",
+                              background: `rgba(196,148,58,0.08)`,
+                              border: `1px solid rgba(196,148,58,0.12)`,
+                              padding: "4px 10px",
+                              borderRadius: 100,
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {mod}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <motion.span
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     style={{
-                      display: "inline-block",
-                      fontSize: 13,
-                      fontWeight: 600,
+                      display: "block",
+                      fontSize: 14,
+                      fontWeight: 700,
                       fontFamily: display,
-                      color: colors.coral,
+                      color: "#ffffff",
                       letterSpacing: "0.02em",
+                      marginTop: 8,
+                      padding: "8px 20px",
+                      backgroundColor: colors.coral,
+                      border: "none",
+                      borderRadius: 50,
+                      textAlign: "center" as const,
                     }}
                   >
-                    Learn more &rarr;
-                  </span>
+                    Learn more
+                  </motion.span>
                 </motion.div>
                 </a>
               </FadeIn>
@@ -1055,53 +1710,41 @@ export default function Home() {
       {/* ── Comparison Table ── */}
       <ComparisonTable />
 
-      <Divider accent />
-
       {/* ── How It Works ── */}
-      <section id="how" style={{ ...sectionPadding, backgroundColor: colors.bgRecessed }}>
-        <div style={{ maxWidth, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <FadeIn preset="slide-up" duration={0.8}>
-              <span style={{
-                display: "inline-block",
-                fontFamily: display,
-                fontWeight: 700,
-                fontSize: 11,
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                color: colors.coral,
-                marginBottom: 16,
-              }}>
-                How it works
-              </span>
-              <h2
-                style={{
-                  fontFamily: display,
-                  fontSize: 44,
-                  fontWeight: 700,
-                  marginBottom: 16,
-                  color: colors.textPrimary,
-                  letterSpacing: "-0.03em",
-                }}
-              >
-                {c.steps.headline}
-              </h2>
-              {c.steps.subheadline && (
-                <p style={{
-                  fontSize: 17,
-                  color: colors.textMuted,
-                  maxWidth: 560,
-                  margin: "0 auto",
-                  lineHeight: 1.7,
-                  fontFamily: body,
-                }}>
-                  {c.steps.subheadline}
-                </p>
-              )}
-            </FadeIn>
-          </div>
+      <section id="how" style={{ paddingTop: 96, paddingLeft: 24, paddingRight: 24, paddingBottom: 140, position: "relative", overflow: "hidden", background: colors.bgDeep }}>
+        <img
+          src="/blueprint-bg.jpg"
+          alt=""
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: 0,
+          }}
+        />
+        <div style={{ maxWidth, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
-          {/* Steps — 2×3 card grid with icons */}
+          {/* Section title */}
+          <FadeIn preset="slide-up" duration={0.8}>
+            <h2
+              style={{
+                fontFamily: display,
+                fontSize: "clamp(32px, 5vw, 52px)",
+                fontWeight: 700,
+                lineHeight: 1.15,
+                marginBottom: 56,
+                color: colors.textPrimary,
+                letterSpacing: "-0.03em",
+                textAlign: "center",
+              }}
+            >
+              How it works
+            </h2>
+          </FadeIn>
+
+          {/* Steps — 2×3 card grid with icons + step numbers */}
           <div
             className="how-grid"
             style={{
@@ -1156,17 +1799,42 @@ export default function Home() {
               };
               return (
                 <FadeIn key={i} delay={0.08 + i * 0.08} preset="slide-up">
-                  <div style={{
-                    padding: 28,
-                    backgroundColor: colors.bgSurface,
-                    borderRadius: 16,
-                    border: `1px solid ${colors.borderDefault}`,
-                    height: "100%",
-                    boxSizing: "border-box" as const,
-                    display: "flex",
-                    flexDirection: "column" as const,
-                    gap: 16,
-                  }}>
+                  <motion.div
+                    whileHover={{
+                      y: -4,
+                      borderColor: `rgba(196,148,58,0.3)`,
+                      boxShadow: "0 12px 32px rgba(0,0,0,0.25)",
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                    style={{
+                      padding: 28,
+                      backgroundColor: colors.bgSurface,
+                      borderRadius: 16,
+                      border: `1px solid ${colors.borderDefault}`,
+                      height: "100%",
+                      boxSizing: "border-box" as const,
+                      display: "flex",
+                      flexDirection: "column" as const,
+                      gap: 16,
+                      position: "relative" as const,
+                    }}
+                  >
+                    {/* Step number watermark */}
+                    <span style={{
+                      position: "absolute",
+                      top: 16,
+                      right: 20,
+                      fontFamily: display,
+                      fontSize: 56,
+                      fontWeight: 600,
+                      color: colors.coral,
+                      opacity: 0.06,
+                      lineHeight: 1,
+                      pointerEvents: "none" as const,
+                    }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+
                     <div style={{
                       width: 48,
                       height: 48,
@@ -1201,83 +1869,90 @@ export default function Home() {
                     }}>
                       {step.desc}
                     </p>
-                  </div>
+                  </motion.div>
                 </FadeIn>
               );
             })}
           </div>
+
+          {/* CTA */}
+          <FadeIn preset="fade" delay={0.6} duration={0.8}>
+            <div style={{ textAlign: "center", marginTop: 48 }}>
+              <a
+                href="#programs"
+                style={{
+                  display: "inline-block",
+                  padding: "14px 36px",
+                  backgroundColor: colors.coral,
+                  color: "#ffffff",
+                  fontFamily: display,
+                  fontSize: 15,
+                  fontWeight: 700,
+                  borderRadius: 50,
+                  textDecoration: "none",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                Get started
+              </a>
+            </div>
+          </FadeIn>
+        </div>
+        {/* Wave divider embedded inside section so bg image rounds out */}
+        <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, zIndex: 2 }}>
+          <SectionDivider variant="wave" fromColor="transparent" toColor={colors.bgLight} height={60} />
         </div>
       </section>
 
       {/* ── Trust Strip ── */}
       <section
         style={{
-          ...sectionPadding,
-          backgroundColor: colors.bgRecessed,
+          padding: "80px 0",
+          backgroundColor: colors.bgLight,
         }}
       >
-        <div style={{ maxWidth, margin: "0 auto" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 24px" }}>
           <FadeIn preset="slide-up" duration={0.8}>
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
-              <h2
-                style={{
-                  fontFamily: display,
-                  fontSize: 40,
-                  fontWeight: 700,
-                  color: colors.textPrimary,
-                  marginBottom: 16,
-                  letterSpacing: "-0.03em",
-                }}
-              >
-                Built on trust, not hype.
-              </h2>
-              <p
-                style={{
-                  fontSize: 17,
-                  color: colors.textMuted,
-                  maxWidth: 560,
-                  margin: "0 auto",
-                  lineHeight: 1.7,
-                  fontFamily: body,
-                }}
-              >
-                You&rsquo;re sharing real things here. We take that seriously.
-              </p>
-            </div>
+            <h2
+              style={{
+                fontFamily: display,
+                fontSize: "clamp(28px, 4vw, 42px)",
+                fontWeight: 700,
+                color: "#18181C",
+                marginBottom: 56,
+                letterSpacing: "-0.03em",
+                textAlign: "center",
+              }}
+            >
+              Built different. Built honest.
+            </h2>
           </FadeIn>
 
-          <div
-            className="trust-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 20,
-            }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: 48 }}>
             {[
               {
                 icon: (
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 ),
                 title: "What you write here stays here.",
-                desc: "Your entries never train any model. Zero third-party access. No data sales. Export everything or delete your account at any time. You\u2019re sharing vulnerable things \u2014 we treat that accordingly.",
+                desc: "Your entries never train any model. Zero third-party access. No data sales. Export or delete at any time.",
               },
               {
                 icon: (
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                   </svg>
                 ),
                 title: "Every exercise is cited and explained.",
-                desc: "Nothing here is made up. Every exercise comes from a real coaching, psychology, or neuroscience framework \u2014 and each one tells you where it comes from, why it was chosen for you, and how to do it. In plain language.",
+                desc: "Nothing is made up. Every exercise comes from a real coaching or psychology framework \u2014 and tells you where it comes from and why it was chosen for you.",
               },
               {
                 icon: (
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
                     <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
@@ -1285,125 +1960,236 @@ export default function Home() {
                   </svg>
                 ),
                 title: "Built by someone who\u2019s been through it.",
-                desc: "Designed by a certified leadership coach who\u2019s navigated career crises firsthand and wished something like this had existed. Not theory \u2014 frameworks from real coaching rooms, shaped by lived experience.",
+                desc: "Designed by a certified leadership coach who\u2019s navigated career crises firsthand. Frameworks from real coaching rooms, shaped by lived experience.",
               },
             ].map((item, i) => (
-              <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">
+              <FadeIn key={i} delay={0.1 + i * 0.12} preset="fade">
                 <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 24,
+                  }}
+                >
+                  <div style={{
+                    width: 52,
+                    height: 52,
+                    borderRadius: "50%",
+                    backgroundColor: `${colors.coral}15`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}>
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h3
+                      style={{
+                        fontFamily: display,
+                        fontSize: 18,
+                        fontWeight: 700,
+                        lineHeight: 1.35,
+                        marginBottom: 6,
+                        color: "#18181C",
+                      }}
+                    >
+                      {item.title}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: 15,
+                        color: "rgba(24,24,28,0.6)",
+                        lineHeight: 1.6,
+                        margin: 0,
+                        fontFamily: body,
+                      }}
+                    >
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <FadeIn preset="fade" delay={0.4} duration={0.8}>
+            <div style={{ textAlign: "center", marginTop: 48 }}>
+              <a
+                href="#programs"
+                style={{
+                  display: "inline-block",
+                  padding: "14px 36px",
+                  backgroundColor: colors.coral,
+                  color: "#ffffff",
+                  fontFamily: display,
+                  fontSize: 15,
+                  fontWeight: 700,
+                  borderRadius: 50,
+                  textDecoration: "none",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                Find your program
+              </a>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── Social Proof ── */}
+      <SocialProof />
+
+      {/* ── Takeaways ── */}
+      <section style={{ paddingTop: 80, paddingBottom: 96, paddingLeft: 24, paddingRight: 24 }}>
+        <div style={{ maxWidth, margin: "0 auto" }}>
+          <FadeIn preset="slide-up" duration={0.8}>
+            <div style={{ textAlign: "center", marginBottom: 56 }}>
+              <p style={{
+                fontFamily: body,
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: 2,
+                textTransform: "uppercase" as const,
+                color: colors.coral,
+                marginBottom: 14,
+              }}>
+                After 30 days
+              </p>
+              <h2 style={{
+                fontFamily: display,
+                fontSize: "clamp(32px, 5vw, 52px)",
+                fontWeight: 700,
+                color: colors.textPrimary,
+                letterSpacing: "-0.03em",
+                marginBottom: 12,
+              }}>
+                {c.takeaways.headline}
+              </h2>
+              <p style={{
+                fontSize: 17,
+                color: colors.textMuted,
+                maxWidth: 560,
+                margin: "0 auto",
+                lineHeight: 1.7,
+                fontFamily: body,
+              }}>
+                {c.takeaways.subheadline}
+              </p>
+            </div>
+          </FadeIn>
+
+          <div
+            className="takeaways-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 20,
+              maxWidth: 900,
+              margin: "0 auto",
+            }}
+          >
+            {c.takeaways.items.map((item, i) => (
+              <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">
+                <motion.div
+                  whileHover={{ y: -4, borderColor: `rgba(196,148,58,0.3)` }}
+                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
                     padding: 28,
                     backgroundColor: colors.bgSurface,
                     borderRadius: 16,
                     border: `1px solid ${colors.borderDefault}`,
                     height: "100%",
-                    boxSizing: "border-box",
+                    boxSizing: "border-box" as const,
                   }}
                 >
-                  <div style={{ marginBottom: 16 }}>{item.icon}</div>
-                  <h3
-                    style={{
+                  <div style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    backgroundColor: `${colors.coral}15`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 16,
+                  }}>
+                    <span style={{
                       fontFamily: display,
-                      fontSize: 17,
-                      fontWeight: 700,
-                      lineHeight: 1.35,
-                      marginBottom: 10,
-                      color: colors.textPrimary,
-                    }}
-                  >
+                      fontSize: 18,
+                      fontWeight: 600,
+                      color: colors.coral,
+                    }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <h3 style={{
+                    fontFamily: display,
+                    fontSize: 17,
+                    fontWeight: 700,
+                    lineHeight: 1.35,
+                    marginBottom: 10,
+                    color: colors.textPrimary,
+                  }}>
                     {item.title}
                   </h3>
-                  <p
-                    style={{
-                      fontSize: 14,
-                      color: colors.textMuted,
-                      lineHeight: 1.65,
-                      margin: 0,
-                      fontFamily: body,
-                    }}
-                  >
+                  <p style={{
+                    fontSize: 14,
+                    color: colors.textMuted,
+                    lineHeight: 1.65,
+                    margin: 0,
+                    fontFamily: body,
+                  }}>
                     {item.desc}
                   </p>
-                </div>
+                </motion.div>
               </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── The Human Layer ── */}
-      <section style={{ ...sectionPadding }}>
-        <div style={{ maxWidth: 650, margin: "0 auto", textAlign: "center" }}>
-          <FadeIn preset="slide-up" duration={0.8}>
-            <h2
-              style={{
-                fontFamily: serif,
-                fontStyle: "italic",
-                fontSize: 40,
-                fontWeight: 500,
-                marginBottom: 20,
-                color: colors.textPrimary,
-                letterSpacing: "-0.02em",
-              }}
-            >
-              {c.humanLayer.headline}
-            </h2>
-          </FadeIn>
-          <FadeIn preset="blur" delay={0.15} duration={0.9}>
-            <p
-              style={{
-                fontSize: 17,
-                color: colors.textMuted,
-                lineHeight: 1.7,
-                marginBottom: 36,
-                fontFamily: body,
-              }}
-            >
-              {c.humanLayer.body}
-            </p>
-          </FadeIn>
-          <FadeIn preset="fade" delay={0.3}>
-            <motion.a
-              href="/intake"
-              whileHover={{
-                scale: 1.05,
-                backgroundColor: colors.coral,
-                color: colors.bgDeep,
-                borderColor: colors.coral,
-              }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              style={{
-                padding: "16px 40px",
-                fontSize: 15,
-                fontWeight: 600,
-                color: colors.coral,
-                backgroundColor: "transparent",
-                border: `2px solid ${colors.coral}`,
-                borderRadius: 100,
-                textDecoration: "none",
-                display: "inline-block",
-                fontFamily: display,
-              }}
-            >
-              {c.humanLayer.cta}
-            </motion.a>
-          </FadeIn>
-        </div>
-      </section>
-
       {/* ── Who Built This ── */}
       <section
         style={{
-          ...sectionPadding,
-          backgroundColor: colors.bgRecessed,
+          paddingTop: 96,
+          paddingLeft: 24,
+          paddingRight: 24,
+          paddingBottom: 140,
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        <div style={{ maxWidth: 650, margin: "0 auto", textAlign: "center" }}>
+        <img
+          src="/lemon-bg.jpg"
+          alt=""
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: 0.5,
+            zIndex: 0,
+          }}
+        />
+        <div style={{
+          maxWidth: 920,
+          margin: "0 auto",
+          textAlign: "center",
+          position: "relative",
+          zIndex: 1,
+          backgroundColor: "rgba(24, 24, 28, 0.30)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          borderRadius: 20,
+          padding: "48px 40px 40px",
+        }}>
           <FadeIn preset="slide-up" duration={0.8}>
             <h2
               style={{
                 fontFamily: display,
-                fontSize: 40,
+                fontSize: "clamp(32px, 5vw, 52px)",
                 fontWeight: 700,
                 marginBottom: 20,
                 color: colors.textPrimary,
@@ -1456,255 +2242,197 @@ export default function Home() {
             </div>
           </FadeIn>
         </div>
-      </section>
-
-      {/* ── Takeaways ── */}
-      <section style={{ ...sectionPadding }}>
-        <div style={{ maxWidth, margin: "0 auto" }}>
-          <FadeIn preset="slide-up" duration={0.8}>
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
-              <span style={{
-                display: "inline-block",
-                fontFamily: display,
-                fontWeight: 700,
-                fontSize: 11,
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                color: colors.coral,
-                marginBottom: 16,
-              }}>
-                After 30 days
-              </span>
-              <h2 style={{
-                fontFamily: serif,
-                fontStyle: "italic",
-                fontSize: 40,
-                fontWeight: 500,
-                color: colors.textPrimary,
-                letterSpacing: "-0.02em",
-                marginBottom: 12,
-              }}>
-                {c.takeaways.headline}
-              </h2>
-              <p style={{
-                fontSize: 17,
-                color: colors.textMuted,
-                maxWidth: 560,
-                margin: "0 auto",
-                lineHeight: 1.7,
-                fontFamily: body,
-              }}>
-                {c.takeaways.subheadline}
-              </p>
-            </div>
-          </FadeIn>
-
-          <div
-            className="takeaways-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 20,
-            }}
-          >
-            {c.takeaways.items.map((item, i) => (
-              <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">
-                <motion.div
-                  whileHover={{
-                    y: -4,
-                    borderColor: colors.plum,
-                    boxShadow: "0 16px 32px rgba(0,0,0,0.3)",
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  style={{
-                    padding: 28,
-                    backgroundColor: colors.bgSurface,
-                    borderRadius: 16,
-                    border: `1px solid ${colors.borderDefault}`,
-                    height: "100%",
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <div style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 10,
-                    background: colors.plumWash,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 16,
-                  }}>
-                    <span style={{
-                      fontFamily: display,
-                      fontSize: 14,
-                      fontWeight: 700,
-                      color: colors.plumLight,
-                    }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                  <h3 style={{
-                    fontFamily: display,
-                    fontSize: 17,
-                    fontWeight: 700,
-                    lineHeight: 1.35,
-                    marginBottom: 10,
-                    color: colors.textPrimary,
-                  }}>
-                    {item.title}
-                  </h3>
-                  <p style={{
-                    fontSize: 14,
-                    color: colors.textMuted,
-                    lineHeight: 1.65,
-                    margin: 0,
-                    fontFamily: body,
-                  }}>
-                    {item.desc}
-                  </p>
-                </motion.div>
-              </FadeIn>
-            ))}
-          </div>
+        {/* Wave divider embedded so lemon bg rounds out */}
+        <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, zIndex: 2 }}>
+          <SectionDivider variant="ripple" fromColor="transparent" toColor={colors.bgDeep} height={50} />
         </div>
       </section>
 
-      <Divider />
-
       {/* ── FAQ ── */}
       <section id="faq" style={{ ...sectionPadding }}>
-        <div style={{ maxWidth: 780, margin: "0 auto" }}>
-          <div style={{ display: "flex", gap: 64, alignItems: "flex-start" }} className="faq-layout">
-            {/* Left header */}
-            <div style={{ flex: "0 0 220px", position: "sticky", top: 120 }} className="faq-header">
-              <FadeIn preset="slide-up" duration={0.8}>
-                <span style={{
-                  display: "inline-block",
-                  fontFamily: display,
-                  fontWeight: 700,
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
-                  color: colors.coral,
-                  marginBottom: 16,
-                }}>
-                  Support
-                </span>
-                <h2
-                  style={{
-                    fontFamily: display,
-                    fontSize: 36,
-                    fontWeight: 700,
-                    color: colors.textPrimary,
-                    letterSpacing: "-0.03em",
-                    lineHeight: 1.15,
-                  }}
-                >
-                  Frequently Asked Questions
-                </h2>
-              </FadeIn>
-            </div>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px" }}>
+          <FadeIn preset="fade">
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: 2,
+                textTransform: "uppercase" as const,
+                color: colors.coral,
+                marginBottom: 14,
+              }}
+            >
+              Questions
+            </p>
+          </FadeIn>
 
-            {/* Right accordion */}
-            <div style={{ flex: 1 }}>
-              {c.faq.items.map((item, i) => {
-                const isOpen = openFaq === i;
-                return (
-                  <FadeIn key={i} delay={i * 0.06} preset="fade">
-                    <div
-                      style={{
-                        borderBottom: `1px solid ${colors.borderSubtle}`,
-                      }}
-                    >
-                      <motion.button
-                        onClick={() => setOpenFaq(isOpen ? null : i)}
-                        whileHover={{ color: colors.textPrimary }}
+          <FadeIn preset="slide-up">
+            <h2
+              style={{
+                fontFamily: display,
+                fontSize: "clamp(26px, 3.5vw, 36px)",
+                lineHeight: 1.2,
+                color: colors.textPrimary,
+                marginBottom: 40,
+                fontWeight: 700,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              Frequently asked
+            </h2>
+          </FadeIn>
+
+          <FadeIn preset="fade" delay={0.1}>
+            <div
+              className="faq-layout"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "180px 1fr",
+                gap: 40,
+                alignItems: "start",
+              }}
+            >
+              {/* Topic nav — left column */}
+              <nav
+                className="faq-nav"
+                style={{
+                  display: "flex",
+                  flexDirection: "column" as const,
+                  gap: 4,
+                  position: "sticky" as const,
+                  top: 100,
+                }}
+              >
+                {(c.faq as { topics: string[] }).topics.map((topic: string) => (
+                  <button
+                    key={topic}
+                    onClick={() => {
+                      setActiveFaqTopic(topic);
+                      setOpenFaq(null);
+                    }}
+                    style={{
+                      background: activeFaqTopic === topic ? colors.bgElevated : "transparent",
+                      border: activeFaqTopic === topic
+                        ? `1px solid ${colors.borderDefault}`
+                        : "1px solid transparent",
+                      borderRadius: 8,
+                      padding: "10px 14px",
+                      fontFamily: body,
+                      fontSize: 13,
+                      fontWeight: activeFaqTopic === topic ? 600 : 400,
+                      color: activeFaqTopic === topic ? colors.textPrimary : colors.textMuted,
+                      cursor: "pointer",
+                      textAlign: "left" as const,
+                      transition: "all 0.15s",
+                    }}
+                  >
+                    {topic}
+                  </button>
+                ))}
+              </nav>
+
+              {/* Questions — right column */}
+              <div>
+                {(c.faq.items as { topic: string; q: string; a: string }[])
+                  .filter((item) => item.topic === activeFaqTopic)
+                  .map((item, i) => {
+                    const isOpen = openFaq === i;
+                    return (
+                      <div
+                        key={`${activeFaqTopic}-${i}`}
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          padding: "22px 0",
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          textAlign: "left",
-                          fontFamily: display,
-                          fontSize: 15,
-                          fontWeight: 600,
-                          color: isOpen ? colors.textPrimary : colors.textSecondary,
-                          transition: "color 0.2s",
+                          borderBottom: `1px solid ${colors.borderSubtle}`,
                         }}
                       >
-                        {item.q}
-                        <motion.span
-                          animate={{ rotate: isOpen ? 180 : 0 }}
-                          transition={{ duration: 0.2 }}
+                        <motion.button
+                          onClick={() => setOpenFaq(isOpen ? null : i)}
+                          whileHover={{ color: colors.textPrimary }}
                           style={{
-                            fontSize: 18,
-                            color: colors.textMuted,
-                            flexShrink: 0,
-                            marginLeft: 16,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            width: "100%",
+                            padding: "22px 0",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            textAlign: "left",
+                            fontFamily: display,
+                            fontSize: 15,
+                            fontWeight: 600,
+                            color: isOpen ? colors.textPrimary : colors.textSecondary,
+                            transition: "color 0.2s",
                           }}
                         >
-                          &#x2304;
-                        </motion.span>
-                      </motion.button>
-                      <motion.div
-                        initial={false}
-                        animate={{
-                          height: isOpen ? "auto" : 0,
-                          opacity: isOpen ? 1 : 0,
-                        }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                        style={{ overflow: "hidden" }}
-                      >
-                        <p
-                          style={{
-                            fontSize: 14,
-                            color: colors.textMuted,
-                            lineHeight: 1.7,
-                            margin: 0,
-                            paddingBottom: 22,
-                            fontFamily: body,
+                          {item.q}
+                          <motion.span
+                            animate={{ rotate: isOpen ? 180 : 0 }}
+                            transition={{ duration: 0.2 }}
+                            style={{
+                              fontSize: 18,
+                              color: colors.textMuted,
+                              flexShrink: 0,
+                              marginLeft: 16,
+                            }}
+                          >
+                            &#x2304;
+                          </motion.span>
+                        </motion.button>
+                        <motion.div
+                          initial={false}
+                          animate={{
+                            height: isOpen ? "auto" : 0,
+                            opacity: isOpen ? 1 : 0,
                           }}
+                          transition={{ duration: 0.25, ease: "easeInOut" }}
+                          style={{ overflow: "hidden" }}
                         >
-                          {item.a}
-                        </p>
-                      </motion.div>
-                    </div>
-                  </FadeIn>
-                );
-              })}
+                          <p
+                            style={{
+                              fontSize: 14,
+                              color: colors.textMuted,
+                              lineHeight: 1.7,
+                              margin: 0,
+                              paddingBottom: 22,
+                              fontFamily: body,
+                            }}
+                          >
+                            {item.a}
+                          </p>
+                        </motion.div>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* ── Final CTA ── */}
       <section
         style={{
-          ...sectionPadding,
-          backgroundColor: colors.gray50,
+          padding: "80px 24px",
           textAlign: "center",
           position: "relative",
           overflow: "hidden",
+          background: colors.bgRecessed,
         }}
       >
         <div
-          style={{ maxWidth: 600, margin: "0 auto", position: "relative" }}
+          style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1 }}
         >
           <FadeIn preset="slide-up" duration={0.8}>
             <h2
               style={{
-                fontFamily: serif,
-                fontStyle: "italic",
-                fontSize: 48,
-                fontWeight: 500,
-                marginBottom: 8,
+                fontFamily: display,
+                fontSize: "clamp(32px, 5vw, 52px)",
+                fontWeight: 700,
+                marginBottom: 16,
                 color: colors.textPrimary,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.03em",
+                lineHeight: 1.15,
               }}
             >
               {c.finalCta.headline}
@@ -1715,14 +2443,15 @@ export default function Home() {
               style={{
                 fontSize: 19,
                 color: colors.textMuted,
-                marginBottom: 44,
+                marginBottom: 20,
                 fontFamily: body,
+                lineHeight: 1.6,
               }}
             >
               {c.finalCta.subtext}
             </p>
           </FadeIn>
-          <FadeIn preset="pop" delay={0.3}>
+          <FadeIn preset="pop" delay={0.35}>
             <div
               style={{
                 display: "flex",
@@ -1735,20 +2464,21 @@ export default function Home() {
                 href="#programs"
                 whileHover={{
                   scale: 1.06,
-                  boxShadow: "0 16px 48px rgba(0,0,0,0.15)",
+                  boxShadow: "0 16px 48px rgba(196,148,58,0.25)",
                 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{
-                  padding: "16px 40px",
-                  fontSize: 15,
+                  padding: "18px 48px",
+                  fontSize: 16,
                   fontWeight: 600,
-                  color: colors.bgDeep,
+                  color: "#ffffff",
                   backgroundColor: colors.coral,
                   borderRadius: 100,
                   textDecoration: "none",
                   display: "inline-block",
                   fontFamily: display,
+                  letterSpacing: "0.01em",
                 }}
               >
                 {c.finalCta.primaryCta}
@@ -1771,36 +2501,42 @@ export default function Home() {
             margin: "0 auto",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "center",
             flexWrap: "wrap",
             gap: 16,
           }}
         >
-          <a href="/" style={{ textDecoration: "none" }}>
-            <Logo size={16} />
-          </a>
           <div
             style={{
               display: "flex",
               gap: 24,
               fontSize: 13,
-              color: colors.textMuted,
+              color: "#ffffff",
+              alignItems: "center",
             }}
           >
-            <span>{c.footer.copyright}</span>
-            <a
-              href={c.brand.companyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: colors.textMuted, textDecoration: "none" }}
-            >
-              All Minds on Deck
-            </a>
+            <span>
+              {c.footer.copyright} · Made with <span style={{ color: colors.coral, fontSize: 18 }}>&#9829;</span> by{" "}
+              <a
+                href="https://allmindsondeck.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#ffffff", textDecoration: "underline" }}
+              >
+                All Minds On Deck
+              </a>
+            </span>
             <a
               href="/privacy"
-              style={{ color: colors.textMuted, textDecoration: "none" }}
+              style={{ color: "#ffffff", textDecoration: "none" }}
             >
               {c.footer.privacyLink}
+            </a>
+            <a
+              href="/contact"
+              style={{ color: "#ffffff", textDecoration: "none" }}
+            >
+              Contact
             </a>
           </div>
         </div>
@@ -1814,15 +2550,20 @@ export default function Home() {
           .programs-grid { grid-template-columns: 1fr !important; }
           .how-grid { grid-template-columns: 1fr !important; }
           .trust-grid { grid-template-columns: 1fr !important; }
+          .pricing-grid { grid-template-columns: 1fr !important; }
+          .social-proof-grid { grid-template-columns: 1fr !important; }
           .takeaways-grid { grid-template-columns: 1fr !important; }
-          .faq-layout { flex-direction: column !important; gap: 32px !important; }
-          .faq-header { position: static !important; flex: none !important; }
+          .faq-layout { grid-template-columns: 1fr !important; gap: 24px !important; }
+          .faq-nav { flex-direction: row !important; flex-wrap: wrap !important; position: static !important; gap: 8px !important; }
+          .differentiator-layout { flex-direction: column !important; text-align: center !important; }
+          .differentiator-layout > div:last-child p { text-align: center !important; }
+          .stats-bar-grid { flex-direction: column !important; gap: 12px !important; }
         }
         @media (min-width: 769px) and (max-width: 1024px) {
           .programs-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .how-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .trust-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .takeaways-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .social-proof-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
     </div>

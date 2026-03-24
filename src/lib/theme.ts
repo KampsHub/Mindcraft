@@ -12,19 +12,20 @@ export const colors = {
   bgInput: "#28282E",      // Text inputs, recessed fields
   bgSurface: "#333339",    // Cards, panels, main content areas
   bgElevated: "#3E3E46",   // Active nav, hover states, popovers
+  bgLight: "#F0EDE6",       // Light sections for contrast (warm white)
 
   // ── Text ──
-  textPrimary: "#E4DDE2",  // Headings, primary content
-  textSecondary: "#B5ADB6", // Subtitles, labels, nav links
-  textBody: "#D0C9CF",     // Body text on cards
-  textMuted: "#99929B",    // Section labels, hints, metadata
+  textPrimary: "#F0EDE6",  // Headings, primary content (warm white)
+  textSecondary: "#C8CDD2", // Subtitles, labels, nav links (light silver)
+  textBody: "#C8CDD2",     // Body text on cards (light silver)
+  textMuted: "#8A9199",    // Section labels, hints, metadata
 
-  // ── Accent: Coral (action + progress) ──
-  coralLight: "#F4B5A9",
-  coral: "#E09585",
-  coralPressed: "#B56E5E",
-  coralOnDark: "#6B3F37",  // Text on dark backgrounds
-  coralWash: "rgba(224, 149, 133, 0.12)",
+  // ── Accent: Warm Ochre ──
+  coralLight: "#D4A84E",
+  coral: "#C4943A",
+  coralPressed: "#A67A2A",
+  coralOnDark: "#6B5020",  // Text on dark backgrounds
+  coralWash: "rgba(196, 148, 58, 0.12)",
 
   // ── Accent: Plum (depth + reflection) ──
   plumLight: "#B08DAD",
@@ -46,14 +47,14 @@ export const colors = {
   errorWash: "rgba(210, 88, 88, 0.12)",
 
   // ── Legacy aliases (for gradual migration) ──
-  primary: "#E09585",
-  primaryDark: "#B56E5E",
-  primaryLight: "#F4B5A9",
-  primaryMuted: "rgba(224, 149, 133, 0.12)",
+  primary: "#C4943A",
+  primaryDark: "#A67A2A",
+  primaryLight: "#D4A84E",
+  primaryMuted: "rgba(196, 148, 58, 0.12)",
   accent: "#7B5278",
   accentLight: "rgba(123, 82, 120, 0.15)",
   cream: "#333339",
-  black: "#E4DDE2",
+  black: "#F0EDE6",
   dark: "#D0C9CF",
   gray700: "#B5ADB6",
   gray600: "#B5ADB6",

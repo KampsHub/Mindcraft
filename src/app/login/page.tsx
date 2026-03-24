@@ -61,7 +61,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ display: "inline-block", marginBottom: 16 }}>
-            <Logo size={44} />
+            <Logo size={20} />
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
             {c.login.headline}
@@ -128,7 +128,7 @@ export default function LoginPage() {
 
         <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.gray500 }}>
           {c.login.newHere}{" "}
-          <a href="/subscribe" style={{ color: colors.primary, fontWeight: 500, textDecoration: "none" }}>
+          <a href="/#programs" style={{ color: colors.primary, fontWeight: 500, textDecoration: "none" }}>
             {c.login.newHereLink}
           </a>
         </p>

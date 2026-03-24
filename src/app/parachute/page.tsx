@@ -2104,6 +2104,7 @@ function Pricing() {
                         setSlidingAmounts((prev) => ({ ...prev, [tier.key]: Number(e.target.value) }));
                         if (!touchedSlider[tier.key]) setTouchedSlider((prev) => ({ ...prev, [tier.key]: true }));
                       }}
+                      onPointerUp={() => trackEvent(`layoff_${tier.key}_slider_amount`, { amount: slidingAmounts[tier.key] })}
                       style={{ width: "100%", accentColor: colors.coral, cursor: "pointer" }}
                     />
                   </div>

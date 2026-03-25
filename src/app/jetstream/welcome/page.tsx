@@ -540,7 +540,7 @@ function JetstreamWelcome() {
                     marginBottom: 8,
                   }}
                 >
-                  Check your inbox.
+                  You&rsquo;re all set.
                 </h2>
                 <p
                   style={{
@@ -551,13 +551,13 @@ function JetstreamWelcome() {
                     marginBottom: 0,
                   }}
                 >
-                  We sent a confirmation link to{" "}
+                  Your account has been created for{" "}
                   <strong style={{ color: colors.textPrimary }}>{email}</strong>.
-                  Click it, then sign in. Your program is waiting.
+                  Taking you to your program now.
                 </p>
 
                 <a
-                  href="/login"
+                  href="/intake?program=jetstream"
                   style={{
                     display: "inline-block",
                     marginTop: 24,
@@ -567,7 +567,7 @@ function JetstreamWelcome() {
                     textDecoration: "none",
                   }}
                 >
-                  Go to sign in →
+                  Go to intake →
                 </a>
               </motion.div>
             )}

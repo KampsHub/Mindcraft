@@ -18,4 +18,4 @@ Disallow: /my-account
 Disallow: /forgot-password
 Disallow: /reset-password
 
-Sitemap: https://mindcraft.ninja/sitemap.xml
+Sitemap: https://mindcraft.ing/sitemap.xml

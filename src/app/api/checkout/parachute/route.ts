@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       metadata: { tier, amount_cents: String(cents), program: "parachute" },
-      success_url: `${baseUrl}/parachute?checkout=success`,
+      success_url: `${baseUrl}/parachute/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/parachute?checkout=cancelled#pricing`,
     });
 

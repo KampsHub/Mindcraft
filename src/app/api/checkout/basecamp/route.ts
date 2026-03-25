@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       metadata: { tier, amount_cents: String(cents), program: "basecamp" },
-      success_url: `${baseUrl}/basecamp?checkout=success`,
+      success_url: `${baseUrl}/basecamp/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/basecamp?checkout=cancelled#pricing`,
     });
 

@@ -311,42 +311,51 @@ function Hero() {
           height: "100%",
           objectFit: "cover",
           zIndex: 0,
-          opacity: 0.5,
+          opacity: 0.7,
         }}
       />
       <div style={{ maxWidth: narrowMax, margin: "0 auto", position: "relative" as const, zIndex: 1 }}>
         <FadeIn preset="fade" triggerOnMount delay={0.1}>
-          <p
+          <div
             style={{
-              fontFamily: body,
-              fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: 2,
-              textTransform: "uppercase" as const,
-              color: colors.coral,
+              backgroundColor: "rgba(24,24,28,0.55)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              borderRadius: 14,
+              padding: "24px 28px",
               marginBottom: 24,
+              display: "inline-block",
             }}
           >
-            For professionals experiencing involuntary job loss
-          </p>
-        </FadeIn>
-
-        <FadeIn preset="slide-up" triggerOnMount delay={0.2}>
-          <h1
-            style={{
-              fontFamily: display,
-              fontSize: "clamp(34px, 5.5vw, 54px)",
-              lineHeight: 1.12,
-              color: colors.textPrimary,
-              marginBottom: 24,
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            You lost your job.
-            <br />
-            Now what?
-          </h1>
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: 2,
+                textTransform: "uppercase" as const,
+                color: colors.coral,
+                marginBottom: 16,
+              }}
+            >
+              For professionals experiencing involuntary job loss
+            </p>
+            <h1
+              style={{
+                fontFamily: display,
+                fontSize: "clamp(34px, 5.5vw, 54px)",
+                lineHeight: 1.12,
+                color: colors.textPrimary,
+                marginBottom: 0,
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              You lost your job.
+              <br />
+              Now what?
+            </h1>
+          </div>
         </FadeIn>
 
         <FadeIn preset="slide-up" triggerOnMount delay={0.3}>
@@ -387,95 +396,110 @@ function Hero() {
         </FadeIn>
 
         <FadeIn preset="slide-up" triggerOnMount delay={0.4}>
-          <p
+          <div
             style={{
-              fontFamily: body,
-              fontSize: 17,
-              color: colors.textSecondary,
-              lineHeight: 1.75,
-              maxWidth: 580,
-              marginBottom: 20,
-            }}
-          >
-            Losing a job can be a challenging and isolating time.
-          </p>
-        </FadeIn>
-
-        <FadeIn preset="slide-up" triggerOnMount delay={0.45}>
-          <p
-            style={{
-              fontFamily: body,
-              fontSize: 17,
-              color: colors.textBody,
-              lineHeight: 1.75,
+              backgroundColor: "rgba(24,24,28,0.55)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              borderRadius: 14,
+              padding: "24px 28px",
               maxWidth: 580,
               marginBottom: 28,
             }}
           >
-            PARACHUTE is a 30-day personalized daily program to help you work
-            through the emotional mess.
-          </p>
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 17,
+                color: colors.textSecondary,
+                lineHeight: 1.75,
+                marginBottom: 12,
+              }}
+            >
+              Losing a job can be a challenging and isolating time.
+            </p>
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 17,
+                color: colors.textBody,
+                lineHeight: 1.75,
+                marginBottom: 0,
+              }}
+            >
+              PARACHUTE is a 30-day personalized daily program to help you work
+              through the emotional mess.
+            </p>
+          </div>
         </FadeIn>
 
 
         <FadeIn preset="slide-up" triggerOnMount delay={0.55}>
           <div
             style={{
-              display: "flex",
-              gap: 16,
-              alignItems: "center",
-              flexWrap: "wrap" as const,
+              backgroundColor: "rgba(24,24,28,0.55)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              borderRadius: 14,
+              padding: "20px 28px",
+              maxWidth: 580,
             }}
           >
-            <a
-              href="#pricing"
-              onClick={() => trackEvent("layoff_hero_cta_click", {})}
+            <div
               style={{
-                display: "inline-flex",
+                display: "flex",
+                gap: 16,
                 alignItems: "center",
-                gap: 8,
-                fontFamily: body,
-                fontSize: 15,
-                fontWeight: 600,
-                padding: "14px 32px",
-                borderRadius: 8,
-                textDecoration: "none",
-                backgroundColor: colors.coral,
-                color: "#ffffff",
-                transition: "all 0.2s",
-                border: "none",
+                flexWrap: "wrap" as const,
               }}
             >
-              Sliding scale from $29
-            </a>
-            <a
-              href="#how"
+              <a
+                href="#pricing"
+                onClick={() => trackEvent("layoff_hero_cta_click", {})}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontFamily: body,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  padding: "14px 32px",
+                  borderRadius: 8,
+                  textDecoration: "none",
+                  backgroundColor: colors.coral,
+                  color: "#ffffff",
+                  transition: "all 0.2s",
+                  border: "none",
+                }}
+              >
+                Sliding scale from $29
+              </a>
+              <a
+                href="#how"
+                style={{
+                  fontFamily: body,
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: "rgba(255,255,255,0.7)",
+                  textDecoration: "none",
+                  padding: "14px 8px",
+                  transition: "color 0.2s",
+                }}
+              >
+                See how it works ↓
+              </a>
+            </div>
+            <p
               style={{
                 fontFamily: body,
-                fontSize: 15,
-                fontWeight: 500,
-                color: colors.textMuted,
-                textDecoration: "none",
-                padding: "14px 8px",
-                transition: "color 0.2s",
+                fontSize: 13,
+                color: "rgba(255,255,255,0.5)",
+                marginTop: 12,
               }}
             >
-              See how it works ↓
-            </a>
+              7-day money-back guarantee · Access until your goals are complete
+            </p>
           </div>
-        </FadeIn>
-
-        <FadeIn preset="fade" triggerOnMount delay={0.65}>
-          <p
-            style={{
-              fontFamily: body,
-              fontSize: 13,
-              color: colors.textMuted,
-              marginTop: 16,
-            }}
-          >
-            7-day money-back guarantee · Access until your goals are complete
-          </p>
         </FadeIn>
       </div>
     </section>
@@ -1831,6 +1855,7 @@ function Pricing() {
     pay_it_forward: 59,
   });
   const [touchedSlider, setTouchedSlider] = useState<Record<string, boolean>>({});
+  const [selectedTier, setSelectedTier] = useState("standard");
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   useEffect(() => {
@@ -1979,269 +2004,283 @@ function Pricing() {
           </h2>
         </FadeIn>
 
+        {/* Self-guided program — single card with tier selector */}
         <FadeIn preset="slide-up" delay={0.1}>
-          <p
+          <div
             style={{
-              fontFamily: body,
-              fontSize: 17,
-              color: colors.textSecondary,
-              lineHeight: 1.7,
-              maxWidth: 620,
-              marginBottom: 48,
-              textAlign: "center" as const,
+              padding: 32,
+              border: `2px solid ${colors.coral}`,
+              borderRadius: 14,
+              backgroundColor: colors.bgSurface,
+              position: "relative" as const,
+              boxShadow: `0 4px 32px rgba(224, 149, 133, 0.1)`,
+              maxWidth: 480,
               margin: "0 auto 48px",
             }}
           >
-            Everyone gets the same program. Same exercises, same depth, same
-            access. The only difference is what you can afford right now.
-            One payment. Access until your goals are complete.
-          </p>
+            <span
+              style={{
+                position: "absolute" as const,
+                top: -13,
+                left: 20,
+                backgroundColor: colors.coral,
+                color: "#ffffff",
+                fontFamily: body,
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: 1.5,
+                textTransform: "uppercase" as const,
+                padding: "5px 12px",
+                borderRadius: 6,
+              }}
+            >
+              Most common
+            </span>
+
+            <p style={{ fontFamily: display, fontSize: 24, fontWeight: 700, color: colors.textPrimary, marginBottom: 12, letterSpacing: "-0.02em" }}>
+              Self-guided program
+            </p>
+            <p style={{ fontFamily: body, fontSize: 14, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 20 }}>
+              Everyone gets the same program. Same exercises, same depth, same access. The only difference is what you can afford right now. One payment. Access until your goals are complete.
+            </p>
+            <p style={{ fontFamily: display, fontSize: 36, fontWeight: 700, color: colors.coral, marginBottom: 20, letterSpacing: "-0.02em" }}>
+              {tiers.find((t) => t.key === selectedTier)?.price}
+            </p>
+
+            {/* Tier selector pills */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+              {tiers.map((tier) => (
+                <button
+                  key={tier.key}
+                  onClick={() => {
+                    setSelectedTier(tier.key);
+                    trackEvent(`layoff_${tier.key}_price_click`, { tier: tier.key, price: tier.price });
+                  }}
+                  style={{
+                    flex: 1,
+                    fontFamily: body,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    padding: "10px 8px",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    backgroundColor: selectedTier === tier.key ? colors.coral : colors.bgElevated,
+                    color: selectedTier === tier.key ? "#ffffff" : colors.textSecondary,
+                    border: selectedTier === tier.key ? "none" : `1px solid ${colors.borderDefault}`,
+                    transition: "all 0.2s",
+                    whiteSpace: "nowrap" as const,
+                  }}
+                >
+                  {tier.name}
+                </button>
+              ))}
+            </div>
+
+            <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, lineHeight: 1.6, marginBottom: 20 }}>
+              {tiers.find((t) => t.key === selectedTier)?.desc}
+            </p>
+
+            {/* Slider for sliding-scale tiers */}
+            {tiers.find((t) => t.key === selectedTier)?.sliding && (
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <span style={{ fontFamily: body, fontSize: 12, color: colors.textMuted }}>${tiers.find((t) => t.key === selectedTier)?.min}</span>
+                  <span style={{ fontFamily: display, fontSize: 22, fontWeight: 700, color: colors.textPrimary }}>${slidingAmounts[selectedTier]}</span>
+                  <span style={{ fontFamily: body, fontSize: 12, color: colors.textMuted }}>${tiers.find((t) => t.key === selectedTier)?.max}</span>
+                </div>
+                <input
+                  type="range"
+                  min={tiers.find((t) => t.key === selectedTier)?.min}
+                  max={tiers.find((t) => t.key === selectedTier)?.max}
+                  value={slidingAmounts[selectedTier] || 0}
+                  onChange={(e) => {
+                    setSlidingAmounts((prev) => ({ ...prev, [selectedTier]: Number(e.target.value) }));
+                    if (!touchedSlider[selectedTier]) setTouchedSlider((prev) => ({ ...prev, [selectedTier]: true }));
+                  }}
+                  onPointerUp={() => trackEvent(`layoff_${selectedTier}_slider_amount`, { amount: slidingAmounts[selectedTier] })}
+                  style={{ width: "100%", accentColor: colors.coral, cursor: "pointer" }}
+                />
+              </div>
+            )}
+
+            <button
+              onClick={() => {
+                const tier = tiers.find((t) => t.key === selectedTier);
+                handleCheckout(selectedTier, tier?.sliding ? slidingAmounts[selectedTier] : undefined);
+              }}
+              disabled={checkoutLoading === selectedTier}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                fontFamily: body,
+                fontSize: 14,
+                fontWeight: 600,
+                padding: "14px 20px",
+                borderRadius: 8,
+                cursor: checkoutLoading === selectedTier ? "wait" : "pointer",
+                backgroundColor: colors.coral,
+                color: "#ffffff",
+                transition: "all 0.25s ease",
+                border: "none",
+                opacity: checkoutLoading === selectedTier ? 0.6 : 1,
+              }}
+            >
+              {checkoutLoading === selectedTier
+                ? "Redirecting..."
+                : tiers.find((t) => t.key === selectedTier)?.sliding
+                  ? `Start now — $${slidingAmounts[selectedTier]}`
+                  : "Start now"}
+            </button>
+          </div>
         </FadeIn>
 
-        {/* Tier cards */}
+        {/* Enneagram + 1:1 side by side */}
         <div
-          className="parachute-price-grid"
+          className="parachute-addon-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "1fr 1fr",
             gap: 16,
             alignItems: "stretch",
             marginBottom: 48,
           }}
         >
-          {tiers.map((tier, i) => (
-            <FadeIn key={tier.name} preset="slide-up" delay={0.1 + i * 0.06} style={{ display: "flex" }}>
-              <div
-                onClick={() => trackEvent(`layoff_${tier.key}_price_click`, { tier: tier.key, price: tier.price })}
+          {/* Program + Enneagram */}
+          <FadeIn preset="slide-up" delay={0.35} style={{ display: "flex" }}>
+            <div
+              style={{
+                padding: 28,
+                border: `2px solid ${colors.coral}`,
+                borderRadius: 14,
+                backgroundColor: colors.bgSurface,
+                position: "relative" as const,
+                display: "flex",
+                flexDirection: "column" as const,
+                width: "100%",
+              }}
+            >
+              <span
                 style={{
-                  padding: 28,
-                  border: tier.highlight
-                    ? `2px solid ${colors.coral}`
-                    : `1px solid ${colors.borderDefault}`,
-                  borderRadius: 14,
-                  backgroundColor: colors.bgSurface,
-                  position: "relative" as const,
-                  boxShadow: tier.highlight
-                    ? `0 4px 32px rgba(224, 149, 133, 0.1)`
-                    : "none",
-                  display: "flex",
-                  flexDirection: "column" as const,
-                  width: "100%",
-                }}
-              >
-                {tier.badge && (
-                  <span
-                    style={{
-                      position: "absolute" as const,
-                      top: -13,
-                      left: 20,
-                      backgroundColor: colors.coral,
-                      color: "#ffffff",
-                      fontFamily: body,
-                      fontSize: 9,
-                      fontWeight: 700,
-                      letterSpacing: 1.5,
-                      textTransform: "uppercase" as const,
-                      padding: "5px 12px",
-                      borderRadius: 6,
-                    }}
-                  >
-                    {tier.badge}
-                  </span>
-                )}
-
-                <p
-                  style={{
-                    fontFamily: display,
-                    fontSize: 36,
-                    fontWeight: 700,
-                    color: colors.textPrimary,
-                    marginBottom: 4,
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  {tier.price}
-                </p>
-                <p
-                  style={{
-                    fontFamily: body,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: tier.highlight ? colors.coral : colors.textSecondary,
-                    marginBottom: 14,
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  {tier.name}
-                </p>
-                <p
-                  style={{
-                    fontFamily: body,
-                    fontSize: 13,
-                    color: colors.textMuted,
-                    lineHeight: 1.6,
-                    flex: 1,
-                    marginBottom: 20,
-                  }}
-                >
-                  {tier.desc}
-                </p>
-
-                {/* Slider for sliding-scale tiers */}
-                {tier.sliding && (
-                  <div style={{ marginBottom: 16 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                      <span style={{ fontFamily: body, fontSize: 12, color: colors.textMuted }}>${tier.min}</span>
-                      <span style={{ fontFamily: display, fontSize: 22, fontWeight: 700, color: colors.textPrimary }}>${slidingAmounts[tier.key]}</span>
-                      <span style={{ fontFamily: body, fontSize: 12, color: colors.textMuted }}>${tier.max}</span>
-                    </div>
-                    <input
-                      type="range"
-                      min={tier.min}
-                      max={tier.max}
-                      value={slidingAmounts[tier.key]}
-                      onChange={(e) => {
-                        setSlidingAmounts((prev) => ({ ...prev, [tier.key]: Number(e.target.value) }));
-                        if (!touchedSlider[tier.key]) setTouchedSlider((prev) => ({ ...prev, [tier.key]: true }));
-                      }}
-                      onPointerUp={() => trackEvent(`layoff_${tier.key}_slider_amount`, { amount: slidingAmounts[tier.key] })}
-                      style={{ width: "100%", accentColor: colors.coral, cursor: "pointer" }}
-                    />
-                  </div>
-                )}
-
-                <button
-                  onClick={() => handleCheckout(tier.key, tier.sliding ? slidingAmounts[tier.key] : undefined)}
-                  disabled={checkoutLoading === tier.key}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    fontFamily: body,
-                    fontSize: 14,
-                    fontWeight: 600,
-                    padding: "12px 20px",
-                    borderRadius: 8,
-                    cursor: checkoutLoading === tier.key ? "wait" : "pointer",
-                    backgroundColor: (tier.highlight || (tier.sliding && touchedSlider[tier.key]))
-                      ? colors.coral
-                      : colors.bgElevated,
-                    color: (tier.highlight || (tier.sliding && touchedSlider[tier.key]))
-                      ? colors.bgDeep
-                      : colors.textPrimary,
-                    transition: "all 0.25s ease",
-                    border: (tier.highlight || (tier.sliding && touchedSlider[tier.key]))
-                      ? "none"
-                      : `1px solid ${colors.borderDefault}`,
-                    opacity: checkoutLoading === tier.key ? 0.6 : 1,
-                  }}
-                >
-                  {checkoutLoading === tier.key ? "Redirecting..." : tier.sliding ? `Start now — $${slidingAmounts[tier.key]}` : "Start now"}
-                </button>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-
-        {/* Enneagram add-on */}
-        <FadeIn preset="slide-up" delay={0.35}>
-          <div
-            style={{
-              padding: 32,
-              backgroundColor: colors.bgElevated,
-              borderRadius: 14,
-              border: `1px solid rgba(176,141,173,0.25)`,
-              marginBottom: 48,
-              display: "grid",
-              gridTemplateColumns: "1fr auto",
-              gap: 32,
-              alignItems: "center",
-            }}
-            className="parachute-addon-grid"
-          >
-            <div>
-              <p
-                style={{
+                  position: "absolute" as const,
+                  top: -13,
+                  left: 20,
+                  backgroundColor: colors.plumLight,
+                  color: "#ffffff",
                   fontFamily: body,
-                  fontSize: 10,
+                  fontSize: 9,
                   fontWeight: 700,
-                  letterSpacing: 2,
+                  letterSpacing: 1.5,
                   textTransform: "uppercase" as const,
-                  color: colors.plumLight,
-                  marginBottom: 10,
+                  padding: "5px 12px",
+                  borderRadius: 6,
                 }}
               >
-                Full package
+                Deep Insight
+              </span>
+
+              <div style={{ minHeight: 90 }}>
+                <p style={{ fontFamily: display, fontSize: 24, fontWeight: 700, color: colors.textPrimary, marginBottom: 4, letterSpacing: "-0.02em" }}>Program + Enneagram</p>
+                <p style={{ fontFamily: display, fontSize: 28, fontWeight: 700, color: colors.coral, marginBottom: 14, letterSpacing: "-0.02em" }}>$349</p>
+              </div>
+              <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, lineHeight: 1.6, flex: 1, marginBottom: 20 }}>
+                The self-guided program plus the IEQ9 Enneagram — the assessment professional coaches actually use. It shows you why you react the way you do under pressure, what patterns keep repeating, and how to work with them. Includes a 1-hour live debrief. Your results shape every exercise.
               </p>
-              <h3
-                style={{
-                  fontFamily: display,
-                  fontSize: 22,
-                  fontWeight: 700,
-                  color: colors.textPrimary,
-                  marginBottom: 8,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Program + Enneagram
-              </h3>
-              <p
-                style={{
-                  fontFamily: body,
-                  fontSize: 14,
-                  color: colors.textMuted,
-                  lineHeight: 1.7,
-                  marginBottom: 0,
-                  maxWidth: 520,
-                }}
-              >
-                The full 30-day program plus the IEQ9 Integrative Enneagram —
-                one of the most comprehensive psychometric assessments available.
-                Includes a 1-hour debrief with a certified coach. Your Enneagram
-                data is woven into every exercise and coaching goal. Most
-                personality tests tell you your type and stop there. The IEQ9
-                shows you why you react the way you do — how you handle stress,
-                what drives your decisions, and what patterns keep repeating. It
-                is the tool professional coaches and therapists use.
-              </p>
-            </div>
-            <div style={{ textAlign: "center" as const }}>
-              <p
-                style={{
-                  fontFamily: body,
-                  fontSize: 12,
-                  color: colors.textMuted,
-                  marginBottom: 14,
-                }}
-              >
-                one-time, everything included
-              </p>
+
               <button
                 onClick={() => handleCheckout("enneagram")}
                 disabled={checkoutLoading === "enneagram"}
                 style={{
-                  display: "inline-flex",
+                  display: "flex",
+                  justifyContent: "center",
                   alignItems: "center",
+                  width: "100%",
                   fontFamily: body,
                   fontSize: 14,
                   fontWeight: 600,
-                  padding: "12px 24px",
+                  padding: "12px 20px",
                   borderRadius: 8,
                   cursor: checkoutLoading === "enneagram" ? "wait" : "pointer",
-                  backgroundColor: colors.plumLight,
+                  backgroundColor: colors.coral,
                   color: "#ffffff",
+                  transition: "all 0.25s ease",
                   border: "none",
-                  transition: "all 0.2s",
-                  whiteSpace: "nowrap" as const,
                   opacity: checkoutLoading === "enneagram" ? 0.6 : 1,
                 }}
               >
-                {checkoutLoading === "enneagram" ? "Redirecting..." : "Choose full package"}
+                {checkoutLoading === "enneagram" ? "Redirecting..." : "Start now"}
               </button>
             </div>
-          </div>
-        </FadeIn>
+          </FadeIn>
+
+          {/* 1:1 Coaching */}
+          <FadeIn preset="slide-up" delay={0.4} style={{ display: "flex" }}>
+            <div
+              style={{
+                padding: 28,
+                border: `1px solid ${colors.borderDefault}`,
+                borderRadius: 14,
+                backgroundColor: colors.bgSurface,
+                position: "relative" as const,
+                display: "flex",
+                flexDirection: "column" as const,
+                width: "100%",
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute" as const,
+                  top: -13,
+                  left: 20,
+                  backgroundColor: colors.bgElevated,
+                  color: colors.textPrimary,
+                  fontFamily: body,
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: 1.5,
+                  textTransform: "uppercase" as const,
+                  padding: "5px 12px",
+                  borderRadius: 6,
+                }}
+              >
+                Dedicated Expert-Coach
+              </span>
+
+              <div style={{ minHeight: 90 }}>
+                <p style={{ fontFamily: display, fontSize: 24, fontWeight: 700, color: colors.textPrimary, marginBottom: 4, letterSpacing: "-0.02em" }}>Program Intensive</p>
+                <p style={{ fontFamily: display, fontSize: 28, fontWeight: 700, color: colors.coral, marginBottom: 14, letterSpacing: "-0.02em" }}>1:1 Thinking Partner</p>
+              </div>
+              <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, lineHeight: 1.6, flex: 1, marginBottom: 20 }}>
+                Everything in the self-guided program, plus weekly or bi-weekly 1:1 coaching sessions throughout your search. Includes a personal Enneagram assessment, so you can see where your defaults help and where they cost you.
+              </p>
+
+              <a
+                href="/apply"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  fontFamily: body,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  padding: "12px 20px",
+                  borderRadius: 8,
+                  cursor: "pointer",
+                  backgroundColor: colors.bgElevated,
+                  color: colors.textPrimary,
+                  transition: "all 0.25s ease",
+                  border: `1px solid ${colors.borderDefault}`,
+                  textDecoration: "none",
+                  boxSizing: "border-box" as const,
+                }}
+              >
+                Apply
+              </a>
+            </div>
+          </FadeIn>
+        </div>
 
         {/* What's included — shared feature list */}
         <FadeIn preset="fade" delay={0.4}>
@@ -2420,7 +2459,7 @@ function DataPrivacy() {
 
         <div style={{ textAlign: "center", marginTop: 48, marginBottom: 16 }}>
           <a
-            href="/intake"
+            href="#pricing"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -3086,7 +3125,7 @@ function Outcomes() {
 
         <div style={{ textAlign: "center", marginTop: 48, marginBottom: 16 }}>
           <a
-            href="/intake"
+            href="#pricing"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -3418,15 +3457,12 @@ function ResponsiveStyles() {
   return (
     <style>{`
       @media (max-width: 960px) {
-        .parachute-price-grid { grid-template-columns: 1fr 1fr !important; }
       }
       @media (max-width: 520px) {
-        .parachute-price-grid { grid-template-columns: 1fr !important; }
       }
       @media (max-width: 768px) {
         .parachute-pers-grid { grid-template-columns: 1fr !important; }
         .parachute-arc-grid { grid-template-columns: 1fr 1fr !important; }
-        .parachute-price-grid { grid-template-columns: 1fr !important; }
         .parachute-features-grid { grid-template-columns: 1fr !important; }
         .parachute-proof-inner { flex-direction: column !important; gap: 16px !important; }
         .parachute-prob-grid { grid-template-columns: 1fr !important; }
@@ -3479,8 +3515,8 @@ function ParachutePage() {
       <ProofBar />
       <Problem />
       <HowItWorks />
-      <Outcomes />
       <Suspense><Pricing /></Suspense>
+      <Outcomes />
       <Guarantee />
       <Founder />
       <DataPrivacy />

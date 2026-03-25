@@ -265,7 +265,7 @@ function Nav() {
             Sign in
           </a>
           <a
-            href="/intake"
+            href="#pricing"
             style={{
               fontFamily: body,
               fontSize: 14,
@@ -311,42 +311,51 @@ function Hero() {
           height: "100%",
           objectFit: "cover",
           zIndex: 0,
-          opacity: 0.5,
+          opacity: 0.7,
         }}
       />
       <div style={{ maxWidth: narrowMax, margin: "0 auto", position: "relative" as const, zIndex: 1 }}>
         <FadeIn preset="fade" triggerOnMount delay={0.1}>
-          <p
+          <div
             style={{
-              fontFamily: body,
-              fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: 2,
-              textTransform: "uppercase" as const,
-              color: colors.coral,
+              backgroundColor: "rgba(24,24,28,0.55)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              borderRadius: 14,
+              padding: "24px 28px",
               marginBottom: 24,
+              display: "inline-block",
             }}
           >
-            For professionals starting a new role
-          </p>
-        </FadeIn>
-
-        <FadeIn preset="slide-up" triggerOnMount delay={0.2}>
-          <h1
-            style={{
-              fontFamily: display,
-              fontSize: "clamp(34px, 5.5vw, 54px)",
-              lineHeight: 1.12,
-              color: colors.textPrimary,
-              marginBottom: 24,
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            New role.
-            <br />
-            Now what?
-          </h1>
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: 2,
+                textTransform: "uppercase" as const,
+                color: colors.coral,
+                marginBottom: 16,
+              }}
+            >
+              For professionals starting a new role
+            </p>
+            <h1
+              style={{
+                fontFamily: display,
+                fontSize: "clamp(34px, 5.5vw, 54px)",
+                lineHeight: 1.12,
+                color: colors.textPrimary,
+                marginBottom: 0,
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              New role.
+              <br />
+              Now what?
+            </h1>
+          </div>
         </FadeIn>
 
         <FadeIn preset="slide-up" triggerOnMount delay={0.3}>
@@ -387,94 +396,109 @@ function Hero() {
         </FadeIn>
 
         <FadeIn preset="slide-up" triggerOnMount delay={0.4}>
-          <p
+          <div
             style={{
-              fontFamily: body,
-              fontSize: 17,
-              color: colors.textSecondary,
-              lineHeight: 1.75,
-              maxWidth: 580,
-              marginBottom: 20,
-            }}
-          >
-            Starting a new role is one of the highest-leverage moments in a career. It is also one of the most disorienting.
-          </p>
-        </FadeIn>
-
-        <FadeIn preset="slide-up" triggerOnMount delay={0.45}>
-          <p
-            style={{
-              fontFamily: body,
-              fontSize: 17,
-              color: colors.textBody,
-              lineHeight: 1.75,
+              backgroundColor: "rgba(24,24,28,0.55)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              borderRadius: 14,
+              padding: "24px 28px",
               maxWidth: 580,
               marginBottom: 28,
             }}
           >
-            BASECAMP is a 30-day personalized daily program to help you find your footing when everything is new.
-          </p>
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 17,
+                color: colors.textSecondary,
+                lineHeight: 1.75,
+                marginBottom: 12,
+              }}
+            >
+              Starting a new role is one of the highest-leverage moments in a career. It is also one of the most disorienting.
+            </p>
+            <p
+              style={{
+                fontFamily: body,
+                fontSize: 17,
+                color: colors.textBody,
+                lineHeight: 1.75,
+                marginBottom: 0,
+              }}
+            >
+              BASECAMP is a 30-day personalized daily program to help you find your footing when everything is new.
+            </p>
+          </div>
         </FadeIn>
 
 
         <FadeIn preset="slide-up" triggerOnMount delay={0.55}>
           <div
             style={{
-              display: "flex",
-              gap: 16,
-              alignItems: "center",
-              flexWrap: "wrap" as const,
+              backgroundColor: "rgba(24,24,28,0.55)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              borderRadius: 14,
+              padding: "20px 28px",
+              maxWidth: 580,
             }}
           >
-            <a
-              href="/intake"
-              onClick={() => trackEvent("new_role_hero_cta_click", {})}
+            <div
               style={{
-                display: "inline-flex",
+                display: "flex",
+                gap: 16,
                 alignItems: "center",
-                gap: 8,
-                fontFamily: body,
-                fontSize: 15,
-                fontWeight: 600,
-                padding: "14px 32px",
-                borderRadius: 8,
-                textDecoration: "none",
-                backgroundColor: colors.coral,
-                color: "#ffffff",
-                transition: "all 0.2s",
-                border: "none",
+                flexWrap: "wrap" as const,
               }}
             >
-              Get started
-            </a>
-            <a
-              href="#how"
+              <a
+                href="#pricing"
+                onClick={() => trackEvent("new_role_hero_cta_click", {})}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontFamily: body,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  padding: "14px 32px",
+                  borderRadius: 8,
+                  textDecoration: "none",
+                  backgroundColor: colors.coral,
+                  color: "#ffffff",
+                  transition: "all 0.2s",
+                  border: "none",
+                }}
+              >
+                Get started
+              </a>
+              <a
+                href="#how"
+                style={{
+                  fontFamily: body,
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: "rgba(255,255,255,0.7)",
+                  textDecoration: "none",
+                  padding: "14px 8px",
+                  transition: "color 0.2s",
+                }}
+              >
+                See how it works ↓
+              </a>
+            </div>
+            <p
               style={{
                 fontFamily: body,
-                fontSize: 15,
-                fontWeight: 500,
-                color: colors.textMuted,
-                textDecoration: "none",
-                padding: "14px 8px",
-                transition: "color 0.2s",
+                fontSize: 13,
+                color: "rgba(255,255,255,0.5)",
+                marginTop: 12,
               }}
             >
-              See how it works ↓
-            </a>
+              7-day money-back guarantee · Access until your goals are complete
+            </p>
           </div>
-        </FadeIn>
-
-        <FadeIn preset="fade" triggerOnMount delay={0.65}>
-          <p
-            style={{
-              fontFamily: body,
-              fontSize: 13,
-              color: colors.textMuted,
-              marginTop: 16,
-            }}
-          >
-            7-day money-back guarantee · Access until your goals are complete
-          </p>
         </FadeIn>
       </div>
     </section>
@@ -1100,7 +1124,7 @@ function HowItWorks() {
         <FadeIn preset="fade" delay={0.3}>
           <div style={{ textAlign: "center" as const, marginTop: 36 }}>
             <a
-              href="/intake"
+              href="#pricing"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -1428,26 +1452,26 @@ function Pricing() {
               <p
                 style={{
                   fontFamily: display,
-                  fontSize: 36,
+                  fontSize: 24,
                   fontWeight: 700,
                   color: colors.textPrimary,
                   marginBottom: 4,
                   letterSpacing: "-0.02em",
                 }}
               >
-                $49
+                Self-guided program
               </p>
               <p
                 style={{
-                  fontFamily: body,
-                  fontSize: 13,
-                  fontWeight: 600,
+                  fontFamily: display,
+                  fontSize: 36,
+                  fontWeight: 700,
                   color: colors.coral,
                   marginBottom: 14,
-                  letterSpacing: "0.02em",
+                  letterSpacing: "-0.02em",
                 }}
               >
-                Self-guided program
+                $49
               </p>
               <p
                 style={{
@@ -1493,7 +1517,7 @@ function Pricing() {
             <div
               style={{
                 padding: 28,
-                border: `1px solid rgba(176,141,173,0.35)`,
+                border: `2px solid ${colors.coral}`,
                 borderRadius: 14,
                 backgroundColor: colors.bgSurface,
                 position: "relative" as const,
@@ -1518,7 +1542,7 @@ function Pricing() {
                   borderRadius: 6,
                 }}
               >
-                Deepest insight
+                Deep Insight
               </span>
 
               <p
@@ -1527,11 +1551,23 @@ function Pricing() {
                   fontSize: 24,
                   fontWeight: 700,
                   color: colors.textPrimary,
-                  marginBottom: 14,
+                  marginBottom: 4,
                   letterSpacing: "-0.02em",
                 }}
               >
                 Program + Enneagram
+              </p>
+              <p
+                style={{
+                  fontFamily: display,
+                  fontSize: 36,
+                  fontWeight: 700,
+                  color: colors.coral,
+                  marginBottom: 14,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                $349
               </p>
               <p
                 style={{
@@ -1560,7 +1596,7 @@ function Pricing() {
                   padding: "12px 20px",
                   borderRadius: 8,
                   cursor: checkoutLoading === "enneagram" ? "wait" : "pointer",
-                  backgroundColor: colors.plumLight,
+                  backgroundColor: colors.coral,
                   color: "#ffffff",
                   transition: "all 0.25s ease",
                   border: "none",
@@ -1602,32 +1638,32 @@ function Pricing() {
                   borderRadius: 6,
                 }}
               >
-                Human support
+                Dedicated Expert-Coach
               </span>
 
               <p
                 style={{
                   fontFamily: display,
-                  fontSize: 36,
+                  fontSize: 24,
                   fontWeight: 700,
                   color: colors.textPrimary,
                   marginBottom: 4,
                   letterSpacing: "-0.02em",
                 }}
               >
-                1:1
+                First 90 Days
               </p>
               <p
                 style={{
-                  fontFamily: body,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: colors.textSecondary,
+                  fontFamily: display,
+                  fontSize: 28,
+                  fontWeight: 700,
+                  color: colors.coral,
                   marginBottom: 14,
-                  letterSpacing: "0.02em",
+                  letterSpacing: "-0.02em",
                 }}
               >
-                3-month coaching partnership
+                1:1 Thinking Partner
               </p>
               <p
                 style={{
@@ -1639,11 +1675,11 @@ function Pricing() {
                   marginBottom: 20,
                 }}
               >
-                The full program plus ongoing 1-on-1 coaching sessions across your first 90 days. For people who want a thinking partner through the entire transition, not just a tool.
+                Everything in the self-guided program, plus weekly or bi-weekly 1:1 coaching sessions across your first 90 days. Includes a personal Enneagram assessment, so you can see where your defaults help and where they cost you.
               </p>
 
               <a
-                href="/intake"
+                href="/apply"
                 style={{
                   display: "flex",
                   justifyContent: "center",
@@ -1846,7 +1882,7 @@ function DataPrivacy() {
 
         <div style={{ textAlign: "center", marginTop: 48, marginBottom: 16 }}>
           <a
-            href="/intake"
+            href="#pricing"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -1972,7 +2008,7 @@ function Outcomes() {
 
         <div style={{ textAlign: "center", marginTop: 48, marginBottom: 16 }}>
           <a
-            href="/intake"
+            href="#pricing"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -2113,7 +2149,7 @@ function FAQ() {
     {
       topic: "Pricing",
       q: "What is the coaching partnership?",
-      a: "Three months of 1-on-1 coaching alongside the full program. For people who want a thinking partner through the entire transition — not just a tool. It starts with a brief application so we can make sure it is the right fit.",
+      a: "Weekly or bi-weekly 1:1 coaching sessions across your first 90 days, alongside the full self-guided program. Includes a personal Enneagram assessment so you can see where your defaults help and where they cost you. It starts with a brief application so we can make sure it is the right fit.",
     },
     {
       topic: "Data & privacy",
@@ -2320,7 +2356,7 @@ function FinalCTA() {
             Start today.
           </p>
           <a
-            href="/intake"
+            href="#pricing"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -2479,8 +2515,8 @@ function BasecampPage() {
       <ProofBar />
       <Problem />
       <HowItWorks />
-      <Outcomes />
       <Suspense><Pricing /></Suspense>
+      <Outcomes />
       <Guarantee />
       <DataPrivacy />
       <FAQ />

@@ -2,10 +2,10 @@ import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 
 const PRODUCTS: Record<string, { productId: string; min: number; max: number }> = {
-  standard:         { productId: "prod_U95TWPCUggnbs3", min: 4900,  max: 4900  },
-  pay_what_you_can: { productId: "prod_U95UKkYNo24wBL", min: 2900,  max: 4800  },
-  pay_it_forward:   { productId: "prod_U95UMTnT09pyPs", min: 5000,  max: 6900  },
-  enneagram:        { productId: "prod_U95VluMgqykEjV", min: 34900, max: 34900 },
+  standard:         { productId: "prod_U950fARo03dl1l", min: 4900,  max: 4900  },
+  pay_what_you_can: { productId: "prod_U95Dn55mOcFKrE", min: 2900,  max: 4800  },
+  pay_it_forward:   { productId: "prod_U95Fwajd9Je9C0", min: 5000,  max: 6900  },
+  enneagram:        { productId: "prod_U951PDLQ2zM79O", min: 34900, max: 34900 },
 };
 
 export async function POST(req: NextRequest) {
@@ -53,10 +53,6 @@ export async function POST(req: NextRequest) {
       metadata: { tier, amount_cents: String(cents), program: "parachute" },
       success_url: `${baseUrl}/parachute/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/parachute?checkout=cancelled#pricing`,
-      // Auto-apply 20% discount on enneagram tier
-      ...(tier === "enneagram" && {
-        discounts: [{ coupon: "wWQ0iwo7" }],
-      }),
     });
 
     return NextResponse.json({ url: session.url });

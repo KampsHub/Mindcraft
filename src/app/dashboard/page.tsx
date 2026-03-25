@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import Nav from "@/components/Nav";
 import FadeIn from "@/components/FadeIn";
 import ProgramCard from "./ProgramCard";
+import UpsellSection from "./UpsellSection";
 import { colors, fonts } from "@/lib/theme";
 import ExercisesSection from "@/components/ExercisesSection";
 
@@ -62,6 +63,7 @@ const quickLinks = [
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [enrollments, setEnrollments] = useState<EnrollmentWithContext[]>([]);
+  const [hasEnneagram, setHasEnneagram] = useState(true); // default true to hide upsell until checked
   const supabase = createClient();
   const router = useRouter();
 
@@ -135,6 +137,15 @@ export default function DashboardPage() {
         );
         setEnrollments(enriched);
       }
+
+      // Check if user has enneagram assessment
+      const { data: assessments } = await supabase
+        .from("client_assessments")
+        .select("id")
+        .eq("client_id", userId)
+        .eq("type", "enneagram")
+        .limit(1);
+      setHasEnneagram((assessments?.length || 0) > 0);
     } catch {
       // Tables may not exist yet
     }
@@ -344,6 +355,11 @@ export default function DashboardPage() {
           </div>
         </FadeIn>
 
+        <UpsellSection
+          showEnneagram={!hasEnneagram}
+          programSlug={enrollments[0]?.enrollment?.programs?.slug || "parachute"}
+          onNavigate={(path) => router.push(path)}
+        />
 
       </div>
 

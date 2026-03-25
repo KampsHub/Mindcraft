@@ -2,8 +2,8 @@ import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 
 const PRODUCTS: Record<string, { productId: string; min: number; max: number }> = {
-  standard:  { productId: "prod_U96n2t6R6t7JGP",  min: 4900,  max: 4900  },
-  enneagram: { productId: "prod_U96onJPYHgPXEo",  min: 34900, max: 34900 },
+  standard:  { productId: "prod_UD4mJMz3x4luYO",  min: 4900,  max: 4900  },
+  enneagram: { productId: "prod_UD4nGQjowWm1JP",  min: 34900, max: 34900 },
 };
 
 export async function POST(req: NextRequest) {
@@ -48,9 +48,6 @@ export async function POST(req: NextRequest) {
       metadata: { tier, amount_cents: String(cents), program: "jetstream" },
       success_url: `${baseUrl}/jetstream/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/jetstream?checkout=cancelled#pricing`,
-      ...(tier === "enneagram" && {
-        discounts: [{ coupon: "wWQ0iwo7" }],
-      }),
     });
 
     return NextResponse.json({ url: session.url });

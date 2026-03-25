@@ -1446,7 +1446,7 @@ function WeeklyReviewPage() {
                 backgroundColor: colors.plumWash, color: colors.plumLight,
                 marginBottom: 14,
               }}>
-                Deepest insight
+                Deep Insight
               </span>
               <p style={{
                 fontFamily: display, fontSize: 18, fontWeight: 700,

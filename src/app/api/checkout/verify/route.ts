@@ -20,8 +20,9 @@ export async function GET(req: NextRequest) {
     const tier = (session.metadata?.tier as string) || "standard";
     const program = (session.metadata?.program as string) || "parachute";
     const amountPaid = session.amount_total || 0;
+    const customerEmail = session.customer_details?.email || session.customer_email || null;
 
-    return NextResponse.json({ paid, tier, program, amountPaid });
+    return NextResponse.json({ paid, tier, program, amountPaid, customerEmail });
   } catch (error: unknown) {
     console.error("Error verifying checkout session:", error);
     return NextResponse.json({ paid: false, error: "Invalid session" }, { status: 400 });

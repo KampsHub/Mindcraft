@@ -1270,7 +1270,7 @@ export default function Home() {
         <div style={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(180deg, rgba(24,24,28,0.35) 0%, rgba(24,24,28,0.55) 100%)`,
+          background: `linear-gradient(180deg, rgba(24,24,28,0.2) 0%, rgba(24,24,28,0.4) 100%)`,
           zIndex: 0,
         }} />
 
@@ -1553,17 +1553,15 @@ export default function Home() {
                 <motion.div
                   whileHover={{
                     y: -6,
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
-                    borderColor: colors.coral,
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+                    borderColor: "rgba(255,255,255,0.3)",
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
                     padding: 32,
-                    backgroundColor: "rgba(24, 24, 28, 0.70)",
-                    backdropFilter: "blur(6px)",
-                    WebkitBackdropFilter: "blur(6px)",
+                    backgroundColor: colors.coral,
                     borderRadius: 16,
-                    border: `1px solid ${colors.borderDefault}`,
+                    border: `1px solid rgba(255,255,255,0.15)`,
                     height: "100%",
                     boxSizing: "border-box",
                     cursor: "pointer",
@@ -1580,8 +1578,8 @@ export default function Home() {
                       alignItems: "center",
                       justifyContent: "center",
                       gap: 12,
-                      background: colors.coralWash,
-                      color: colors.coral,
+                      background: "rgba(0,0,0,0.15)",
+                      color: "rgba(255,255,255,0.95)",
                       fontFamily: display,
                       fontWeight: 700,
                       fontSize: 20,
@@ -1599,7 +1597,7 @@ export default function Home() {
                         fontSize: 9,
                         fontWeight: 700,
                         letterSpacing: "0.08em",
-                        background: colors.coral,
+                        background: "rgba(255,255,255,0.25)",
                         color: "#ffffff",
                         padding: "4px 10px",
                         borderRadius: 20,
@@ -1615,7 +1613,7 @@ export default function Home() {
                       fontWeight: 700,
                       lineHeight: 1.35,
                       marginBottom: 12,
-                      color: colors.textPrimary,
+                      color: "#ffffff",
                       textAlign: "center" as const,
                     }}
                   >
@@ -1624,7 +1622,7 @@ export default function Home() {
                   <p
                     style={{
                       fontSize: 15,
-                      color: "#ffffff",
+                      color: "rgba(255,255,255,0.85)",
                       lineHeight: 1.65,
                       marginBottom: 20,
                       fontFamily: body,
@@ -1640,7 +1638,7 @@ export default function Home() {
                     <div
                       className="program-peek"
                       style={{
-                        borderTop: `1px solid ${colors.borderSubtle}`,
+                        borderTop: `1px solid rgba(255,255,255,0.25)`,
                         paddingTop: 16,
                         marginBottom: 20,
                       }}
@@ -1651,25 +1649,23 @@ export default function Home() {
                         fontFamily: display,
                         textTransform: "uppercase" as const,
                         letterSpacing: "0.1em",
-                        color: "rgba(255,255,255,0.7)",
+                        color: "rgba(255,255,255,0.85)",
                         display: "block",
                         marginBottom: 10,
                       }}>
                         What we&rsquo;ll work on
                       </span>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                         {card.modules.map((mod: string, mi: number) => (
                           <span
                             key={mi}
                             style={{
-                              fontSize: 11,
+                              fontSize: 12,
                               fontFamily: body,
-                              color: "#ffffff",
-                              background: `rgba(196,148,58,0.08)`,
-                              border: `1px solid rgba(196,148,58,0.12)`,
-                              padding: "4px 10px",
-                              borderRadius: 100,
-                              whiteSpace: "nowrap",
+                              color: "rgba(255,255,255,0.9)",
+                              lineHeight: 1.4,
+                              paddingLeft: 12,
+                              borderLeft: "2px solid rgba(255,255,255,0.3)",
                             }}
                           >
                             {mod}
@@ -1688,11 +1684,11 @@ export default function Home() {
                       fontSize: 14,
                       fontWeight: 700,
                       fontFamily: display,
-                      color: "#ffffff",
+                      color: colors.coral,
                       letterSpacing: "0.02em",
                       marginTop: 8,
                       padding: "8px 20px",
-                      backgroundColor: colors.coral,
+                      backgroundColor: "#ffffff",
                       border: "none",
                       borderRadius: 50,
                       textAlign: "center" as const,
@@ -2174,7 +2170,7 @@ export default function Home() {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            opacity: 0.5,
+            opacity: 0.7,
             zIndex: 0,
           }}
         />

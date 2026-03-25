@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import { colors, fonts } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -55,7 +57,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: 14,
         }}>
-          <EnneagramCard programSlug={programSlug} onNavigate={onNavigate} />
+          <EnneagramCard />
           <CoachingCard onNavigate={onNavigate} />
         </div>
       </div>
@@ -63,7 +65,27 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
   );
 }
 
-function EnneagramCard({ programSlug, onNavigate }: { programSlug: string; onNavigate: (path: string) => void }) {
+function EnneagramCard() {
+  const [loading, setLoading] = useState(false);
+
+  async function handleCheckout() {
+    setLoading(true);
+    trackEvent("enneagram_standalone_begin_checkout", {});
+    try {
+      const res = await fetch("/api/checkout/enneagram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else console.error("Checkout error:", data.error);
+    } catch (err) {
+      console.error("Checkout error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <motion.div
       whileHover={{ y: -6, borderColor: "rgba(176, 141, 173, 0.5)", boxShadow: "0 16px 48px rgba(123, 82, 120, 0.25)" }}
@@ -90,7 +112,7 @@ function EnneagramCard({ programSlug, onNavigate }: { programSlug: string; onNav
         backgroundColor: colors.plumWash, color: colors.plumLight,
         marginBottom: 14,
       }}>
-        Deepest insight
+        Deep Insight
       </span>
       <p style={{
         fontFamily: display, fontSize: 18, fontWeight: 700,
@@ -110,22 +132,24 @@ function EnneagramCard({ programSlug, onNavigate }: { programSlug: string; onNav
           fontFamily: display, fontSize: 15, fontWeight: 600,
           color: colors.plumLight,
         }}>
-          $275
+          $300
         </span>
         <motion.button
           whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(176, 141, 173, 0.4)" }}
           whileTap={{ scale: 0.97 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          onClick={() => onNavigate(`/${programSlug}#pricing`)}
+          onClick={handleCheckout}
+          disabled={loading}
           style={{
             fontFamily: display, fontSize: 13, fontWeight: 600,
             padding: "10px 24px", borderRadius: 100,
             backgroundColor: colors.plum, color: colors.textPrimary,
-            border: "none", cursor: "pointer",
+            border: "none", cursor: loading ? "default" : "pointer",
             letterSpacing: "0.01em",
+            opacity: loading ? 0.7 : 1,
           }}
         >
-          Learn more
+          {loading ? "Redirecting…" : "Add now"}
         </motion.button>
       </div>
     </motion.div>

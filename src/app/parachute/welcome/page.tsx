@@ -210,7 +210,10 @@ function ParachuteWelcome() {
     transition: "border-color 0.2s",
   };
 
-  const tierLabel = tier === "enneagram" ? "Enneagram" : "Standard";
+  const tierLabel = tier === "enneagram" ? "Enneagram"
+    : tier === "pay_what_you_can" ? "Pay What You Can"
+    : tier === "pay_it_forward" ? "Pay It Forward"
+    : "Standard";
   const tierBadgeBg = tier === "enneagram" ? colors.plumWash : colors.coralWash;
   const tierBadgeColor = tier === "enneagram" ? colors.plumLight : colors.coral;
 

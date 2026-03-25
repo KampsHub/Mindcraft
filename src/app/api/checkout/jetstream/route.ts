@@ -30,7 +30,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const origin = req.headers.get("origin") || req.headers.get("referer")?.replace(/\/[^/]*$/, "") || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const baseUrl = origin.replace(/\/$/, "");
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",

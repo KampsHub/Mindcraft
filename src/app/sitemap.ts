@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://mindcraft.ninja";
+  const baseUrl = "https://mindcraft.ing";
 
   return [
     {

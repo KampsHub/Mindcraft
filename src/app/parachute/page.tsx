@@ -2000,7 +2000,7 @@ function Pricing() {
               textAlign: "center" as const,
             }}
           >
-            Choose the level that reflects your current financial reality.
+            Choose the level that fits where you are right now.
           </h2>
         </FadeIn>
 

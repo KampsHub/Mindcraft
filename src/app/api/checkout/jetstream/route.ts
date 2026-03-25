@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       metadata: { tier, amount_cents: String(cents), program: "jetstream" },
-      success_url: `${baseUrl}/jetstream/welcome?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${baseUrl}/jetstream?checkout=success`,
       cancel_url: `${baseUrl}/jetstream?checkout=cancelled#pricing`,
     });
 

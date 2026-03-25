@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const next = searchParams.get("next");
 
   if (code) {
     const cookieStore = await cookies();
@@ -25,7 +26,12 @@ export async function GET(request: Request) {
       }
     );
 
-    await supabase.auth.exchangeCodeForSession(code);
+    const { data } = await supabase.auth.exchangeCodeForSession(code);
+
+    // If this is a password recovery flow, redirect to reset page
+    if (data?.session?.user?.recovery_sent_at || next === "/reset-password") {
+      return NextResponse.redirect(`${origin}/reset-password`);
+    }
 
     // Fire welcome email (non-blocking — don't let it delay the redirect)
     const cookieHeader = cookieStore
@@ -40,5 +46,7 @@ export async function GET(request: Request) {
     });
   }
 
-  return NextResponse.redirect(`${origin}/mindful-journal`);
+  // Honor the `next` param if provided, otherwise default to journal
+  const redirectTo = next || "/mindful-journal";
+  return NextResponse.redirect(`${origin}${redirectTo}`);
 }

@@ -141,7 +141,14 @@ export default function IntakePage() {
   }
 
   async function handleComplete() {
-    if (!user || !selectedProgram) return;
+    if (!user) {
+      alert("Please sign in first. Your session may have expired.");
+      return;
+    }
+    if (!selectedProgram) {
+      alert("No program selected. Please go back and select a program.");
+      return;
+    }
     setSaving(true);
 
     const preStartData = {

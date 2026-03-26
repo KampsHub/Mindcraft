@@ -237,27 +237,7 @@ export default function DashboardPage() {
       {/* Background image — program-aware */}
       <DashboardBgImage programSlug={enrollments[0]?.enrollment?.programs?.slug} />
 
-      {/* Decorative floating dots */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 0.1, scale: 1 }}
-        transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-        style={{
-          position: "absolute", top: "8%", right: "12%",
-          width: 180, height: 180, borderRadius: "50%",
-          background: colors.coral, pointerEvents: "none", filter: "blur(60px)", zIndex: 1,
-        }}
-      />
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 0.08, scale: 1 }}
-        transition={{ duration: 1.5, delay: 0.6, ease: "easeOut" }}
-        style={{
-          position: "absolute", top: "18%", left: "8%",
-          width: 140, height: 140, borderRadius: "50%",
-          background: colors.plum, pointerEvents: "none", filter: "blur(50px)", zIndex: 1,
-        }}
-      />
+      {/* Decorative floating dots — hidden when bg image is active */}
 
       <Nav />
 

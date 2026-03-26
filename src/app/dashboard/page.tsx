@@ -242,6 +242,13 @@ export default function DashboardPage() {
       <Nav />
 
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
+       <div style={{
+          backgroundColor: colors.bgSurface,
+          borderRadius: 16,
+          padding: "28px 24px",
+          border: `1px solid ${colors.borderDefault}`,
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+        }}>
 
         {/* ── Welcome ── */}
         <FadeIn preset="fade" duration={0.6} triggerOnMount>
@@ -406,6 +413,7 @@ export default function DashboardPage() {
           onNavigate={(path) => router.push(path)}
         />
 
+       </div>
       </div>
 
       {/* Footer */}

@@ -620,9 +620,9 @@ function DailyFlowPage() {
       {/* Day header */}
       <FadeIn preset="fade" triggerOnMount>
         <div style={{ marginBottom: 28 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
             <span style={{
-              display: "inline-block", background: colors.plumWash, color: colors.plum,
+              display: "inline-block", background: colors.coralWash, color: colors.coral,
               fontFamily: display, fontWeight: 700, fontSize: 11,
               textTransform: "uppercase", letterSpacing: "0.1em",
               padding: "5px 14px", borderRadius: 100,
@@ -630,7 +630,10 @@ function DailyFlowPage() {
               Week {programDay.week_number} — {weekNames[programDay.week_number - 1] || ""}
             </span>
             <span style={{
-              fontSize: 12, color: colors.textMuted, fontFamily: body, fontWeight: 500,
+              display: "inline-block", background: colors.bgSurface, color: colors.textPrimary,
+              fontFamily: display, fontWeight: 700, fontSize: 11,
+              textTransform: "uppercase", letterSpacing: "0.1em",
+              padding: "5px 14px", borderRadius: 100,
             }}>
               {enrollment.programs?.name}
             </span>

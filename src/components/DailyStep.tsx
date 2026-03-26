@@ -165,9 +165,9 @@ export default function DailyStep({
         )}
       </div>
 
-      {/* Step content — only shown when active or completed */}
+      {/* Step content — only shown when active */}
       <AnimatePresence>
-        {(isActive || isCompleted) && (
+        {isActive && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}

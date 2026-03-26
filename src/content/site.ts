@@ -657,8 +657,7 @@ export const content = {
       heading: "Get in touch",
       issueTypes: [
         "Technical problem",
-        "Feedback on an exercise",
-        "Feedback on insights and summaries",
+        "General Feedback",
         "Question for a Coach",
       ],
       messagePlaceholder: "Tell us what's on your mind...",

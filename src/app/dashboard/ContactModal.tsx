@@ -9,8 +9,7 @@ const body = fonts.bodyAlt;
 
 const ISSUE_TYPES = [
   "Technical problem",
-  "Feedback on an exercise",
-  "Feedback on insights and summaries",
+  "General Feedback",
   "Question for a Coach",
 ];
 

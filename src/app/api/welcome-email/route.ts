@@ -56,7 +56,7 @@ export async function POST() {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     await resend.emails.send({
-      from: "Stefanie from Mindcraft <stefanie@allmindsondeck.org>",
+      from: "Stefanie from Mindcraft <stefanie@allmindsondeck.com>",
       to: user.email,
       subject: "Welcome to Mindcraft",
       html: `

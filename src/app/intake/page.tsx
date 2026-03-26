@@ -93,10 +93,19 @@ export default function IntakePage() {
   const supabase = createClient();
   const router = useRouter();
 
-  // Load programs + auth
+  // Load programs + auth — redirect to login if not authenticated
   useEffect(() => {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        // Not authenticated — redirect to login with a return URL
+        const programSlug = searchParams.get("program");
+        const returnUrl = programSlug ? `/intake?program=${programSlug}` : "/intake";
+        window.location.href = `/login?next=${encodeURIComponent(returnUrl)}`;
+        return;
+      }
+
       setUser(user);
 
       const { data: progs } = await supabase

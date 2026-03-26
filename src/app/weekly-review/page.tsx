@@ -559,7 +559,7 @@ function WeeklyReviewPage() {
     return (
       <PageShell showBgImage programSlug={enrollment?.programs?.slug}>
         <div style={{ textAlign: "center", paddingTop: 80 }}>
-          <p style={{ color: colors.textMuted }}>Loading review...</p>
+          <p style={{ color: "#ffffff" }}>Loading review...</p>
         </div>
       </PageShell>
     );
@@ -573,7 +573,7 @@ function WeeklyReviewPage() {
           <h1 style={{ fontFamily: display, fontSize: 28, fontWeight: 700, color: colors.textPrimary, marginBottom: 12 }}>
             No active program
           </h1>
-          <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6 }}>
             Start a program to access your weekly review.
           </p>
           <PillButton onClick={() => router.push("/#programs")} style={{ marginTop: 20 }}>

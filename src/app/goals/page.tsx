@@ -278,7 +278,7 @@ function GoalsPage() {
   if (loading) {
     return (
       <PageShell blobVariant="goals" showBgImage programSlug={enrollment?.programs?.slug}>
-        <p style={{ color: colors.textMuted, fontFamily: body }}>Loading goals...</p>
+        <p style={{ color: "#ffffff", fontFamily: body }}>Loading goals...</p>
       </PageShell>
     );
   }
@@ -294,7 +294,7 @@ function GoalsPage() {
           }}>
             No active program
           </h1>
-          <p style={{ fontSize: 15, color: colors.textMuted, lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
+          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
             You need to start a program first. Your goals are generated after completing Days 1-3.
           </p>
           <PillButton onClick={() => router.push("/#programs")} size="lg">
@@ -325,7 +325,7 @@ function GoalsPage() {
           }}>
             Generate your goals
           </h1>
-          <p style={{ fontSize: 15, color: colors.textMuted, lineHeight: 1.6, marginBottom: 32, fontFamily: body }}>
+          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 32, fontFamily: body }}>
             Based on your intake and what surfaced in Days 1-3, your coaching intelligence will generate
             6 personalized goals. You choose which 2-3 to work on first.
           </p>
@@ -342,7 +342,7 @@ function GoalsPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                style={{ color: colors.textMuted, fontSize: 13, marginTop: 14, fontFamily: body }}
+                style={{ color: "#ffffff", fontSize: 13, marginTop: 14, fontFamily: body }}
               >
                 Reading your intake and journal entries. This takes about 15 seconds.
               </motion.p>
@@ -388,12 +388,12 @@ function GoalsPage() {
           {alreadyApproved ? "Your goals" : "Choose your goals"}
         </h1>
         {!alreadyApproved && (
-          <p style={{ fontSize: 15, color: colors.textMuted, lineHeight: 1.6, marginBottom: 28, fontFamily: body }}>
+          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 28, fontFamily: body }}>
             Select 2-3 goals to work on first. The rest can be activated at any weekly check-in.
           </p>
         )}
         {alreadyApproved && (
-          <p style={{ fontSize: 14, color: colors.textMuted, marginBottom: 28, fontFamily: body }}>
+          <p style={{ fontSize: 14, color: "#ffffff", marginBottom: 28, fontFamily: body }}>
             {displayGoals.length} active goal{displayGoals.length !== 1 ? "s" : ""}. Adjustments happen at weekly review.
           </p>
         )}

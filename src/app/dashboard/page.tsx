@@ -517,7 +517,7 @@ function DashboardBgImage({ programSlug }: { programSlug?: string }) {
         backgroundRepeat: "no-repeat",
         pointerEvents: "none",
         zIndex: 0,
-        filter: "brightness(1.35)",
+        filter: "brightness(1.5) contrast(1.05)",
       }}
     >
       <div style={{
@@ -525,10 +525,10 @@ function DashboardBgImage({ programSlug }: { programSlug?: string }) {
         inset: 0,
         background: `linear-gradient(
           to bottom,
-          rgba(24, 24, 28, 0.15) 0%,
-          rgba(24, 24, 28, 0.4) 35%,
-          rgba(24, 24, 28, 0.75) 60%,
-          ${colors.bgDeep} 85%
+          rgba(24, 24, 28, 0.0) 0%,
+          rgba(24, 24, 28, 0.2) 25%,
+          rgba(24, 24, 28, 0.6) 55%,
+          ${colors.bgDeep} 80%
         )`,
       }} />
     </motion.div>

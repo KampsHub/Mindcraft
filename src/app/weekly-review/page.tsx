@@ -204,7 +204,7 @@ function WeeklyReviewPage() {
         .from("program_enrollments")
         .select("*, programs(*)")
         .eq("client_id", userId)
-        .in("status", ["active", "onboarding", "awaiting_goals"])
+        .in("status", ["active", "onboarding", "awaiting_goals", "pre_start", "completed", "paused"])
         .order("created_at", { ascending: false })
         .limit(1);
       if (enrollments && enrollments.length > 0) {

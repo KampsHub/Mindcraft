@@ -1307,19 +1307,41 @@ function DailyFlowPage() {
               })()}
             </p>
 
-            <motion.button
-              whileHover={{ scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => setActiveStep(4)}
-              style={{
-                padding: "12px 28px", fontSize: 14, fontWeight: 600,
-                color: colors.bgDeep, backgroundColor: colors.coral,
-                border: "none", borderRadius: 100, cursor: "pointer",
-                fontFamily: display, letterSpacing: "0.01em",
-              }}
-            >
-              Continue to Exercises
-            </motion.button>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setActiveStep(4)}
+                style={{
+                  padding: "12px 28px", fontSize: 14, fontWeight: 600,
+                  color: colors.bgDeep, backgroundColor: colors.coral,
+                  border: "none", borderRadius: 100, cursor: "pointer",
+                  fontFamily: display, letterSpacing: "0.01em",
+                }}
+              >
+                Continue to Exercises
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  setStateAnalysis(null);
+                  setOverflowExercises([]);
+                  setCoachingQuestions([]);
+                  setReframe(null);
+                  setPatternChallenge(null);
+                  processJournal();
+                }}
+                style={{
+                  padding: "10px 20px", fontSize: 13, fontWeight: 600,
+                  color: "#ffffff", backgroundColor: "transparent",
+                  border: `1px solid ${colors.borderDefault}`, borderRadius: 100,
+                  cursor: "pointer", fontFamily: display,
+                }}
+              >
+                Reprocess
+              </motion.button>
+            </div>
           </div>
           </div>
         ) : (

@@ -73,6 +73,7 @@ interface ThemesResult {
   carry_forward: string;
   // Commitment tracking data (passthrough from API)
   yesterday_commitments?: string[];
+  yesterday_committed_actions?: string[];
   yesterday_for_tomorrow?: { watch_for?: string; try_this?: string; sit_with?: string } | null;
   active_pattern_challenges?: PatternChallengeData[];
 }
@@ -119,6 +120,8 @@ interface SummaryResult {
   tomorrow_preview: { title: string; territory: string; connection: string };
   pattern_note: string | null;
   micro_content: string;
+  mini_actions?: string[];
+  committed_actions?: string[];
 }
 
 // ── Component ──
@@ -181,6 +184,8 @@ function DailyFlowPage() {
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [dayRating, setDayRating] = useState<number | null>(null);
   const [dayFeedback, setDayFeedback] = useState("");
+  const [selectedActions, setSelectedActions] = useState<Set<number>>(new Set());
+  const [customAction, setCustomAction] = useState("");
 
   // Review prompt
   const [showReviewPrompt, setShowReviewPrompt] = useState(false);
@@ -872,6 +877,31 @@ function DailyFlowPage() {
                     {themes.follow_up.highlight}
                   </p>
                 )}
+              </div>
+            )}
+
+            {/* Yesterday's committed mini-actions follow-up */}
+            {themes.yesterday_committed_actions && themes.yesterday_committed_actions.length > 0 && (
+              <div style={{
+                padding: "16px 18px",
+                backgroundColor: "rgba(224, 149, 133, 0.06)",
+                borderRadius: 12,
+                borderLeft: `3px solid ${colors.coral}`,
+                marginBottom: 16,
+              }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                  Yesterday&apos;s mini-actions
+                </p>
+                <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
+                  You committed to these. How did they go?
+                </p>
+                {themes.yesterday_committed_actions.map((action, i) => (
+                  <div key={i} style={{ marginBottom: 8 }}>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
+                      {action}
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -1781,6 +1811,118 @@ function DailyFlowPage() {
                 <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.65, fontFamily: body }}>
                   {summaryResult.micro_content}
                 </p>
+              </div>
+            )}
+
+            {/* Mini-actions */}
+            {summaryResult.mini_actions && summaryResult.mini_actions.length > 0 && (
+              <div style={{
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14,
+                border: `1px solid ${colors.borderDefault}`,
+                padding: 22,
+              }}>
+                <p style={{
+                  fontSize: 12, fontWeight: 700, color: colors.coral,
+                  margin: "0 0 6px 0", textTransform: "uppercase",
+                  letterSpacing: "0.08em", fontFamily: display,
+                }}>
+                  Pick a Mini-Action for Today
+                </p>
+                <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 14px 0", fontFamily: body, lineHeight: 1.5 }}>
+                  Each takes under 5 minutes. Choose one (or more) to carry into the rest of your day.
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {summaryResult.mini_actions.map((action, i) => {
+                    const isSelected = selectedActions.has(i);
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setSelectedActions((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(i)) next.delete(i); else next.add(i);
+                            return next;
+                          });
+                        }}
+                        style={{
+                          display: "flex", alignItems: "center", gap: 12,
+                          padding: "12px 16px", borderRadius: 10, cursor: "pointer",
+                          border: `1px solid ${isSelected ? colors.coral : colors.borderDefault}`,
+                          backgroundColor: isSelected ? colors.coralWash : colors.bgElevated,
+                          textAlign: "left", transition: "all 0.2s",
+                        }}
+                      >
+                        <div style={{
+                          width: 24, height: 24, borderRadius: "50%", flexShrink: 0,
+                          border: `2px solid ${isSelected ? colors.coral : colors.borderDefault}`,
+                          backgroundColor: isSelected ? colors.coral : "transparent",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          color: colors.bgDeep, fontSize: 12, fontWeight: 700,
+                        }}>
+                          {isSelected ? "\u2713" : ""}
+                        </div>
+                        <span style={{ fontSize: 14, color: "#ffffff", fontFamily: body, lineHeight: 1.45 }}>
+                          {action}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+                  <input
+                    type="text"
+                    value={customAction}
+                    onChange={(e) => setCustomAction(e.target.value)}
+                    placeholder="Or write your own..."
+                    style={{
+                      flex: 1, padding: "10px 14px", fontSize: 14, fontFamily: body,
+                      border: `1px solid ${colors.borderDefault}`, borderRadius: 10,
+                      backgroundColor: colors.bgInput, color: colors.textPrimary,
+                      outline: "none",
+                    }}
+                  />
+                </div>
+                {(selectedActions.size > 0 || customAction.trim()) && (
+                  <button
+                    onClick={async () => {
+                      const actions: string[] = [];
+                      selectedActions.forEach((i) => {
+                        if (summaryResult.mini_actions?.[i]) actions.push(summaryResult.mini_actions[i]);
+                      });
+                      if (customAction.trim()) actions.push(customAction.trim());
+                      // Save committed actions to session
+                      if (session?.id) {
+                        const updatedSummary = { ...summaryResult, committed_actions: actions };
+                        await supabase
+                          .from("daily_sessions")
+                          .update({ step_5_summary: updatedSummary })
+                          .eq("id", session.id);
+                        setSummaryResult(updatedSummary);
+                      }
+                    }}
+                    style={{
+                      marginTop: 12, fontFamily: display, fontSize: 13, fontWeight: 600,
+                      padding: "10px 24px", borderRadius: 100,
+                      backgroundColor: colors.coral, color: colors.bgDeep,
+                      border: "none", cursor: "pointer",
+                    }}
+                  >
+                    Commit to {selectedActions.size + (customAction.trim() ? 1 : 0)} action{(selectedActions.size + (customAction.trim() ? 1 : 0)) !== 1 ? "s" : ""}
+                  </button>
+                )}
+                {summaryResult.committed_actions && summaryResult.committed_actions.length > 0 && (
+                  <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, backgroundColor: colors.bgElevated }}>
+                    <p style={{ fontSize: 12, fontWeight: 600, color: colors.coral, margin: "0 0 6px 0", fontFamily: display }}>
+                      Committed
+                    </p>
+                    {summaryResult.committed_actions.map((a, i) => (
+                      <p key={i} style={{ fontSize: 14, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
+                        \u2713 {a}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

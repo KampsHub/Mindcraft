@@ -178,6 +178,11 @@ function WeeklyReviewPage() {
   const [summaryShareSuccess, setSummaryShareSuccess] = useState(false);
   const [showSummaryShare, setShowSummaryShare] = useState(false);
   const [showInsightDetails, setShowInsightDetails] = useState(false);
+  const [selectedDaysForShare, setSelectedDaysForShare] = useState<Set<number>>(new Set());
+  const [showDayShare, setShowDayShare] = useState(false);
+  const [dayShareEmail, setDayShareEmail] = useState("");
+  const [sharingDays, setSharingDays] = useState(false);
+  const [dayShareSuccess, setDayShareSuccess] = useState(false);
   const supabase = createClient();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -455,6 +460,61 @@ function WeeklyReviewPage() {
       console.error("Share summary failed:", err);
     } finally {
       setSharingSummary(false);
+    }
+  }
+
+  async function handleShareDays() {
+    if (!dayShareEmail || sharingDays || selectedDaysForShare.size === 0) return;
+    setSharingDays(true);
+    setDayShareSuccess(false);
+    try {
+      const dayPayloads = sessions
+        .filter((s) => selectedDaysForShare.has(s.day_number))
+        .map((s) => ({
+          day_number: s.day_number,
+          title: "",
+          summary: typeof s.step_2_journal === "string" ? s.step_2_journal.slice(0, 500) : "No journal entry",
+          themes: [] as string[],
+        }));
+      const res = await fetch("/api/daily-summary/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: dayShareEmail,
+          days: dayPayloads,
+          programName: enrollment?.programs?.name || "Mindcraft",
+        }),
+      });
+      if (res.ok) {
+        setDayShareSuccess(true);
+        setTimeout(() => {
+          setDayShareSuccess(false);
+          setShowDayShare(false);
+          setDayShareEmail("");
+          setSelectedDaysForShare(new Set());
+        }, 2000);
+      }
+    } catch (err) {
+      console.error("Share days failed:", err);
+    } finally {
+      setSharingDays(false);
+    }
+  }
+
+  function toggleDayForShare(dayNum: number) {
+    setSelectedDaysForShare((prev) => {
+      const next = new Set(prev);
+      if (next.has(dayNum)) next.delete(dayNum);
+      else next.add(dayNum);
+      return next;
+    });
+  }
+
+  function toggleAllDaysForShare() {
+    if (selectedDaysForShare.size === sessions.length) {
+      setSelectedDaysForShare(new Set());
+    } else {
+      setSelectedDaysForShare(new Set(sessions.map((s) => s.day_number)));
     }
   }
 
@@ -1066,6 +1126,117 @@ function WeeklyReviewPage() {
           </AnimatePresence>
         </div>
       </FadeIn>
+
+      {/* ── Share Individual Days ── */}
+      {completedSessions.length > 0 && (
+        <FadeIn preset="fade" delay={0.2} triggerOnMount>
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+              <p style={{ fontFamily: display, fontSize: 14, fontWeight: 700, color: colors.textPrimary, margin: 0 }}>
+                Share Daily Insights
+              </p>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  onClick={toggleAllDaysForShare}
+                  style={{
+                    fontFamily: body, fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 6,
+                    border: `1px solid ${colors.borderDefault}`, cursor: "pointer",
+                    backgroundColor: selectedDaysForShare.size === sessions.length ? colors.coralWash : "transparent",
+                    color: selectedDaysForShare.size === sessions.length ? colors.coral : colors.textMuted,
+                  }}
+                >
+                  {selectedDaysForShare.size === sessions.length ? "Deselect all" : "Select all"}
+                </button>
+                {selectedDaysForShare.size > 0 && (
+                  <button
+                    onClick={() => setShowDayShare(true)}
+                    style={{
+                      fontFamily: display, fontSize: 11, fontWeight: 600, padding: "4px 14px", borderRadius: 6,
+                      backgroundColor: colors.coral, color: colors.bgDeep, border: "none", cursor: "pointer",
+                    }}
+                  >
+                    Share {selectedDaysForShare.size} day{selectedDaysForShare.size !== 1 ? "s" : ""}
+                  </button>
+                )}
+              </div>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {completedSessions.map((s) => {
+                const selected = selectedDaysForShare.has(s.day_number);
+                return (
+                  <button
+                    key={s.day_number}
+                    onClick={() => toggleDayForShare(s.day_number)}
+                    style={{
+                      fontFamily: display, fontSize: 12, fontWeight: 600,
+                      padding: "6px 12px", borderRadius: 8, cursor: "pointer",
+                      border: `1px solid ${selected ? colors.coral : colors.borderDefault}`,
+                      backgroundColor: selected ? colors.coralWash : colors.bgSurface,
+                      color: selected ? colors.coral : colors.textMuted,
+                    }}
+                  >
+                    Day {s.day_number}
+                  </button>
+                );
+              })}
+            </div>
+            <p style={{ fontSize: 11, color: colors.textMuted, margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
+              Your data is yours. Only what you explicitly choose to share will be sent.
+            </p>
+
+            {/* Share modal */}
+            <AnimatePresence>
+              {showDayShare && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  style={{ overflow: "hidden", marginTop: 12 }}
+                >
+                  <div style={{
+                    display: "flex", gap: 8, alignItems: "center",
+                    padding: "12px 16px", borderRadius: 10,
+                    backgroundColor: colors.bgSurface, border: `1px solid ${colors.borderDefault}`,
+                  }}>
+                    <input
+                      type="email"
+                      placeholder="Recipient email"
+                      value={dayShareEmail}
+                      onChange={(e) => setDayShareEmail(e.target.value)}
+                      style={{
+                        flex: 1, padding: "8px 12px", fontSize: 13, fontFamily: body,
+                        border: `1px solid ${colors.borderDefault}`, borderRadius: 8,
+                        backgroundColor: colors.bgInput, color: colors.textPrimary, outline: "none",
+                      }}
+                    />
+                    <button
+                      onClick={handleShareDays}
+                      disabled={sharingDays || !dayShareEmail}
+                      style={{
+                        fontFamily: display, fontSize: 12, fontWeight: 600,
+                        padding: "8px 18px", borderRadius: 100, cursor: "pointer",
+                        border: "none", backgroundColor: colors.coral, color: colors.bgDeep,
+                        opacity: sharingDays || !dayShareEmail ? 0.5 : 1,
+                      }}
+                    >
+                      {sharingDays ? "Sending..." : dayShareSuccess ? "Sent \u2713" : "Send"}
+                    </button>
+                    <button
+                      onClick={() => { setShowDayShare(false); setDayShareEmail(""); }}
+                      style={{
+                        fontFamily: body, fontSize: 12, color: colors.textMuted,
+                        background: "none", border: "none", cursor: "pointer",
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </FadeIn>
+      )}
 
       {/* ── Exercises ── */}
       {weekExercises.length > 0 && (

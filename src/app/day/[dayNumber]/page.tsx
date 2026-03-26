@@ -265,6 +265,14 @@ function DailyFlowPage() {
           setCrisisDetectedStep5(true);
         }
       }
+      // On Day 1, auto-complete step 1 (welcome — no themes to review)
+      if (dayNumber === 1 && !steps.includes(1)) {
+        steps.push(1);
+        supabase.from("daily_sessions")
+          .update({ completed_steps: steps })
+          .eq("id", existingSession.id)
+          .then(() => {});
+      }
       // Set active step to the next incomplete one
       const nextStep = [1, 2, 3, 4, 5].find((s) => !steps.includes(s)) || 5;
       setActiveStep(nextStep);

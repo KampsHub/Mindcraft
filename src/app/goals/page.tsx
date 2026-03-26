@@ -311,14 +311,24 @@ function GoalsPage() {
       <PageShell blobVariant="goals" showBgImage programSlug={enrollment?.programs?.slug}>
         <ProgramSwitcher currentEnrollmentId={enrollment.id} onSwitch={handleSwitchEnrollment} />
         <FadeIn preset="fade" triggerOnMount>
-          <span style={{
-            display: "inline-block", background: colors.plumWash, color: colors.plumLight,
-            fontFamily: display, fontWeight: 700, fontSize: 11,
-            textTransform: "uppercase", letterSpacing: "0.1em",
-            padding: "5px 14px", borderRadius: 100, marginBottom: 16,
-          }}>
-            {enrollment.programs?.name} — Day {enrollment.current_day}
-          </span>
+          <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+            <span style={{
+              display: "inline-block", background: colors.coralWash, color: colors.coral,
+              fontFamily: display, fontWeight: 700, fontSize: 11,
+              textTransform: "uppercase", letterSpacing: "0.1em",
+              padding: "5px 14px", borderRadius: 100,
+            }}>
+              Week {Math.ceil(enrollment.current_day / 7)}
+            </span>
+            <span style={{
+              display: "inline-block", background: colors.bgSurface, color: colors.textPrimary,
+              fontFamily: display, fontWeight: 700, fontSize: 11,
+              textTransform: "uppercase", letterSpacing: "0.1em",
+              padding: "5px 14px", borderRadius: 100,
+            }}>
+              {enrollment.programs?.name}
+            </span>
+          </div>
           <h1 style={{
             fontFamily: display, fontSize: 32, fontWeight: 700,
             letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 10px 0",
@@ -375,12 +385,24 @@ function GoalsPage() {
       <ProgramSwitcher currentEnrollmentId={enrollment.id} onSwitch={handleSwitchEnrollment} />
 
       <FadeIn preset="fade" triggerOnMount>
-        <p style={{
-          fontFamily: display, fontSize: 13, fontWeight: 600,
-          color: colors.coral, margin: "0 0 6px 0", letterSpacing: "0.02em",
-        }}>
-          {enrollment.programs?.name} — Day {enrollment.current_day}
-        </p>
+        <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
+          <span style={{
+            display: "inline-block", background: colors.coralWash, color: colors.coral,
+            fontFamily: display, fontWeight: 700, fontSize: 11,
+            textTransform: "uppercase", letterSpacing: "0.1em",
+            padding: "5px 14px", borderRadius: 100,
+          }}>
+            Week {Math.ceil(enrollment.current_day / 7)}
+          </span>
+          <span style={{
+            display: "inline-block", background: colors.bgSurface, color: colors.textPrimary,
+            fontFamily: display, fontWeight: 700, fontSize: 11,
+            textTransform: "uppercase", letterSpacing: "0.1em",
+            padding: "5px 14px", borderRadius: 100,
+          }}>
+            {enrollment.programs?.name}
+          </span>
+        </div>
         <h1 style={{
           fontFamily: display, fontSize: 32, fontWeight: 700,
           letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 6px 0",

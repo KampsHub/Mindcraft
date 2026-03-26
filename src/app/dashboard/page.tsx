@@ -260,7 +260,7 @@ export default function DashboardPage() {
             }}>
               {getGreeting(enrollments[0]?.enrollment?.programs?.slug)}
             </h1>
-            <p style={{ fontSize: 14, color: colors.textMuted, margin: 0, fontFamily: body }}>
+            <p style={{ fontSize: 14, color: "#ffffff", margin: 0, fontFamily: body }}>
               {user.email}
             </p>
           </div>

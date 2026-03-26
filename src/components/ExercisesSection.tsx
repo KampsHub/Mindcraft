@@ -220,7 +220,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <h3 style={{
             fontFamily: display, fontSize: 14, fontWeight: 600,
-            color: colors.textMuted, margin: 0, letterSpacing: "0.01em",
+            color: "#ffffff", margin: 0, letterSpacing: "0.01em",
           }}>
             Exercises
           </h3>

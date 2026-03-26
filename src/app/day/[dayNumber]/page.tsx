@@ -169,6 +169,7 @@ function DailyFlowPage() {
   const [patternChallenge, setPatternChallenge] = useState<{ pattern: string; challenge: string; counter_move: string } | null>(null);
   const [sequenceSuggestion, setSequenceSuggestion] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
+  const [processError, setProcessError] = useState<string | null>(null);
 
   // Step 4
   const [frameworkAnalysis, setFrameworkAnalysis] = useState<FrameworkAnalysis | null>(null);
@@ -373,8 +374,16 @@ function DailyFlowPage() {
 
   // ── Step 3: Process journal — adaptive exercise selection ──
   async function processJournal() {
-    if (!enrollment || !session) return;
+    if (!enrollment || !session) {
+      setProcessError("Session not ready. Please refresh the page and try again.");
+      return;
+    }
+    if (!journalContent.trim()) {
+      setProcessError("Write something in your journal first.");
+      return;
+    }
     setProcessing(true);
+    setProcessError(null);
 
     try {
       const res = await fetch("/api/process-journal", {
@@ -387,55 +396,61 @@ function DailyFlowPage() {
         }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        setStateAnalysis(data.state_analysis);
-        setOverflowExercises(data.overflow_exercises || []);
-        setCoachingQuestions(data.coaching_questions || []);
-        setReframe(data.reframe || null);
-        setPatternChallenge(data.pattern_challenge || null);
-        setSequenceSuggestion(data.sequence_suggestion || null);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Unknown error" }));
+        setProcessError(err.error || `Processing failed (${res.status}). Try again.`);
+        setProcessing(false);
+        return;
+      }
 
-        // Crisis detection -- check urgency_level
-        const isHighUrgency = data.state_analysis?.urgency_level === "high";
-        if (isHighUrgency) {
-          setCrisisDetectedStep3(true);
-          // Fire crisis notification (non-blocking)
-          fetch("/api/crisis-notify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              enrollmentId: enrollment.id,
-              dayNumber,
-              source: "process-journal",
-              action: "detected",
-            }),
-          }).catch(() => {});
-        }
+      const data = await res.json();
+      setStateAnalysis(data.state_analysis);
+      setOverflowExercises(data.overflow_exercises || []);
+      setCoachingQuestions(data.coaching_questions || []);
+      setReframe(data.reframe || null);
+      setPatternChallenge(data.pattern_challenge || null);
+      setSequenceSuggestion(data.sequence_suggestion || null);
 
-        // Save analysis to session
-        await supabase
-          .from("daily_sessions")
-          .update({
-            step_3_analysis: data,
-            completed_steps: [...new Set([...(session.completed_steps || []), 3])],
-          })
-          .eq("id", session.id);
+      // Crisis detection -- check urgency_level
+      const isHighUrgency = data.state_analysis?.urgency_level === "high";
+      if (isHighUrgency) {
+        setCrisisDetectedStep3(true);
+        // Fire crisis notification (non-blocking)
+        fetch("/api/crisis-notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            enrollmentId: enrollment.id,
+            dayNumber,
+            source: "process-journal",
+            action: "detected",
+          }),
+        }).catch(() => {});
+      }
 
-        setSession((prev) => prev ? {
-          ...prev,
+      // Save analysis to session
+      await supabase
+        .from("daily_sessions")
+        .update({
           step_3_analysis: data,
-          completed_steps: [...new Set([...(prev.completed_steps || []), 3])],
-        } : prev);
-        setActiveStep(4);
+          completed_steps: [...new Set([...(session.completed_steps || []), 3])],
+        })
+        .eq("id", session.id);
 
-        // Also trigger framework analysis (skip if crisis)
-        if (!isHighUrgency) {
-          loadFrameworkAnalysis();
-        }
+      setSession((prev) => prev ? {
+        ...prev,
+        step_3_analysis: data,
+        completed_steps: [...new Set([...(prev.completed_steps || []), 3])],
+      } : prev);
+      setActiveStep(4);
+
+      // Also trigger framework analysis (skip if crisis)
+      if (!isHighUrgency) {
+        loadFrameworkAnalysis();
       }
     } catch (err) {
       console.error("Journal processing failed:", err);
+      setProcessError("Something went wrong. Please try again.");
     }
     setProcessing(false);
   }
@@ -1372,6 +1387,11 @@ function DailyFlowPage() {
             >
               Process My Journal
             </motion.button>
+            {processError && (
+              <p style={{ fontSize: 14, color: "#f87171", margin: "14px 0 0 0", fontFamily: body }}>
+                {processError}
+              </p>
+            )}
           </div>
         )}
       </DailyStep>

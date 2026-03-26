@@ -152,6 +152,8 @@ function WeeklyReviewPage() {
   const [loading, setLoading] = useState(true);
   const [weekNumber, setWeekNumber] = useState(1);
   const [weekTheme, setWeekTheme] = useState<WeekTheme | null>(null);
+  const [hasEnneagram, setHasEnneagram] = useState(true); // default true to hide upsell until checked
+  const [enneagramData, setEnneagramData] = useState<{ type: string; notes: string } | null>(null);
 
   // Insight state
   const [insightChecked, setInsightChecked] = useState<Record<number, boolean>>({});
@@ -218,6 +220,23 @@ function WeeklyReviewPage() {
       return;
     }
     setEnrollment(enroll);
+
+    // Check enneagram status
+    try {
+      const { data: assessments } = await supabase
+        .from("client_assessments")
+        .select("id, data")
+        .eq("client_id", userId)
+        .eq("type", "enneagram")
+        .limit(1);
+      const hasIt = (assessments?.length || 0) > 0;
+      setHasEnneagram(hasIt);
+      if (hasIt && assessments?.[0]?.data) {
+        setEnneagramData(assessments[0].data as { type: string; notes: string });
+      }
+    } catch {
+      // Table may not exist yet
+    }
 
     // Calculate current week number from current_day
     const currentWeek = Math.ceil(enroll.current_day / 7);
@@ -1407,9 +1426,80 @@ function WeeklyReviewPage() {
       </>
       )}
 
+      {/* ── Enneagram results ── */}
+      {hasEnneagram && (
+        <FadeIn preset="fade" delay={0.3} triggerOnMount>
+          <div style={{
+            marginTop: 36, marginBottom: 28,
+            backgroundColor: colors.bgSurface,
+            borderRadius: 14,
+            border: "1px solid rgba(176, 141, 173, 0.25)",
+            padding: 24,
+            position: "relative",
+            overflow: "hidden",
+          }}>
+            {/* Decorative glow */}
+            <div style={{
+              position: "absolute", top: -30, right: -30,
+              width: 120, height: 120, borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(176, 141, 173, 0.15) 0%, transparent 70%)",
+              pointerEvents: "none",
+            }} />
+            <span style={{
+              display: "inline-block",
+              fontFamily: body, fontSize: 9, fontWeight: 700,
+              letterSpacing: 1.5, textTransform: "uppercase",
+              padding: "5px 12px", borderRadius: 6,
+              backgroundColor: colors.plumWash, color: colors.plumLight,
+              marginBottom: 14,
+            }}>
+              IEQ9 Enneagram
+            </span>
+            {enneagramData?.type ? (
+              <>
+                <h3 style={{
+                  fontFamily: display, fontSize: 20, fontWeight: 700,
+                  color: colors.textPrimary, margin: "0 0 8px 0",
+                }}>
+                  Type {enneagramData.type}
+                </h3>
+                {enneagramData.notes && (
+                  <p style={{
+                    fontFamily: body, fontSize: 14, color: "#ffffff",
+                    lineHeight: 1.6, margin: "0 0 18px 0",
+                  }}>
+                    {enneagramData.notes}
+                  </p>
+                )}
+                <p style={{
+                  fontFamily: body, fontSize: 12, color: colors.plumLight, margin: 0,
+                }}>
+                  Your Enneagram results shape every exercise and goal in your program.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 style={{
+                  fontFamily: display, fontSize: 20, fontWeight: 700,
+                  color: colors.textPrimary, margin: "0 0 8px 0",
+                }}>
+                  Your Enneagram
+                </h3>
+                <p style={{
+                  fontFamily: body, fontSize: 14, color: "#ffffff",
+                  lineHeight: 1.6, margin: 0,
+                }}>
+                  Your results are being prepared. You&apos;ll see them here once your IEQ9 debrief is complete.
+                </p>
+              </>
+            )}
+          </div>
+        </FadeIn>
+      )}
+
       {/* ── Go deeper — upsells ── */}
       <UpsellSection
-        showEnneagram={true}
+        showEnneagram={!hasEnneagram}
         programSlug={enrollment.programs?.slug || "parachute"}
         onNavigate={(path) => router.push(path)}
       />

@@ -25,11 +25,41 @@ interface UpsellSectionProps {
 
 export default function UpsellSection({ showEnneagram, programSlug, onNavigate }: UpsellSectionProps) {
   if (!showEnneagram) {
-    // Only show 1:1 card as a single full-width card
+    // Enneagram purchased — show confirmation + coaching upsell
     return (
       <FadeIn preset="fade" delay={0.1}>
         <div style={{ marginTop: 36 }}>
           <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 24 }} />
+
+          {/* Enneagram confirmation */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10,
+            padding: "14px 18px", borderRadius: 12,
+            backgroundColor: colors.bgSurface,
+            border: `1px solid rgba(176, 141, 173, 0.25)`,
+            marginBottom: 20,
+          }}>
+            <div style={{
+              width: 28, height: 28, borderRadius: "50%",
+              backgroundColor: colors.plumWash,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0,
+            }}>
+              <span style={{ color: colors.plumLight, fontSize: 14, fontWeight: 700 }}>✓</span>
+            </div>
+            <p style={{
+              fontFamily: body, fontSize: 13, color: "#ffffff", margin: 0, lineHeight: 1.4,
+            }}>
+              Enneagram results available in{" "}
+              <span
+                onClick={() => onNavigate("/weekly-review")}
+                style={{ color: colors.plumLight, cursor: "pointer", textDecoration: "underline", fontWeight: 600 }}
+              >
+                Insights
+              </span>
+            </p>
+          </div>
+
           <p style={{
             fontFamily: display, fontSize: 12, fontWeight: 600,
             color: "#ffffff", marginBottom: 14, letterSpacing: "0.04em",

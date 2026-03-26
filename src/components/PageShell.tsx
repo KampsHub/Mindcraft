@@ -112,7 +112,7 @@ export default function PageShell({
               backgroundRepeat: "no-repeat",
               pointerEvents: "none",
               zIndex: 0,
-              filter: "brightness(1.15)",
+              filter: "brightness(1.35)",
             }}
           >
             {/* Dark gradient overlay for readability */}
@@ -121,9 +121,9 @@ export default function PageShell({
               inset: 0,
               background: `linear-gradient(
                 to bottom,
-                rgba(24, 24, 28, 0.35) 0%,
-                rgba(24, 24, 28, 0.55) 30%,
-                rgba(24, 24, 28, 0.8) 60%,
+                rgba(24, 24, 28, 0.15) 0%,
+                rgba(24, 24, 28, 0.4) 35%,
+                rgba(24, 24, 28, 0.75) 60%,
                 ${colors.bgDeep} 85%
               )`,
             }} />

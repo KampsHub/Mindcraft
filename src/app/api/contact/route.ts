@@ -1,16 +1,58 @@
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+const CONTACT_EMAIL = "stefanie@allmindsondeck.com";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, message } = await req.json();
+    const body = await req.json();
 
-    if (!name || !email || !message) {
-      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+    // Support both formats:
+    // - ContactModal (authenticated): { issueType, message }
+    // - Public contact page: { name, email, message }
+    let senderName = body.name || "";
+    let senderEmail = body.email || "";
+    const issueType = body.issueType || "General";
+    const message = body.message;
+
+    if (!message?.trim()) {
+      return NextResponse.json({ error: "Message is required" }, { status: 400 });
     }
 
-    const CONTACT_EMAIL = "crew@allmindsondeck.com";
+    // If no name/email provided, try to get from authenticated session
+    if (!senderName || !senderEmail) {
+      try {
+        const cookieStore = await cookies();
+        const supabase = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          {
+            cookies: {
+              getAll() { return cookieStore.getAll(); },
+              setAll(cookiesToSet) {
+                try {
+                  cookiesToSet.forEach(({ name, value, options }) =>
+                    cookieStore.set(name, value, options)
+                  );
+                } catch { /* Server Component context */ }
+              },
+            },
+          }
+        );
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          senderEmail = senderEmail || user.email || "unknown";
+          senderName = senderName || user.user_metadata?.name || user.email || "Logged-in user";
+        }
+      } catch {
+        // Auth lookup is best-effort
+      }
+    }
 
-    // If Supabase service role is available, store the message
+    // Store in database
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -19,14 +61,33 @@ export async function POST(req: NextRequest) {
       const supabase = createClient(supabaseUrl, supabaseKey);
 
       await supabase.from("contact_messages").insert({
-        name,
-        email,
-        message,
+        name: senderName,
+        email: senderEmail,
+        message: `[${issueType}] ${message}`,
         to_email: CONTACT_EMAIL,
         created_at: new Date().toISOString(),
       });
-    } else {
-      console.log("\n=== CONTACT FORM ===\nFrom: " + name + " <" + email + ">\nTo: " + CONTACT_EMAIL + "\nMessage: " + message + "\n====================\n");
+    }
+
+    // Send email notification
+    try {
+      await resend.emails.send({
+        from: "Mindcraft <noreply@allmindsondeck.org>",
+        to: CONTACT_EMAIL,
+        replyTo: senderEmail || undefined,
+        subject: `Mindcraft Contact: ${issueType}`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px;">
+            <p><strong>From:</strong> ${senderName} &lt;${senderEmail}&gt;</p>
+            <p><strong>Type:</strong> ${issueType}</p>
+            <hr style="border: 1px solid #eee;" />
+            <p>${message.replace(/\n/g, "<br>")}</p>
+          </div>
+        `,
+      });
+    } catch (emailErr) {
+      console.error("Contact email failed:", emailErr);
+      // Still return success — message is stored in database
     }
 
     return NextResponse.json({ success: true });

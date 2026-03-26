@@ -1270,7 +1270,7 @@ export default function Home() {
         <div style={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(180deg, rgba(24,24,28,0.5) 0%, rgba(24,24,28,0.7) 100%)`,
+          background: `linear-gradient(180deg, rgba(24,24,28,0.25) 0%, rgba(24,24,28,0.5) 100%)`,
           zIndex: 0,
         }} />
 

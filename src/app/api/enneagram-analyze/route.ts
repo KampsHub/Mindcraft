@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { validateBody, enneagramAnalyzeSchema, getAnthropicClient } from "@/lib/api-validation";
+import { validateBody, enneagramAnalyzeSchema, getAnthropicClient, getModelForTier } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const ANALYZE_PROMPT = `You are an expert Enneagram analyst. You will receive one or two IEQ9 Enneagram assessment documents (PDF or images). Extract the following structured data:
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
     const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: getModelForTier("deep"),
       max_tokens: 4096,
       messages: [{
         role: "user",

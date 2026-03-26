@@ -1,9 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { validateBody, generateProfileSchema } from "@/lib/api-validation";
+import { validateBody, generateProfileSchema, getAnthropicClient, getModelForTier } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 /* ── Admin client (bypasses RLS for writes) ── */
@@ -262,11 +261,13 @@ export async function POST(request: Request) {
       (exercises || []) as Record<string, unknown>[]
     );
 
-    const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     // ── Call 1: Client Context ──
     const contextMsg = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: getModelForTier("fast"),
       max_tokens: 2048,
       system: CLIENT_CONTEXT_PROMPT,
       messages: [{ role: "user", content: contextPrompt }],
@@ -283,7 +284,7 @@ export async function POST(request: Request) {
     const edgesInput = `${contextPrompt}\n\n## Client Context (already generated)\n${JSON.stringify(clientContext, null, 2)}`;
 
     const edgesMsg = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: getModelForTier("fast"),
       max_tokens: 3000,
       system: GROWTH_EDGES_PROMPT,
       messages: [{ role: "user", content: edgesInput }],
@@ -300,7 +301,7 @@ export async function POST(request: Request) {
     const mapInput = `${contextPrompt}\n\n## Client Context\n${JSON.stringify(clientContext, null, 2)}\n\n## Growth Edges\n${JSON.stringify(growthEdges, null, 2)}`;
 
     const mapMsg = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: getModelForTier("fast"),
       max_tokens: 3000,
       system: DEVELOPMENT_MAP_PROMPT,
       messages: [{ role: "user", content: mapInput }],

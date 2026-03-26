@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { getAnthropicClient } from "@/lib/api-validation";
+import { getAnthropicClient, getModelForTier } from "@/lib/api-validation";
 
 const PLAN_SYSTEM_PROMPT = `You are a coaching plan architect for All Minds on Deck. You receive a client's intake responses — their values, family patterns, identity, relationship style, saboteurs, work context, goals, and package-specific answers.
 
@@ -113,7 +113,7 @@ Generate a personalised 4-week coaching plan for this client.`;
     const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: getModelForTier("deep"),
       max_tokens: 2048,
       system: PLAN_SYSTEM_PROMPT,
       messages: [{ role: "user", content: intakePrompt }],

@@ -93,6 +93,20 @@ export function validateBody<T>(
   return { success: true, data: result.data };
 }
 
+// ── Model tier routing ──
+// "fast" = Haiku (cheap, simple tasks), "standard" = Sonnet (default), "deep" = Opus (complex reasoning)
+export type ModelTier = "fast" | "standard" | "deep";
+
+const MODEL_MAP: Record<ModelTier, string> = {
+  fast: "claude-haiku-4-20250514",
+  standard: "claude-sonnet-4-20250514",
+  deep: "claude-sonnet-4-20250514", // upgrade to Opus when available
+};
+
+export function getModelForTier(tier: ModelTier = "standard"): string {
+  return MODEL_MAP[tier];
+}
+
 // ── Anthropic client factory ──
 // Returns an Anthropic client or a 500 response if the API key is missing.
 

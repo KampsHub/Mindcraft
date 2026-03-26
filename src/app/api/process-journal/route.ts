@@ -32,7 +32,7 @@ Return valid JSON (no markdown, no code fences):
 
 {
   "state_analysis": {
-    "reading": "2-3 paragraphs of natural prose. Talk directly to the person. Quote their words. Name 1-3 patterns you see — what they are, what they protect, what they cost. Make connections across what they wrote. Teach something about how their mind is working right now. Write in flowing paragraphs, NOT labeled categories.",
+    "reading": "3-5 sentences MAX. Talk directly to the person. Only quote words they ACTUALLY wrote — never paraphrase or fabricate quotes. Name the 1-2 core patterns you see. Be precise and brief. No filler, no motivational language, no over-explaining.",
     "key_themes": ["theme1", "theme2", "theme3"],
     "urgency_level": "low | medium | high",
     "goal_connections": ["Which active goals this connects to — stated as natural observations, e.g. 'This connects to your goal to separate professional identity from core worth'"]
@@ -262,7 +262,7 @@ Analyze the journal content and select the best overflow exercises for this clie
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 3000,
+      max_tokens: 2000,
       system: systemPrompt,
       messages: [{ role: "user", content: profileContext + userPrompt }],
     });

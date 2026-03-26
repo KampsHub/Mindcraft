@@ -513,13 +513,11 @@ function DashboardBgImage({ programSlug }: { programSlug?: string }) {
   if (!bgImage) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 2, ease: "easeOut" }}
+    <div
       style={{
-        position: "fixed",
-        top: 0, left: 0, right: 0, bottom: 0,
+        position: "absolute",
+        top: 0, left: 0, right: 0,
+        height: "100vh",
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center top",
@@ -540,6 +538,6 @@ function DashboardBgImage({ programSlug }: { programSlug?: string }) {
           ${colors.bgDeep} 80%
         )`,
       }} />
-    </motion.div>
+    </div>
   );
 }

@@ -1266,11 +1266,11 @@ export default function Home() {
             }}
           />
         )}
-        {/* Dark overlay for text legibility */}
+        {/* Minimal overlay — only at bottom for text legibility */}
         <div style={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(180deg, rgba(24,24,28,0.1) 0%, rgba(24,24,28,0.3) 100%)`,
+          background: `linear-gradient(180deg, transparent 0%, rgba(24,24,28,0.15) 80%)`,
           zIndex: 0,
         }} />
 
@@ -1553,15 +1553,17 @@ export default function Home() {
                 <motion.div
                   whileHover={{
                     y: -6,
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
-                    borderColor: "rgba(255,255,255,0.3)",
+                    boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
+                    borderColor: "rgba(224,149,133,0.3)",
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   style={{
                     padding: 32,
-                    backgroundColor: colors.coral,
+                    backgroundColor: "rgba(24,24,28,0.75)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
                     borderRadius: 16,
-                    border: `1px solid rgba(255,255,255,0.15)`,
+                    border: `1px solid rgba(255,255,255,0.1)`,
                     height: "100%",
                     boxSizing: "border-box",
                     cursor: "pointer",
@@ -1577,18 +1579,19 @@ export default function Home() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      gap: 12,
-                      background: "rgba(0,0,0,0.15)",
-                      color: "rgba(255,255,255,0.95)",
+                      gap: 10,
+                      background: "rgba(224,149,133,0.15)",
+                      color: colors.coral,
                       fontFamily: display,
                       fontWeight: 700,
-                      fontSize: 20,
+                      fontSize: 12,
                       textTransform: "uppercase",
-                      letterSpacing: "0.14em",
-                      padding: "10px 18px",
+                      letterSpacing: "0.12em",
+                      padding: "8px 18px",
                       borderRadius: 100,
                       marginBottom: 22,
                       textAlign: "center" as const,
+                      alignSelf: "center",
                     }}
                   >
                     {card.tag}
@@ -1597,9 +1600,9 @@ export default function Home() {
                         fontSize: 9,
                         fontWeight: 700,
                         letterSpacing: "0.08em",
-                        background: "rgba(255,255,255,0.25)",
-                        color: "#ffffff",
-                        padding: "4px 10px",
+                        background: "rgba(224,149,133,0.2)",
+                        color: colors.coral,
+                        padding: "3px 8px",
                         borderRadius: 20,
                       }}>
                         Sliding scale
@@ -1638,7 +1641,7 @@ export default function Home() {
                     <div
                       className="program-peek"
                       style={{
-                        borderTop: `1px solid rgba(255,255,255,0.25)`,
+                        borderTop: `1px solid rgba(255,255,255,0.08)`,
                         paddingTop: 16,
                         marginBottom: 20,
                       }}
@@ -1665,7 +1668,7 @@ export default function Home() {
                               color: "rgba(255,255,255,0.9)",
                               lineHeight: 1.4,
                               paddingLeft: 12,
-                              borderLeft: "2px solid rgba(255,255,255,0.3)",
+                              borderLeft: `2px solid ${colors.coral}40`,
                             }}
                           >
                             {mod}
@@ -1681,14 +1684,14 @@ export default function Home() {
                     transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     style={{
                       display: "block",
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: 700,
                       fontFamily: display,
-                      color: colors.coral,
+                      color: colors.bgDeep,
                       letterSpacing: "0.02em",
                       marginTop: 8,
-                      padding: "8px 20px",
-                      backgroundColor: "#ffffff",
+                      padding: "10px 24px",
+                      backgroundColor: colors.coral,
                       border: "none",
                       borderRadius: 50,
                       textAlign: "center" as const,

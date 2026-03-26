@@ -121,7 +121,7 @@ function BasecampWelcome() {
         const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ email, password });
         if (!signInError && signInData.user) {
           await createEnrollmentIfNeeded(signInData.user.id, signInData.user.email || email);
-          router.push("/intake?program=basecamp");
+          window.location.href = "/intake?program=basecamp";
           return;
         }
         setError("An account with this email already exists. Switch to the \"I have an account\" tab to sign in.");
@@ -134,7 +134,7 @@ function BasecampWelcome() {
 
     if (data.session && data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
-      router.push("/intake?program=basecamp");
+      window.location.href = "/intake?program=basecamp";
       return;
     }
 
@@ -158,7 +158,7 @@ function BasecampWelcome() {
     if (data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
     }
-    router.push("/intake?program=basecamp");
+    window.location.href = "/intake?program=basecamp";
   }
 
   const inputStyle: React.CSSProperties = {

@@ -154,7 +154,7 @@ function ParachuteWelcome() {
         const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ email, password });
         if (!signInError && signInData.user) {
           await createEnrollmentIfNeeded(signInData.user.id, signInData.user.email || email);
-          router.push("/intake?program=parachute");
+          window.location.href = "/intake?program=parachute";
           return;
         }
         setError("An account with this email already exists. Switch to the \"I have an account\" tab to sign in.");
@@ -168,7 +168,7 @@ function ParachuteWelcome() {
     // If email confirmation is off, user is auto-authenticated → go to intake
     if (data.session && data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
-      router.push("/intake?program=parachute");
+      window.location.href = "/intake?program=parachute";
       return;
     }
 
@@ -193,7 +193,7 @@ function ParachuteWelcome() {
     if (data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
     }
-    router.push("/intake?program=parachute");
+    window.location.href = "/intake?program=parachute";
   }
 
   const inputStyle: React.CSSProperties = {

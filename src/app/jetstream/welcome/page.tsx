@@ -125,7 +125,7 @@ function JetstreamWelcome() {
         const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ email, password });
         if (!signInError && signInData.user) {
           await createEnrollmentIfNeeded(signInData.user.id, signInData.user.email || email);
-          router.push("/intake?program=jetstream");
+          window.location.href = "/intake?program=jetstream";
           return;
         }
         setError("An account with this email already exists. Switch to the \"I have an account\" tab to sign in.");
@@ -138,7 +138,7 @@ function JetstreamWelcome() {
 
     if (data.session && data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
-      router.push("/intake?program=jetstream");
+      window.location.href = "/intake?program=jetstream";
       return;
     }
 
@@ -162,7 +162,7 @@ function JetstreamWelcome() {
     if (data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
     }
-    router.push("/intake?program=jetstream");
+    window.location.href = "/intake?program=jetstream";
   }
 
   const inputStyle: React.CSSProperties = {

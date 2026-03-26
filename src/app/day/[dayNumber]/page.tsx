@@ -1033,6 +1033,22 @@ function DailyFlowPage() {
             border: `1px solid ${colors.borderDefault}`,
             padding: 28, textAlign: "center",
           }}>
+            {/* Progress bar */}
+            <div style={{
+              width: "100%", height: 4, borderRadius: 2,
+              backgroundColor: colors.bgElevated, marginBottom: 24,
+              overflow: "hidden",
+            }}>
+              <motion.div
+                initial={{ width: "0%" }}
+                animate={{ width: "85%" }}
+                transition={{ duration: 12, ease: "easeOut" }}
+                style={{
+                  height: "100%", borderRadius: 2,
+                  backgroundColor: colors.coral,
+                }}
+              />
+            </div>
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
@@ -1043,7 +1059,7 @@ function DailyFlowPage() {
                 margin: "0 auto 18px auto",
               }}
             />
-            <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, fontFamily: body }}>
+            <p style={{ fontSize: 14, color: "#ffffff", margin: 0, fontFamily: body }}>
               Reading your journal and matching exercises to what surfaced...
             </p>
           </div>
@@ -1218,7 +1234,31 @@ function DailyFlowPage() {
             </motion.button>
           </div>
           </div>
-        ) : null}
+        ) : (
+          <div style={{
+            backgroundColor: colors.bgSurface,
+            borderRadius: 14,
+            border: `1px solid ${colors.borderDefault}`,
+            padding: 22, textAlign: "center",
+          }}>
+            <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 18px 0", lineHeight: 1.65, fontFamily: body }}>
+              Your journal is ready to be processed. Your coaching AI will read what you wrote and select exercises matched to what surfaced.
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={processJournal}
+              style={{
+                padding: "12px 28px", fontSize: 14, fontWeight: 600,
+                color: colors.bgDeep, backgroundColor: colors.coral,
+                border: "none", borderRadius: 100, cursor: "pointer",
+                fontFamily: display, letterSpacing: "0.01em",
+              }}
+            >
+              Process My Journal
+            </motion.button>
+          </div>
+        )}
       </DailyStep>
 
       {/* ═══════ STEP 4: Exercises + Framework Analysis ═══════ */}

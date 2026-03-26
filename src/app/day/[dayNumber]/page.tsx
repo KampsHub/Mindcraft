@@ -587,7 +587,7 @@ function DailyFlowPage() {
   if (loading) {
     return (
       <PageShell>
-        <p style={{ color: colors.textMuted, fontFamily: body }}>Loading your session...</p>
+        <p style={{ color: "#ffffff", fontFamily: body }}>Loading your session...</p>
       </PageShell>
     );
   }
@@ -602,7 +602,7 @@ function DailyFlowPage() {
           }}>
             Day not available
           </h1>
-          <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
+          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
             This day isn&apos;t available yet. Make sure you have an active program enrollment.
           </p>
           <motion.button
@@ -652,7 +652,7 @@ function DailyFlowPage() {
           }}>
             Day {dayNumber}: {programDay.title}
           </h1>
-          <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, lineHeight: 1.55, fontFamily: body }}>
+          <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
             {programDay.territory}
           </p>
         </div>
@@ -700,7 +700,7 @@ function DailyFlowPage() {
             border: `1px solid ${colors.borderDefault}`,
             padding: 22,
           }}>
-            <p style={{ fontSize: 14, color: colors.textSecondary, margin: "0 0 18px 0", lineHeight: 1.65, fontFamily: body }}>
+            <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 18px 0", lineHeight: 1.65, fontFamily: body }}>
               Welcome to Day 1 of your program. There are no themes to review yet — today is where it begins.
             </p>
             <motion.button
@@ -742,7 +742,7 @@ function DailyFlowPage() {
               disabled={loadingThemes}
               style={{
                 padding: "12px 28px", fontSize: 14, fontWeight: 600,
-                color: loadingThemes ? colors.textMuted : colors.bgDeep,
+                color: loadingThemes ? "#ffffff" : colors.bgDeep,
                 backgroundColor: loadingThemes ? colors.bgElevated : colors.coral,
                 border: "none", borderRadius: 100,
                 cursor: loadingThemes ? "not-allowed" : "pointer",
@@ -772,7 +772,7 @@ function DailyFlowPage() {
               <div style={{ marginBottom: 18 }}>
                 {themes.thread.split("\n\n").map((para, i) => (
                   <p key={i} style={{
-                    fontSize: 14, color: colors.textBody, lineHeight: 1.75,
+                    fontSize: 16, color: "#ffffff", lineHeight: 1.75,
                     margin: i === 0 ? "0 0 12px 0" : "12px 0",
                     fontFamily: body,
                   }}>
@@ -781,7 +781,7 @@ function DailyFlowPage() {
                 ))}
               </div>
             ) : (
-              <p style={{ fontSize: 14, color: colors.textBody, lineHeight: 1.65, margin: "0 0 14px 0", fontFamily: body }}>
+              <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: "0 0 14px 0", fontFamily: body }}>
                 {themes.summary}
               </p>
             )}
@@ -801,9 +801,9 @@ function DailyFlowPage() {
 
                 {themes.follow_up.commitments?.length > 0 && (
                   <div style={{ marginBottom: 10 }}>
-                    <p style={{ fontSize: 12, color: colors.textMuted, margin: "0 0 6px 0", fontFamily: body }}>You said you would:</p>
+                    <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body }}>You said you would:</p>
                     {themes.follow_up.commitments.map((c, i) => (
-                      <p key={i} style={{ fontSize: 13, color: colors.textBody, margin: "4px 0", fontFamily: body, paddingLeft: 12 }}>
+                      <p key={i} style={{ fontSize: 15, color: "#ffffff", margin: "4px 0", fontFamily: body, paddingLeft: 12 }}>
                         &bull; {c}
                       </p>
                     ))}
@@ -812,9 +812,9 @@ function DailyFlowPage() {
 
                 {themes.follow_up.coaching_questions?.length > 0 && (
                   <div style={{ marginBottom: 10 }}>
-                    <p style={{ fontSize: 12, color: colors.textMuted, margin: "0 0 6px 0", fontFamily: body }}>From last time:</p>
+                    <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body }}>From last time:</p>
                     {themes.follow_up.coaching_questions.map((q, i) => (
-                      <p key={i} style={{ fontSize: 13, color: colors.textBody, margin: "4px 0", fontFamily: body, fontStyle: "italic", paddingLeft: 12 }}>
+                      <p key={i} style={{ fontSize: 15, color: "#ffffff", margin: "4px 0", fontFamily: body, fontStyle: "italic", paddingLeft: 12 }}>
                         {q}
                       </p>
                     ))}
@@ -822,7 +822,7 @@ function DailyFlowPage() {
                 )}
 
                 {themes.follow_up.highlight && (
-                  <p style={{ fontSize: 13, color: colors.textSecondary, margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
+                  <p style={{ fontSize: 15, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
                     {themes.follow_up.highlight}
                   </p>
                 )}
@@ -855,10 +855,10 @@ function DailyFlowPage() {
                     borderLeft: `3px solid ${colors.plum}`,
                     marginBottom: 8,
                   }}>
-                    <p style={{ fontSize: 13, color: colors.textBody, margin: 0, lineHeight: 1.55, fontFamily: body }}>
+                    <p style={{ fontSize: 15, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
                       {p.observation}
                     </p>
-                    <p style={{ fontSize: 12, color: colors.textMuted, margin: "4px 0 0 0", fontFamily: body }}>
+                    <p style={{ fontSize: 12, color: "#ffffff", margin: "4px 0 0 0", fontFamily: body }}>
                       Seen across {p.days_observed} days • {p.connection}
                     </p>
                   </div>
@@ -867,7 +867,7 @@ function DailyFlowPage() {
             )}
 
             {themes.carry_forward && (
-              <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0, fontStyle: "italic", fontFamily: body }}>
+              <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body }}>
                 {themes.carry_forward}
               </p>
             )}
@@ -916,11 +916,11 @@ function DailyFlowPage() {
                 borderLeft: `3px solid ${colors.coral}`,
                 marginBottom: 8,
               }}>
-                <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
                   {themes.personal_prompt.prompt}
                 </p>
                 {themes.personal_prompt.context && (
-                  <p style={{ fontSize: 12, color: colors.textMuted, margin: "6px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
+                  <p style={{ fontSize: 12, color: "#ffffff", margin: "6px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
                     {themes.personal_prompt.context}
                   </p>
                 )}
@@ -932,7 +932,7 @@ function DailyFlowPage() {
           {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
             <div style={{ marginBottom: 18 }}>
               <p style={{
-                fontSize: 11, fontWeight: 700, color: colors.textMuted,
+                fontSize: 11, fontWeight: 700, color: "#ffffff",
                 margin: "0 0 10px 0", textTransform: "uppercase",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
@@ -945,11 +945,11 @@ function DailyFlowPage() {
                   borderRadius: 12,
                   marginBottom: 8,
                 }}>
-                  <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.55, fontFamily: body }}>
+                  <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
                     {sp.prompt}
                   </p>
                   {sp.purpose && (
-                    <p style={{ fontSize: 12, color: colors.textMuted, margin: "4px 0 0 0", fontFamily: body }}>
+                    <p style={{ fontSize: 12, color: "#ffffff", margin: "4px 0 0 0", fontFamily: body }}>
                       {sp.purpose}
                     </p>
                   )}
@@ -987,7 +987,7 @@ function DailyFlowPage() {
           />
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
-            <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: body }}>
+            <span style={{ fontSize: 12, color: "#ffffff", fontFamily: body }}>
               {journalContent.length > 0 ? `${journalContent.split(/\s+/).filter(Boolean).length} words` : ""}
             </span>
 
@@ -999,7 +999,7 @@ function DailyFlowPage() {
                 disabled={!journalContent.trim() || savingJournal}
                 style={{
                   padding: "12px 28px", fontSize: 14, fontWeight: 600,
-                  color: !journalContent.trim() || savingJournal ? colors.textMuted : colors.bgDeep,
+                  color: !journalContent.trim() || savingJournal ? "#ffffff" : colors.bgDeep,
                   backgroundColor: !journalContent.trim() || savingJournal ? colors.bgElevated : colors.coral,
                   border: "none", borderRadius: 100,
                   cursor: !journalContent.trim() || savingJournal ? "not-allowed" : "pointer",
@@ -1070,7 +1070,7 @@ function DailyFlowPage() {
                 margin: "0 auto 18px auto",
               }}
             />
-            <p style={{ fontSize: 14, color: "#ffffff", margin: 0, fontFamily: body }}>
+            <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
               Reading your journal and matching exercises to what surfaced...
             </p>
           </div>
@@ -1097,7 +1097,7 @@ function DailyFlowPage() {
             <div style={{ marginBottom: 18 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <p style={{
-                  fontSize: 11, fontWeight: 700, color: colors.textMuted,
+                  fontSize: 11, fontWeight: 700, color: "#ffffff",
                   margin: 0, textTransform: "uppercase",
                   letterSpacing: "0.08em", fontFamily: display,
                 }}>
@@ -1109,7 +1109,7 @@ function DailyFlowPage() {
                 {stateAnalysis.reading ? (
                   // New prose format — natural paragraphs
                   stateAnalysis.reading.split("\n\n").map((para, i) => (
-                    <p key={i} style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.7, fontFamily: body }}>
+                    <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.7, fontFamily: body }}>
                       {para}
                     </p>
                   ))
@@ -1117,17 +1117,17 @@ function DailyFlowPage() {
                   // Legacy category format (backwards compatible)
                   <>
                     {stateAnalysis.emotional_state && (
-                      <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                      <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
                         {stateAnalysis.emotional_state}
                       </p>
                     )}
                     {stateAnalysis.cognitive_patterns && (
-                      <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                      <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
                         {stateAnalysis.cognitive_patterns}
                       </p>
                     )}
                     {stateAnalysis.somatic_signals && (
-                      <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                      <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
                         {stateAnalysis.somatic_signals}
                       </p>
                     )}
@@ -1162,7 +1162,7 @@ function DailyFlowPage() {
                   Questions to sit with
                 </p>
                 {coachingQuestions.map((q, i) => (
-                  <p key={i} style={{ fontSize: 14, color: colors.textBody, margin: i === 0 ? 0 : "10px 0 0 0", lineHeight: 1.6, fontFamily: body, fontStyle: "italic" }}>
+                  <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: i === 0 ? 0 : "10px 0 0 0", lineHeight: 1.6, fontFamily: body, fontStyle: "italic" }}>
                     {q}
                   </p>
                 ))}
@@ -1183,13 +1183,13 @@ function DailyFlowPage() {
                   </p>
                   <FlagButton outputType="reframe" dailySessionId={session?.id} />
                 </div>
-                <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 8px 0", fontFamily: body, fontStyle: "italic" }}>
+                <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 8px 0", fontFamily: body, fontStyle: "italic" }}>
                   &ldquo;{reframe.source_quote}&rdquo;
                 </p>
-                <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, fontFamily: body, textDecoration: "line-through" }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body, textDecoration: "line-through" }}>
                   {reframe.old_thought}
                 </p>
-                <p style={{ fontSize: 14, color: colors.textBody, margin: "6px 0 0 0", fontFamily: body, fontWeight: 600 }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: "6px 0 0 0", fontFamily: body, fontWeight: 600 }}>
                   {reframe.new_thought}
                 </p>
               </div>
@@ -1207,13 +1207,13 @@ function DailyFlowPage() {
                 <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
                   Pattern challenge
                 </p>
-                <p style={{ fontSize: 13, color: colors.textBody, margin: "0 0 8px 0", lineHeight: 1.55, fontFamily: body }}>
+                <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 8px 0", lineHeight: 1.55, fontFamily: body }}>
                   {patternChallenge.pattern}
                 </p>
-                <p style={{ fontSize: 14, color: colors.textBody, margin: "0 0 4px 0", fontWeight: 600, fontFamily: body }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 4px 0", fontWeight: 600, fontFamily: body }}>
                   {patternChallenge.challenge}
                 </p>
-                <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0, fontFamily: body, fontStyle: "italic" }}>
+                <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontFamily: body, fontStyle: "italic" }}>
                   Counter-move: {patternChallenge.counter_move}
                 </p>
               </div>
@@ -1221,12 +1221,12 @@ function DailyFlowPage() {
 
             {/* Sequence suggestion */}
             {sequenceSuggestion && (
-              <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 14px 0", fontFamily: body, fontStyle: "italic" }}>
+              <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 14px 0", fontFamily: body, fontStyle: "italic" }}>
                 {sequenceSuggestion}
               </p>
             )}
 
-            <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 18px 0", fontFamily: body }}>
+            <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
               {overflowExercises.length} exercise{overflowExercises.length !== 1 ? "s" : ""} selected based on your journal.
             </p>
 
@@ -1252,7 +1252,7 @@ function DailyFlowPage() {
             border: `1px solid ${colors.borderDefault}`,
             padding: 22, textAlign: "center",
           }}>
-            <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 18px 0", lineHeight: 1.65, fontFamily: body }}>
+            <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 18px 0", lineHeight: 1.65, fontFamily: body }}>
               Your journal is ready to be processed. Your coaching AI will read what you wrote and select exercises matched to what surfaced.
             </p>
             <motion.button
@@ -1290,7 +1290,7 @@ function DailyFlowPage() {
         {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
           <div style={{ marginBottom: 22 }}>
             <p style={{
-              fontSize: 11, fontWeight: 700, color: colors.textMuted,
+              fontSize: 11, fontWeight: 700, color: "#ffffff",
               margin: "0 0 12px 0", textTransform: "uppercase",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
@@ -1318,7 +1318,7 @@ function DailyFlowPage() {
         {overflowExercises.length > 0 && (
           <div style={{ marginBottom: 22 }}>
             <p style={{
-              fontSize: 11, fontWeight: 700, color: colors.textMuted,
+              fontSize: 11, fontWeight: 700, color: "#ffffff",
               margin: "0 0 12px 0", textTransform: "uppercase",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
@@ -1357,12 +1357,12 @@ function DailyFlowPage() {
             border: `1px solid ${colors.borderDefault}`,
             padding: 22, textAlign: "center",
           }}>
-            <p style={{ fontSize: 13, color: colors.textMuted, fontFamily: body }}>Loading framework analysis...</p>
+            <p style={{ fontSize: 13, color: "#ffffff", fontFamily: body }}>Loading framework analysis...</p>
           </div>
         ) : frameworkAnalysis ? (
           <div style={{ marginBottom: 22 }}>
             <p style={{
-              fontSize: 11, fontWeight: 700, color: colors.textMuted,
+              fontSize: 11, fontWeight: 700, color: "#ffffff",
               margin: "0 0 12px 0", textTransform: "uppercase",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
@@ -1381,11 +1381,11 @@ function DailyFlowPage() {
               }}>
                 {frameworkAnalysis.framework_name}
               </h3>
-              <p style={{ fontSize: 12, color: colors.textMuted, margin: "0 0 16px 0", fontFamily: body }}>
+              <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 16px 0", fontFamily: body }}>
                 {frameworkAnalysis.originator} — {frameworkAnalysis.source_work}
               </p>
 
-              <p style={{ fontSize: 14, color: colors.textBody, lineHeight: 1.65, margin: "0 0 16px 0", fontFamily: body }}>
+              <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: "0 0 16px 0", fontFamily: body }}>
                 {frameworkAnalysis.explanation}
               </p>
 
@@ -1395,7 +1395,7 @@ function DailyFlowPage() {
                 borderRadius: 12,
                 marginBottom: 16,
               }}>
-                <p style={{ fontSize: 14, color: colors.textBody, lineHeight: 1.65, margin: 0, fontFamily: body }}>
+                <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: 0, fontFamily: body }}>
                   {frameworkAnalysis.application}
                 </p>
               </div>
@@ -1434,7 +1434,7 @@ function DailyFlowPage() {
           disabled={loadingSummary}
           style={{
             padding: "12px 28px", fontSize: 14, fontWeight: 600,
-            color: loadingSummary ? colors.textMuted : colors.bgDeep,
+            color: loadingSummary ? "#ffffff" : colors.bgDeep,
             backgroundColor: loadingSummary ? colors.bgElevated : colors.coral,
             border: "none", borderRadius: 100,
             cursor: loadingSummary ? "not-allowed" : "pointer",
@@ -1473,7 +1473,7 @@ function DailyFlowPage() {
                 margin: "0 auto 18px auto",
               }}
             />
-            <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, fontFamily: body }}>
+            <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
               Generating your daily summary...
             </p>
           </div>
@@ -1498,7 +1498,7 @@ function DailyFlowPage() {
               <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 4 }}>
                 <FlagButton outputType="summary" dailySessionId={session?.id} />
               </div>
-              <p style={{ fontSize: 14, color: colors.textBody, lineHeight: 1.7, margin: "0 0 14px 0", fontFamily: body }}>
+              <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.7, margin: "0 0 14px 0", fontFamily: body }}>
                 {summaryResult.summary}
               </p>
 
@@ -1523,7 +1523,7 @@ function DailyFlowPage() {
                   borderRadius: 12,
                   borderLeft: `3px solid ${colors.plum}`,
                 }}>
-                  <p style={{ fontSize: 13, color: colors.textBody, margin: 0, lineHeight: 1.55, fontFamily: body }}>
+                  <p style={{ fontSize: 15, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
                     <span style={{ fontWeight: 700 }}>Pattern forming:</span> {summaryResult.pattern_note}
                   </p>
                 </div>
@@ -1539,14 +1539,14 @@ function DailyFlowPage() {
                 padding: 22,
               }}>
                 <p style={{
-                  fontSize: 11, fontWeight: 700, color: colors.textMuted,
+                  fontSize: 11, fontWeight: 700, color: "#ffffff",
                   margin: "0 0 12px 0", textTransform: "uppercase",
                   letterSpacing: "0.08em", fontFamily: display,
                 }}>
                   Exercise Insights
                 </p>
                 {summaryResult.exercise_insights.map((ei, i) => (
-                  <p key={i} style={{ fontSize: 14, color: colors.textBody, margin: "0 0 10px 0", lineHeight: 1.55, fontFamily: body }}>
+                  <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "0 0 10px 0", lineHeight: 1.55, fontFamily: body }}>
                     <span style={{ fontWeight: 600, color: colors.textPrimary }}>{ei.exercise_name}:</span> {ei.insight}
                   </p>
                 ))}
@@ -1562,7 +1562,7 @@ function DailyFlowPage() {
                 padding: 22,
               }}>
                 <p style={{
-                  fontSize: 11, fontWeight: 700, color: colors.textMuted,
+                  fontSize: 11, fontWeight: 700, color: "#ffffff",
                   margin: "0 0 12px 0", textTransform: "uppercase",
                   letterSpacing: "0.08em", fontFamily: display,
                 }}>
@@ -1573,7 +1573,7 @@ function DailyFlowPage() {
                     <p style={{ fontSize: 14, fontWeight: 600, color: colors.textPrimary, margin: 0, fontFamily: body }}>
                       {gp.goal_text}
                     </p>
-                    <p style={{ fontSize: 13, color: colors.textSecondary, margin: "3px 0 0 0", fontFamily: body, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: 15, color: "#ffffff", margin: "3px 0 0 0", fontFamily: body, lineHeight: 1.5 }}>
                       {gp.observation}
                     </p>
                   </div>
@@ -1600,10 +1600,10 @@ function DailyFlowPage() {
               <p style={{ fontSize: 16, fontWeight: 700, color: colors.textPrimary, margin: "0 0 4px 0", fontFamily: display, letterSpacing: "-0.02em" }}>
                 Day {dayNumber + 1}: {summaryResult.tomorrow_preview.title}
               </p>
-              <p style={{ fontSize: 13, color: colors.textSecondary, margin: "0 0 8px 0", fontFamily: body }}>
+              <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 8px 0", fontFamily: body }}>
                 {summaryResult.tomorrow_preview.territory}
               </p>
-              <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0, fontStyle: "italic", fontFamily: body, lineHeight: 1.55 }}>
+              <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body, lineHeight: 1.55 }}>
                 {summaryResult.tomorrow_preview.connection}
               </p>
             </div>
@@ -1617,13 +1617,13 @@ function DailyFlowPage() {
                 padding: 22,
               }}>
                 <p style={{
-                  fontSize: 11, fontWeight: 700, color: colors.textMuted,
+                  fontSize: 11, fontWeight: 700, color: "#ffffff",
                   margin: "0 0 10px 0", textTransform: "uppercase",
                   letterSpacing: "0.08em", fontFamily: display,
                 }}>
                   Today&apos;s Insight
                 </p>
-                <p style={{ fontSize: 14, color: colors.textBody, margin: 0, lineHeight: 1.65, fontFamily: body }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.65, fontFamily: body }}>
                   {summaryResult.micro_content}
                 </p>
               </div>
@@ -1637,7 +1637,7 @@ function DailyFlowPage() {
               padding: 22,
             }}>
               <p style={{
-                fontSize: 11, fontWeight: 700, color: colors.textMuted,
+                fontSize: 11, fontWeight: 700, color: "#ffffff",
                 margin: "0 0 14px 0", textTransform: "uppercase",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
@@ -1659,7 +1659,7 @@ function DailyFlowPage() {
                         ? `2px solid ${colors.coral}`
                         : `1px solid ${colors.borderDefault}`,
                       backgroundColor: dayRating && star <= dayRating ? colors.coralWash : colors.bgSurface,
-                      color: dayRating && star <= dayRating ? colors.coral : colors.textMuted,
+                      color: dayRating && star <= dayRating ? colors.coral : "#ffffff",
                       fontSize: 22,
                       cursor: "pointer",
                       transition: "all 0.2s",
@@ -1767,7 +1767,7 @@ function DailyFlowPage() {
                 {dayNumber === 30 ? "Program Complete!" : `Week ${Math.ceil(dayNumber / 7)} Complete`}
               </h2>
               <p style={{
-                fontSize: 14, color: colors.textSecondary, margin: "0 0 24px 0",
+                fontSize: 16, color: "#ffffff", margin: "0 0 24px 0",
                 fontFamily: body, lineHeight: 1.6,
               }}>
                 {dayNumber === 30
@@ -1794,7 +1794,7 @@ function DailyFlowPage() {
                   onClick={() => router.push("/dashboard")}
                   style={{
                     width: "100%", padding: "12px 24px", fontSize: 14, fontWeight: 600,
-                    color: colors.textSecondary, backgroundColor: "transparent",
+                    color: "#ffffff", backgroundColor: "transparent",
                     border: `1px solid ${colors.borderDefault}`,
                     borderRadius: 100, cursor: "pointer", fontFamily: display,
                   }}

@@ -286,7 +286,7 @@ function GoalsPage() {
   /* ── No enrollment ── */
   if (!enrollment) {
     return (
-      <PageShell blobVariant="goals" showBgImage programSlug={enrollment?.programs?.slug}>
+      <PageShell blobVariant="goals" showBgImage>
         <FadeIn preset="fade" triggerOnMount>
           <h1 style={{
             fontFamily: display, fontSize: 32, fontWeight: 700,

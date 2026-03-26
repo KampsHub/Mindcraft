@@ -568,7 +568,7 @@ function WeeklyReviewPage() {
   /* ── No enrollment ── */
   if (!enrollment) {
     return (
-      <PageShell showBgImage programSlug={enrollment?.programs?.slug}>
+      <PageShell showBgImage>
         <div style={{ paddingTop: 48 }}>
           <h1 style={{ fontFamily: display, fontSize: 28, fontWeight: 700, color: colors.textPrimary, marginBottom: 12 }}>
             No active program

@@ -162,6 +162,9 @@ function DailyFlowPage() {
   const [stateAnalysis, setStateAnalysis] = useState<StateAnalysis | null>(null);
   const [overflowExercises, setOverflowExercises] = useState<OverflowExercise[]>([]);
   const [coachingQuestions, setCoachingQuestions] = useState<string[]>([]);
+  const [questionResponses, setQuestionResponses] = useState<Record<number, string>>({});
+  const [savingResponses, setSavingResponses] = useState(false);
+  const [responsesSaved, setResponsesSaved] = useState(false);
   const [reframe, setReframe] = useState<{ old_thought: string; new_thought: string; source_quote: string } | null>(null);
   const [patternChallenge, setPatternChallenge] = useState<{ pattern: string; challenge: string; counter_move: string } | null>(null);
   const [sequenceSuggestion, setSequenceSuggestion] = useState<string | null>(null);
@@ -437,6 +440,28 @@ function DailyFlowPage() {
     setProcessing(false);
   }
 
+  // ── Save coaching question responses ──
+  async function saveQuestionResponses() {
+    if (!session || Object.values(questionResponses).every((r) => !r.trim())) return;
+    setSavingResponses(true);
+    try {
+      const content = coachingQuestions
+        .map((q, i) => `Q: ${q}\nA: ${questionResponses[i] || "(no response)"}`)
+        .join("\n\n");
+      await supabase.from("entries").insert({
+        client_id: user?.id,
+        content,
+        date: new Date().toISOString().split("T")[0],
+        theme_tags: ["coaching-questions"],
+        metadata: { source: "coaching_questions", day_number: dayNumber, enrollment_id: enrollment?.id },
+      });
+      setResponsesSaved(true);
+    } catch (err) {
+      console.error("Failed to save question responses:", err);
+    }
+    setSavingResponses(false);
+  }
+
   // ── Step 4: Framework analysis ──
   async function loadFrameworkAnalysis() {
     if (!enrollment) return;
@@ -694,6 +719,11 @@ function DailyFlowPage() {
         estimatedTime="2 min"
       >
         {dayNumber === 1 ? (
+          completedSteps.includes(1) ? (
+            <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontFamily: body }}>
+              Day 1 — no prior themes.
+            </p>
+          ) : (
           <div style={{
             backgroundColor: colors.bgSurface,
             borderRadius: 14,
@@ -728,6 +758,7 @@ function DailyFlowPage() {
               Begin Day 1
             </motion.button>
           </div>
+          )
         ) : !themes ? (
           <div style={{
             backgroundColor: colors.bgSurface,
@@ -1150,24 +1181,67 @@ function DailyFlowPage() {
             )}
 
             {/* Coaching Questions */}
+            {/* Separator */}
+            <div style={{ height: 1, backgroundColor: colors.borderSubtle, margin: "18px 0" }} />
+
             {coachingQuestions.length > 0 && (
               <div style={{
-                padding: "16px 18px",
+                padding: "20px 22px",
                 backgroundColor: colors.plumWash,
                 borderRadius: 12,
                 borderLeft: `3px solid ${colors.plum}`,
                 marginBottom: 14,
               }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: colors.plum, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: colors.plum, margin: "0 0 16px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
                   Questions to sit with
                 </p>
                 {coachingQuestions.map((q, i) => (
-                  <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: i === 0 ? 0 : "10px 0 0 0", lineHeight: 1.6, fontFamily: body, fontStyle: "italic" }}>
-                    {q}
-                  </p>
+                  <div key={i} style={{ marginBottom: i < coachingQuestions.length - 1 ? 18 : 0 }}>
+                    <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 10px 0", lineHeight: 1.6, fontFamily: body, fontStyle: "italic" }}>
+                      {q}
+                    </p>
+                    <textarea
+                      value={questionResponses[i] || ""}
+                      onChange={(e) => setQuestionResponses((prev) => ({ ...prev, [i]: e.target.value }))}
+                      placeholder="Your thoughts..."
+                      rows={2}
+                      disabled={responsesSaved}
+                      style={{
+                        width: "100%", padding: "10px 14px", fontSize: 15, fontFamily: body,
+                        border: `1px solid ${colors.borderDefault}`, borderRadius: 10,
+                        backgroundColor: colors.bgInput, color: "#ffffff",
+                        resize: "vertical", minHeight: 60, boxSizing: "border-box",
+                        outline: "none", opacity: responsesSaved ? 0.6 : 1,
+                      }}
+                    />
+                  </div>
                 ))}
+                {!responsesSaved ? (
+                  <motion.button
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={saveQuestionResponses}
+                    disabled={savingResponses || Object.values(questionResponses).every((r) => !r.trim())}
+                    style={{
+                      marginTop: 14, padding: "10px 24px", fontSize: 13, fontWeight: 600,
+                      color: colors.bgDeep, backgroundColor: colors.plum,
+                      border: "none", borderRadius: 100, cursor: "pointer",
+                      fontFamily: display, letterSpacing: "0.01em",
+                      opacity: savingResponses || Object.values(questionResponses).every((r) => !r.trim()) ? 0.5 : 1,
+                    }}
+                  >
+                    {savingResponses ? "Saving..." : "Save Responses"}
+                  </motion.button>
+                ) : (
+                  <p style={{ marginTop: 12, fontSize: 13, color: colors.plum, fontWeight: 600, fontFamily: display }}>
+                    ✓ Responses saved
+                  </p>
+                )}
               </div>
             )}
+
+            {/* Separator before reframe */}
+            {reframe && <div style={{ height: 1, backgroundColor: colors.borderSubtle, margin: "18px 0" }} />}
 
             {/* Reframe */}
             {reframe && (

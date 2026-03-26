@@ -12,6 +12,7 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
+  const [expired, setExpired] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -35,8 +36,14 @@ export default function ResetPasswordPage() {
       }
     });
 
+    // If no session after 6 seconds, link likely expired
+    const timeout = setTimeout(() => {
+      if (!ready) setExpired(true);
+    }, 6000);
+
     return () => {
       subscription.unsubscribe();
+      clearTimeout(timeout);
     };
   }, [supabase]);
 
@@ -106,9 +113,28 @@ export default function ResetPasswordPage() {
             textAlign: "center",
           }}
         >
-          <p style={{ color: colors.gray500, fontSize: 14 }}>
-            Verifying your reset link...
-          </p>
+          {expired ? (
+            <>
+              <p style={{ color: colors.gray500, fontSize: 14, marginBottom: 16 }}>
+                This reset link may have expired or already been used.
+              </p>
+              <a
+                href="/forgot-password"
+                style={{
+                  color: colors.primary,
+                  fontWeight: 600,
+                  fontSize: 14,
+                  textDecoration: "none",
+                }}
+              >
+                Request a new reset link
+              </a>
+            </>
+          ) : (
+            <p style={{ color: colors.gray500, fontSize: 14 }}>
+              Verifying your reset link...
+            </p>
+          )}
         </div>
       </div>
     );

@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   try {
     const apiKey = process.env.CLAUDE_API_KEY;
     const resendKey = process.env.RESEND_API_KEY;
-    const coachEmail = process.env.COACH_EMAIL || "stefanie@allmindsondeck.org";
+    const coachEmail = process.env.COACH_EMAIL || "crew@allmindsondeck.com";
 
     if (!apiKey) {
       return NextResponse.json({ error: "CLAUDE_API_KEY not set" }, { status: 500 });

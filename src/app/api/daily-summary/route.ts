@@ -70,7 +70,7 @@ When generating extracted_commitments:
 5. The pattern_note is only for genuine multi-day patterns. Don't force it. When you name one, teach something about why it exists.
 6. Tomorrow's connection should feel organic, not like a homework assignment.
 7. **Framework attribution**: When referencing exercises by name, use the exact official framework name and include the originator. Specifically: "The Seven Levels of Personal, Group and Organizational Effectiveness" must always use the full name and be attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate or paraphrase copyrighted framework names.
-8. SAFETY: If today's journal or exercise responses contain signals of crisis (suicidal ideation, self-harm, hopelessness, abuse disclosures, expressions of being a burden), include in summary: "What you wrote carries real weight, and it's beyond what exercises can hold right now. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or email stefanie@allmindsondeck.org." Set pattern_note to flag this for review.`;
+8. SAFETY: If today's journal or exercise responses contain signals of crisis (suicidal ideation, self-harm, hopelessness, abuse disclosures, expressions of being a burden), include in summary: "What you wrote carries real weight, and it's beyond what exercises can hold right now. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or email crew@allmindsondeck.com." Set pattern_note to flag this for review.`;
 
 export async function POST(request: Request) {
   try {

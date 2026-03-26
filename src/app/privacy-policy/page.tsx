@@ -374,8 +374,8 @@ export default function PrivacyPolicyPage() {
           </ul>
           <p style={textStyle}>
             To exercise any of these rights, email{" "}
-            <a href="mailto:stefanie@allmindsondeck.org" style={{ color: colors.coral, textDecoration: "none" }}>
-              stefanie@allmindsondeck.org
+            <a href="mailto:crew@allmindsondeck.com" style={{ color: colors.coral, textDecoration: "none" }}>
+              crew@allmindsondeck.com
             </a>
             . We will respond within 30 days.
           </p>
@@ -454,8 +454,8 @@ export default function PrivacyPolicyPage() {
           </p>
           <p style={textStyle}>
             All Minds on Deck LLC<br />
-            <a href="mailto:stefanie@allmindsondeck.org" style={{ color: colors.coral, textDecoration: "none" }}>
-              stefanie@allmindsondeck.org
+            <a href="mailto:crew@allmindsondeck.com" style={{ color: colors.coral, textDecoration: "none" }}>
+              crew@allmindsondeck.com
             </a>
           </p>
         </div>

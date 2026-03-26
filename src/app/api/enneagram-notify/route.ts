@@ -18,8 +18,8 @@ export async function POST(req: NextRequest) {
     const resend = new Resend(resendKey);
 
     await resend.emails.send({
-      from: "Mindcraft <stefanie@allmindsondeck.org>",
-      to: "stefanie@allmindsondeck.com",
+      from: "Mindcraft <crew@allmindsondeck.com>",
+      to: "crew@allmindsondeck.com",
       subject: "New Enneagram Purchase",
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">

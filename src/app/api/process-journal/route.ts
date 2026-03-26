@@ -98,7 +98,7 @@ Test every exercise description: would someone who has never been to therapy or 
 7. If a modality doesn't have a relevant match, skip it. Quality over coverage.
 8. Order by relevance — most needed first.
 9. **Framework attribution**: When selecting a framework, use its exact official name and originator as listed in the library. Specifically: "The Seven Levels of Personal, Group and Organizational Effectiveness" must always use the full name and be attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate or paraphrase copyrighted framework names.
-10. SAFETY: If the journal contains signals of crisis (suicidal ideation, self-harm, hopelessness, abuse, or being a burden), do NOT select exercises. Instead return an empty overflow_exercises array and include in state_analysis.reading: "What you wrote carries real weight, and it's beyond what exercises can hold right now. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or email stefanie@allmindsondeck.org." Set urgency_level to "high".`;
+10. SAFETY: If the journal contains signals of crisis (suicidal ideation, self-harm, hopelessness, abuse, or being a burden), do NOT select exercises. Instead return an empty overflow_exercises array and include in state_analysis.reading: "What you wrote carries real weight, and it's beyond what exercises can hold right now. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or email crew@allmindsondeck.com." Set urgency_level to "high".`;
 
 const ONBOARDING_DISCOVERY = `
 

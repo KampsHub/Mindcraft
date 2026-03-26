@@ -64,6 +64,11 @@ export const qualityFlagSchema = z.object({
   userComment: z.string().max(500).optional(),
 });
 
+export const enneagramAnalyzeSchema = z.object({
+  clientId: z.string().uuid().optional(),
+  fileUrls: z.array(z.string().url()).min(1).max(2),
+});
+
 // ── Validation wrapper ──
 // Parses an unknown body against a Zod schema.
 // Returns typed data on success, or a 400 NextResponse on failure.

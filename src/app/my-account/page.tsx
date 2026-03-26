@@ -411,7 +411,7 @@ export default function MyAccountPage() {
                 Rectification
               </p>
               <p style={{ fontSize: 12, color: colors.textMuted, margin: 0, fontFamily: body }}>
-                Edit your display name above, or contact stefanie@allmindsondeck.org for other corrections.
+                Edit your display name above, or contact crew@allmindsondeck.com for other corrections.
               </p>
             </div>
           </div>

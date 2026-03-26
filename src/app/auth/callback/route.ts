@@ -29,7 +29,13 @@ export async function GET(request: Request) {
     const { data } = await supabase.auth.exchangeCodeForSession(code);
 
     // If this is a password recovery flow, redirect to reset page
-    if (data?.session?.user?.recovery_sent_at || next === "/reset-password") {
+    // Use AMR claim (most reliable), fall back to next param or recovery_sent_at
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const session = data?.session as Record<string, any> | undefined;
+    const isRecovery =
+      next === "/reset-password" ||
+      session?.amr?.some((a: { method: string }) => a.method === "recovery");
+    if (isRecovery) {
       return NextResponse.redirect(`${origin}/reset-password`);
     }
 

@@ -118,7 +118,7 @@ function getGreeting(programSlug?: string): string {
 /* ── Quick-access links (3 per row) ── */
 const quickLinks = [
   { href: "/mindful-journal", label: "Journal", desc: "Write freely", icon: "✎", accent: colors.coral },
-  { href: "/goals", label: "Progress", desc: "Goals & milestones", icon: "◎", accent: colors.coral },
+  { href: "/goals", label: "Plan & Progress", desc: "Goals & milestones", icon: "◎", accent: colors.coral },
   { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻", accent: colors.coral },
 ];
 

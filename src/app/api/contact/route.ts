@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
 
-    const CONTACT_EMAIL = "stefanie@allmindsondeck.com";
+    const CONTACT_EMAIL = "crew@allmindsondeck.com";
 
     // If Supabase service role is available, store the message
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

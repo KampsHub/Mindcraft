@@ -797,7 +797,7 @@ export const content = {
         },
       ],
       contactText:
-        "To exercise any of these rights, contact stefanie@allmindsondeck.org",
+        "To exercise any of these rights, contact crew@allmindsondeck.com",
     },
     saveButton: "Save preferences",
     savingButton: "Saving...",

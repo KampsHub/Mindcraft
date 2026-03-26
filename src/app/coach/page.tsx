@@ -10,6 +10,9 @@ import FadeIn from "@/components/FadeIn";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import { content as c } from "@/content/site";
+import EnneagramUpload from "@/components/EnneagramUpload";
+import EnneagramInsights from "@/components/EnneagramInsights";
+import type { EnneagramAnalysis } from "@/components/EnneagramUpload";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -106,6 +109,7 @@ export default function CoachPage() {
   const [enneagramNotes, setEnneagramNotes] = useState("");
   const [sharedSummaries, setSharedSummaries] = useState<{ id: string; enrollment_id: string; approved_summary: { sections: { id: string; title: string; content: string }[] }; period_start: string; period_end: string; approved_at: string; programs?: { name: string } }[]>([]);
   const [savingEnneagram, setSavingEnneagram] = useState(false);
+  const [enneagramAnalysis, setEnneagramAnalysis] = useState<EnneagramAnalysis | null>(null);
 
   // Analytics state
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
@@ -202,6 +206,12 @@ export default function CoachPage() {
     if (enneagram) {
       setEnneagramType(enneagram.data?.type || "");
       setEnneagramNotes(enneagram.data?.notes || "");
+      // Load full analysis if documents were uploaded
+      if (enneagram.data?.documents) {
+        setEnneagramAnalysis(enneagram.data as EnneagramAnalysis);
+      } else {
+        setEnneagramAnalysis(null);
+      }
     } else {
       setEnneagramType("");
       setEnneagramNotes("");
@@ -449,6 +459,21 @@ export default function CoachPage() {
                       <PillButton onClick={saveEnneagram} disabled={savingEnneagram} size="sm">
                         {savingEnneagram ? c.coach.enneagram.savingButton : c.coach.enneagram.saveButton}
                       </PillButton>
+                    </div>
+
+                    {/* Enneagram document upload (coach) */}
+                    <div style={{ marginTop: 16 }}>
+                      {enneagramAnalysis ? (
+                        <EnneagramInsights data={enneagramAnalysis} />
+                      ) : (
+                        <EnneagramUpload
+                          clientId={selectedClient.id}
+                          onAnalysisComplete={(data) => {
+                            setEnneagramAnalysis(data);
+                            if (data.type) setEnneagramType(data.type);
+                          }}
+                        />
+                      )}
                     </div>
                   </FadeIn>
 

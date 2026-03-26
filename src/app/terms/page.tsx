@@ -170,10 +170,10 @@ export default function TermsPage() {
             If you are not satisfied within the first 7 days and have not completed more than 3 days
             of the program, you can request a full refund by emailing{" "}
             <a
-              href="mailto:stefanie@allmindsondeck.org"
+              href="mailto:crew@allmindsondeck.com"
               style={{ color: colors.coral, textDecoration: "none" }}
             >
-              stefanie@allmindsondeck.org
+              crew@allmindsondeck.com
             </a>
             . After that window, refunds are handled on a case-by-case basis.
           </p>
@@ -328,10 +328,10 @@ export default function TermsPage() {
           <p style={textStyle}>
             Reach out at{" "}
             <a
-              href="mailto:stefanie@allmindsondeck.org"
+              href="mailto:crew@allmindsondeck.com"
               style={{ color: colors.coral, textDecoration: "none" }}
             >
-              stefanie@allmindsondeck.org
+              crew@allmindsondeck.com
             </a>
             .
           </p>

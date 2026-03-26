@@ -115,8 +115,8 @@ export async function POST(request: NextRequest) {
             const resend = new Resend(resendKey);
             const amountCents = session.metadata?.amount_cents || "0";
             await resend.emails.send({
-              from: "Mindcraft <stefanie@allmindsondeck.com>",
-              to: "stefanie@allmindsondeck.com",
+              from: "Mindcraft <crew@allmindsondeck.com>",
+              to: "crew@allmindsondeck.com",
               subject: `🎯 New Enneagram Purchase — ${customerEmail || "Unknown"}`,
               html: `
                 <div style="font-family: -apple-system, sans-serif; max-width: 520px; padding: 24px;">

@@ -9,7 +9,7 @@ import ContactModal from "@/components/ContactModal";
 
 const navLinks = [
   { href: "/dashboard", label: "Today" },
-  { href: "/goals", label: "Progress" },
+  { href: "/goals", label: "Plan & Progress" },
   { href: "/weekly-review", label: "Insights" },
 ];
 

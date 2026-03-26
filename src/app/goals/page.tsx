@@ -11,6 +11,9 @@ import PillButton from "@/components/PillButton";
 import { colors, fonts } from "@/lib/theme";
 import AnimatedStat from "@/components/AnimatedStat";
 import ProgramSwitcher from "@/components/ProgramSwitcher";
+import EnneagramUpload from "@/components/EnneagramUpload";
+import EnneagramInsights from "@/components/EnneagramInsights";
+import type { EnneagramAnalysis, EnneagramDoc } from "@/components/EnneagramUpload";
 
 /* ── Design tokens ── */
 const display = fonts.display;
@@ -74,6 +77,7 @@ function GoalsPage() {
   const [exerciseCount, setExerciseCount] = useState(0);
   const [journalEntryCount, setJournalEntryCount] = useState(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [enneagramData, setEnneagramData] = useState<EnneagramAnalysis | null>(null);
   const [weekNumber, setWeekNumber] = useState(1);
   const [weekTheme, setWeekTheme] = useState<WeekTheme | null>(null);
   const supabase = createClient();
@@ -186,6 +190,17 @@ function GoalsPage() {
         .order("week_number");
       if (reviews) {
         setWeekRatings(reviews.filter((r: WeekRating) => r.goal_ratings));
+      }
+
+      // Fetch enneagram data
+      const { data: enneagram } = await supabase
+        .from("client_assessments")
+        .select("data")
+        .eq("client_id", userId)
+        .eq("type", "enneagram")
+        .maybeSingle();
+      if (enneagram?.data) {
+        setEnneagramData(enneagram.data as EnneagramAnalysis);
       }
     }
     setLoading(false);
@@ -577,6 +592,20 @@ function GoalsPage() {
             label="journal entries"
             accentColor={colors.warning}
           />
+        </div>
+      </FadeIn>
+
+      {/* ── Enneagram Section ── */}
+      <FadeIn preset="fade" delay={0.12} triggerOnMount>
+        <div style={{ marginBottom: 24 }}>
+          {enneagramData ? (
+            <EnneagramInsights data={enneagramData} />
+          ) : user ? (
+            <EnneagramUpload
+              clientId={user.id}
+              onAnalysisComplete={(data) => setEnneagramData(data)}
+            />
+          ) : null}
         </div>
       </FadeIn>
 

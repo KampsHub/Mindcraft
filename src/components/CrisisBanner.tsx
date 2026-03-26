@@ -226,7 +226,7 @@ export default function CrisisBanner({
 
             {/* Coach email */}
             <a
-              href="mailto:stefanie@allmindsondeck.org?subject=Reaching%20out%20from%20Mindcraft"
+              href="mailto:crew@allmindsondeck.com?subject=Reaching%20out%20from%20Mindcraft"
               style={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -266,7 +266,7 @@ export default function CrisisBanner({
                   margin: 0,
                   fontFamily: body,
                 }}>
-                  stefanie@allmindsondeck.org
+                  crew@allmindsondeck.com
                 </p>
               </div>
             </a>

@@ -142,7 +142,7 @@ export default function ApplyPage() {
       } else {
         const body = await res.json().catch(() => null);
         console.error("Submit failed:", res.status, body);
-        setError("Something went wrong. Please try again or email us directly at stefanie@allmindsondeck.com.");
+        setError("Something went wrong. Please try again or email us directly at crew@allmindsondeck.com.");
       }
     } catch (err) {
       console.error("Submit error:", err);

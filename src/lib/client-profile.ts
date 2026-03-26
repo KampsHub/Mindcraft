@@ -18,6 +18,7 @@ export interface ClientProfileContext {
   growth_edges?: Record<string, unknown>;
   development_map?: Record<string, unknown>;
   observations_log?: Record<string, unknown>[];
+  enneagram?: Record<string, unknown>;
 }
 
 function getAdminSupabase() {
@@ -53,7 +54,31 @@ export async function getClientProfile(
       return null;
     }
 
-    return data as unknown as ClientProfileContext;
+    const profile = data as unknown as ClientProfileContext;
+
+    // Fetch enneagram data if available (from client_assessments via enrollment's client_id)
+    try {
+      const { data: enrollment } = await admin
+        .from("program_enrollments")
+        .select("client_id")
+        .eq("id", enrollmentId)
+        .single();
+      if (enrollment?.client_id) {
+        const { data: enneagram } = await admin
+          .from("client_assessments")
+          .select("data")
+          .eq("client_id", enrollment.client_id)
+          .eq("type", "enneagram")
+          .maybeSingle();
+        if (enneagram?.data) {
+          profile.enneagram = enneagram.data as Record<string, unknown>;
+        }
+      }
+    } catch {
+      // Enneagram data is supplementary — don't break if unavailable
+    }
+
+    return profile;
   } catch {
     // Table may not exist or other error — don't break the calling route
     return null;
@@ -118,6 +143,25 @@ ${traitText}`);
         .join("\n");
       sections.push(`## Recent Observations
 ${obsText}`);
+    }
+  }
+
+  // Include enneagram data if available (any depth)
+  if (profile.enneagram) {
+    const e = profile.enneagram;
+    const centers = e.centers as Record<string, number> | undefined;
+    const devAreas = e.key_development_areas as string[] | undefined;
+    const lines: string[] = [];
+    if (e.type) lines.push(`**Type:** ${e.type}${e.wing ? `w${e.wing}` : ""}${e.tritype ? ` (Tritype: ${e.tritype})` : ""}`);
+    if (centers) lines.push(`**Centers:** Action ${centers.action}%, Feeling ${centers.feeling}%, Thinking ${centers.thinking}%`);
+    if (devAreas && devAreas.length > 0) {
+      lines.push(`**Key Development Areas:**\n${devAreas.map((a, i) => `${i + 1}. ${a}`).join("\n")}`);
+    }
+    if (lines.length > 0) {
+      sections.push(`## Enneagram Profile (IEQ9)
+${lines.join("\n")}
+
+Use this to inform exercise selection and coaching questions. Reference their center balance, development areas, and type-specific growth edges when relevant.`);
     }
   }
 

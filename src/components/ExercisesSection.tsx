@@ -125,6 +125,8 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
       const parked: typeof parkedExercises = [];
 
       (programDays as ProgramDay[]).forEach((pd) => {
+        // Only show parked exercises for days the user actually started
+        if (!dayToSession.has(pd.day_number)) return;
         if (pd.coaching_exercises && Array.isArray(pd.coaching_exercises)) {
           pd.coaching_exercises.forEach((ce) => {
             if (!completedNames.has(ce.name)) {
@@ -485,7 +487,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                       border: `1px solid ${colors.borderDefault}`,
                       padding: 24, textAlign: "center",
                     }}>
-                      <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 4px 0", fontFamily: body }}>
+                      <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
                         No parked exercises.
                       </p>
                       <p style={{ fontSize: 12, color: colors.borderDefault, margin: 0, fontFamily: body }}>
@@ -494,7 +496,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                     </div>
                   ) : (
                     <>
-                      <p style={{ fontSize: 12, color: colors.textMuted, margin: "0 0 4px 0", fontFamily: body }}>
+                      <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
                         Coaching plan exercises from past days that weren&apos;t completed.
                       </p>
                       {parkedExercises.map((ex) => {
@@ -549,14 +551,14 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                   }}>
                                     Parked
                                   </span>
-                                  <span style={{ fontSize: 10, color: colors.textMuted, fontFamily: body }}>
+                                  <span style={{ fontSize: 10, color: "#ffffff", fontFamily: body }}>
                                     Day {ex.day_number}: {ex.day_title}
                                   </span>
                                 </div>
                               </div>
                               <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
                                 {ex.duration_min && (
-                                  <span style={{ fontSize: 10, color: colors.borderDefault, fontFamily: display, fontWeight: 500 }}>
+                                  <span style={{ fontSize: 10, color: "#ffffff", fontFamily: display, fontWeight: 500 }}>
                                     ~{ex.duration_min}min
                                   </span>
                                 )}

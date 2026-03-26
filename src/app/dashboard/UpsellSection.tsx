@@ -203,7 +203,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
           whileHover={{ scale: 1.06, boxShadow: "0 8px 24px rgba(224, 149, 133, 0.35)" }}
           whileTap={{ scale: 0.97 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          onClick={() => onNavigate("/intake")}
+          onClick={() => onNavigate("/apply")}
           style={{
             fontFamily: display, fontSize: 13, fontWeight: 600,
             padding: "10px 24px", borderRadius: 100,

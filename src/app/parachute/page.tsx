@@ -1868,8 +1868,8 @@ function Pricing() {
   const handleCheckout = async (tier: string, amount?: number) => {
     setCheckoutLoading(tier);
     const tierLabel = tier === "pay_what_you_can" ? "pay_what_you_can" : tier === "pay_it_forward" ? "pay_it_forward" : "standard";
-    trackEvent(`layoff_${tierLabel}_begin_checkout`, { tier, price: amount ? `$${amount}` : tier });
-    trackEvent("begin_checkout", { package: "layoff", tier, price: amount ? `$${amount}` : tier });
+    trackEvent(`parachute_${tierLabel}_begin_checkout`, { tier, price: amount ? `$${amount}` : tier });
+    trackEvent("begin_checkout", { package: "parachute", tier, price: amount ? `$${amount}` : tier });
     try {
       const res = await fetch("/api/checkout/parachute", {
         method: "POST",

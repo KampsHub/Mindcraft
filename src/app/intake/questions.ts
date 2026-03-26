@@ -206,7 +206,7 @@ export const universalQuestions = [
 // ── Package-specific questions ─────────────────────────────────────
 
 export const packageQuestions: Record<string, typeof universalQuestions> = {
-  layoff: [
+  parachute: [
     {
       id: "layoff_timeline",
       category: "Layoff Context",
@@ -250,7 +250,7 @@ export const packageQuestions: Record<string, typeof universalQuestions> = {
     },
   ],
 
-  new_role: [
+  basecamp: [
     {
       id: "newrole_context",
       category: "New Role Context",
@@ -295,7 +295,7 @@ export const packageQuestions: Record<string, typeof universalQuestions> = {
     },
   ],
 
-  performance_plan: [
+  jetstream: [
     {
       id: "pip_timeline",
       category: "PIP Context",
@@ -343,19 +343,19 @@ export const packageQuestions: Record<string, typeof universalQuestions> = {
 
 export const packages = [
   {
-    id: "layoff",
+    id: "parachute",
     name: "Layoff Recovery",
     description:
       "Navigate the emotional, professional, and identity dimensions of job loss. Rebuild from a grounded place.",
   },
   {
-    id: "performance_plan",
+    id: "jetstream",
     name: "Performance Improvement Plan",
     description:
       "Stay clear-headed during a PIP. Separate performance gaps from emotional spirals. Build optionality while meeting requirements.",
   },
   {
-    id: "new_role",
+    id: "basecamp",
     name: "New Role",
     description:
       "Navigate the transition wave of a new job with strategic clarity and self-awareness. Read the culture, know your patterns, establish from alignment.",

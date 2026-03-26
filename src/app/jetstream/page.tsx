@@ -1422,7 +1422,7 @@ function Pricing() {
     setCheckoutLoading(tier);
     trackEvent("pip_price_click", { tier });
     trackEvent("pip_begin_checkout", { tier });
-    trackEvent("begin_checkout", { package: "performance_plan", tier });
+    trackEvent("begin_checkout", { package: "jetstream", tier });
     try {
       const res = await fetch("/api/checkout/jetstream", {
         method: "POST",

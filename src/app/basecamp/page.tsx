@@ -1288,7 +1288,7 @@ function Pricing() {
     setCheckoutLoading(tier);
     trackEvent("new_role_price_click", { tier });
     trackEvent("new_role_begin_checkout", { tier });
-    trackEvent("begin_checkout", { package: "new_role", tier });
+    trackEvent("begin_checkout", { package: "basecamp", tier });
     try {
       const res = await fetch("/api/checkout/basecamp", {
         method: "POST",

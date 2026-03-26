@@ -167,8 +167,14 @@ export default function ApplyPage() {
           <h1 style={{ fontFamily: display, fontSize: 28, fontWeight: 700, color: colors.textPrimary, marginBottom: 16 }}>
             Thank you.
           </h1>
-          <p style={{ fontFamily: body, fontSize: 16, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 32 }}>
+          <p style={{ fontFamily: body, fontSize: 16, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 20 }}>
             We&rsquo;ll get back to you within two business days with next steps or a recommendation from our network.
+          </p>
+          <p style={{ fontFamily: body, fontSize: 14, color: colors.textMuted, lineHeight: 1.6, marginBottom: 32 }}>
+            We work with certified coaches and partner coaches from All Minds On Deck.{" "}
+            <a href="https://allmindsondeck.com/about" target="_blank" rel="noopener noreferrer" style={{ color: colors.coral, textDecoration: "none", fontWeight: 600 }}>
+              Meet the team
+            </a>
           </p>
           <a href="/" style={{ fontFamily: display, fontSize: 15, fontWeight: 600, padding: "14px 36px", borderRadius: 8, backgroundColor: colors.coral, color: "#ffffff", textDecoration: "none" }}>
             Back to Mindcraft

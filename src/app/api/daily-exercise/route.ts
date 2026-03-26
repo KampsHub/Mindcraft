@@ -46,10 +46,23 @@ Return valid JSON (no markdown, no code fences):
   "framework_id": "UUID of the framework",
   "title": "A personalised title for today's exercise",
   "introduction": "2-3 sentences connecting this exercise to what the client has been working on recently. Reference their words.",
-  "exercise": "The full personalised exercise instructions.",
+  "what_this_is": "1-2 sentences explaining the framework in plain language. What it is, where it comes from, and why it matters. Write for someone with zero coaching background.",
+  "steps": [
+    "Step 1: Clear, specific instruction. Tell them exactly what to do, not what to think about. Include example prompts or sentence starters where helpful.",
+    "Step 2: Next action. Each step should be completable in 2-3 minutes.",
+    "Step 3: Continue until the exercise is fully instructed.",
+    "Step 4: Always end with a reflection or journaling prompt."
+  ],
   "estimated_time": "10-15 min",
   "theme_tags": ["relevant_theme_1", "relevant_theme_2"]
-}`;
+}
+
+## Exercise instruction rules
+- Every step must be concrete and actionable. "Reflect on your patterns" is NOT a step. "Write down 3 situations this week where you noticed yourself withdrawing" IS a step.
+- Include sentence starters, specific prompts, or example responses where helpful.
+- If the exercise uses a concept (saboteur, parts, somatic mapping), explain it in plain language within the step — never assume the person knows jargon.
+- Steps should build on each other. The person should be able to follow them sequentially without re-reading.
+- 4-6 steps per exercise. Not fewer, not more.`;
 
 export async function POST() {
   const startTime = Date.now();
@@ -108,6 +121,17 @@ export async function POST() {
 
     const recentFrameworkIds = (recentExercises || []).map((e) => e.framework_id).filter(Boolean);
 
+    // Fetch low-rated exercises (under 4 stars) to exclude from selection
+    const { data: lowRatedExercises } = await supabase
+      .from("exercise_completions")
+      .select("framework_id, star_rating")
+      .eq("client_id", user.id)
+      .lt("star_rating", 4)
+      .not("framework_id", "is", null);
+    const lowRatedFrameworkIds = new Set(
+      (lowRatedExercises || []).map((e) => e.framework_id).filter(Boolean)
+    );
+
     // Collect current themes from recent entries
     const currentThemes = [...new Set(
       (recentEntries || []).flatMap((e) => e.theme_tags || [])
@@ -121,9 +145,9 @@ export async function POST() {
       .eq("active", true)
       .contains("target_packages", [packageFilter]);
 
-    // Filter out recently used frameworks
+    // Filter out recently used and low-rated frameworks
     const candidateFrameworks = (frameworks || []).filter(
-      (f) => !recentFrameworkIds.includes(f.id)
+      (f) => !recentFrameworkIds.includes(f.id) && !lowRatedFrameworkIds.has(f.id)
     );
 
     if (!candidateFrameworks.length) {

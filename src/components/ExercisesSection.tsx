@@ -87,12 +87,17 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
 
     const { data: sessions } = await supabase
       .from("daily_sessions")
-      .select("id, day_number")
+      .select("id, day_number, completed_at")
       .eq("enrollment_id", enrollment.id);
 
     const sessMap = new Map<string, number>();
     const dayToSession = new Map<number, string>();
-    sessions?.forEach((s) => { sessMap.set(s.id, s.day_number); dayToSession.set(s.day_number, s.id); });
+    const completedDays = new Set<number>();
+    sessions?.forEach((s) => {
+      sessMap.set(s.id, s.day_number);
+      dayToSession.set(s.day_number, s.id);
+      if (s.completed_at) completedDays.add(s.day_number);
+    });
     setSessionMap(dayToSession);
     const sessionIds = sessions?.map((s) => s.id) || [];
 
@@ -125,8 +130,8 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
       const parked: typeof parkedExercises = [];
 
       (programDays as ProgramDay[]).forEach((pd) => {
-        // Only show parked exercises for days the user actually started
-        if (!dayToSession.has(pd.day_number)) return;
+        // Only show parked exercises for days the user actually completed
+        if (!completedDays.has(pd.day_number)) return;
         if (pd.coaching_exercises && Array.isArray(pd.coaching_exercises)) {
           pd.coaching_exercises.forEach((ce) => {
             if (!completedNames.has(ce.name)) {

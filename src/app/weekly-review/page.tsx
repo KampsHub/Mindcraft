@@ -24,6 +24,7 @@ interface ProgramEnrollment {
   current_day: number;
   status: string;
   goals_approved: boolean;
+  pre_start_data?: Record<string, unknown>;
   programs: {
     name: string;
     slug: string;
@@ -776,6 +777,69 @@ function WeeklyReviewPage() {
             }}>
               {completedSessions.length}/7 days finished. Each day&apos;s exercises must be done or parked before the review sections become available.
             </p>
+          </div>
+        </FadeIn>
+      )}
+
+      {/* ── Coaching Arc — Big agenda vs daily insights ── */}
+      {enrollment.pre_start_data && activeGoals.length > 0 && (
+        <FadeIn preset="fade" delay={0.1} triggerOnMount>
+          <div style={{ marginBottom: 32 }}>
+            <SectionHeader title="Your coaching arc" sectionKey="arc" collapsed={collapsedSections.has("arc")} onToggle={toggleSection} />
+            <AnimatePresence initial={false}>
+              {!collapsedSections.has("arc") && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div style={{
+                    backgroundColor: colors.bgSurface, borderRadius: 14,
+                    border: `1px solid ${colors.borderDefault}`, padding: 22,
+                  }}>
+                    {/* What they came in with */}
+                    <p style={{
+                      fontSize: 12, fontWeight: 700, color: colors.plumLight,
+                      margin: "0 0 10px 0", textTransform: "uppercase",
+                      letterSpacing: "0.08em", fontFamily: display,
+                    }}>
+                      What you came in with
+                    </p>
+                    {(enrollment.pre_start_data as Record<string, string>)?.goal && (
+                      <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 8px 0", fontFamily: body, lineHeight: 1.5, fontStyle: "italic" }}>
+                        &ldquo;{(enrollment.pre_start_data as Record<string, string>).goal}&rdquo;
+                      </p>
+                    )}
+
+                    {/* Active goals */}
+                    <p style={{
+                      fontSize: 12, fontWeight: 700, color: colors.coral,
+                      margin: "18px 0 10px 0", textTransform: "uppercase",
+                      letterSpacing: "0.08em", fontFamily: display,
+                    }}>
+                      Goals you&apos;re working on
+                    </p>
+                    {activeGoals.map((g) => (
+                      <div key={g.id} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 6 }}>
+                        <span style={{ color: colors.coral, fontSize: 14, marginTop: 2 }}>&#x25CF;</span>
+                        <p style={{ fontSize: 14, color: "#ffffff", margin: 0, fontFamily: body, lineHeight: 1.45 }}>
+                          {g.goal_text}
+                        </p>
+                      </div>
+                    ))}
+
+                    {/* Progress note */}
+                    <p style={{
+                      fontSize: 13, color: colors.textMuted, margin: "14px 0 0 0",
+                      fontFamily: body, lineHeight: 1.5,
+                    }}>
+                      Day {enrollment.current_day} of 30. The daily insights below show how your work is connecting to these goals.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </FadeIn>
       )}

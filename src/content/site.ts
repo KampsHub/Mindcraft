@@ -28,7 +28,7 @@ export const content = {
     subheadline:
       "A career crisis can be one of the most difficult phases you\u2019ll handle in life. This is 30 days of structure at a time when you can\u2019t even finish your morning coffee. See clearly. Handle anxiety. Pick up insight about yourself. Gain interpersonal skills.",
     cta: "Find your program",
-    heroVideo: "/hero-bg-v4.mp4",
+    heroVideo: "/hero-bg-v5.mp4",
     heroImage: "", // e.g. "/images/hero.jpg" - fallback or standalone image
     heroPoster: "", // poster image for video (shown while loading)
   },

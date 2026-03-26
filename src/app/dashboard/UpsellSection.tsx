@@ -32,7 +32,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
           <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 24 }} />
           <p style={{
             fontFamily: display, fontSize: 12, fontWeight: 600,
-            color: colors.textMuted, marginBottom: 14, letterSpacing: "0.04em",
+            color: "#ffffff", marginBottom: 14, letterSpacing: "0.04em",
             textTransform: "uppercase",
           }}>
             Go deeper
@@ -49,7 +49,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
         <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 24 }} />
         <p style={{
           fontFamily: display, fontSize: 12, fontWeight: 600,
-          color: colors.textMuted, marginBottom: 14, letterSpacing: "0.04em",
+          color: "#ffffff", marginBottom: 14, letterSpacing: "0.04em",
           textTransform: "uppercase",
         }}>
           Go deeper
@@ -124,7 +124,7 @@ function EnneagramCard() {
         Add Enneagram
       </p>
       <p style={{
-        fontFamily: body, fontSize: 13, color: colors.textSecondary,
+        fontFamily: body, fontSize: 13, color: "#ffffff",
         lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
       }}>
         The IEQ9 Enneagram — the assessment professional coaches actually use. It shows you why you react the way you do under pressure and what patterns keep repeating. Includes a 1-hour live debrief. Your results shape every exercise.
@@ -195,7 +195,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
         1:1 Coaching
       </p>
       <p style={{
-        fontFamily: body, fontSize: 13, color: colors.textSecondary,
+        fontFamily: body, fontSize: 13, color: "#ffffff",
         lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
       }}>
         Everything in the self-guided program, plus weekly or bi-weekly 1:1 coaching sessions. Includes a personal Enneagram assessment, so you can see where your defaults help and where they cost you.

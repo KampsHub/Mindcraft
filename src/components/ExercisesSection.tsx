@@ -227,7 +227,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
           <span style={{
             fontSize: 11, fontFamily: display, fontWeight: 600,
             padding: "2px 8px", borderRadius: 100,
-            backgroundColor: colors.bgElevated, color: colors.textMuted,
+            backgroundColor: colors.bgElevated, color: "#ffffff",
           }}>
             {completedExercises.length} completed • {parkedExercises.length} parked
           </span>

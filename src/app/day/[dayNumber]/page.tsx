@@ -29,7 +29,7 @@ interface ProgramDay {
   week_number: number;
   title: string;
   territory: string;
-  seed_prompts: { prompt: string; purpose: string }[];
+  seed_prompts: { prompt: string; purpose: string; context?: string }[];
   coaching_exercises: { name: string; duration_min: number; custom_framing: string }[];
   overflow_defaults: { name: string; originator: string; source: string; modality: string; duration_min: number }[];
   micro_content: string;
@@ -971,7 +971,7 @@ function DailyFlowPage() {
               </p>
               {programDay.seed_prompts.map((sp, i) => (
                 <div key={i} style={{
-                  padding: "12px 16px",
+                  padding: "14px 18px",
                   backgroundColor: colors.bgElevated,
                   borderRadius: 12,
                   marginBottom: 8,
@@ -979,8 +979,13 @@ function DailyFlowPage() {
                   <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
                     {sp.prompt}
                   </p>
-                  {sp.purpose && (
-                    <p style={{ fontSize: 12, color: "#ffffff", margin: "4px 0 0 0", fontFamily: body }}>
+                  {sp.context && (
+                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: "8px 0 0 0", lineHeight: 1.5, fontFamily: body, fontStyle: "italic" }}>
+                      {sp.context}
+                    </p>
+                  )}
+                  {sp.purpose && !sp.context && (
+                    <p style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", margin: "4px 0 0 0", fontFamily: body }}>
                       {sp.purpose}
                     </p>
                   )}

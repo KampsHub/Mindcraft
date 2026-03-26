@@ -121,7 +121,7 @@ interface ProgramDay {
   week_number: number;
   title: string;
   territory: string;
-  seed_prompts: { prompt: string; purpose: string }[];
+  seed_prompts: { prompt: string; purpose: string; context?: string }[];
   coaching_exercises: {
     name: string;
     duration_min: number;
@@ -163,6 +163,7 @@ const days: ProgramDay[] = [
       {
         prompt: "Which of the seven disruptions is loudest?",
         purpose: "Identify primary disruption",
+        context: "The seven disruptions are: income & financial security, routine & structure, identity, social belonging, sense of competence, future uncertainty, and skill confidence. Losing a job can shake all of them at once.",
       },
       {
         prompt: "What did you lose that you have not said out loud yet?",

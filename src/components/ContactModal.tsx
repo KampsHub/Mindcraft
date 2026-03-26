@@ -166,7 +166,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   What is this about?
                 </label>
                 <div style={{
-                  display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8,
+                  display: "flex", flexDirection: "column", gap: 8,
                   marginBottom: 20,
                 }}>
                   {ISSUE_TYPES.map((type) => (

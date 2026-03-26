@@ -1301,7 +1301,7 @@ function DailyFlowPage() {
             )}
 
             <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
-              {overflowExercises.length} exercise{overflowExercises.length !== 1 ? "s" : ""} selected based on your journal.
+              {overflowExercises.length} exercise{overflowExercises.length !== 1 ? "s" : ""} selected based on what you wrote.
             </p>
 
             <motion.button
@@ -1349,8 +1349,8 @@ function DailyFlowPage() {
       {/* ═══════ STEP 4: Exercises + Framework Analysis ═══════ */}
       <DailyStep
         stepNumber={4}
-        title="Exercises & Framework Analysis"
-        subtitle="Required coaching exercises + overflow matched to your journal"
+        title={dayNumber <= 3 ? "Exercises & Intake" : "Exercises & Framework Analysis"}
+        subtitle={dayNumber <= 3 ? "Onboarding exercises that also serve as your intake" : "Today's exercises — structured and matched to your journal"}
         isActive={activeStep === 4}
         isCompleted={completedSteps.includes(4)}
         estimatedTime="15-30 min"
@@ -1368,7 +1368,7 @@ function DailyFlowPage() {
               margin: "0 0 12px 0", textTransform: "uppercase",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
-              Coaching Plan
+              {dayNumber <= 3 ? "Today's Exercise" : "From Your Coaching Plan"}
             </p>
             {programDay.coaching_exercises.map((ex, i) => (
               <ExerciseCard
@@ -1396,7 +1396,7 @@ function DailyFlowPage() {
               margin: "0 0 12px 0", textTransform: "uppercase",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
-              Overflow — Matched to Your Journal
+              {dayNumber <= 3 ? "Based on What You Wrote" : "Matched to Your Journal"}
             </p>
             {overflowExercises.map((ex, i) => (
               <ExerciseCard

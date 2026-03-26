@@ -139,13 +139,26 @@ export default function PageShell({
       <div style={{ position: "relative", zIndex: 1 }}>
         <Nav />
         <div style={{ maxWidth, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
-          {children}
+          {showBgImage ? (
+            <div style={{
+              backgroundColor: "rgba(51, 51, 57, 0.5)",
+              borderRadius: 16,
+              padding: "28px 24px",
+              border: `1px solid rgba(255, 255, 255, 0.06)`,
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+            }}>
+              {children}
+            </div>
+          ) : (
+            children
+          )}
         </div>
 
       </div>
 
       {/* Footer */}
-      <footer style={{ padding: "48px 24px", borderTop: `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>
+      <footer style={{ padding: "48px 24px", borderTop: showBgImage ? "none" : `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>
         <div style={{
           maxWidth, margin: "0 auto",
           display: "flex", alignItems: "center", justifyContent: "center",

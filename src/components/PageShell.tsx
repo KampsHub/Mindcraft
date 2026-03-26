@@ -32,6 +32,20 @@ const PROGRAM_BG_IMAGES: Record<string, string[]> = {
     "/shutterstock_2758781913.jpg",
     "/shutterstock_2758782247.jpg",
   ],
+  basecamp: [
+    "/basecamp-hero-bg.jpg",
+    "/shutterstock_2758783389.jpg",
+    "/shutterstock_2758783589.jpg",
+    "/shutterstock_2758783845.jpg",
+    "/shutterstock_2758783917.jpg",
+    "/shutterstock_2758784169.jpg",
+    "/shutterstock_2758784713.jpg",
+    "/shutterstock_2758784965.jpg",
+    "/shutterstock_2758785201.jpg",
+    "/shutterstock_2758785621.jpg",
+    "/shutterstock_2758785777.jpg",
+    "/shutterstock_2758786195.jpg",
+  ],
 };
 
 const blobPositions = {

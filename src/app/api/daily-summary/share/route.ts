@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 interface DayPayload {
   day_number: number;
   title: string;
@@ -86,6 +84,7 @@ export async function POST(request: Request) {
       </div>
     `;
 
+    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: "Mindcraft <noreply@allmindsondeck.org>",
       to: email,

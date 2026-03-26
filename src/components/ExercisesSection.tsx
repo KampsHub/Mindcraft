@@ -326,7 +326,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                       border: `1px solid ${colors.borderDefault}`,
                       padding: 24, textAlign: "center",
                     }}>
-                      <p style={{ fontSize: 13, color: colors.textMuted, margin: 0, fontFamily: body }}>
+                      <p style={{ fontSize: 13, color: "#ffffff", margin: 0, fontFamily: body }}>
                         {modalityFilter !== "all"
                           ? `No ${modalityFilter} exercises completed yet.`
                           : "No exercises completed yet."}

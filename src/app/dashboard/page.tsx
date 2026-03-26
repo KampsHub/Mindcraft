@@ -400,7 +400,7 @@ export default function DashboardPage() {
                 }}>
                   {link.label}
                 </p>
-                <p style={{ fontSize: 12, color: colors.textMuted, margin: 0, fontFamily: body }}>
+                <p style={{ fontSize: 12, color: "#ffffff", margin: 0, fontFamily: body }}>
                   {link.desc}
                 </p>
               </motion.button>

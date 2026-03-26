@@ -125,7 +125,7 @@ function EnneagramCard() {
         fontFamily: body, fontSize: 13, color: colors.textSecondary,
         lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
       }}>
-        The IEQ9 assessment + 1-hour debrief with a certified coach. Your results refine every exercise and goal.
+        The IEQ9 Enneagram — the assessment professional coaches actually use. It shows you why you react the way you do under pressure and what patterns keep repeating. Includes a 1-hour live debrief. Your results shape every exercise.
       </p>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <span style={{
@@ -196,7 +196,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
         fontFamily: body, fontSize: 13, color: colors.textSecondary,
         lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
       }}>
-        A 3-month partnership with a certified coach who already knows your patterns from the program.
+        Everything in the self-guided program, plus weekly or bi-weekly 1:1 coaching sessions. Includes a personal Enneagram assessment, so you can see where your defaults help and where they cost you.
       </p>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <motion.button

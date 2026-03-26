@@ -243,13 +243,11 @@ export default function DashboardPage() {
 
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
        <div style={{
-          backgroundColor: "rgba(40, 40, 48, 0.75)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
+          backgroundColor: colors.bgSurface,
           borderRadius: 16,
           padding: "28px 24px",
-          border: `1px solid rgba(255, 255, 255, 0.08)`,
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+          border: `1px solid ${colors.borderDefault}`,
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
         }}>
 
         {/* ── Welcome ── */}

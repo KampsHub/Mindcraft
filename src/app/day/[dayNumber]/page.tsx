@@ -676,8 +676,8 @@ function DailyFlowPage() {
       {/* ═══════ STEP 1: Yesterday's Themes ═══════ */}
       <DailyStep
         stepNumber={1}
-        title="Yesterday's Themes"
-        subtitle={dayNumber === 1 ? "Welcome to Day 1" : "What surfaced yesterday"}
+        title={dayNumber === 1 ? "Welcome" : "Yesterday's Themes"}
+        subtitle={dayNumber === 1 ? "Your program starts here" : "What surfaced yesterday"}
         isActive={activeStep === 1}
         isCompleted={completedSteps.includes(1)}
         estimatedTime="2 min"

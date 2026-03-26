@@ -1301,7 +1301,10 @@ function DailyFlowPage() {
             )}
 
             <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
-              {overflowExercises.length} exercise{overflowExercises.length !== 1 ? "s" : ""} selected based on what you wrote.
+              {(() => {
+                const total = (programDay?.coaching_exercises?.length || 0) + overflowExercises.length;
+                return `${total} exercise${total !== 1 ? "s" : ""} ready for you today.`;
+              })()}
             </p>
 
             <motion.button

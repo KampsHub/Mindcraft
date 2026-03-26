@@ -1257,13 +1257,13 @@ function DailyFlowPage() {
                   </p>
                   <FlagButton outputType="reframe" dailySessionId={session?.id} />
                 </div>
-                <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 8px 0", fontFamily: body, fontStyle: "italic" }}>
+                <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 12px 0", fontFamily: body, fontStyle: "italic", lineHeight: 1.6 }}>
                   &ldquo;{reframe.source_quote}&rdquo;
                 </p>
-                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body, textDecoration: "line-through" }}>
+                <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontFamily: body, textDecoration: "line-through", opacity: 0.7, lineHeight: 1.6 }}>
                   {reframe.old_thought}
                 </p>
-                <p style={{ fontSize: 16, color: "#ffffff", margin: "6px 0 0 0", fontFamily: body, fontWeight: 600 }}>
+                <p style={{ fontSize: 15, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontWeight: 600, lineHeight: 1.6 }}>
                   {reframe.new_thought}
                 </p>
               </div>

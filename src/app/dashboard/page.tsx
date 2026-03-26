@@ -356,7 +356,7 @@ export default function DashboardPage() {
             {quickLinks.map((link, i) => (
               <motion.button
                 key={link.href}
-                whileHover={{ y: -5, boxShadow: `0 12px 32px ${link.accent}18` }}
+                whileHover={{ y: -3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 22, delay: i * 0.03 }}
                 onClick={() => router.push(link.href)}
                 style={{

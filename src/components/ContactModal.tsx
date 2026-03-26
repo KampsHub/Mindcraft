@@ -86,12 +86,13 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               backgroundColor: colors.bgSurface,
               borderRadius: 16,
               border: `1px solid ${colors.borderDefault}`,
-              padding: 28,
+              padding: "28px 28px 32px",
               width: "100%",
               maxWidth: 480,
-              maxHeight: "90vh",
+              maxHeight: "85vh",
               overflowY: "auto",
               position: "relative",
+              zIndex: 1001,
             }}
           >
             {/* Close button */}
@@ -202,12 +203,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Tell us what's on your mind..."
-                  rows={5}
+                  rows={4}
                   style={{
                     width: "100%", padding: "12px 16px", fontSize: 14, fontFamily: body,
                     border: `1px solid ${colors.borderDefault}`, borderRadius: 12,
                     backgroundColor: colors.bgInput, color: colors.textPrimary,
-                    resize: "vertical", minHeight: 120, boxSizing: "border-box",
+                    resize: "vertical", minHeight: 100, boxSizing: "border-box",
                     outline: "none",
                   }}
                 />

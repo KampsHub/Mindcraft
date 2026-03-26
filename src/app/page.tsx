@@ -1270,7 +1270,7 @@ export default function Home() {
         <div style={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(180deg, rgba(24,24,28,0.2) 0%, rgba(24,24,28,0.4) 100%)`,
+          background: `linear-gradient(180deg, rgba(24,24,28,0.5) 0%, rgba(24,24,28,0.7) 100%)`,
           zIndex: 0,
         }} />
 
@@ -1311,9 +1311,9 @@ export default function Home() {
               lineHeight: 1.15,
               letterSpacing: "-0.03em",
               fontFamily: display,
-              backgroundColor: "rgba(24, 24, 28, 0.70)",
-              backdropFilter: "blur(6px)",
-              WebkitBackdropFilter: "blur(6px)",
+              backgroundColor: "rgba(20, 20, 24, 0.85)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               borderRadius: 12,
               padding: "24px 32px",
             }}
@@ -1367,9 +1367,9 @@ export default function Home() {
                 maxWidth: 640,
                 fontFamily: body,
                 letterSpacing: "0.01em",
-                backgroundColor: "rgba(24, 24, 28, 0.70)",
-                backdropFilter: "blur(6px)",
-                WebkitBackdropFilter: "blur(6px)",
+                backgroundColor: "rgba(20, 20, 24, 0.85)",
+                backdropFilter: "blur(10px)",
+                WebkitBackdropFilter: "blur(10px)",
                 borderRadius: 12,
                 padding: "16px 24px",
               }}

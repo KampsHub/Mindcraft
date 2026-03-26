@@ -318,9 +318,9 @@ function Hero() {
         <FadeIn preset="fade" triggerOnMount delay={0.1}>
           <div
             style={{
-              backgroundColor: "rgba(24,24,28,0.55)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              backgroundColor: "rgba(20,20,24,0.85)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               borderRadius: 14,
               padding: "24px 28px",
               marginBottom: 24,
@@ -398,9 +398,9 @@ function Hero() {
         <FadeIn preset="slide-up" triggerOnMount delay={0.4}>
           <div
             style={{
-              backgroundColor: "rgba(24,24,28,0.55)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              backgroundColor: "rgba(20,20,24,0.85)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               borderRadius: 14,
               padding: "24px 28px",
               maxWidth: 580,
@@ -436,9 +436,9 @@ function Hero() {
         <FadeIn preset="slide-up" triggerOnMount delay={0.55}>
           <div
             style={{
-              backgroundColor: "rgba(24,24,28,0.55)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              backgroundColor: "rgba(20,20,24,0.85)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               borderRadius: 14,
               padding: "20px 28px",
               maxWidth: 580,

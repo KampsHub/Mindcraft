@@ -94,7 +94,7 @@ export default function FadeIn({
   // scroll: use whileInView (fires when scrolled into view)
   const animationProps = triggerOnMount
     ? { animate: getAnimate(resolvedPreset) }
-    : { whileInView: getAnimate(resolvedPreset), viewport: { once, margin: "-60px" } };
+    : { whileInView: getAnimate(resolvedPreset), viewport: { once, margin: "-20px" } };
 
   return (
     <motion.div

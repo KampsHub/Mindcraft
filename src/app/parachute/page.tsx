@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion, AnimatePresence, useInView, useMotionValue, useTransform, useScroll } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
 import FadeIn from "@/components/FadeIn";
@@ -15,14 +15,14 @@ const body = fonts.bodyAlt;
 /* ── Layout constants ── */
 const maxWidth = 1120;
 const narrowMax = 700;
-const sectionPadding = { padding: "96px 24px" } as const;
-const sectionPaddingSmall = { padding: "64px 24px" } as const;
+const sectionPadding = { padding: "64px 24px" } as const;
+const sectionPaddingSmall = { padding: "48px 24px" } as const;
 
 /* ── Animated counter hook (eased, requestAnimationFrame) ── */
 function useCounter(end: number, duration = 2000, startOnView = true) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "0px" });
   useEffect(() => {
     if (!startOnView || !inView) return;
     let startTime: number | null = null;
@@ -318,9 +318,9 @@ function Hero() {
         <FadeIn preset="fade" triggerOnMount delay={0.1}>
           <div
             style={{
-              backgroundColor: "rgba(24,24,28,0.55)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              backgroundColor: "rgba(20,20,24,0.85)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               borderRadius: 14,
               padding: "24px 28px",
               marginBottom: 24,
@@ -398,9 +398,9 @@ function Hero() {
         <FadeIn preset="slide-up" triggerOnMount delay={0.4}>
           <div
             style={{
-              backgroundColor: "rgba(24,24,28,0.55)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              backgroundColor: "rgba(20,20,24,0.85)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               borderRadius: 14,
               padding: "24px 28px",
               maxWidth: 580,
@@ -437,9 +437,9 @@ function Hero() {
         <FadeIn preset="slide-up" triggerOnMount delay={0.55}>
           <div
             style={{
-              backgroundColor: "rgba(24,24,28,0.55)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              backgroundColor: "rgba(20,20,24,0.85)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               borderRadius: 14,
               padding: "20px 28px",
               maxWidth: 580,
@@ -1788,7 +1788,7 @@ function TestimonialCarousel() {
             style={{
               fontFamily: body,
               fontSize: 16,
-              color: colors.textBody,
+              color: "#F0EDE6",
               lineHeight: 1.75,
               fontStyle: "italic",
               margin: 0,
@@ -1801,7 +1801,7 @@ function TestimonialCarousel() {
               style={{
                 display: "block",
                 fontSize: 12,
-                color: colors.textMuted,
+                color: "#C8CDD2",
                 fontStyle: "normal",
                 marginTop: 12,
                 fontWeight: 600,
@@ -2368,7 +2368,7 @@ function Pricing() {
    ═══════════════════════════════════════════════════════════ */
 function Guarantee() {
   return (
-    <section style={{ ...sectionPaddingSmall, background: "#D9D7D4" }}>
+    <section style={{ ...sectionPaddingSmall, background: colors.bgRecessed }}>
       <FadeIn preset="fade">
         <div
           style={{
@@ -2399,7 +2399,7 @@ function Guarantee() {
               fontFamily: display,
               fontSize: 26,
               fontWeight: 700,
-              color: "#1E1E22",
+              color: colors.textPrimary,
               marginBottom: 14,
               letterSpacing: "-0.01em",
             }}
@@ -2410,7 +2410,7 @@ function Guarantee() {
             style={{
               fontFamily: body,
               fontSize: 15,
-              color: "#4A4850",
+              color: colors.textSecondary,
               lineHeight: 1.7,
             }}
           >
@@ -2435,7 +2435,7 @@ function DataPrivacy() {
   ];
 
   return (
-    <section style={{ ...sectionPaddingSmall, background: "#D9D7D4" }}>
+    <section style={{ ...sectionPaddingSmall, background: colors.bgDeep }}>
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px" }}>
         <FadeIn preset="fade">
           <p style={{ fontFamily: body, fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" as const, color: colors.coral, marginBottom: 14, textAlign: "center" as const }}>
@@ -2448,10 +2448,10 @@ function DataPrivacy() {
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 }}
           >
             {points.map((p, i) => (
-              <div key={p.title} style={{ textAlign: "center" as const, padding: "28px 20px", background: "rgba(255,255,255,0.6)", borderRadius: 12, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", border: "1px solid rgba(0,0,0,0.06)" }}>
-                <p style={{ fontFamily: body, fontSize: 18, marginBottom: 10, color: "#1E1E22" }}>{["◼", "◼", "◼"][i]}</p>
-                <p style={{ fontFamily: body, fontSize: 14, fontWeight: 600, color: "#1E1E22", marginBottom: 6 }}>{p.title}</p>
-                <p style={{ fontFamily: body, fontSize: 13, color: "#6A6872", lineHeight: 1.55, margin: 0 }}>{p.desc}</p>
+              <div key={p.title} style={{ textAlign: "center" as const, padding: "28px 20px", background: colors.bgSurface, borderRadius: 12, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", border: `1px solid ${colors.borderDefault}` }}>
+                <p style={{ fontFamily: body, fontSize: 18, marginBottom: 10, color: colors.coral }}>{["◼", "◼", "◼"][i]}</p>
+                <p style={{ fontFamily: body, fontSize: 14, fontWeight: 600, color: colors.textPrimary, marginBottom: 6 }}>{p.title}</p>
+                <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, lineHeight: 1.55, margin: 0 }}>{p.desc}</p>
               </div>
             ))}
           </div>
@@ -3038,7 +3038,7 @@ function Outcomes() {
   ];
 
   return (
-    <section style={{ ...sectionPadding, background: "#D9D7D4" }}>
+    <section style={{ ...sectionPadding, background: colors.bgRecessed }}>
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px" }}>
         <FadeIn preset="fade">
           <p
@@ -3062,7 +3062,7 @@ function Outcomes() {
               fontFamily: display,
               fontSize: "clamp(26px, 3.5vw, 36px)",
               lineHeight: 1.2,
-              color: "#1E1E22",
+              color: colors.textPrimary,
               marginBottom: 40,
               fontWeight: 700,
               letterSpacing: "-0.01em",
@@ -3100,7 +3100,7 @@ function Outcomes() {
                       fontFamily: body,
                       fontSize: 14,
                       fontWeight: 600,
-                      color: "#1E1E22",
+                      color: colors.textPrimary,
                       marginBottom: 3,
                     }}
                   >
@@ -3110,7 +3110,7 @@ function Outcomes() {
                     style={{
                       fontFamily: body,
                       fontSize: 13,
-                      color: "#6A6872",
+                      color: colors.textMuted,
                       lineHeight: 1.6,
                       margin: 0,
                     }}

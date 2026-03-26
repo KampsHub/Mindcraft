@@ -557,7 +557,7 @@ function WeeklyReviewPage() {
   /* ── Loading ── */
   if (loading) {
     return (
-      <PageShell showBgImage>
+      <PageShell showBgImage programSlug={enrollment?.programs?.slug}>
         <div style={{ textAlign: "center", paddingTop: 80 }}>
           <p style={{ color: colors.textMuted }}>Loading review...</p>
         </div>
@@ -568,7 +568,7 @@ function WeeklyReviewPage() {
   /* ── No enrollment ── */
   if (!enrollment) {
     return (
-      <PageShell showBgImage>
+      <PageShell showBgImage programSlug={enrollment?.programs?.slug}>
         <div style={{ paddingTop: 48 }}>
           <h1 style={{ fontFamily: display, fontSize: 28, fontWeight: 700, color: colors.textPrimary, marginBottom: 12 }}>
             No active program
@@ -613,7 +613,7 @@ function WeeklyReviewPage() {
   };
 
   return (
-    <PageShell showBgImage>
+    <PageShell showBgImage programSlug={enrollment?.programs?.slug}>
 
       {/* ── Program Switcher ── */}
       <ProgramSwitcher currentEnrollmentId={enrollment.id} onSwitch={handleSwitchEnrollment} />

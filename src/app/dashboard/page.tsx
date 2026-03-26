@@ -234,8 +234,8 @@ export default function DashboardPage() {
 
   return (
     <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative", overflow: "hidden" }}>
-      {/* Background parachute image */}
-      <DashboardBgImage />
+      {/* Background image — program-aware */}
+      <DashboardBgImage programSlug={enrollments[0]?.enrollment?.programs?.slug} />
 
       {/* Decorative floating dots */}
       <motion.div
@@ -455,24 +455,37 @@ export default function DashboardPage() {
 }
 
 /* ── Background image component ── */
-const BG_IMAGES = [
-  "/hero-parachute.jpg",
-  "/shutterstock_2758752955.jpg",
-  "/shutterstock_2758753407.jpg",
-  "/shutterstock_2758753475.jpg",
-  "/shutterstock_2758773487.jpg",
-  "/shutterstock_2758773645.jpg",
-  "/shutterstock_2758773677.jpg",
-  "/shutterstock_2758773863.jpg",
-  "/shutterstock_2758774471.jpg",
-];
+const PROGRAM_BG_IMAGES: Record<string, string[]> = {
+  parachute: [
+    "/hero-parachute.jpg",
+    "/shutterstock_2758752955.jpg",
+    "/shutterstock_2758753407.jpg",
+    "/shutterstock_2758753475.jpg",
+    "/shutterstock_2758773487.jpg",
+    "/shutterstock_2758773645.jpg",
+    "/shutterstock_2758773677.jpg",
+    "/shutterstock_2758773863.jpg",
+    "/shutterstock_2758774471.jpg",
+  ],
+  jetstream: [
+    "/jetstream-hero-bg.jpg",
+    "/shutterstock_2758780005.jpg",
+    "/shutterstock_2758780047.jpg",
+    "/shutterstock_2758780709.jpg",
+    "/shutterstock_2758781481.jpg",
+    "/shutterstock_2758781721.jpg",
+    "/shutterstock_2758781913.jpg",
+    "/shutterstock_2758782247.jpg",
+  ],
+};
 
-function DashboardBgImage() {
+function DashboardBgImage({ programSlug }: { programSlug?: string }) {
   const [bgImage, setBgImage] = useState<string | null>(null);
   useEffect(() => {
+    const pool = PROGRAM_BG_IMAGES[programSlug || "parachute"] || PROGRAM_BG_IMAGES.parachute;
     const day = Math.floor(Date.now() / 86400000);
-    setBgImage(BG_IMAGES[day % BG_IMAGES.length]);
-  }, []);
+    setBgImage(pool[day % pool.length]);
+  }, [programSlug]);
 
   if (!bgImage) return null;
 
@@ -490,6 +503,7 @@ function DashboardBgImage() {
         backgroundRepeat: "no-repeat",
         pointerEvents: "none",
         zIndex: 0,
+        filter: "brightness(1.15)",
       }}
     >
       <div style={{
@@ -497,9 +511,9 @@ function DashboardBgImage() {
         inset: 0,
         background: `linear-gradient(
           to bottom,
-          rgba(24, 24, 28, 0.55) 0%,
-          rgba(24, 24, 28, 0.75) 30%,
-          rgba(24, 24, 28, 0.92) 60%,
+          rgba(24, 24, 28, 0.35) 0%,
+          rgba(24, 24, 28, 0.55) 30%,
+          rgba(24, 24, 28, 0.8) 60%,
           ${colors.bgDeep} 85%
         )`,
       }} />

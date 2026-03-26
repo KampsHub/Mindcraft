@@ -9,18 +9,30 @@ import { content as c } from "@/content/site";
 
 const body = fonts.bodyAlt;
 
-/* ── Parachute background images ── */
-const BG_IMAGES = [
-  "/hero-parachute.jpg",
-  "/shutterstock_2758752955.jpg",
-  "/shutterstock_2758753407.jpg",
-  "/shutterstock_2758753475.jpg",
-  "/shutterstock_2758773487.jpg",
-  "/shutterstock_2758773645.jpg",
-  "/shutterstock_2758773677.jpg",
-  "/shutterstock_2758773863.jpg",
-  "/shutterstock_2758774471.jpg",
-];
+/* ── Program background images ── */
+const PROGRAM_BG_IMAGES: Record<string, string[]> = {
+  parachute: [
+    "/hero-parachute.jpg",
+    "/shutterstock_2758752955.jpg",
+    "/shutterstock_2758753407.jpg",
+    "/shutterstock_2758753475.jpg",
+    "/shutterstock_2758773487.jpg",
+    "/shutterstock_2758773645.jpg",
+    "/shutterstock_2758773677.jpg",
+    "/shutterstock_2758773863.jpg",
+    "/shutterstock_2758774471.jpg",
+  ],
+  jetstream: [
+    "/jetstream-hero-bg.jpg",
+    "/shutterstock_2758780005.jpg",
+    "/shutterstock_2758780047.jpg",
+    "/shutterstock_2758780709.jpg",
+    "/shutterstock_2758781481.jpg",
+    "/shutterstock_2758781721.jpg",
+    "/shutterstock_2758781913.jpg",
+    "/shutterstock_2758782247.jpg",
+  ],
+};
 
 const blobPositions = {
   default: {
@@ -43,6 +55,7 @@ interface PageShellProps {
   showBlobs?: boolean;
   blobVariant?: keyof typeof blobPositions;
   showBgImage?: boolean;
+  programSlug?: string;
 }
 
 export default function PageShell({
@@ -51,6 +64,7 @@ export default function PageShell({
   showBlobs = true,
   blobVariant = "default",
   showBgImage = false,
+  programSlug,
 }: PageShellProps) {
   const positions = blobPositions[blobVariant];
 
@@ -58,10 +72,11 @@ export default function PageShell({
   const [bgImage, setBgImage] = useState<string | null>(null);
   useEffect(() => {
     if (!showBgImage) return;
+    const pool = PROGRAM_BG_IMAGES[programSlug || "parachute"] || PROGRAM_BG_IMAGES.parachute;
     const day = Math.floor(Date.now() / 86400000); // days since epoch
-    const idx = day % BG_IMAGES.length;
-    setBgImage(BG_IMAGES[idx]);
-  }, [showBgImage]);
+    const idx = day % pool.length;
+    setBgImage(pool[idx]);
+  }, [showBgImage, programSlug]);
 
   return (
     <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative", overflow: "hidden" }}>
@@ -83,6 +98,7 @@ export default function PageShell({
               backgroundRepeat: "no-repeat",
               pointerEvents: "none",
               zIndex: 0,
+              filter: "brightness(1.15)",
             }}
           >
             {/* Dark gradient overlay for readability */}
@@ -91,9 +107,9 @@ export default function PageShell({
               inset: 0,
               background: `linear-gradient(
                 to bottom,
-                rgba(24, 24, 28, 0.55) 0%,
-                rgba(24, 24, 28, 0.75) 30%,
-                rgba(24, 24, 28, 0.92) 60%,
+                rgba(24, 24, 28, 0.35) 0%,
+                rgba(24, 24, 28, 0.55) 30%,
+                rgba(24, 24, 28, 0.8) 60%,
                 ${colors.bgDeep} 85%
               )`,
             }} />

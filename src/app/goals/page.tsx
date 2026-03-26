@@ -277,7 +277,7 @@ function GoalsPage() {
   /* ── Loading ── */
   if (loading) {
     return (
-      <PageShell blobVariant="goals" showBgImage>
+      <PageShell blobVariant="goals" showBgImage programSlug={enrollment?.programs?.slug}>
         <p style={{ color: colors.textMuted, fontFamily: body }}>Loading goals...</p>
       </PageShell>
     );
@@ -286,7 +286,7 @@ function GoalsPage() {
   /* ── No enrollment ── */
   if (!enrollment) {
     return (
-      <PageShell blobVariant="goals" showBgImage>
+      <PageShell blobVariant="goals" showBgImage programSlug={enrollment?.programs?.slug}>
         <FadeIn preset="fade" triggerOnMount>
           <h1 style={{
             fontFamily: display, fontSize: 32, fontWeight: 700,
@@ -308,7 +308,7 @@ function GoalsPage() {
   /* ── Generate goals ── */
   if (goals.length === 0) {
     return (
-      <PageShell blobVariant="goals" showBgImage>
+      <PageShell blobVariant="goals" showBgImage programSlug={enrollment?.programs?.slug}>
         <ProgramSwitcher currentEnrollmentId={enrollment.id} onSwitch={handleSwitchEnrollment} />
         <FadeIn preset="fade" triggerOnMount>
           <span style={{
@@ -370,7 +370,7 @@ function GoalsPage() {
     : goals;
 
   return (
-    <PageShell blobVariant="goals" showBgImage>
+    <PageShell blobVariant="goals" showBgImage programSlug={enrollment?.programs?.slug}>
       {/* Program Switcher */}
       <ProgramSwitcher currentEnrollmentId={enrollment.id} onSwitch={handleSwitchEnrollment} />
 

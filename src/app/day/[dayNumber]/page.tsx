@@ -1137,35 +1137,44 @@ function DailyFlowPage() {
               />
             )}
           <div style={{
-            backgroundColor: colors.bgSurface,
-            borderRadius: 14,
-            border: `1px solid ${colors.borderDefault}`,
-            padding: 22,
             ...(crisisDetectedStep3 && !crisisDismissedStep3
               ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
               : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
+            display: "flex", flexDirection: "column", gap: 16,
           }}>
-            <div style={{ marginBottom: 18 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <p style={{
-                  fontSize: 11, fontWeight: 700, color: "#ffffff",
-                  margin: 0, textTransform: "uppercase",
-                  letterSpacing: "0.08em", fontFamily: display,
-                }}>
-                  What your journal reveals
-                </p>
+
+            {/* ── Card 1: Reading ── */}
+            <div style={{
+              backgroundColor: colors.bgSurface,
+              borderRadius: 14, padding: 22,
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: "50%",
+                    backgroundColor: colors.coralWash,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <span style={{ fontSize: 13 }}>🔍</span>
+                  </div>
+                  <p style={{
+                    fontSize: 12, fontWeight: 700, color: colors.coral,
+                    margin: 0, textTransform: "uppercase",
+                    letterSpacing: "0.08em", fontFamily: display,
+                  }}>
+                    What your journal reveals
+                  </p>
+                </div>
                 <FlagButton outputType="reflection" dailySessionId={session?.id} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {stateAnalysis.reading ? (
-                  // New prose format — natural paragraphs
                   stateAnalysis.reading.split("\n\n").map((para, i) => (
                     <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.7, fontFamily: body }}>
                       {para}
                     </p>
                   ))
                 ) : (
-                  // Legacy category format (backwards compatible)
                   <>
                     {stateAnalysis.emotional_state && (
                       <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
@@ -1185,38 +1194,40 @@ function DailyFlowPage() {
                   </>
                 )}
               </div>
+              {stateAnalysis.goal_connections.length > 0 && (
+                <div style={{
+                  padding: "10px 14px", marginTop: 16,
+                  backgroundColor: colors.plumWash,
+                  borderRadius: 10,
+                }}>
+                  <p style={{ fontSize: 13, color: colors.plumLight, margin: 0, fontFamily: body, fontWeight: 500 }}>
+                    <span style={{ fontWeight: 700 }}>Goal connections:</span> {stateAnalysis.goal_connections.join(" • ")}
+                  </p>
+                </div>
+              )}
             </div>
 
-            {stateAnalysis.goal_connections.length > 0 && (
-              <div style={{
-                padding: "12px 16px",
-                backgroundColor: colors.plumWash,
-                borderRadius: 12,
-                marginBottom: 14,
-              }}>
-                <p style={{ fontSize: 13, color: colors.plumLight, margin: 0, fontFamily: body, fontWeight: 500 }}>
-                  <span style={{ fontWeight: 700 }}>Goal connections:</span> {stateAnalysis.goal_connections.join(" • ")}
-                </p>
-              </div>
-            )}
-
-            {/* Coaching Questions */}
-            {/* Separator */}
-            <div style={{ height: 1, backgroundColor: colors.borderSubtle, margin: "18px 0" }} />
-
+            {/* ── Card 2: Coaching Questions ── */}
             {coachingQuestions.length > 0 && (
               <div style={{
-                padding: "20px 22px",
-                backgroundColor: colors.plumWash,
-                borderRadius: 12,
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14, padding: 22,
                 borderLeft: `3px solid ${colors.plum}`,
-                marginBottom: 14,
               }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: colors.plum, margin: "0 0 16px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
-                  Questions to sit with
-                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: "50%",
+                    backgroundColor: colors.plumWash,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <span style={{ fontSize: 13 }}>💭</span>
+                  </div>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: colors.plum, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                    Questions to sit with
+                  </p>
+                </div>
                 {coachingQuestions.map((q, i) => (
-                  <div key={i} style={{ marginBottom: i < coachingQuestions.length - 1 ? 18 : 0 }}>
+                  <div key={i} style={{ marginBottom: i < coachingQuestions.length - 1 ? 20 : 0 }}>
                     <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 10px 0", lineHeight: 1.6, fontFamily: body, fontStyle: "italic" }}>
                       {q}
                     </p>
@@ -1227,10 +1238,10 @@ function DailyFlowPage() {
                       rows={2}
                       disabled={responsesSaved}
                       style={{
-                        width: "100%", padding: "10px 14px", fontSize: 15, fontFamily: body,
-                        border: `1px solid ${colors.borderDefault}`, borderRadius: 10,
-                        backgroundColor: colors.bgInput, color: "#ffffff",
-                        resize: "vertical", minHeight: 60, boxSizing: "border-box",
+                        width: "100%", padding: "12px 16px", fontSize: 15, fontFamily: body,
+                        border: `1px solid ${colors.borderDefault}`, borderRadius: 12,
+                        backgroundColor: colors.bgRecessed, color: "#ffffff",
+                        resize: "vertical", minHeight: 70, boxSizing: "border-box",
                         outline: "none", opacity: responsesSaved ? 0.6 : 1,
                       }}
                     />
@@ -1243,7 +1254,7 @@ function DailyFlowPage() {
                     onClick={saveQuestionResponses}
                     disabled={savingResponses || Object.values(questionResponses).every((r) => !r.trim())}
                     style={{
-                      marginTop: 14, padding: "10px 24px", fontSize: 13, fontWeight: 600,
+                      marginTop: 16, padding: "10px 24px", fontSize: 13, fontWeight: 600,
                       color: colors.bgDeep, backgroundColor: colors.plum,
                       border: "none", borderRadius: 100, cursor: "pointer",
                       fontFamily: display, letterSpacing: "0.01em",
@@ -1260,21 +1271,26 @@ function DailyFlowPage() {
               </div>
             )}
 
-            {/* Separator before reframe */}
-            {reframe && <div style={{ height: 1, backgroundColor: colors.borderSubtle, margin: "18px 0" }} />}
-
-            {/* Reframe */}
+            {/* ── Card 3: Reframe ── */}
             {reframe && (
               <div style={{
-                padding: "16px 18px",
-                backgroundColor: colors.coralWash,
-                borderRadius: 12,
-                marginBottom: 14,
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14, padding: 22,
+                borderLeft: `3px solid ${colors.coral}`,
               }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
-                    Reframe
-                  </p>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{
+                      width: 28, height: 28, borderRadius: "50%",
+                      backgroundColor: colors.coralWash,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      <span style={{ fontSize: 13 }}>↻</span>
+                    </div>
+                    <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                      Reframe
+                    </p>
+                  </div>
                   <FlagButton outputType="reframe" dailySessionId={session?.id} />
                 </div>
                 <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 12px 0", fontFamily: body, fontStyle: "italic", lineHeight: 1.6 }}>
@@ -1289,18 +1305,25 @@ function DailyFlowPage() {
               </div>
             )}
 
-            {/* Pattern Challenge */}
+            {/* ── Card 4: Pattern Challenge ── */}
             {patternChallenge && (
               <div style={{
-                padding: "16px 18px",
-                backgroundColor: colors.bgElevated,
-                borderRadius: 12,
-                borderLeft: `3px solid ${colors.coral}`,
-                marginBottom: 14,
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14, padding: 22,
+                borderLeft: `3px solid ${colors.warning}`,
               }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
-                  Pattern challenge
-                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: "50%",
+                    backgroundColor: "rgba(251, 191, 36, 0.15)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <span style={{ fontSize: 13 }}>⚡</span>
+                  </div>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: colors.warning, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                    Pattern challenge
+                  </p>
+                </div>
                 <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 8px 0", lineHeight: 1.55, fontFamily: body }}>
                   {patternChallenge.pattern}
                 </p>

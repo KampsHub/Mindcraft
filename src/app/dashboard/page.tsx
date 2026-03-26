@@ -53,6 +53,68 @@ interface EnrollmentWithContext {
   weekNumber: number;
 }
 
+/* ── Dashboard greetings by program ── */
+const greetings: Record<string, string[]> = {
+  parachute: [
+    "You're still here. That counts.",
+    "Structure before strategy.",
+    "The fog lifts one morning at a time.",
+    "\"The only way out is through.\" — Robert Frost",
+    "You don't have to figure it all out today.",
+    "Clear eyes first. Then decisions.",
+    "\"In the middle of difficulty lies opportunity.\" — Albert Einstein",
+    "Rebuilding is not starting over.",
+    "\"Courage is not the absence of fear.\" — Nelson Mandela",
+    "You showed up. That's the whole job today.",
+    "Let the dust settle before you sweep.",
+    "What got disrupted can be rebuilt differently.",
+    "Progress isn't always visible. Keep going.",
+  ],
+  jetstream: [
+    "Stay steady. Stay sharp.",
+    "Clarity under pressure is a skill. You're building it.",
+    "Separate the noise from the signal.",
+    "You're still in the game.",
+    "One clear conversation at a time.",
+    "\"Courage is grace under pressure.\" — Hemingway",
+    "Think clearly. Act deliberately.",
+    "Pressure reveals. It doesn't define.",
+    "Stay in the room. Breathe. Then speak.",
+    "The best move right now is the calm one.",
+  ],
+  basecamp: [
+    "New map. Same compass.",
+    "Listen before you lead.",
+    "Read the room before you redecorate it.",
+    "The first 30 days are data collection, not performance.",
+    "\"Begin as you mean to go on.\"",
+    "Trust the discomfort of not knowing.",
+    "New doesn't mean unprepared.",
+    "Every new room feels wrong until you've sat in it a while.",
+    "The culture will reveal itself. Just watch.",
+    "\"Do what you can, with what you have, where you are.\" — Theodore Roosevelt",
+    "Observe twice. Speak once.",
+    "You've done hard transitions before. This is another one.",
+    "Credibility is built daily, not announced.",
+    "The learning curve is the point, not the obstacle.",
+    "Land first. Then fly.",
+  ],
+};
+
+const defaultGreetings = [
+  "You're still here. That counts.",
+  "Clear eyes first. Then decisions.",
+  "Progress isn't always visible. Keep going.",
+];
+
+function getGreeting(programSlug?: string): string {
+  const list = (programSlug && greetings[programSlug]) || defaultGreetings;
+  // Use today's date as seed for daily rotation
+  const today = new Date();
+  const dayIndex = today.getFullYear() * 366 + today.getMonth() * 31 + today.getDate();
+  return list[dayIndex % list.length];
+}
+
 /* ── Quick-access links (3 per row) ── */
 const quickLinks = [
   { href: "/mindful-journal", label: "Journal", desc: "Write freely", icon: "✎", accent: colors.coral },
@@ -205,7 +267,7 @@ export default function DashboardPage() {
               fontFamily: display, fontSize: 32, fontWeight: 700,
               letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 6px 0",
             }}>
-              The work continues.
+              {getGreeting(enrollments[0]?.enrollment?.programs?.slug)}
             </h1>
             <p style={{ fontSize: 14, color: colors.textMuted, margin: 0, fontFamily: body }}>
               {user.email}

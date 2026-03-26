@@ -103,6 +103,45 @@ export async function POST(request: NextRequest) {
           }
         }
       }
+
+      // Send notification email if this is an Enneagram purchase
+      const tier = session.metadata?.tier;
+      const program = session.metadata?.program;
+      if (tier === "enneagram" || tier === "enneagram_standalone") {
+        const resendKey = process.env.RESEND_API_KEY;
+        if (resendKey) {
+          try {
+            const { Resend } = await import("resend");
+            const resend = new Resend(resendKey);
+            const amountCents = session.metadata?.amount_cents || "0";
+            await resend.emails.send({
+              from: "Mindcraft <stefanie@allmindsondeck.com>",
+              to: "stefanie@allmindsondeck.com",
+              subject: `🎯 New Enneagram Purchase — ${customerEmail || "Unknown"}`,
+              html: `
+                <div style="font-family: -apple-system, sans-serif; max-width: 520px; padding: 24px;">
+                  <h2 style="margin: 0 0 16px;">New Enneagram Purchase</h2>
+                  <table style="border-collapse: collapse; width: 100%;">
+                    <tr><td style="padding: 8px 0; color: #666;">Customer</td><td style="padding: 8px 0; font-weight: 600;">${customerEmail || "Not provided"}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #666;">Tier</td><td style="padding: 8px 0; font-weight: 600;">${tier}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #666;">Program</td><td style="padding: 8px 0; font-weight: 600;">${program || "standalone"}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #666;">Amount</td><td style="padding: 8px 0; font-weight: 600;">$${(Number(amountCents) / 100).toFixed(2)}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #666;">Stripe Customer</td><td style="padding: 8px 0;">${stripeCustomerId}</td></tr>
+                  </table>
+                  <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;" />
+                  <p style="color: #666; font-size: 14px;">
+                    <strong>Action needed:</strong> Order IEQ9 assessment for this customer and coordinate debrief scheduling.
+                  </p>
+                </div>
+              `,
+            });
+            console.log(`Enneagram purchase notification sent for ${customerEmail}`);
+          } catch (emailErr) {
+            console.error("Failed to send Enneagram notification:", emailErr);
+          }
+        }
+      }
+
       break;
     }
 

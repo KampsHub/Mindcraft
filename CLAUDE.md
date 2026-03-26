@@ -84,6 +84,13 @@ Missing statuses = users see "No active program" even though they're enrolled.
 - TypeScript: accessing `.property` on a type narrowed to `never` (e.g. `enrollment?.programs?.slug` inside `if (!enrollment)`)
 - React: `useState` declared after early `return` statements — hooks must come before any returns
 - Mismatched braces in large files — use `npx tsc --noEmit` to catch syntax errors
+- **Module-scope env vars**: NEVER instantiate SDK clients at module scope (e.g. `const resend = new Resend(process.env.KEY)` at top of file). Vercel evaluates all modules during build — if the env var isn't available at build time, it crashes. Always create clients inside the request handler.
+
+### Deployment Monitoring (MANDATORY)
+- After every `git push`, check that the Vercel build succeeds
+- Run `gh api repos/KampsHub/Mindcraft/deployments --jq '.[0] | {sha: .sha[0:7], state, created_at}'` to verify
+- If state is `null` or `error`, investigate immediately — don't move on to the next task
+- If build fails, fix and repush before doing anything else
 
 ## Database Content Updates
 - Weekly themes territories: `scripts/update-weekly-territories.sql`

@@ -353,7 +353,14 @@ export default function IntakePage() {
               whileTap={attribution ? { scale: 0.97 } : {}}
               onClick={() => {
                 if (attribution) {
-                  trackEvent("attribution_source", { source: attribution === "other" ? attributionOther : attribution });
+                  const source = attribution === "other" ? attributionOther : attribution;
+                  const eventParams: Record<string, string> = {
+                    source,
+                    attribution_type: attribution === "other" ? "freeform" : "preset",
+                  };
+                  if (attribution === "other") eventParams.freeform_text = attributionOther;
+                  trackEvent("attribution_source", eventParams);
+                  // Skip program selection — we already know from the URL param or purchase
                   setStep(selectedProgram ? "intake" : "program");
                 }
               }}
@@ -661,22 +668,48 @@ export default function IntakePage() {
                 {q.type === "disruptions_scale" && q.items && (
                   <div style={{ marginTop: 8 }}>
                     <p style={{
-                      fontSize: 12, color: colors.gray400, margin: "0 0 14px 0",
-                      fontFamily: body,
+                      fontSize: 13, color: colors.textMuted, margin: "0 0 6px 0",
+                      fontFamily: body, lineHeight: 1.5,
                     }}>
                       Rate each 1-10 (10 = most intense right now)
                     </p>
-                    {q.items.map((item) => (
+                    <p style={{
+                      fontSize: 12, color: colors.textMuted, margin: "0 0 20px 0",
+                      fontFamily: body, lineHeight: 1.5, opacity: 0.7,
+                    }}>
+                      This helps us understand which areas need the most support so your program starts where you actually are — not where a generic program assumes you are.
+                    </p>
+                    {q.items.map((item) => {
+                      const descriptions: Record<string, string> = {
+                        "Income and Financial Security": "How stressed are you about money, bills, runway, or supporting others right now?",
+                        "Routine and Structure": "How disrupted is your daily rhythm — sleep, schedule, sense of purpose in your day?",
+                        "Identity": "How much has your sense of who you are shifted since this started?",
+                        "Social Belonging": "How isolated or disconnected do you feel from your community, colleagues, or social circle?",
+                        "Sense of Competence": "How much is your confidence in your professional abilities shaken right now?",
+                        "Future Uncertainty": "How overwhelming does the unknown feel — what's next, when, and how?",
+                        "Skill Confidence": "How much do you doubt whether your skills are current, transferable, or enough?",
+                      };
+                      return (
                       <div key={item} style={{
-                        display: "flex", alignItems: "center", gap: 12,
-                        marginBottom: 14,
+                        display: "flex", alignItems: "flex-start", gap: 12,
+                        marginBottom: 18,
                       }}>
-                        <span style={{
-                          fontSize: 14, color: colors.textBody, minWidth: 160,
-                          flex: 1, fontFamily: body,
-                        }}>
-                          {item}
-                        </span>
+                        <div style={{ minWidth: 200, flex: 1 }}>
+                          <span style={{
+                            fontSize: 14, color: colors.textBody,
+                            fontFamily: body, fontWeight: 500,
+                          }}>
+                            {item}
+                          </span>
+                          {descriptions[item] && (
+                            <p style={{
+                              fontSize: 12, color: colors.textMuted, margin: "2px 0 0 0",
+                              fontFamily: body, lineHeight: 1.4, opacity: 0.8,
+                            }}>
+                              {descriptions[item]}
+                            </p>
+                          )}
+                        </div>
                         <div style={{ display: "flex", gap: 4 }}>
                           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                             <motion.button
@@ -703,7 +736,8 @@ export default function IntakePage() {
                           ))}
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -769,24 +803,42 @@ export default function IntakePage() {
             Before we begin
           </h1>
           <p style={{
-            fontSize: 14, color: colors.textMuted, marginBottom: 28,
+            fontSize: 14, color: colors.textMuted, marginBottom: 8,
             lineHeight: 1.6, fontFamily: body,
           }}>
-            Your data, your terms. You can change these anytime.
+            Your data, your terms. You can change these anytime in your account settings.
           </p>
         </FadeIn>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-          {toggles.map((toggle, i) => (
+          {toggles.map((toggle, i) => {
+            const toggleDescriptions: Record<string, { description: string; whyRequired?: string }> = {
+              "ai_processing": {
+                description: "Your journal entries and exercise responses are processed by AI to personalize your daily program, generate insights, and adapt exercises to your situation.",
+                whyRequired: "This is required because the entire program is built around AI-generated personalization. Without it, we can't tailor the experience to you.",
+              },
+              "coach_sharing": {
+                description: "If you're working with a 1:1 coach, this allows them to see your journal themes, exercise patterns, and progress summaries — so sessions are more focused and informed. Your coach never sees raw journal text unless you share it directly.",
+              },
+              "aggregate_analytics": {
+                description: "We use anonymized, aggregated data (never individual responses) to improve exercises, understand which tools are most effective, and make the program better for everyone.",
+              },
+              "data_deletion": {
+                description: "You can request full deletion of your data at any time through your account settings. We'll remove everything within 30 days.",
+                whyRequired: "This is required because it's your legal right — we want you to know it exists before you start.",
+              },
+            };
+            const info = toggleDescriptions[toggle.id];
+            return (
             <FadeIn key={toggle.id} preset="slide-up" delay={i * 0.06} triggerOnMount>
               <div style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
+                display: "flex", alignItems: "flex-start", justifyContent: "space-between",
                 padding: "18px 0",
                 borderBottom: `1px solid ${colors.borderSubtle}`,
               }}>
-                <div>
+                <div style={{ flex: 1, paddingRight: 16 }}>
                   <p style={{
-                    fontSize: 15, fontWeight: 500, color: colors.black,
+                    fontSize: 15, fontWeight: 500, color: colors.textPrimary,
                     margin: 0, fontFamily: body,
                   }}>
                     {toggle.label}
@@ -802,6 +854,22 @@ export default function IntakePage() {
                       </span>
                     )}
                   </p>
+                  {info && (
+                    <p style={{
+                      fontSize: 13, color: colors.textMuted, margin: "4px 0 0 0",
+                      lineHeight: 1.5, fontFamily: body,
+                    }}>
+                      {info.description}
+                    </p>
+                  )}
+                  {info?.whyRequired && toggle.required && (
+                    <p style={{
+                      fontSize: 12, color: colors.textMuted, margin: "4px 0 0 0",
+                      lineHeight: 1.4, fontFamily: body, fontStyle: "italic", opacity: 0.7,
+                    }}>
+                      {info.whyRequired}
+                    </p>
+                  )}
                 </div>
                 <label style={{
                   position: "relative", display: "inline-block",
@@ -834,7 +902,8 @@ export default function IntakePage() {
                 </label>
               </div>
             </FadeIn>
-          ))}
+            );
+          })}
         </div>
 
         <FadeIn preset="fade" delay={0.3} triggerOnMount>

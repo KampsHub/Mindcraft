@@ -254,12 +254,12 @@ export default function DashboardPage() {
         {/* ── Welcome ── */}
         <FadeIn preset="fade" duration={0.6} triggerOnMount>
           <div style={{ marginBottom: 32 }}>
-            <h1 style={{
-              fontFamily: display, fontSize: 22, fontWeight: 600,
-              letterSpacing: "-0.02em", color: colors.textPrimary, margin: "0 0 6px 0",
+            <p style={{
+              fontFamily: display, fontSize: 16, fontWeight: 500,
+              letterSpacing: "-0.01em", color: colors.textPrimary, margin: "0 0 6px 0",
             }}>
               {getGreeting(enrollments[0]?.enrollment?.programs?.slug)}
-            </h1>
+            </p>
             <p style={{ fontSize: 14, color: "#ffffff", margin: 0, fontFamily: body }}>
               {user.email}
             </p>

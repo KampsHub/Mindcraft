@@ -156,12 +156,13 @@ export default function PageShell({
         <div style={{ maxWidth, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
           {showBgImage ? (
             <div style={{
-              backgroundColor: "rgba(24, 24, 28, 0.65)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
+              backgroundColor: "rgba(40, 40, 48, 0.75)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
               borderRadius: 16,
               padding: "28px 24px",
-              border: `1px solid ${colors.borderSubtle}`,
+              border: `1px solid rgba(255, 255, 255, 0.08)`,
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
             }}>
               {children}
             </div>

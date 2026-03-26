@@ -333,19 +333,29 @@ function GoalsPage() {
             fontFamily: display, fontSize: 32, fontWeight: 700,
             letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 10px 0",
           }}>
-            Generate your goals
+            {enrollment.current_day < 4 ? "Goals unlock after Day 3" : "Generate your goals"}
           </h1>
           <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 32, fontFamily: body }}>
-            Based on your intake and what surfaced in Days 1-3, your coaching intelligence will generate
-            6 personalized goals. You choose which 2-3 to work on first.
+            {enrollment.current_day < 4
+              ? `You're on Day ${enrollment.current_day}. Complete your first three days — the exercises double as intake — and your coaching intelligence will generate 6 personalized goals.`
+              : "Based on your intake and what surfaced in Days 1-3, your coaching intelligence will generate 6 personalized goals. You choose which 2-3 to work on first."}
           </p>
-          <PillButton
-            onClick={handleGenerate}
-            disabled={generating}
-            size="lg"
-          >
-            {generating ? "Generating goals..." : "Generate My Goals"}
-          </PillButton>
+          {enrollment.current_day < 4 ? (
+            <PillButton
+              onClick={() => router.push(`/day/${enrollment.current_day}?enrollment=${enrollment.id}`)}
+              size="lg"
+            >
+              Continue Day {enrollment.current_day}
+            </PillButton>
+          ) : (
+            <PillButton
+              onClick={handleGenerate}
+              disabled={generating}
+              size="lg"
+            >
+              {generating ? "Generating goals..." : "Generate My Goals"}
+            </PillButton>
+          )}
           <AnimatePresence>
             {generating && (
               <motion.p

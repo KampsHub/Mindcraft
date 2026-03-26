@@ -124,7 +124,7 @@ function EnneagramCard() {
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
       style={{
         ...cardStyle,
-        border: "1px solid rgba(176, 141, 173, 0.3)",
+        border: "none",
         position: "relative" as const,
         overflow: "hidden" as const,
       }}
@@ -195,7 +195,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
       style={{
         ...cardStyle,
-        border: `1px solid ${colors.borderDefault}`,
+        border: "none",
         position: "relative" as const,
         overflow: "hidden" as const,
       }}

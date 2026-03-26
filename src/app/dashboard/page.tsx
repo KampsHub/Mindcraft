@@ -19,7 +19,7 @@ const body = fonts.bodyAlt;
 const cardStyle: React.CSSProperties = {
   backgroundColor: colors.bgSurface,
   borderRadius: 14,
-  border: `1px solid ${colors.borderDefault}`,
+  border: "none",
 };
 
 /* ── Types ── */

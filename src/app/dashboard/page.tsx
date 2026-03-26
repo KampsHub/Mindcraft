@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Nav from "@/components/Nav";
 import FadeIn from "@/components/FadeIn";
 import ProgramCard from "./ProgramCard";
@@ -233,7 +233,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative" }}>
+    <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative", overflow: "hidden" }}>
+      {/* Background parachute image */}
+      <DashboardBgImage />
+
       {/* Decorative floating dots */}
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
@@ -242,7 +245,7 @@ export default function DashboardPage() {
         style={{
           position: "absolute", top: "8%", right: "12%",
           width: 180, height: 180, borderRadius: "50%",
-          background: colors.coral, pointerEvents: "none", filter: "blur(60px)",
+          background: colors.coral, pointerEvents: "none", filter: "blur(60px)", zIndex: 1,
         }}
       />
       <motion.div
@@ -252,7 +255,7 @@ export default function DashboardPage() {
         style={{
           position: "absolute", top: "18%", left: "8%",
           width: 140, height: 140, borderRadius: "50%",
-          background: colors.plum, pointerEvents: "none", filter: "blur(50px)",
+          background: colors.plum, pointerEvents: "none", filter: "blur(50px)", zIndex: 1,
         }}
       />
 
@@ -448,5 +451,58 @@ export default function DashboardPage() {
       </footer>
 
     </div>
+  );
+}
+
+/* ── Background image component ── */
+const BG_IMAGES = [
+  "/hero-parachute.jpg",
+  "/shutterstock_2758752955.jpg",
+  "/shutterstock_2758753407.jpg",
+  "/shutterstock_2758753475.jpg",
+  "/shutterstock_2758773487.jpg",
+  "/shutterstock_2758773645.jpg",
+  "/shutterstock_2758773677.jpg",
+  "/shutterstock_2758773863.jpg",
+  "/shutterstock_2758774471.jpg",
+];
+
+function DashboardBgImage() {
+  const [bgImage, setBgImage] = useState<string | null>(null);
+  useEffect(() => {
+    const day = Math.floor(Date.now() / 86400000);
+    setBgImage(BG_IMAGES[day % BG_IMAGES.length]);
+  }, []);
+
+  if (!bgImage) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 2, ease: "easeOut" }}
+      style={{
+        position: "fixed",
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundRepeat: "no-repeat",
+        pointerEvents: "none",
+        zIndex: 0,
+      }}
+    >
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: `linear-gradient(
+          to bottom,
+          rgba(24, 24, 28, 0.55) 0%,
+          rgba(24, 24, 28, 0.75) 30%,
+          rgba(24, 24, 28, 0.92) 60%,
+          ${colors.bgDeep} 85%
+        )`,
+      }} />
+    </motion.div>
   );
 }

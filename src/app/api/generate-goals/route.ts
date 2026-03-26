@@ -1,9 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, generateGoalsSchema } from "@/lib/api-validation";
+import { validateBody, generateGoalsSchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const GOAL_SYSTEM_PROMPT = `You are a coaching goal architect for All Minds on Deck. You receive a client's pre-start intake responses and their first 3 days of journal entries, exercise responses, and onboarding data from a structured coaching program.
@@ -159,9 +158,9 @@ Generate 6 personalized coaching goals for this client based on everything above
     const fullPrompt = profileContext + promptData;
 
     // Call Claude
-    const anthropic = new Anthropic({
-      apiKey: process.env.CLAUDE_API_KEY!,
-    });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",

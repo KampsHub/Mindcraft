@@ -1,9 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt, appendObservation } from "@/lib/client-profile";
-import { validateBody, dailySummarySchema } from "@/lib/api-validation";
+import { validateBody, dailySummarySchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const SUMMARY_SYSTEM_PROMPT = `You are the coaching companion closing today's session. You receive today's complete session data: journal entry, exercise completions with responses, free-flow captures, and the upcoming day's territory.
@@ -221,7 +220,9 @@ Generate today's summary for Day ${dayNumber}.`;
     const profile = await getClientProfile(enrollmentId, "edges");
     const profileContext = formatProfileForPrompt(profile, "edges");
 
-    const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",

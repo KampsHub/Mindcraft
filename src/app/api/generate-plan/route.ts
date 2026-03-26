@@ -1,7 +1,7 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getAnthropicClient } from "@/lib/api-validation";
 
 const PLAN_SYSTEM_PROMPT = `You are a coaching plan architect for All Minds on Deck. You receive a client's intake responses — their values, family patterns, identity, relationship style, saboteurs, work context, goals, and package-specific answers.
 
@@ -108,9 +108,9 @@ ${JSON.stringify(intake.package_specific, null, 2)}
 Generate a personalised 4-week coaching plan for this client.`;
 
     // Call Claude
-    const anthropic = new Anthropic({
-      apiKey: process.env.CLAUDE_API_KEY!,
-    });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",

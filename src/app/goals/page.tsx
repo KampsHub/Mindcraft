@@ -73,6 +73,7 @@ function GoalsPage() {
   const [sessions, setSessions] = useState<DailySession[]>([]);
   const [exerciseCount, setExerciseCount] = useState(0);
   const [journalEntryCount, setJournalEntryCount] = useState(0);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [weekNumber, setWeekNumber] = useState(1);
   const [weekTheme, setWeekTheme] = useState<WeekTheme | null>(null);
   const supabase = createClient();
@@ -225,16 +226,17 @@ function GoalsPage() {
       });
       if (!res.ok) {
         const err = await res.json();
-        alert(err.error || "Failed to generate goals");
+        setErrorMsg(err.error || "Failed to generate goals. Please try again.");
         setGenerating(false);
         return;
       }
+      setErrorMsg(null);
       const data = await res.json();
       setGoals(data.goals);
       if (user) await loadData(user.id);
     } catch (err) {
       console.error("Goal generation failed:", err);
-      alert("Goal generation failed. Check the console.");
+      setErrorMsg("Goal generation failed. Please try again or contact support.");
     }
     setGenerating(false);
   }
@@ -246,7 +248,6 @@ function GoalsPage() {
         next.delete(goalId);
       } else {
         if (next.size >= 3) {
-          alert("You can have up to 3 active goals at a time. Deselect one first.");
           return prev;
         }
         next.add(goalId);
@@ -276,7 +277,7 @@ function GoalsPage() {
   /* ── Loading ── */
   if (loading) {
     return (
-      <PageShell blobVariant="goals">
+      <PageShell blobVariant="goals" showBgImage>
         <p style={{ color: colors.textMuted, fontFamily: body }}>Loading goals...</p>
       </PageShell>
     );
@@ -285,7 +286,7 @@ function GoalsPage() {
   /* ── No enrollment ── */
   if (!enrollment) {
     return (
-      <PageShell blobVariant="goals">
+      <PageShell blobVariant="goals" showBgImage>
         <FadeIn preset="fade" triggerOnMount>
           <h1 style={{
             fontFamily: display, fontSize: 32, fontWeight: 700,
@@ -307,7 +308,7 @@ function GoalsPage() {
   /* ── Generate goals ── */
   if (goals.length === 0) {
     return (
-      <PageShell blobVariant="goals">
+      <PageShell blobVariant="goals" showBgImage>
         <ProgramSwitcher currentEnrollmentId={enrollment.id} onSwitch={handleSwitchEnrollment} />
         <FadeIn preset="fade" triggerOnMount>
           <span style={{
@@ -346,6 +347,16 @@ function GoalsPage() {
                 Reading your intake and journal entries. This takes about 15 seconds.
               </motion.p>
             )}
+            {errorMsg && !generating && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{ color: "#f87171", fontSize: 13, marginTop: 14, fontFamily: body }}
+              >
+                {errorMsg}
+              </motion.p>
+            )}
           </AnimatePresence>
         </FadeIn>
       </PageShell>
@@ -359,7 +370,7 @@ function GoalsPage() {
     : goals;
 
   return (
-    <PageShell blobVariant="goals">
+    <PageShell blobVariant="goals" showBgImage>
       {/* Program Switcher */}
       <ProgramSwitcher currentEnrollmentId={enrollment.id} onSwitch={handleSwitchEnrollment} />
 

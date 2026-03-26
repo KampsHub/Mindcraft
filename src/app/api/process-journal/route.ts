@@ -1,9 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, processJournalSchema } from "@/lib/api-validation";
+import { validateBody, processJournalSchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const PROCESS_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive:
@@ -257,7 +256,9 @@ Analyze the journal content and select the best overflow exercises for this clie
       systemPrompt += ONBOARDING_DISCOVERY;
     }
 
-    const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",

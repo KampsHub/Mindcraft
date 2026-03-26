@@ -29,6 +29,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
     return (
       <FadeIn preset="fade" delay={0.1}>
         <div style={{ marginTop: 36 }}>
+          <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 24 }} />
           <p style={{
             fontFamily: display, fontSize: 12, fontWeight: 600,
             color: colors.textMuted, marginBottom: 14, letterSpacing: "0.04em",
@@ -45,6 +46,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
   return (
     <FadeIn preset="fade" delay={0.1}>
       <div style={{ marginTop: 36 }}>
+        <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 24 }} />
         <p style={{
           fontFamily: display, fontSize: 12, fontWeight: 600,
           color: colors.textMuted, marginBottom: 14, letterSpacing: "0.04em",

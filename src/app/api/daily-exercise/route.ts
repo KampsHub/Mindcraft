@@ -1,9 +1,9 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { logApiCall } from "@/lib/api-logger";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
+import { getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const EXERCISE_SYSTEM_PROMPT = `You are the coaching companion selecting and delivering today's exercise. You receive:
@@ -163,7 +163,9 @@ ${candidateFrameworks.map((f) => `- ID: ${f.id}\n  Name: ${f.name}\n  Category: 
 
 Select the best framework and deliver a personalised exercise for today.`;
 
-    const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",

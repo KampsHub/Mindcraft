@@ -1,9 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, frameworkAnalysisSchema } from "@/lib/api-validation";
+import { validateBody, frameworkAnalysisSchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const FRAMEWORK_ANALYSIS_PROMPT = `You are the coaching companion for a structured development program. You receive multi-day journal entries, exercises, and theme history, plus a library of foundational coaching frameworks.
@@ -150,7 +149,9 @@ Select the best framework to apply to this client's multi-day pattern.`;
     const profile = await getClientProfile(enrollmentId, "full");
     const profileContext = formatProfileForPrompt(profile, "full");
 
-    const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",

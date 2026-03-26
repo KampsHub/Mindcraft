@@ -1,10 +1,9 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { generateQueryEmbedding } from "@/lib/embeddings";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, reflectSchema } from "@/lib/api-validation";
+import { validateBody, reflectSchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const SYSTEM_PROMPT = `## 1. Identity
@@ -196,9 +195,9 @@ export async function POST(request: NextRequest) {
       console.warn("RAG retrieval failed, continuing without context:", ragError);
     }
 
-    const anthropic = new Anthropic({
-      apiKey: process.env.CLAUDE_API_KEY!,
-    });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     const userContent = `${profileContext}${pastEntriesContext}\n\n## Today's Entry\n${entry}`;
 

@@ -1,12 +1,26 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Nav from "@/components/Nav";
 import Logo from "@/components/Logo";
 import { colors, fonts } from "@/lib/theme";
 import { content as c } from "@/content/site";
 
 const body = fonts.bodyAlt;
+
+/* ── Parachute background images ── */
+const BG_IMAGES = [
+  "/hero-parachute.jpg",
+  "/shutterstock_2758752955.jpg",
+  "/shutterstock_2758753407.jpg",
+  "/shutterstock_2758753475.jpg",
+  "/shutterstock_2758773487.jpg",
+  "/shutterstock_2758773645.jpg",
+  "/shutterstock_2758773677.jpg",
+  "/shutterstock_2758773863.jpg",
+  "/shutterstock_2758774471.jpg",
+];
 
 const blobPositions = {
   default: {
@@ -28,6 +42,7 @@ interface PageShellProps {
   maxWidth?: number;
   showBlobs?: boolean;
   blobVariant?: keyof typeof blobPositions;
+  showBgImage?: boolean;
 }
 
 export default function PageShell({
@@ -35,11 +50,57 @@ export default function PageShell({
   maxWidth = 720,
   showBlobs = true,
   blobVariant = "default",
+  showBgImage = false,
 }: PageShellProps) {
   const positions = blobPositions[blobVariant];
 
+  // Pick a background image — rotates daily, stable within a session
+  const [bgImage, setBgImage] = useState<string | null>(null);
+  useEffect(() => {
+    if (!showBgImage) return;
+    const day = Math.floor(Date.now() / 86400000); // days since epoch
+    const idx = day % BG_IMAGES.length;
+    setBgImage(BG_IMAGES[idx]);
+  }, [showBgImage]);
+
   return (
-    <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative" }}>
+    <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative", overflow: "hidden" }}>
+      {/* Background image */}
+      <AnimatePresence>
+        {showBgImage && bgImage && (
+          <motion.div
+            key={bgImage}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+            style={{
+              position: "fixed",
+              top: 0, left: 0, right: 0, bottom: 0,
+              backgroundImage: `url(${bgImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center top",
+              backgroundRepeat: "no-repeat",
+              pointerEvents: "none",
+              zIndex: 0,
+            }}
+          >
+            {/* Dark gradient overlay for readability */}
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              background: `linear-gradient(
+                to bottom,
+                rgba(24, 24, 28, 0.55) 0%,
+                rgba(24, 24, 28, 0.75) 30%,
+                rgba(24, 24, 28, 0.92) 60%,
+                ${colors.bgDeep} 85%
+              )`,
+            }} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {showBlobs && (
         <>
           <motion.div
@@ -50,6 +111,7 @@ export default function PageShell({
               position: "absolute", ...positions.coral,
               width: 180, height: 180, borderRadius: "50%",
               background: colors.coral, pointerEvents: "none", filter: "blur(60px)",
+              zIndex: 1,
             }}
           />
           <motion.div
@@ -60,17 +122,21 @@ export default function PageShell({
               position: "absolute", ...positions.plum,
               width: 140, height: 140, borderRadius: "50%",
               background: colors.plum, pointerEvents: "none", filter: "blur(50px)",
+              zIndex: 1,
             }}
           />
         </>
       )}
-      <Nav />
-      <div style={{ maxWidth, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
-        {children}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <Nav />
+        <div style={{ maxWidth, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
+          {children}
+        </div>
+
       </div>
 
       {/* Footer */}
-      <footer style={{ padding: "48px 24px", borderTop: `1px solid ${colors.borderSubtle}` }}>
+      <footer style={{ padding: "48px 24px", borderTop: `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>
         <div style={{
           maxWidth, margin: "0 auto",
           display: "flex", alignItems: "center", justifyContent: "center",

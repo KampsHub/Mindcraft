@@ -1,3 +1,4 @@
+import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import { NextResponse } from "next/server";
 
@@ -85,4 +86,25 @@ export function validateBody<T>(
     };
   }
   return { success: true, data: result.data };
+}
+
+// ── Anthropic client factory ──
+// Returns an Anthropic client or a 500 response if the API key is missing.
+
+export function getAnthropicClient():
+  | { success: true; client: Anthropic }
+  | { success: false; response: NextResponse } {
+  if (!process.env.CLAUDE_API_KEY) {
+    return {
+      success: false,
+      response: NextResponse.json(
+        { error: "AI service is not configured. Please contact support." },
+        { status: 500 }
+      ),
+    };
+  }
+  return {
+    success: true,
+    client: new Anthropic({ apiKey: process.env.CLAUDE_API_KEY }),
+  };
 }

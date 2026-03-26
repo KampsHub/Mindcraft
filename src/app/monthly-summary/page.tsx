@@ -125,7 +125,7 @@ export default function MonthlySummaryPage() {
 
   if (loading) {
     return (
-      <PageShell>
+      <PageShell showBgImage>
         <div style={{ textAlign: "center", paddingTop: 80 }}>
           <p style={{ color: colors.textMuted }}>{c.monthlySummary.loadingText}</p>
         </div>
@@ -151,7 +151,7 @@ export default function MonthlySummaryPage() {
   const activityByDay = dayNames.map((d) => ({ day: d, entries: dayMap[d] }));
 
   return (
-    <PageShell>
+    <PageShell showBgImage>
       {/* Header */}
       <FadeIn preset="fade" delay={0}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>

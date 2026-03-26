@@ -1,10 +1,9 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, weeklyInsightsSchema } from "@/lib/api-validation";
+import { validateBody, weeklyInsightsSchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 function getAdminSupabase() {
@@ -163,7 +162,9 @@ Generate the key insights for Week ${weekNumber}.`;
     const profile = await getClientProfile(enrollmentId, "full");
     const profileContext = formatProfileForPrompt(profile, "full");
 
-    const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY! });
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const anthropic = ac.client;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",

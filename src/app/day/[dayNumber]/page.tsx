@@ -642,7 +642,7 @@ function DailyFlowPage() {
           }}>
             Day not available
           </h1>
-          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
+          <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
             This day isn&apos;t available yet. Make sure you have an active program enrollment.
           </p>
           <motion.button
@@ -650,7 +650,7 @@ function DailyFlowPage() {
             whileTap={{ scale: 0.97 }}
             onClick={() => router.push("/dashboard")}
             style={{
-              padding: "14px 32px", fontSize: 15, fontWeight: 600,
+              padding: "14px 32px", fontSize: 16, fontWeight: 600,
               color: colors.bgDeep, backgroundColor: colors.coral,
               border: "none", borderRadius: 100, cursor: "pointer",
               fontFamily: display, letterSpacing: "0.01em",
@@ -671,7 +671,7 @@ function DailyFlowPage() {
           <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
             <span style={{
               display: "inline-block", background: colors.coralWash, color: colors.coral,
-              fontFamily: display, fontWeight: 700, fontSize: 11,
+              fontFamily: display, fontWeight: 700, fontSize: 12,
               textTransform: "uppercase", letterSpacing: "0.1em",
               padding: "5px 14px", borderRadius: 100,
             }}>
@@ -679,7 +679,7 @@ function DailyFlowPage() {
             </span>
             <span style={{
               display: "inline-block", background: colors.bgSurface, color: colors.textPrimary,
-              fontFamily: display, fontWeight: 700, fontSize: 11,
+              fontFamily: display, fontWeight: 700, fontSize: 12,
               textTransform: "uppercase", letterSpacing: "0.1em",
               padding: "5px 14px", borderRadius: 100,
             }}>
@@ -735,7 +735,7 @@ function DailyFlowPage() {
       >
         {dayNumber === 1 ? (
           completedSteps.includes(1) ? (
-            <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontFamily: body }}>
+            <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
               Day 1 — no prior themes.
             </p>
           ) : (
@@ -798,7 +798,7 @@ function DailyFlowPage() {
               {loadingThemes ? "Loading themes..." : "Load Yesterday's Themes"}
             </motion.button>
             {themesError && (
-              <p style={{ fontSize: 13, color: colors.coral, margin: "10px 0 0 0", fontFamily: body }}>
+              <p style={{ fontSize: 14, color: colors.coral, margin: "10px 0 0 0", fontFamily: body }}>
                 {themesError}
               </p>
             )}
@@ -841,7 +841,7 @@ function DailyFlowPage() {
                 borderLeft: `3px solid ${colors.coral}`,
                 marginBottom: 16,
               }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
                   Carrying forward
                 </p>
 
@@ -849,7 +849,7 @@ function DailyFlowPage() {
                   <div style={{ marginBottom: 10 }}>
                     <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body }}>You said you would:</p>
                     {themes.follow_up.commitments.map((c, i) => (
-                      <p key={i} style={{ fontSize: 15, color: "#ffffff", margin: "4px 0", fontFamily: body, paddingLeft: 12 }}>
+                      <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "4px 0", fontFamily: body, paddingLeft: 12 }}>
                         &bull; {c}
                       </p>
                     ))}
@@ -860,7 +860,7 @@ function DailyFlowPage() {
                   <div style={{ marginBottom: 10 }}>
                     <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body }}>From last time:</p>
                     {themes.follow_up.coaching_questions.map((q, i) => (
-                      <p key={i} style={{ fontSize: 15, color: "#ffffff", margin: "4px 0", fontFamily: body, fontStyle: "italic", paddingLeft: 12 }}>
+                      <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "4px 0", fontFamily: body, fontStyle: "italic", paddingLeft: 12 }}>
                         {q}
                       </p>
                     ))}
@@ -868,7 +868,7 @@ function DailyFlowPage() {
                 )}
 
                 {themes.follow_up.highlight && (
-                  <p style={{ fontSize: 15, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
+                  <p style={{ fontSize: 16, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
                     {themes.follow_up.highlight}
                   </p>
                 )}
@@ -901,7 +901,7 @@ function DailyFlowPage() {
                     borderLeft: `3px solid ${colors.plum}`,
                     marginBottom: 8,
                   }}>
-                    <p style={{ fontSize: 15, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
+                    <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
                       {p.observation}
                     </p>
                     <p style={{ fontSize: 12, color: "#ffffff", margin: "4px 0 0 0", fontFamily: body }}>
@@ -913,7 +913,7 @@ function DailyFlowPage() {
             )}
 
             {themes.carry_forward && (
-              <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body }}>
+              <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body }}>
                 {themes.carry_forward}
               </p>
             )}
@@ -978,7 +978,7 @@ function DailyFlowPage() {
           {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
             <div style={{ marginBottom: 18 }}>
               <p style={{
-                fontSize: 11, fontWeight: 700, color: "#ffffff",
+                fontSize: 12, fontWeight: 700, color: "#ffffff",
                 margin: "0 0 10px 0", textTransform: "uppercase",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
@@ -995,7 +995,7 @@ function DailyFlowPage() {
                     {sp.prompt}
                   </p>
                   {sp.context && (
-                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: "8px 0 0 0", lineHeight: 1.5, fontFamily: body, fontStyle: "italic" }}>
+                    <p style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", margin: "8px 0 0 0", lineHeight: 1.5, fontFamily: body, fontStyle: "italic" }}>
                       {sp.context}
                     </p>
                   )}
@@ -1019,7 +1019,7 @@ function DailyFlowPage() {
               width: "100%",
               minHeight: 200,
               padding: 18,
-              fontSize: 15,
+              fontSize: 16,
               lineHeight: 1.7,
               border: journalSaved
                 ? `1px solid ${colors.coral}`
@@ -1062,7 +1062,7 @@ function DailyFlowPage() {
               </motion.button>
             ) : (
               <span style={{
-                fontSize: 13, color: colors.coral, fontWeight: 600,
+                fontSize: 14, color: colors.coral, fontWeight: 600,
                 fontFamily: display, display: "flex", alignItems: "center", gap: 6,
               }}>
                 <span style={{
@@ -1070,7 +1070,7 @@ function DailyFlowPage() {
                   backgroundColor: colors.coral,
                   color: colors.bgDeep,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 11,
+                  fontSize: 12,
                 }}>✓</span>
                 Journal saved
               </span>
@@ -1151,11 +1151,13 @@ function DailyFlowPage() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div style={{
-                    width: 28, height: 28, borderRadius: "50%",
+                    width: 30, height: 30, borderRadius: "50%",
                     backgroundColor: colors.coralWash,
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <span style={{ fontSize: 13 }}>🔍</span>
+                    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+                    </svg>
                   </div>
                   <p style={{
                     fontSize: 12, fontWeight: 700, color: colors.coral,
@@ -1200,7 +1202,7 @@ function DailyFlowPage() {
                   backgroundColor: colors.plumWash,
                   borderRadius: 10,
                 }}>
-                  <p style={{ fontSize: 13, color: colors.plumLight, margin: 0, fontFamily: body, fontWeight: 500 }}>
+                  <p style={{ fontSize: 14, color: colors.plumLight, margin: 0, fontFamily: body, fontWeight: 500 }}>
                     <span style={{ fontWeight: 700 }}>Goal connections:</span> {stateAnalysis.goal_connections.join(" • ")}
                   </p>
                 </div>
@@ -1216,11 +1218,13 @@ function DailyFlowPage() {
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                   <div style={{
-                    width: 28, height: 28, borderRadius: "50%",
+                    width: 30, height: 30, borderRadius: "50%",
                     backgroundColor: colors.plumWash,
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <span style={{ fontSize: 13 }}>💭</span>
+                    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.plum} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
                   </div>
                   <p style={{ fontSize: 12, fontWeight: 700, color: colors.plum, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
                     Questions to sit with
@@ -1238,7 +1242,7 @@ function DailyFlowPage() {
                       rows={2}
                       disabled={responsesSaved}
                       style={{
-                        width: "100%", padding: "12px 16px", fontSize: 15, fontFamily: body,
+                        width: "100%", padding: "12px 16px", fontSize: 16, fontFamily: body,
                         border: `1px solid ${colors.borderDefault}`, borderRadius: 12,
                         backgroundColor: colors.bgRecessed, color: "#ffffff",
                         resize: "vertical", minHeight: 70, boxSizing: "border-box",
@@ -1254,7 +1258,7 @@ function DailyFlowPage() {
                     onClick={saveQuestionResponses}
                     disabled={savingResponses || Object.values(questionResponses).every((r) => !r.trim())}
                     style={{
-                      marginTop: 16, padding: "10px 24px", fontSize: 13, fontWeight: 600,
+                      marginTop: 16, padding: "10px 24px", fontSize: 14, fontWeight: 600,
                       color: colors.bgDeep, backgroundColor: colors.plum,
                       border: "none", borderRadius: 100, cursor: "pointer",
                       fontFamily: display, letterSpacing: "0.01em",
@@ -1264,7 +1268,7 @@ function DailyFlowPage() {
                     {savingResponses ? "Saving..." : "Save Responses"}
                   </motion.button>
                 ) : (
-                  <p style={{ marginTop: 12, fontSize: 13, color: colors.plum, fontWeight: 600, fontFamily: display }}>
+                  <p style={{ marginTop: 12, fontSize: 14, color: colors.plum, fontWeight: 600, fontFamily: display }}>
                     ✓ Responses saved
                   </p>
                 )}
@@ -1281,11 +1285,13 @@ function DailyFlowPage() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div style={{
-                      width: 28, height: 28, borderRadius: "50%",
+                      width: 30, height: 30, borderRadius: "50%",
                       backgroundColor: colors.coralWash,
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}>
-                      <span style={{ fontSize: 13 }}>↻</span>
+                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21.5 2v6h-6" /><path d="M2.5 22v-6h6" /><path d="M21.34 15.57a10 10 0 0 1-17.68 2.86" /><path d="M2.66 8.43a10 10 0 0 1 17.68-2.86" />
+                      </svg>
                     </div>
                     <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
                       Reframe
@@ -1293,13 +1299,13 @@ function DailyFlowPage() {
                   </div>
                   <FlagButton outputType="reframe" dailySessionId={session?.id} />
                 </div>
-                <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 12px 0", fontFamily: body, fontStyle: "italic", lineHeight: 1.6 }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 12px 0", fontFamily: body, fontStyle: "italic", lineHeight: 1.6 }}>
                   &ldquo;{reframe.source_quote}&rdquo;
                 </p>
-                <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontFamily: body, textDecoration: "line-through", opacity: 0.7, lineHeight: 1.6 }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body, textDecoration: "line-through", opacity: 0.7, lineHeight: 1.6 }}>
                   {reframe.old_thought}
                 </p>
-                <p style={{ fontSize: 15, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontWeight: 600, lineHeight: 1.6 }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontWeight: 600, lineHeight: 1.6 }}>
                   {reframe.new_thought}
                 </p>
               </div>
@@ -1314,23 +1320,25 @@ function DailyFlowPage() {
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                   <div style={{
-                    width: 28, height: 28, borderRadius: "50%",
+                    width: 30, height: 30, borderRadius: "50%",
                     backgroundColor: "rgba(251, 191, 36, 0.15)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <span style={{ fontSize: 13 }}>⚡</span>
+                    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.warning} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
                   </div>
                   <p style={{ fontSize: 12, fontWeight: 700, color: colors.warning, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
                     Pattern challenge
                   </p>
                 </div>
-                <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 8px 0", lineHeight: 1.55, fontFamily: body }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 8px 0", lineHeight: 1.55, fontFamily: body }}>
                   {patternChallenge.pattern}
                 </p>
                 <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 4px 0", fontWeight: 600, fontFamily: body }}>
                   {patternChallenge.challenge}
                 </p>
-                <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontFamily: body, fontStyle: "italic" }}>
+                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body, fontStyle: "italic" }}>
                   Counter-move: {patternChallenge.counter_move}
                 </p>
               </div>
@@ -1338,12 +1346,12 @@ function DailyFlowPage() {
 
             {/* Sequence suggestion */}
             {sequenceSuggestion && (
-              <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 14px 0", fontFamily: body, fontStyle: "italic" }}>
+              <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 14px 0", fontFamily: body, fontStyle: "italic" }}>
                 {sequenceSuggestion}
               </p>
             )}
 
-            <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
+            <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
               {(() => {
                 const total = (programDay?.coaching_exercises?.length || 0) + overflowExercises.length;
                 return `${total} exercise${total !== 1 ? "s" : ""} ready for you today.`;
@@ -1376,7 +1384,7 @@ function DailyFlowPage() {
                   processJournal();
                 }}
                 style={{
-                  padding: "10px 20px", fontSize: 13, fontWeight: 600,
+                  padding: "10px 20px", fontSize: 14, fontWeight: 600,
                   color: "#ffffff", backgroundColor: "transparent",
                   border: `1px solid ${colors.borderDefault}`, borderRadius: 100,
                   cursor: "pointer", fontFamily: display,
@@ -1437,7 +1445,7 @@ function DailyFlowPage() {
         {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
           <div style={{ marginBottom: 22 }}>
             <p style={{
-              fontSize: 11, fontWeight: 700, color: "#ffffff",
+              fontSize: 12, fontWeight: 700, color: "#ffffff",
               margin: "0 0 12px 0", textTransform: "uppercase",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
@@ -1465,7 +1473,7 @@ function DailyFlowPage() {
         {overflowExercises.length > 0 && (
           <div style={{ marginBottom: 22 }}>
             <p style={{
-              fontSize: 11, fontWeight: 700, color: "#ffffff",
+              fontSize: 12, fontWeight: 700, color: "#ffffff",
               margin: "0 0 12px 0", textTransform: "uppercase",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
@@ -1504,12 +1512,12 @@ function DailyFlowPage() {
             border: `1px solid ${colors.borderDefault}`,
             padding: 22, textAlign: "center",
           }}>
-            <p style={{ fontSize: 13, color: "#ffffff", fontFamily: body }}>Loading framework analysis...</p>
+            <p style={{ fontSize: 14, color: "#ffffff", fontFamily: body }}>Loading framework analysis...</p>
           </div>
         ) : frameworkAnalysis ? (
           <div style={{ marginBottom: 22 }}>
             <p style={{
-              fontSize: 11, fontWeight: 700, color: "#ffffff",
+              fontSize: 12, fontWeight: 700, color: "#ffffff",
               margin: "0 0 12px 0", textTransform: "uppercase",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
@@ -1523,7 +1531,7 @@ function DailyFlowPage() {
               borderLeft: `3px solid ${colors.plum}`,
             }}>
               <h3 style={{
-                fontSize: 17, fontWeight: 700, color: colors.textPrimary, margin: "0 0 4px 0",
+                fontSize: 16, fontWeight: 700, color: colors.textPrimary, margin: "0 0 4px 0",
                 fontFamily: display, letterSpacing: "-0.02em",
               }}>
                 {frameworkAnalysis.framework_name}
@@ -1670,7 +1678,7 @@ function DailyFlowPage() {
                   borderRadius: 12,
                   borderLeft: `3px solid ${colors.plum}`,
                 }}>
-                  <p style={{ fontSize: 15, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
+                  <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
                     <span style={{ fontWeight: 700 }}>Pattern forming:</span> {summaryResult.pattern_note}
                   </p>
                 </div>
@@ -1686,7 +1694,7 @@ function DailyFlowPage() {
                 padding: 22,
               }}>
                 <p style={{
-                  fontSize: 11, fontWeight: 700, color: "#ffffff",
+                  fontSize: 12, fontWeight: 700, color: "#ffffff",
                   margin: "0 0 12px 0", textTransform: "uppercase",
                   letterSpacing: "0.08em", fontFamily: display,
                 }}>
@@ -1709,7 +1717,7 @@ function DailyFlowPage() {
                 padding: 22,
               }}>
                 <p style={{
-                  fontSize: 11, fontWeight: 700, color: "#ffffff",
+                  fontSize: 12, fontWeight: 700, color: "#ffffff",
                   margin: "0 0 12px 0", textTransform: "uppercase",
                   letterSpacing: "0.08em", fontFamily: display,
                 }}>
@@ -1720,7 +1728,7 @@ function DailyFlowPage() {
                     <p style={{ fontSize: 14, fontWeight: 600, color: colors.textPrimary, margin: 0, fontFamily: body }}>
                       {gp.goal_text}
                     </p>
-                    <p style={{ fontSize: 15, color: "#ffffff", margin: "3px 0 0 0", fontFamily: body, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: 16, color: "#ffffff", margin: "3px 0 0 0", fontFamily: body, lineHeight: 1.5 }}>
                       {gp.observation}
                     </p>
                   </div>
@@ -1738,7 +1746,7 @@ function DailyFlowPage() {
               borderColor: "rgba(123,82,120,0.25)",
             }}>
               <p style={{
-                fontSize: 11, fontWeight: 700, color: colors.plumLight,
+                fontSize: 12, fontWeight: 700, color: colors.plumLight,
                 margin: "0 0 8px 0", textTransform: "uppercase",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
@@ -1747,10 +1755,10 @@ function DailyFlowPage() {
               <p style={{ fontSize: 16, fontWeight: 700, color: colors.textPrimary, margin: "0 0 4px 0", fontFamily: display, letterSpacing: "-0.02em" }}>
                 Day {dayNumber + 1}: {summaryResult.tomorrow_preview.title}
               </p>
-              <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 8px 0", fontFamily: body }}>
+              <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 8px 0", fontFamily: body }}>
                 {summaryResult.tomorrow_preview.territory}
               </p>
-              <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body, lineHeight: 1.55 }}>
+              <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body, lineHeight: 1.55 }}>
                 {summaryResult.tomorrow_preview.connection}
               </p>
             </div>
@@ -1764,7 +1772,7 @@ function DailyFlowPage() {
                 padding: 22,
               }}>
                 <p style={{
-                  fontSize: 11, fontWeight: 700, color: "#ffffff",
+                  fontSize: 12, fontWeight: 700, color: "#ffffff",
                   margin: "0 0 10px 0", textTransform: "uppercase",
                   letterSpacing: "0.08em", fontFamily: display,
                 }}>
@@ -1784,7 +1792,7 @@ function DailyFlowPage() {
               padding: 22,
             }}>
               <p style={{
-                fontSize: 11, fontWeight: 700, color: "#ffffff",
+                fontSize: 12, fontWeight: 700, color: "#ffffff",
                 margin: "0 0 14px 0", textTransform: "uppercase",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
@@ -1927,7 +1935,7 @@ function DailyFlowPage() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => router.push("/weekly-review")}
                   style={{
-                    width: "100%", padding: "14px 24px", fontSize: 15, fontWeight: 700,
+                    width: "100%", padding: "14px 24px", fontSize: 16, fontWeight: 700,
                     color: colors.bgDeep, backgroundColor: colors.coral,
                     border: "none", borderRadius: 100, cursor: "pointer",
                     fontFamily: display,

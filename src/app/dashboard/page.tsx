@@ -242,13 +242,6 @@ export default function DashboardPage() {
       <Nav />
 
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
-       <div style={{
-          backgroundColor: colors.bgSurface,
-          borderRadius: 16,
-          padding: "28px 24px",
-          border: `1px solid ${colors.borderDefault}`,
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
-        }}>
 
         {/* ── Welcome ── */}
         <FadeIn preset="fade" duration={0.6} triggerOnMount>
@@ -413,7 +406,6 @@ export default function DashboardPage() {
           onNavigate={(path) => router.push(path)}
         />
 
-       </div>
       </div>
 
       {/* Footer */}
@@ -495,28 +487,14 @@ function DashboardBgImage({ programSlug }: { programSlug?: string }) {
     <div
       style={{
         position: "absolute",
-        top: 0, left: 0, right: 0,
-        height: "100vh",
+        top: 0, left: 0, right: 0, bottom: 0,
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center top",
         backgroundRepeat: "no-repeat",
         pointerEvents: "none",
         zIndex: 0,
-        filter: "brightness(1.5) contrast(1.05)",
       }}
-    >
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        background: `linear-gradient(
-          to bottom,
-          rgba(24, 24, 28, 0.0) 0%,
-          rgba(24, 24, 28, 0.2) 25%,
-          rgba(24, 24, 28, 0.6) 55%,
-          ${colors.bgDeep} 80%
-        )`,
-      }} />
-    </div>
+    />
   );
 }

@@ -880,6 +880,9 @@ function WeeklyReviewPage() {
                 <p style={{ fontSize: 12, color: colors.textMuted, margin: "8px 0 0 4px", fontFamily: body }}>
                   The summary text below will be sent as-is. Edit it before sharing if you&apos;d like.
                 </p>
+                <p style={{ fontSize: 11, color: colors.textMuted, margin: "6px 0 0 4px", fontFamily: body, fontStyle: "italic" }}>
+                  Your data is yours. Only what you explicitly choose to share will be sent. We never share your journal entries, exercises, or insights without your consent.
+                </p>
               </motion.div>
             )}
           </AnimatePresence>

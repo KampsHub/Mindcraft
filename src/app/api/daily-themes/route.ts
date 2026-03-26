@@ -275,6 +275,7 @@ Generate the Thread and today's themes for Day ${dayNumber}.`;
     // ── Extract commitment tracking data from recent sessions ──
     // Yesterday's commitments (from step_5_summary.extracted_commitments)
     const extractedCommitments = (yesterdaySummary?.extracted_commitments as string[] | undefined) || [];
+    const committedActions = (yesterdaySummary?.committed_actions as string[] | undefined) || [];
 
     // Yesterday's for_tomorrow prompts (already extracted above)
     // forTomorrow is already available from line ~187
@@ -301,6 +302,7 @@ Generate the Thread and today's themes for Day ${dayNumber}.`;
       usage: message.usage,
       // Commitment tracking data (passthrough from recent sessions)
       yesterday_commitments: extractedCommitments,
+      yesterday_committed_actions: committedActions,
       yesterday_for_tomorrow: forTomorrow || null,
       active_pattern_challenges: recentPatternChallenges,
     });

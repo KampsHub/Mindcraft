@@ -46,7 +46,12 @@ Return valid JSON (no markdown, no code fences):
     "sit_with": "A question to hold without answering. A living question that needs holding, not resolving."
   },
   "thread_seed": "2-3 sentences that explicitly seed tomorrow's Thread. Name what was discovered today and the open question going forward. This should be specific enough that tomorrow's Thread can build directly on it. Reference the person's words. Name the edge they are approaching. Do not give instructions — name what happened and what is emerging.",
-  "extracted_commitments": ["Things the person explicitly said they would do, in their own words. Only include genuine commitments from the journal or exercise responses — not things you suggested."]
+  "extracted_commitments": ["Things the person explicitly said they would do, in their own words. Only include genuine commitments from the journal or exercise responses — not things you suggested."],
+  "mini_actions": [
+    "A specific, concrete action completable in under 5 minutes. Must be behavioral (do something, not think something). Reference their specific situation from today's journal.",
+    "Second option — different category. If the first involves another person, this one should be solo (self-care, writing, movement).",
+    "Third option — different again. At least one of the three should involve reaching out to someone."
+  ]
 }
 
 ## VOICE INTEGRITY — MANDATORY

@@ -114,17 +114,44 @@ export async function DELETE(request: NextRequest) {
     const enrollmentIds = (enrollmentRows || []).map((e: { id: string }) => e.id);
 
     if (enrollmentIds.length > 0) {
+      // Children of daily_sessions
       await admin.from("exercise_completions").delete().in("enrollment_id", enrollmentIds);
+      await admin.from("free_flow_entries").delete().in("enrollment_id", enrollmentIds);
+      // daily_sessions itself
       await admin.from("daily_sessions").delete().in("enrollment_id", enrollmentIds);
+      // Other enrollment children
       await admin.from("client_goals").delete().in("enrollment_id", enrollmentIds);
       await admin.from("client_profiles").delete().in("enrollment_id", enrollmentIds);
+      await admin.from("weekly_reviews").delete().in("enrollment_id", enrollmentIds);
       await admin.from("program_enrollments").delete().eq("client_id", user.id);
     }
 
     // These may exist regardless of enrollments
     await admin.from("shared_summaries").delete().eq("client_id", user.id);
+    await admin.from("client_assessments").delete().eq("client_id", user.id);
     await admin.from("entries").delete().eq("client_id", user.id);
     await admin.from("consent_settings").delete().eq("client_id", user.id);
+
+    // Clean up Supabase Storage (enneagram docs)
+    try {
+      const { data: storageFiles } = await admin.storage
+        .from("enneagram-docs")
+        .list(user.id);
+      if (storageFiles && storageFiles.length > 0) {
+        const paths = storageFiles.map((f) => `${user.id}/${f.name}`);
+        await admin.storage.from("enneagram-docs").remove(paths);
+      }
+    } catch {
+      // Storage cleanup is best-effort
+    }
+
+    // Delete Supabase Auth user
+    try {
+      await admin.auth.admin.deleteUser(user.id);
+    } catch {
+      // Auth deletion is best-effort — client row deletion below is the critical step
+    }
+
     // Client row last — all FKs should be clear now
     const { error: deleteClientError } = await admin.from("clients").delete().eq("id", user.id);
     if (deleteClientError) {

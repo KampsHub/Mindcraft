@@ -255,8 +255,8 @@ export default function DashboardPage() {
         <FadeIn preset="fade" duration={0.6} triggerOnMount>
           <div style={{ marginBottom: 32 }}>
             <h1 style={{
-              fontFamily: display, fontSize: 32, fontWeight: 700,
-              letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 6px 0",
+              fontFamily: display, fontSize: 22, fontWeight: 600,
+              letterSpacing: "-0.02em", color: colors.textPrimary, margin: "0 0 6px 0",
             }}>
               {getGreeting(enrollments[0]?.enrollment?.programs?.slug)}
             </h1>

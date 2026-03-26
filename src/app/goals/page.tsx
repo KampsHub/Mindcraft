@@ -720,6 +720,31 @@ function GoalsPage() {
         </FadeIn>
       )}
 
+      {/* Exercise download */}
+      {alreadyApproved && (
+        <FadeIn preset="fade" delay={0.3} triggerOnMount>
+          <div style={{ marginTop: 24, paddingTop: 20, borderTop: `1px solid ${colors.borderDefault}` }}>
+            <button
+              onClick={() => {
+                const url = `/api/exercises/download?enrollmentId=${enrollment.id}`;
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "mindcraft-exercise-guide.md";
+                a.click();
+              }}
+              style={{
+                fontFamily: display, fontSize: 13, fontWeight: 600,
+                padding: "10px 24px", borderRadius: 100,
+                backgroundColor: colors.bgElevated, color: "#ffffff",
+                border: `1px solid ${colors.borderDefault}`, cursor: "pointer",
+              }}
+            >
+              Download Exercise Guide
+            </button>
+          </div>
+        </FadeIn>
+      )}
+
     </PageShell>
   );
 }

@@ -5,6 +5,7 @@ import { logApiCall } from "@/lib/api-logger";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 
 const EXERCISE_SYSTEM_PROMPT = `You are the coaching companion selecting and delivering today's exercise. You receive:
 1. Their coaching plan (goals, focus areas, current phase)
@@ -191,11 +192,15 @@ Select the best framework and deliver a personalised exercise for today.`;
     if (!ac.success) return ac.response;
     const anthropic = ac.client;
 
+    // Retrieve coaching memories for continuity
+    const memories = await getRelevantMemories(user.id, 8);
+    const memoryContext = formatMemoriesForPrompt(memories);
+
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1500,
       system: EXERCISE_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: profileContext + userPrompt }],
+      messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
 
     const latencyMs = Date.now() - startTime;

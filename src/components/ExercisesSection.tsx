@@ -203,6 +203,8 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
   }
 
   if (!enrollment || loading) return null;
+  // Don't show exercises section before the user has completed their first day
+  if (enrollment.current_day < 1) return null;
   if (completedExercises.length === 0 && parkedExercises.length === 0) return null;
 
   const filteredCompleted = modalityFilter === "all"

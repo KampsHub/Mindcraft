@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { validateBody, frameworkAnalysisSchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 
 const FRAMEWORK_ANALYSIS_PROMPT = `You are the coaching companion for a structured development program. You receive multi-day journal entries, exercises, and theme history, plus a library of foundational coaching frameworks.
 
@@ -153,11 +154,15 @@ Select the best framework to apply to this client's multi-day pattern.`;
     if (!ac.success) return ac.response;
     const anthropic = ac.client;
 
+    // Retrieve coaching memories for continuity
+    const memories = await getRelevantMemories(user.id, 8);
+    const memoryContext = formatMemoriesForPrompt(memories);
+
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1500,
       system: FRAMEWORK_ANALYSIS_PROMPT,
-      messages: [{ role: "user", content: profileContext + userPrompt }],
+      messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
 
     const textBlock = message.content.find((b) => b.type === "text");

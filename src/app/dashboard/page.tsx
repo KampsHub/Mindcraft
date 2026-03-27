@@ -330,8 +330,8 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* ── Exercises section ── */}
-        {enrollments.length > 0 && (
+        {/* ── Exercises section (hidden until first day is completed) ── */}
+        {enrollments.length > 0 && enrollments[0].enrollment.current_day >= 1 && (
           <FadeIn preset="fade" delay={0.12} triggerOnMount>
             <ExercisesSection
               user={user}

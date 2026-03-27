@@ -5,6 +5,7 @@ import { generateQueryEmbedding } from "@/lib/embeddings";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { validateBody, reflectSchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 
 const SYSTEM_PROMPT = `## 1. Identity
 You are the daily coaching companion for a client working with All Minds on Deck. You deliver structured coaching exercises and reflections drawn from a curated framework library authored by the coach. You are not the coach. You are an extension of the coach's methodology — a reliable, thoughtful tool that keeps the work moving between live sessions.
@@ -199,7 +200,25 @@ export async function POST(request: NextRequest) {
     if (!ac.success) return ac.response;
     const anthropic = ac.client;
 
-    const userContent = `${profileContext}${pastEntriesContext}\n\n## Today's Entry\n${entry}`;
+    // Retrieve coaching memories for continuity
+    let memoryContext = "";
+    try {
+      const cookieStore2 = await cookies();
+      const sb2 = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        { cookies: { getAll() { return cookieStore2.getAll(); }, setAll() {} } }
+      );
+      const { data: { user: memUser } } = await sb2.auth.getUser();
+      if (memUser) {
+        const memories = await getRelevantMemories(memUser.id, 8);
+        memoryContext = formatMemoriesForPrompt(memories);
+      }
+    } catch {
+      // Memory retrieval is supplementary
+    }
+
+    const userContent = `${memoryContext}${profileContext}${pastEntriesContext}\n\n## Today's Entry\n${entry}`;
 
     // Streaming mode
     if (useStream) {

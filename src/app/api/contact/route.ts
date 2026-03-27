@@ -68,22 +68,26 @@ export async function POST(req: NextRequest) {
 
     // Send email notification
     try {
-      const { Resend } = await import("resend");
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: "Mindcraft <noreply@allmindsondeck.org>",
-        to: CONTACT_EMAIL,
-        replyTo: senderEmail || undefined,
-        subject: `Mindcraft Contact: ${issueType}`,
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px;">
-            <p><strong>From:</strong> ${senderName} &lt;${senderEmail}&gt;</p>
-            <p><strong>Type:</strong> ${issueType}</p>
-            <hr style="border: 1px solid #eee;" />
-            <p>${message.replace(/\n/g, "<br>")}</p>
-          </div>
-        `,
-      });
+      if (!process.env.RESEND_API_KEY) {
+        console.warn("RESEND_API_KEY not set, skipping contact email");
+      } else {
+        const { Resend } = await import("resend");
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: "Mindcraft <noreply@allmindsondeck.org>",
+          to: CONTACT_EMAIL,
+          replyTo: senderEmail || undefined,
+          subject: `Mindcraft Contact: ${issueType}`,
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px;">
+              <p><strong>From:</strong> ${senderName} &lt;${senderEmail}&gt;</p>
+              <p><strong>Type:</strong> ${issueType}</p>
+              <hr style="border: 1px solid #eee;" />
+              <p>${message.replace(/\n/g, "<br>")}</p>
+            </div>
+          `,
+        });
+      }
     } catch (emailErr) {
       console.error("Contact email failed:", emailErr);
       // Still return success — message is stored in database

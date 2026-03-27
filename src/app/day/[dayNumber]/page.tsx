@@ -623,11 +623,14 @@ function DailyFlowPage() {
       })
       .eq("id", session.id);
 
-    // Advance enrollment day
+    // Advance enrollment day and ensure status is active
     await supabase
       .from("program_enrollments")
       .update({
         current_day: Math.max(enrollment.current_day, dayNumber + 1),
+        status: enrollment.status === "pre_start" || enrollment.status === "onboarding"
+          ? "active"
+          : enrollment.status,
       })
       .eq("id", enrollment.id);
 

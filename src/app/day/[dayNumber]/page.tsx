@@ -86,6 +86,7 @@ interface OverflowExercise {
   framework_id: string;
   modality: string;
   why_selected: string;
+  why_now?: string;
   custom_framing: string;
   instruction?: string;
   estimated_minutes: number;
@@ -1809,7 +1810,7 @@ function DailyFlowPage() {
                   sourceWork={ex.source_work}
                   customFraming={ex.custom_framing}
                   instructions={ex.instruction || ex.custom_framing}
-                  whySelected={ex.why_selected}
+                  whySelected={ex.why_now || ex.why_selected}
                   whyThisWorks={ex.why_this_works}
                   estimatedMinutes={ex.estimated_minutes}
                   isCompleted={completedExercises.has(ex.framework_name)}

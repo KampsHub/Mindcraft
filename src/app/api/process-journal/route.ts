@@ -31,8 +31,9 @@ Return valid JSON (no markdown, no code fences):
       "framework_name": "Exact name from the library",
       "framework_id": "UUID from the library",
       "modality": "cognitive | somatic | relational | integrative | systems",
-      "instruction": "The actual exercise instruction. Action-first. Tell them exactly what to do, step by step, in plain language. No background, no theory, no 'why this works.' Just: do this. 3-5 steps max. Start each step with a verb.",
-      "why_now": "One sentence: why this exercise fits what they wrote today.",
+      "instruction": "The actual exercise instruction. Action-first. Tell them exactly what to do, step by step, in plain language. 3-5 steps max. Start each step with a verb.",
+      "why_now": "One sentence connecting this exercise to what they wrote today. Pattern-level, not generic.",
+      "why_this_works": "One sentence on the neuroscientific, psychological, or behavioral mechanism. What this exercise does to the brain/body and why it helps. Plain language — no jargon.",
       "estimated_minutes": 10,
       "originator": "Framework originator name"
     }

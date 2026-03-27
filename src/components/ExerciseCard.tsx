@@ -358,50 +358,70 @@ export default function ExerciseCard({
             style={{ overflow: "hidden" }}
           >
             <div style={{ padding: "0 20px 24px 20px" }}>
-              {/* Why now — one sentence context */}
+              {/* Why now */}
               {whySelected && (
-                <p style={{
-                  fontSize: 14, color: "rgba(255,255,255,0.7)", margin: "0 0 12px 0",
-                  lineHeight: 1.5, fontFamily: body,
+                <div style={{
+                  padding: "14px 16px", backgroundColor: "rgba(224, 149, 133, 0.06)",
+                  borderRadius: 12, marginBottom: 12,
+                  borderLeft: `3px solid ${colors.coral}`,
                 }}>
-                  {whySelected}
-                </p>
+                  <p style={{
+                    fontSize: 10, fontWeight: 700, color: colors.coral,
+                    margin: "0 0 6px 0", textTransform: "uppercase",
+                    letterSpacing: "0.06em", fontFamily: display,
+                  }}>
+                    Why now
+                  </p>
+                  <p style={{
+                    fontSize: 14, color: "rgba(255,255,255,0.8)", margin: 0,
+                    lineHeight: 1.55, fontFamily: body,
+                  }}>
+                    {whySelected}
+                  </p>
+                </div>
               )}
 
               {/* Instructions */}
               {instructions && (
-                <div
-                  style={{
-                    padding: "18px 18px",
-                    backgroundColor: colors.bgRecessed,
-                    borderRadius: 14,
-                    marginBottom: 16,
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: colors.textMuted,
-                      margin: "0 0 10px 0",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      fontFamily: display,
-                    }}
-                  >
-                    How to do this
+                <div style={{
+                  padding: "14px 16px", backgroundColor: colors.bgRecessed,
+                  borderRadius: 12, marginBottom: 12,
+                }}>
+                  <p style={{
+                    fontSize: 10, fontWeight: 700, color: colors.textMuted,
+                    margin: "0 0 6px 0", textTransform: "uppercase",
+                    letterSpacing: "0.06em", fontFamily: display,
+                  }}>
+                    What to do
                   </p>
-                  <p
-                    style={{
-                      fontSize: 14,
-                      color: colors.textBody,
-                      margin: 0,
-                      lineHeight: 1.75,
-                      whiteSpace: "pre-wrap",
-                      fontFamily: body,
-                    }}
-                  >
+                  <p style={{
+                    fontSize: 14, color: colors.textBody, margin: 0,
+                    lineHeight: 1.75, whiteSpace: "pre-wrap", fontFamily: body,
+                  }}>
                     {instructions}
+                  </p>
+                </div>
+              )}
+
+              {/* How it can be helpful */}
+              {whyThisWorks && (
+                <div style={{
+                  padding: "14px 16px", backgroundColor: "rgba(255, 255, 255, 0.03)",
+                  borderRadius: 12, marginBottom: 12,
+                  borderLeft: `3px solid rgba(255, 255, 255, 0.15)`,
+                }}>
+                  <p style={{
+                    fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)",
+                    margin: "0 0 6px 0", textTransform: "uppercase",
+                    letterSpacing: "0.06em", fontFamily: display,
+                  }}>
+                    How this helps
+                  </p>
+                  <p style={{
+                    fontSize: 13, color: "rgba(255,255,255,0.55)", margin: 0,
+                    lineHeight: 1.55, fontFamily: body,
+                  }}>
+                    {whyThisWorks}
                   </p>
                 </div>
               )}

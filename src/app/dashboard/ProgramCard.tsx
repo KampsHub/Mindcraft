@@ -44,13 +44,14 @@ interface ProgramCardProps {
   enrollment: ProgramEnrollment;
   goals: ActiveGoal[];
   todaySessionDone: boolean;
+  todaySessionStarted: boolean;
   isCompact: boolean;
   onNavigate: (path: string) => void;
   weekDays?: DayStatus[];
   weekNumber?: number;
 }
 
-export default function ProgramCard({ enrollment, goals, todaySessionDone, isCompact, onNavigate, weekDays, weekNumber }: ProgramCardProps) {
+export default function ProgramCard({ enrollment, goals, todaySessionDone, todaySessionStarted, isCompact, onNavigate, weekDays, weekNumber }: ProgramCardProps) {
   const [goalsOpen, setGoalsOpen] = useState(!isCompact);
   const accent = getAccent(enrollment.programs?.slug);
 
@@ -134,7 +135,7 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, isCom
             Day {enrollment.current_day}
           </h2>
           <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
-            {todaySessionDone ? "Session complete — nice work." : "Your daily session is ready."}
+            {todaySessionDone ? "Session complete — nice work." : todaySessionStarted ? "You have an open session." : "Your daily session is ready."}
           </p>
           <motion.button
             whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }}
@@ -148,7 +149,7 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, isCom
               fontFamily: display, letterSpacing: "0.01em",
             }}
           >
-            {todaySessionDone ? "Review Day" : "Start Session"}
+            {todaySessionDone ? "Review Day" : todaySessionStarted ? "Continue Session" : "Start Session"}
           </motion.button>
         </div>
 

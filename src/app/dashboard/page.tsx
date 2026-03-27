@@ -50,6 +50,7 @@ interface EnrollmentWithContext {
   enrollment: ProgramEnrollment;
   goals: ActiveGoal[];
   todaySessionDone: boolean;
+  todaySessionStarted: boolean;
   weekDays: DayStatus[];
   weekNumber: number;
 }
@@ -193,6 +194,7 @@ export default function DashboardPage() {
               enrollment: { ...enr, programs: Array.isArray(enr.programs) ? enr.programs[0] : enr.programs } as ProgramEnrollment,
               goals: (goalsRes.data || []) as ActiveGoal[],
               todaySessionDone: !!sessionRes.data?.completed_at,
+              todaySessionStarted: !!sessionRes.data && !sessionRes.data.completed_at,
               weekDays,
               weekNumber,
             };
@@ -319,6 +321,7 @@ export default function DashboardPage() {
                   enrollment={ctx.enrollment}
                   goals={ctx.goals}
                   todaySessionDone={ctx.todaySessionDone}
+                  todaySessionStarted={ctx.todaySessionStarted}
                   isCompact={enrollments.length > 1}
                   onNavigate={(path) => router.push(path)}
                   weekDays={ctx.weekDays}

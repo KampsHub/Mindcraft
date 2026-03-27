@@ -254,7 +254,15 @@ function DailyFlowPage() {
 
     if (existingSession) {
       setSession(existingSession);
-      setJournalContent(existingSession.step_2_journal || "");
+      // Extract follow-through from saved journal if present
+      const savedJournal = existingSession.step_2_journal || "";
+      const followThroughMatch = savedJournal.match(/^\[Follow-through on yesterday's exercise "([^"]+)"\]: ([^\n]+)\n\n/);
+      if (followThroughMatch) {
+        setFollowThrough(followThroughMatch[2]);
+        setJournalContent(savedJournal.replace(followThroughMatch[0], ""));
+      } else {
+        setJournalContent(savedJournal);
+      }
       const steps = existingSession.completed_steps || [];
       if (steps.includes(1)) setThemes(existingSession.step_1_themes as unknown as ThemesResult);
       if (steps.includes(3)) {
@@ -1207,18 +1215,50 @@ function DailyFlowPage() {
           <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
             Did anything come up since? What did you notice?
           </p>
-          <textarea
-            value={followThrough}
-            onChange={(e) => setFollowThrough(e.target.value)}
-            placeholder="Quick note — what happened? (optional)"
-            style={{
-              width: "100%", minHeight: 60, padding: 12, fontSize: 14,
-              borderRadius: 10, border: `1px solid ${colors.borderDefault}`,
-              backgroundColor: colors.bgInput, color: "#ffffff",
-              fontFamily: body, resize: "none", outline: "none",
-              boxSizing: "border-box",
-            }}
-          />
+          <div style={{ position: "relative" }}>
+            <textarea
+              value={followThrough}
+              onChange={(e) => setFollowThrough(e.target.value)}
+              placeholder="Type or tap the mic to speak... (optional)"
+              style={{
+                width: "100%", minHeight: 60, padding: "12px 48px 12px 12px", fontSize: 14,
+                borderRadius: 10, border: `1px solid ${colors.borderDefault}`,
+                backgroundColor: colors.bgInput, color: "#ffffff",
+                fontFamily: body, resize: "none", outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+            <button
+              onClick={async () => {
+                try {
+                  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+                  if (!SpeechRecognition) { alert("Voice not supported in this browser"); return; }
+                  const recognition = new SpeechRecognition();
+                  recognition.continuous = false;
+                  recognition.interimResults = false;
+                  recognition.lang = "en-US";
+                  recognition.onresult = (event: any) => {
+                    const transcript = event.results[0][0].transcript;
+                    setFollowThrough((prev) => prev ? prev + " " + transcript : transcript);
+                  };
+                  recognition.start();
+                } catch { /* ignore */ }
+              }}
+              style={{
+                position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
+                width: 32, height: 32, borderRadius: "50%",
+                backgroundColor: "transparent", border: "none",
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              }}
+              title="Speak your response"
+            >
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="22" />
+              </svg>
+            </button>
+          </div>
         </div>
       )}
 

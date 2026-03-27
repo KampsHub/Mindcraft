@@ -16,7 +16,7 @@ import ForTomorrowCard from "@/components/ForTomorrowCard";
 import ActivePatternChallenge, { type PatternChallengeData } from "@/components/ActivePatternChallenge";
 import { colors, fonts } from "@/lib/theme";
 import FlagButton from "@/components/FlagButton";
-import VoiceCoach from "@/components/VoiceCoach";
+import VoiceToText from "@/components/VoiceToText";
 import ChatCoach from "@/components/ChatCoach";
 import ViewModeToggle from "@/components/ViewModeToggle";
 
@@ -1359,11 +1359,7 @@ function DailyFlowPage() {
             )}
           </div>
           {journalMode === "voice" && !journalSaved && (
-            <div style={{ marginTop: 10 }}>
-              <VoiceCoach
-                onTranscript={(text) => setJournalContent((prev) => prev ? prev + "\n" + text : text)}
-              />
-            </div>
+            <VoiceToText onTranscript={(text) => setJournalContent((prev) => prev ? prev + "\n" + text : text)} />
           )}
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>

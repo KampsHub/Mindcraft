@@ -228,7 +228,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
         fontFamily: body, fontSize: 13, color: "#ffffff",
         lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
       }}>
-        A coach sees what the program can't — the thing you're circling but not saying. Faster reframes, harder questions, and someone who holds you accountable when the motivation dips. Includes a personal Enneagram assessment to sharpen the work.
+        The program builds the foundation. A coach can further accelerate it — catching blind spots in real time, pushing back when you're stuck in a loop, and helping you rehearse the conversations you're avoiding. Includes a personal Enneagram assessment to sharpen the work.
       </p>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <motion.button

@@ -33,7 +33,7 @@ interface ProgramDay {
   title: string;
   territory: string;
   seed_prompts: { prompt: string; purpose: string; context?: string }[];
-  coaching_exercises: { name: string; duration_min: number; custom_framing: string }[];
+  coaching_exercises: { name: string; duration_min: number; custom_framing: string; why_now?: string; why_this_works?: string }[];
   overflow_defaults: { name: string; originator: string; source: string; modality: string; duration_min: number }[];
   micro_content: string;
   system_notes: string;
@@ -1742,6 +1742,8 @@ function DailyFlowPage() {
                   type="coaching_plan"
                   customFraming={ex.custom_framing}
                   instructions={ex.custom_framing}
+                  whySelected={ex.why_now}
+                  whyThisWorks={ex.why_this_works}
                   estimatedMinutes={ex.duration_min}
                   isRequired={true}
                   isCompleted={completedExercises.has(ex.name)}

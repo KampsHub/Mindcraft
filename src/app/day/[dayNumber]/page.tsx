@@ -1264,18 +1264,41 @@ function DailyFlowPage() {
                     ? `${stateAnalysis.reading}${stateAnalysis.reading.endsWith("?") ? "" : "\n\nWhat feels most true about this to you?"}`
                     : "I've read your journal. What would you like to explore together?"
                 }
-                onSend={async (message) => {
+                onSend={async (message, history) => {
+                  // Build context: journal + conversation history for continuity
+                  const conversationContext = history
+                    .slice(-6) // Last 6 messages for context
+                    .map((m) => `${m.role === "user" ? "User" : "Coach"}: ${m.content}`)
+                    .join("\n\n");
+                  const fullEntry = `## Conversation so far\n${conversationContext}\n\n## Latest message\n${message}`;
+
                   const res = await fetch("/api/reflect", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ entry: message, stream: false }),
+                    body: JSON.stringify({ entry: fullEntry, stream: false }),
                   });
                   const data = await res.json();
-                  return data.reflection || data.error || "Let me think about that...";
+                  const response = data.reflection || data.error || "Let me think about that...";
+
+                  // Save chat messages to session (non-blocking)
+                  if (session) {
+                    const chatLog = [
+                      ...(history || []).map((m) => ({ role: m.role, content: m.content, ts: m.timestamp })),
+                      { role: "user", content: message, ts: new Date() },
+                      { role: "coach", content: response, ts: new Date() },
+                    ];
+                    supabase
+                      .from("daily_sessions")
+                      .update({ step_3_chat: chatLog })
+                      .eq("id", session.id)
+                      .then(() => {});
+                  }
+
+                  return response;
                 }}
                 placeholder="Ask your coach assistant anything..."
                 showComplete={true}
-                completeLabel="Back to overview"
+                completeLabel="Continue to exercises →"
                 onComplete={() => setStep3Mode("form")}
               />
             ) : (

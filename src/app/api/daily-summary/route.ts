@@ -43,6 +43,11 @@ Return valid JSON (no markdown, no code fences):
     "try_this": "A small behavioral experiment to carry into tomorrow. One action, under 2 minutes, verb-first.",
     "sit_with": "A question to hold without answering. A living question that needs holding, not resolving."
   },
+  "pattern_challenge": {
+    "pattern": "A recurring pattern you noticed across today's journal and exercises — described simply. If nothing recurring, set to null.",
+    "challenge": "A specific real-world action to try when this pattern shows up in the next few days. Not an exercise — something to do in a real moment.",
+    "counter_move": "What to do in the moment when the pattern activates. One sentence. Verb first."
+  },
   "thread_seed": "2-3 sentences that explicitly seed tomorrow's Thread. Name what was discovered today and the open question going forward. This should be specific enough that tomorrow's Thread can build directly on it. Reference the person's words. Name the edge they are approaching. Do not give instructions — name what happened and what is emerging.",
   "extracted_commitments": ["Things the person explicitly said they would do, in their own words. Only include genuine commitments from the journal or exercise responses — not things you suggested."],
   "mini_actions": [

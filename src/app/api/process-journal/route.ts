@@ -49,11 +49,7 @@ Return valid JSON (no markdown, no code fences):
     "new_thought": "A reframe that the person has not said yet but that connects to their own language. Not the opposite of the old thought — the fuller picture.",
     "source_quote": "The exact words from their journal this reframe responds to."
   },
-  "pattern_challenge": {
-    "pattern": "The recurring pattern being named — described concretely with examples from the journal.",
-    "challenge": "A specific behavioral experiment for the next few days. Not an exercise — a real-world action to try when the pattern shows up.",
-    "counter_move": "What to do in the moment when the pattern activates. One sentence. Verb first."
-  },
+  "pattern_challenge": null,
   "sequence_suggestion": "Recommended order for the exercises with brief rationale. Start with grounding/somatic, then cognitive, then relational or integrative. Include approximate total time."
 }
 

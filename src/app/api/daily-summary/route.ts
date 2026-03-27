@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt, appendObservation } from "@/lib/client-profile";
 import { validateBody, dailySummarySchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 
 const SUMMARY_SYSTEM_PROMPT = `You are the coaching companion closing today's session. You receive today's complete session data: journal entry, exercise completions with responses, free-flow captures, and the upcoming day's territory.
 
@@ -229,11 +230,15 @@ Generate today's summary for Day ${dayNumber}.`;
     if (!ac.success) return ac.response;
     const anthropic = ac.client;
 
+    // Retrieve coaching memories for continuity
+    const memories = await getRelevantMemories(user.id, 8);
+    const memoryContext = formatMemoriesForPrompt(memories);
+
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 2000,
       system: SUMMARY_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: profileContext + userPrompt }],
+      messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
 
     const textBlock = message.content.find((b) => b.type === "text");

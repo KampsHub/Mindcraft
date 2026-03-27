@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { validateBody, processJournalSchema, getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { extractMemories, getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 
 const PROCESS_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive:
 1. Today's free-flow journal entry
@@ -260,11 +261,15 @@ Analyze the journal content and select the best overflow exercises for this clie
     if (!ac.success) return ac.response;
     const anthropic = ac.client;
 
+    // Retrieve coaching memories for continuity
+    const memories = await getRelevantMemories(user.id, 10);
+    const memoryContext = formatMemoriesForPrompt(memories);
+
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 2000,
       system: systemPrompt,
-      messages: [{ role: "user", content: profileContext + userPrompt }],
+      messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
 
     const textBlock = message.content.find((b) => b.type === "text");
@@ -278,6 +283,9 @@ Analyze the journal content and select the best overflow exercises for this clie
       raw = raw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
     }
     const result = JSON.parse(raw);
+
+    // Extract memories from this session (non-blocking, uses Haiku)
+    extractMemories(user.id, enrollmentId, dayNumber, journalContent, raw).catch(() => {});
 
     return NextResponse.json({
       ...result,

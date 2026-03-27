@@ -110,6 +110,7 @@ export default function ExerciseCard({
   const [response, setResponse] = useState(existingResponses?.main || "");
   const [rating, setRating] = useState<number | null>(existingRating || null);
   const [submitted, setSubmitted] = useState(isCompleted);
+  const [showScience, setShowScience] = useState(false);
 
   // Interactive input state
   const [spectrumValue, setSpectrumValue] = useState<number>(
@@ -358,44 +359,24 @@ export default function ExerciseCard({
             style={{ overflow: "hidden" }}
           >
             <div style={{ padding: "0 20px 24px 20px" }}>
-              {/* Why now */}
+              {/* Why now — compact one-liner */}
               {whySelected && (
-                <div style={{
-                  padding: "14px 16px", backgroundColor: "rgba(224, 149, 133, 0.06)",
-                  borderRadius: 12, marginBottom: 12,
-                  borderLeft: `3px solid ${colors.coral}`,
+                <p style={{
+                  fontSize: 13, color: "rgba(255,255,255,0.55)", margin: "0 0 14px 0",
+                  lineHeight: 1.5, fontFamily: body, fontStyle: "italic",
                 }}>
-                  <p style={{
-                    fontSize: 10, fontWeight: 700, color: colors.coral,
-                    margin: "0 0 6px 0", textTransform: "uppercase",
-                    letterSpacing: "0.06em", fontFamily: display,
-                  }}>
-                    Why now
-                  </p>
-                  <p style={{
-                    fontSize: 14, color: "rgba(255,255,255,0.8)", margin: 0,
-                    lineHeight: 1.55, fontFamily: body,
-                  }}>
-                    {whySelected}
-                  </p>
-                </div>
+                  {whySelected}
+                </p>
               )}
 
-              {/* Instructions */}
+              {/* Instructions — always visible, the main content */}
               {instructions && (
                 <div style={{
-                  padding: "14px 16px", backgroundColor: colors.bgRecessed,
-                  borderRadius: 12, marginBottom: 12,
+                  padding: "16px 18px", backgroundColor: "rgba(255, 255, 255, 0.04)",
+                  borderRadius: 12, marginBottom: 14,
                 }}>
                   <p style={{
-                    fontSize: 10, fontWeight: 700, color: colors.textMuted,
-                    margin: "0 0 6px 0", textTransform: "uppercase",
-                    letterSpacing: "0.06em", fontFamily: display,
-                  }}>
-                    What to do
-                  </p>
-                  <p style={{
-                    fontSize: 14, color: colors.textBody, margin: 0,
+                    fontSize: 15, color: "#ffffff", margin: 0,
                     lineHeight: 1.75, whiteSpace: "pre-wrap", fontFamily: body,
                   }}>
                     {instructions}
@@ -403,26 +384,33 @@ export default function ExerciseCard({
                 </div>
               )}
 
-              {/* How it can be helpful */}
+              {/* How this helps — collapsed accordion */}
               {whyThisWorks && (
-                <div style={{
-                  padding: "14px 16px", backgroundColor: "rgba(255, 255, 255, 0.03)",
-                  borderRadius: 12, marginBottom: 12,
-                  borderLeft: `3px solid rgba(255, 255, 255, 0.15)`,
-                }}>
-                  <p style={{
-                    fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)",
-                    margin: "0 0 6px 0", textTransform: "uppercase",
-                    letterSpacing: "0.06em", fontFamily: display,
-                  }}>
-                    How this helps
-                  </p>
-                  <p style={{
-                    fontSize: 13, color: "rgba(255,255,255,0.55)", margin: 0,
-                    lineHeight: 1.55, fontFamily: body,
-                  }}>
-                    {whyThisWorks}
-                  </p>
+                <div style={{ marginBottom: 14 }}>
+                  <button
+                    onClick={() => setShowScience(!showScience)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6,
+                      background: "none", border: "none", cursor: "pointer",
+                      padding: "4px 0", fontFamily: display, fontSize: 11,
+                      fontWeight: 600, color: "rgba(255,255,255,0.35)",
+                      textTransform: "uppercase", letterSpacing: "0.06em",
+                    }}
+                  >
+                    <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}
+                      style={{ transform: showScience ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                    Why this works
+                  </button>
+                  {showScience && (
+                    <p style={{
+                      fontSize: 13, color: "rgba(255,255,255,0.45)", margin: "8px 0 0 16px",
+                      lineHeight: 1.55, fontFamily: body,
+                    }}>
+                      {whyThisWorks}
+                    </p>
+                  )}
                 </div>
               )}
 

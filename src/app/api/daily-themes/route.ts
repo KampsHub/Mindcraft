@@ -8,14 +8,16 @@ import { STANDARD_VOICE } from "@/lib/coaching-voice";
 
 const THEMES_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive the last 2-3 journal entries, exercise responses, free-flow captures, a thread seed from yesterday's summary, and today's program territory.
 
-Your primary output is the Thread — a narrative that traces the person's movement across their last 2-3 sessions. This is not a summary. It is a reading of where they are in their development arc.
+Your primary output is the Thread — a brief, grounded recap of what the person actually said and did in their last sessions, plus any patterns you're noticing across days. This is NOT an interpretation or analysis. It's a "here's what you said, here's what I noticed" summary that helps them pick up where they left off.
+
+IMPORTANT: Match the length and energy of their input. If they wrote 3 sentences yesterday, your thread should be 3-5 sentences — not paragraphs. If they went deep, you can go a little deeper. Don't overinterpret short entries.
 
 ## What you produce
 
 Return valid JSON (no markdown, no code fences):
 
 {
-  "thread": "2-3 paragraphs of narrative prose. Re-read the last 2-3 journal entries AND exercise responses. Quote the person's actual words. Trace the movement: where did they go deeper? Where did they push back? Where did a pattern show up again? Connect the arc to today's program territory. This should feel like someone who has been reading carefully says: 'Here is the line I see across the last few days, and here is why today matters.' If a thread_seed was provided from yesterday's summary, use it as your starting point.",
+  "thread": "A brief recap grounded in what they actually wrote. Start with their words, not your interpretation. If a pattern is emerging across days, name it simply — 'You keep coming back to X' or 'This is the second time you've mentioned Y.' Don't perform insight. If a thread_seed was provided, use it as your starting point. Match your length to their input length. 3-8 sentences max unless they wrote extensively.",
 
   "themes": ["theme 1", "theme 2", "theme 3"],
   "summary": "Brief 2-sentence summary for metadata purposes.",
@@ -26,19 +28,18 @@ Return valid JSON (no markdown, no code fences):
   },
 
   "follow_up": {
-    "commitments": ["Things they explicitly said they would do in exercise responses or journal. Only include things they actually said — not things you suggested."],
-    "coaching_questions": ["Unanswered coaching questions from prior sessions. Only carry forward questions that the person did not respond to."],
-    "highlight": "A specific exercise response worth revisiting — something they wrote that opened something up or that they left unfinished."
+    "commitments": ["Only things they explicitly said they would do — in their own words. If they didn't commit to anything, return an empty array. Never invent commitments."],
+    "check_in_prompt": "A single sentence asking how it went, if they committed to something. E.g., 'You said you'd write about how your body feels — did you?' If no commitments, this is null."
   },
 
   "patterns": [
     {
-      "observation": "A pattern across multiple days — named directly, with evidence.",
-      "days_observed": 3,
-      "connection": "How this connects to their goals or growth edges."
+      "observation": "A pattern across multiple days — stated simply, with evidence. Not an analysis — just 'You keep coming back to X' or 'This is the second time Y showed up.'",
+      "days_observed": 2,
+      "connection": "One sentence — how this connects to what they're working on."
     }
   ],
-  "carry_forward": "A living question or observation to carry into today."
+  "carry_forward": "A living question to sit with — not an instruction. One sentence max."
 }
 
 ## Guidelines
@@ -48,9 +49,10 @@ Return valid JSON (no markdown, no code fences):
 4. Journal prompts are backward-looking. Use "recently," "the last couple of days" — never "today" as if the day happened.
 5. Patterns require at least 2 days of evidence. Don't fabricate patterns from a single entry.
 6. The carry_forward should be a question or observation, not an instruction.
-7. When naming patterns, teach something — why this pattern exists, what it protects, what it costs.
-8. For follow_up.commitments, only include things the person actually wrote they would do. Not things exercises suggested.
-9. For follow_up.coaching_questions, only carry forward questions that went unanswered.`;
+7. When naming patterns, keep it simple — "You keep coming back to X" or "This showed up again." Don't teach or analyze the pattern unless they've seen it 3+ times.
+8. For follow_up.commitments, only include things the person explicitly said they would do. If they didn't commit to anything, return an empty array.
+9. The check_in_prompt is a single sentence asking how their commitment went. If no commitments, set to null.
+10. IMPORTANT: Don't carry forward unanswered coaching questions or past highlights. If someone didn't engage with something, let it go. Only carry forward their own commitments.`;
 
 export async function POST(request: Request) {
   try {
@@ -288,7 +290,7 @@ Generate the Thread and today's themes for Day ${dayNumber}.`;
       })
       .filter(pc => pc.days_ago <= 3); // Only show challenges from last 3 days
 
-    return NextResponse.json({
+    const responseData = {
       ...result,
       usage: message.usage,
       // Commitment tracking data (passthrough from recent sessions)
@@ -296,7 +298,26 @@ Generate the Thread and today's themes for Day ${dayNumber}.`;
       yesterday_committed_actions: committedActions,
       yesterday_for_tomorrow: forTomorrow || null,
       active_pattern_challenges: recentPatternChallenges,
-    });
+    };
+
+    // Cache themes in daily_sessions so the day page can load instantly
+    // (upsert — creates session if it doesn't exist yet)
+    try {
+      await supabase
+        .from("daily_sessions")
+        .upsert(
+          {
+            enrollment_id: enrollmentId,
+            day_number: dayNumber,
+            step_1_themes: responseData,
+          },
+          { onConflict: "enrollment_id,day_number" }
+        );
+    } catch {
+      // Non-blocking — if caching fails, the response still works
+    }
+
+    return NextResponse.json(responseData);
   } catch (error: unknown) {
     console.error("Error in /api/daily-themes:", error);
     const errorMessage = error instanceof Error ? error.message : "Internal server error";

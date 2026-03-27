@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import WeekProgressTracker from "@/components/WeekProgressTracker";
@@ -53,6 +53,20 @@ interface ProgramCardProps {
 export default function ProgramCard({ enrollment, goals, todaySessionDone, isCompact, onNavigate, weekDays, weekNumber }: ProgramCardProps) {
   const [goalsOpen, setGoalsOpen] = useState(!isCompact);
   const accent = getAccent(enrollment.programs?.slug);
+
+  // Prefetch yesterday's themes so they're ready when the user clicks "Start Session"
+  useEffect(() => {
+    if (enrollment.status === "active" && enrollment.current_day > 1 && !todaySessionDone) {
+      fetch("/api/daily-themes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enrollmentId: enrollment.id,
+          dayNumber: enrollment.current_day,
+        }),
+      }).catch(() => {}); // Fire-and-forget — errors are fine, the day page will retry
+    }
+  }, [enrollment.id, enrollment.current_day, enrollment.status, todaySessionDone]);
   const { status } = enrollment;
 
   const cardStyle: React.CSSProperties = {

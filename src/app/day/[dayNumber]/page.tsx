@@ -317,13 +317,29 @@ function DailyFlowPage() {
     });
   }, [supabase.auth, router, loadData]);
 
-  // ── Step 1: Load themes ──
+  // ── Step 1: Load themes (check cache first, then API) ──
   async function loadThemes() {
     if (!enrollment || !session) return;
     setLoadingThemes(true);
     setThemesError(null);
 
     try {
+      // Check if themes were prefetched (cached in step_1_themes by dashboard)
+      if (session.step_1_themes && typeof session.step_1_themes === "object" && "thread" in (session.step_1_themes as Record<string, unknown>)) {
+        setThemes(session.step_1_themes as unknown as ThemesResult);
+        if (!session.completed_steps?.includes(1)) {
+          await supabase
+            .from("daily_sessions")
+            .update({ completed_steps: [...(session.completed_steps || []), 1] })
+            .eq("id", session.id);
+          setSession((prev) => prev ? { ...prev, completed_steps: [...(prev.completed_steps || []), 1] } : prev);
+        }
+        setActiveStep(2);
+        setLoadingThemes(false);
+        return;
+      }
+
+      // No cache — call API
       const res = await fetch("/api/daily-themes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

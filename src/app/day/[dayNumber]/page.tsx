@@ -1409,7 +1409,7 @@ function DailyFlowPage() {
               }}
             />
             <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
-              Reading your journal and matching exercises to what surfaced...
+              Processing your entry and selecting exercises that match what came up and where you are in the program.
             </p>
           </div>
         ) : stateAnalysis ? (

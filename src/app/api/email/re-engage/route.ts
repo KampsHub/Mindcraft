@@ -1,10 +1,20 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
+// GET handler for Vercel cron
+export async function GET(request: Request) {
+  return handleReEngage(request, false);
+}
+
+// POST handler for manual trigger with dryRun option
 export async function POST(request: Request) {
+  const body = await request.json().catch(() => ({}));
+  const { dryRun } = body as { dryRun?: boolean };
+  return handleReEngage(request, !!dryRun);
+}
+
+async function handleReEngage(request: Request, dryRun: boolean) {
   try {
-    const body = await request.json();
-    const { dryRun } = body as { dryRun?: boolean };
 
     // Verify cron secret for internal/cron endpoints
     const cronSecret = process.env.CRON_SECRET;
@@ -28,8 +38,8 @@ export async function POST(request: Request) {
     ).toISOString();
 
     const { data: enrollments, error: enrollError } = await supabase
-      .from("enrollments")
-      .select("id, user_id, current_day, programs(name)")
+      .from("program_enrollments")
+      .select("id, client_id, current_day, programs(name)")
       .eq("status", "active");
 
     if (enrollError) {
@@ -75,7 +85,7 @@ export async function POST(request: Request) {
       const { data: recentEmail } = await supabase
         .from("email_events")
         .select("id")
-        .eq("user_id", enrollment.user_id)
+        .eq("user_id", enrollment.client_id)
         .eq("event_type", "re_engage")
         .gte("created_at", sevenDaysAgo)
         .limit(1)
@@ -88,7 +98,7 @@ export async function POST(request: Request) {
       // Fetch user email
       const {
         data: { user },
-      } = await supabase.auth.admin.getUserById(enrollment.user_id);
+      } = await supabase.auth.admin.getUserById(enrollment.client_id);
 
       if (!user?.email) continue;
 
@@ -117,7 +127,7 @@ export async function POST(request: Request) {
         : "You were making real progress.";
 
       results.push({
-        userId: enrollment.user_id,
+        userId: enrollment.client_id,
         email: user.email,
         currentDay,
         programName,
@@ -164,7 +174,7 @@ export async function POST(request: Request) {
 
         // Log the email event for cooldown tracking
         await supabase.from("email_events").insert({
-          user_id: enrollment.user_id,
+          user_id: enrollment.client_id,
           event_type: "re_engage",
           enrollment_id: enrollment.id,
         });

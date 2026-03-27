@@ -3,6 +3,10 @@
     {
       "path": "/api/quality-audit",
       "schedule": "0 16 * * 1"
+    },
+    {
+      "path": "/api/email/re-engage",
+      "schedule": "0 15 * * *"
     }
   ]
 }

@@ -277,8 +277,8 @@ export default function MindfulJournalPage() {
                     categories={FEELINGS_SATISFIED}
                     checkedItems={checkedSatisfied}
                     onToggle={(item) => setCheckedSatisfied((s) => toggleSet(s, item))}
-                    accentColor={colors.plumLight}
-                    accentWash={colors.plumWash}
+                    accentColor={colors.coral}
+                    accentWash={"rgba(224, 149, 133, 0.12)"}
                     isOpen={openSection === "satisfied"}
                     onToggleOpen={() => setOpenSection(openSection === "satisfied" ? null : "satisfied")}
                   />
@@ -297,8 +297,8 @@ export default function MindfulJournalPage() {
                     categories={NEEDS}
                     checkedItems={checkedNeeds}
                     onToggle={(item) => setCheckedNeeds((s) => toggleSet(s, item))}
-                    accentColor={colors.plumLight}
-                    accentWash={colors.plumWash}
+                    accentColor={colors.coral}
+                    accentWash={"rgba(224, 149, 133, 0.12)"}
                     isOpen={openSection === "needs"}
                     onToggleOpen={() => setOpenSection(openSection === "needs" ? null : "needs")}
                   />
@@ -344,11 +344,11 @@ export default function MindfulJournalPage() {
                               animate={{ scale: 1, opacity: 1 }}
                               style={{
                                 fontSize: 12, fontFamily: body, fontWeight: 600,
-                                color: colors.plumLight,
+                                color: colors.coral,
                                 display: "flex", alignItems: "center", gap: 4,
                               }}
                             >
-                              <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: colors.plumLight, display: "inline-block" }} />
+                              <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: colors.coral, display: "inline-block" }} />
                               {checkedSatisfied.size} satisfied
                             </motion.span>
                           )}
@@ -372,11 +372,11 @@ export default function MindfulJournalPage() {
                               animate={{ scale: 1, opacity: 1 }}
                               style={{
                                 fontSize: 12, fontFamily: body, fontWeight: 600,
-                                color: colors.plumLight,
+                                color: colors.coral,
                                 display: "flex", alignItems: "center", gap: 4,
                               }}
                             >
-                              <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: colors.plumLight, display: "inline-block" }} />
+                              <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: colors.coral, display: "inline-block" }} />
                               {checkedNeeds.size} needs
                             </motion.span>
                           )}
@@ -456,7 +456,7 @@ export default function MindfulJournalPage() {
               transition={{ delay: 0.15, type: "spring", stiffness: 200, damping: 15 }}
               style={{
                 width: 56, height: 56, borderRadius: "50%",
-                background: `linear-gradient(135deg, ${colors.coral}, ${colors.plum})`,
+                background: `linear-gradient(135deg, ${colors.coral}, ${colors.coral})`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 marginBottom: 20,
               }}
@@ -495,7 +495,7 @@ export default function MindfulJournalPage() {
                   transition={{ delay: 0.45 }}
                   style={{ textAlign: "center" }}
                 >
-                  <p style={{ fontSize: 24, fontWeight: 700, fontFamily: display, color: colors.plumLight, margin: 0 }}>
+                  <p style={{ fontSize: 24, fontWeight: 700, fontFamily: display, color: colors.coral, margin: 0 }}>
                     {savedStats.feelings}
                   </p>
                   <p style={{ fontSize: 11, color: colors.textMuted, fontFamily: display, margin: 0, letterSpacing: "0.04em" }}>
@@ -510,7 +510,7 @@ export default function MindfulJournalPage() {
                   transition={{ delay: 0.55 }}
                   style={{ textAlign: "center" }}
                 >
-                  <p style={{ fontSize: 24, fontWeight: 700, fontFamily: display, color: colors.plumLight, margin: 0 }}>
+                  <p style={{ fontSize: 24, fontWeight: 700, fontFamily: display, color: colors.coral, margin: 0 }}>
                     {savedStats.needs}
                   </p>
                   <p style={{ fontSize: 11, color: colors.textMuted, fontFamily: display, margin: 0, letterSpacing: "0.04em" }}>

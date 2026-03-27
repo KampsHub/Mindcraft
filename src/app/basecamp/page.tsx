@@ -190,7 +190,7 @@ function NinjaDivider({ children, align = "center" }: { children: React.ReactNod
 
 /* ── Glow button ── */
 function GlowButton({ href, children, variant = "coral" }: { href: string; children: React.ReactNode; variant?: "coral" | "plum" }) {
-  const bg = variant === "coral" ? colors.coral : colors.plumLight;
+  const bg = variant === "coral" ? colors.coral : colors.coral;
   const glow = variant === "coral" ? "rgba(224,149,133,0.4)" : "rgba(176,141,173,0.4)";
   return (
     <motion.a
@@ -1187,7 +1187,7 @@ function TestimonialCarousel() {
           fontWeight: 600,
           letterSpacing: 2,
           textTransform: "uppercase" as const,
-          color: colors.plumLight,
+          color: colors.coral,
           marginBottom: 24,
         }}
       >
@@ -1218,7 +1218,7 @@ function TestimonialCarousel() {
               fontStyle: "italic",
               margin: 0,
               paddingLeft: 20,
-              borderLeft: `3px solid ${activeIdx % 2 === 0 ? colors.plumLight : colors.coral}`,
+              borderLeft: `3px solid ${activeIdx % 2 === 0 ? colors.coral : colors.coral}`,
             }}
           >
             {testimonials[activeIdx].quote}
@@ -1531,7 +1531,7 @@ function Pricing() {
                   position: "absolute" as const,
                   top: -13,
                   left: 20,
-                  backgroundColor: colors.plumLight,
+                  backgroundColor: colors.coral,
                   color: "#ffffff",
                   fontFamily: body,
                   fontSize: 9,

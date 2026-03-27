@@ -45,7 +45,7 @@ interface WeeklyReview {
   reflection: string;
 }
 
-const COLORS = [colors.coral, colors.plum, "#818cf8", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#38bdf8"];
+const COLORS = [colors.coral, colors.coral, "#818cf8", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#38bdf8"];
 
 export default function MonthlySummaryPage() {
   const [user, setUser] = useState<User | null>(null);

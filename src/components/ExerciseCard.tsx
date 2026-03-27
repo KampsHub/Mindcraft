@@ -63,17 +63,17 @@ const modalityConfig: Record<string, { bg: string; text: string; label: string; 
     icon: "🫁",
   },
   relational: {
-    bg: colors.plumWash,
-    text: colors.plumLight,
+    bg: "rgba(224, 149, 133, 0.12)",
+    text: colors.coral,
     label: "Relational",
-    stripe: `linear-gradient(135deg, ${colors.plumLight}, ${colors.plum})`,
+    stripe: `linear-gradient(135deg, ${colors.coral}, ${colors.coral})`,
     icon: "🤝",
   },
   integrative: {
-    bg: colors.plumWash,
-    text: colors.plumLight,
+    bg: "rgba(224, 149, 133, 0.12)",
+    text: colors.coral,
     label: "Integrative",
-    stripe: `linear-gradient(135deg, ${colors.plumLight}80, ${colors.plum}60)`,
+    stripe: `linear-gradient(135deg, ${colors.coral}80, ${colors.coral}60)`,
     icon: "◈",
   },
   systems: {
@@ -204,7 +204,7 @@ export default function ExerciseCard({
         <div
           style={{
             height: 3,
-            background: `linear-gradient(135deg, ${colors.plumLight}80, ${colors.plum}60)`,
+            background: `linear-gradient(135deg, ${colors.coral}80, ${colors.coral}60)`,
             opacity: 0.6,
           }}
         />

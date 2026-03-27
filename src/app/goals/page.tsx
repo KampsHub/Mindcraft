@@ -584,7 +584,7 @@ function GoalsPage() {
             value={exerciseCount}
             max={Math.max(exerciseCount, 7)}
             label="exercises"
-            accentColor={colors.plumLight}
+            accentColor={colors.coral}
           />
           <AnimatedStat
             value={journalEntryCount}

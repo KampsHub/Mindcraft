@@ -35,9 +35,9 @@ export default function ActivePatternChallenge({
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       style={{
         padding: "14px 18px",
-        backgroundColor: colors.plumWash,
+        backgroundColor: "rgba(224, 149, 133, 0.12)",
         borderRadius: 12,
-        borderLeft: `3px solid ${colors.plum}`,
+        borderLeft: `3px solid ${colors.coral}`,
         marginBottom: 16,
       }}
     >
@@ -53,7 +53,7 @@ export default function ActivePatternChallenge({
           style={{
             fontSize: 11,
             fontWeight: 700,
-            color: colors.plum,
+            color: colors.coral,
             margin: 0,
             textTransform: "uppercase",
             letterSpacing: "0.08em",
@@ -65,7 +65,7 @@ export default function ActivePatternChallenge({
         <span
           style={{
             fontSize: 11,
-            color: colors.plumLight,
+            color: colors.coral,
             fontFamily: body,
             fontWeight: 600,
           }}
@@ -115,7 +115,7 @@ export default function ActivePatternChallenge({
               height: 8,
               borderRadius: "50%",
               backgroundColor:
-                i < dayOfChallenge ? colors.plum : colors.borderDefault,
+                i < dayOfChallenge ? colors.coral : colors.borderDefault,
               transition: "background-color 0.3s",
             }}
           />

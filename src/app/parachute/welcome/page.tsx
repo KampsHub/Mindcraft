@@ -214,8 +214,8 @@ function ParachuteWelcome() {
     : tier === "pay_what_you_can" ? "Pay What You Can"
     : tier === "pay_it_forward" ? "Pay It Forward"
     : "Standard";
-  const tierBadgeBg = tier === "enneagram" ? colors.plumWash : colors.coralWash;
-  const tierBadgeColor = tier === "enneagram" ? colors.plumLight : colors.coral;
+  const tierBadgeBg = tier === "enneagram" ? "rgba(224, 149, 133, 0.12)" : colors.coralWash;
+  const tierBadgeColor = tier === "enneagram" ? colors.coral : colors.coral;
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: colors.bgDeep, color: colors.textPrimary }}>

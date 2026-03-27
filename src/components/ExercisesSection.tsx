@@ -49,10 +49,10 @@ type TabFilter = "completed" | "parked";
 type ModalityFilter = "all" | "cognitive" | "somatic" | "relational" | "integrative" | "systems";
 
 const modalityColors: Record<string, { bg: string; text: string; label: string }> = {
-  cognitive: { bg: colors.plumWash, text: colors.plumLight, label: "Cognitive" },
+  cognitive: { bg: "rgba(224, 149, 133, 0.12)", text: colors.coral, label: "Cognitive" },
   somatic: { bg: colors.coralWash, text: colors.coralLight, label: "Somatic" },
-  relational: { bg: "rgba(61, 40, 64, 0.5)", text: colors.plumLight, label: "Relational" },
-  integrative: { bg: colors.plumWash, text: colors.plumLight, label: "Integrative" },
+  relational: { bg: "rgba(61, 40, 64, 0.5)", text: colors.coral, label: "Relational" },
+  integrative: { bg: "rgba(224, 149, 133, 0.12)", text: colors.coral, label: "Integrative" },
   systems: { bg: colors.bgElevated, text: colors.textSecondary, label: "Systems" },
 };
 

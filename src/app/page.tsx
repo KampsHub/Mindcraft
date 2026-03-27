@@ -833,7 +833,7 @@ function PricingSection() {
                     left: 0,
                     right: 0,
                     height: 3,
-                    background: `linear-gradient(90deg, ${colors.coral}, ${colors.plum})`,
+                    background: `linear-gradient(90deg, ${colors.coral}, ${colors.coral})`,
                   }} />
                 )}
                 <span style={{
@@ -975,7 +975,7 @@ function SocialProof() {
           {sp.items.map((item: { quote: string; attribution: string; tag: string }, i: number) => (
             <FadeIn key={i} delay={0.15 + i * 0.12} preset="slide-up">
               <motion.div
-                whileHover={{ y: -4, borderColor: colors.plum }}
+                whileHover={{ y: -4, borderColor: colors.coral }}
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 style={{
                   padding: 28,

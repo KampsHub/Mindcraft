@@ -131,7 +131,7 @@ export default function WeekTimeline({ sessions, weekStartDay }: WeekTimelinePro
                       width: "80%",
                       height,
                       borderRadius: "6px 6px 2px 2px",
-                      background: `linear-gradient(180deg, ${colors.coral} 0%, ${colors.plum} 100%)`,
+                      background: `linear-gradient(180deg, ${colors.coral} 0%, ${colors.coral} 100%)`,
                       transformOrigin: "bottom",
                       cursor: "pointer",
                       opacity: isHovered ? 1 : 0.85,

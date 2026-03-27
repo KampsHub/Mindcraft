@@ -12,7 +12,7 @@ const variants = {
     shadow: "0 8px 30px rgba(224, 149, 133, 0.4)",
   },
   plum: {
-    bg: colors.plum,
+    bg: colors.coral,
     color: colors.textPrimary,
     shadow: "0 8px 30px rgba(123, 82, 120, 0.4)",
   },

@@ -832,7 +832,7 @@ function WeeklyReviewPage() {
                   }}>
                     {/* What they came in with */}
                     <p style={{
-                      fontSize: 12, fontWeight: 700, color: colors.plumLight,
+                      fontSize: 12, fontWeight: 700, color: colors.coral,
                       margin: "0 0 10px 0", textTransform: "uppercase",
                       letterSpacing: "0.08em", fontFamily: display,
                     }}>
@@ -1414,7 +1414,7 @@ function WeeklyReviewPage() {
                                 fontSize: 10, fontFamily: display, fontWeight: 600,
                                 textTransform: "uppercase", letterSpacing: "0.06em",
                                 padding: "2px 8px", borderRadius: 100,
-                                backgroundColor: colors.plumWash, color: colors.plumLight,
+                                backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
                               }}>
                                 {ex.modality}
                               </span>
@@ -1738,7 +1738,7 @@ function WeeklyReviewPage() {
               fontFamily: body, fontSize: 9, fontWeight: 700,
               letterSpacing: 1.5, textTransform: "uppercase",
               padding: "5px 12px", borderRadius: 6,
-              backgroundColor: colors.plumWash, color: colors.plumLight,
+              backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
               marginBottom: 14,
             }}>
               IEQ9 Enneagram
@@ -1760,7 +1760,7 @@ function WeeklyReviewPage() {
                   </p>
                 )}
                 <p style={{
-                  fontFamily: body, fontSize: 12, color: colors.plumLight, margin: 0,
+                  fontFamily: body, fontSize: 12, color: colors.coral, margin: 0,
                 }}>
                   Your Enneagram results shape every exercise and goal in your program.
                 </p>

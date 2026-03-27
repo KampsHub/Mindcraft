@@ -87,8 +87,8 @@ export default function EnneagramInsights({ data }: Props) {
         </span>
         <span style={{
           fontFamily: display, fontSize: 14, fontWeight: 600,
-          color: colors.plumLight, padding: "8px 14px", borderRadius: 10,
-          backgroundColor: colors.plumWash,
+          color: colors.coral, padding: "8px 14px", borderRadius: 10,
+          backgroundColor: "rgba(224, 149, 133, 0.12)",
         }}>
           Tritype {data.tritype}
         </span>
@@ -104,7 +104,7 @@ export default function EnneagramInsights({ data }: Props) {
           Centers of Intelligence
         </p>
         <CenterBar label="Action (Body)" value={data.centers.action} color={colors.coral} />
-        <CenterBar label="Feeling (Heart)" value={data.centers.feeling} color={colors.plumLight} />
+        <CenterBar label="Feeling (Heart)" value={data.centers.feeling} color={colors.coral} />
         <CenterBar label="Thinking (Head)" value={data.centers.thinking} color={colors.warning} />
       </div>
 

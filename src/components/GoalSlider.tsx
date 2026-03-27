@@ -88,7 +88,7 @@ export default function GoalSlider({
           outline: "none",
           borderRadius: 4,
           cursor: "pointer",
-          background: `linear-gradient(90deg, ${colors.plum} 0%, ${colors.coral} ${fillPercent}%, ${colors.bgElevated} ${fillPercent}%)`,
+          background: `linear-gradient(90deg, ${colors.coral} 0%, ${colors.coral} ${fillPercent}%, ${colors.bgElevated} ${fillPercent}%)`,
         }}
       />
 

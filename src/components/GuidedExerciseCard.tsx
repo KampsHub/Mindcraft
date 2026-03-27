@@ -79,8 +79,8 @@ function BreathingCircle() {
             width: 52,
             height: 52,
             borderRadius: "50%",
-            background: `radial-gradient(circle at 35% 35%, ${colors.coralLight}, ${colors.coral} 50%, ${colors.plum} 100%)`,
-            boxShadow: `0 0 40px ${colors.coral}35, inset 0 -4px 12px ${colors.plum}40`,
+            background: `radial-gradient(circle at 35% 35%, ${colors.coralLight}, ${colors.coral} 50%, ${colors.coral} 100%)`,
+            boxShadow: `0 0 40px ${colors.coral}35, inset 0 -4px 12px ${colors.coral}40`,
           }}
         />
       </div>

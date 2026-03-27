@@ -229,7 +229,7 @@ export default function JournalPage() {
                     transition={{ type: "spring", stiffness: 400, damping: 20, delay: i * 0.06 }}
                     style={{
                       padding: "4px 12px", fontSize: 12, fontWeight: 600,
-                      backgroundColor: colors.plumWash, color: colors.plumLight,
+                      backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
                       borderRadius: 100, fontFamily: display,
                     }}
                   >

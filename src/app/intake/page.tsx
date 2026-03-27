@@ -451,7 +451,7 @@ export default function IntakePage() {
                     cursor: "pointer",
                     borderColor: isSelected ? colors.coral : colors.borderDefault,
                     background: isSelected
-                      ? `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.plumDeep} 100%)`
+                      ? `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.bgSurface} 100%)`
                       : colors.bgSurface,
                     transition: "border-color 0.2s, background 0.2s",
                   }}
@@ -644,7 +644,7 @@ export default function IntakePage() {
                             : `1px solid ${colors.borderDefault}`,
                           borderRadius: 12, cursor: "pointer",
                           backgroundColor: answers[q.id] === opt
-                            ? colors.plumDeep : colors.bgSurface,
+                            ? colors.bgSurface : colors.bgSurface,
                           fontFamily: body, transition: "all 0.2s",
                         }}
                       >
@@ -950,7 +950,7 @@ export default function IntakePage() {
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               style={{
                 width: 72, height: 72, borderRadius: "50%",
-                background: `linear-gradient(135deg, ${colors.coralWash} 0%, ${colors.plumWash} 100%)`,
+                background: `linear-gradient(135deg, ${colors.coralWash} 0%, ${"rgba(224, 149, 133, 0.12)"} 100%)`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 margin: "0 auto 28px", fontSize: 30, color: colors.coral,
               }}

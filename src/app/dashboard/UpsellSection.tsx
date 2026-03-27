@@ -36,16 +36,16 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
             display: "flex", alignItems: "center", gap: 10,
             padding: "14px 18px", borderRadius: 12,
             backgroundColor: colors.bgSurface,
-            border: `1px solid rgba(176, 141, 173, 0.25)`,
+            border: `1px solid rgba(224, 149, 133, 0.25)`,
             marginBottom: 20,
           }}>
             <div style={{
               width: 28, height: 28, borderRadius: "50%",
-              backgroundColor: colors.plumWash,
+              backgroundColor: "rgba(224, 149, 133, 0.12)",
               display: "flex", alignItems: "center", justifyContent: "center",
               flexShrink: 0,
             }}>
-              <span style={{ color: colors.plumLight, fontSize: 14, fontWeight: 700 }}>✓</span>
+              <span style={{ color: colors.coral, fontSize: 14, fontWeight: 700 }}>✓</span>
             </div>
             <p style={{
               fontFamily: body, fontSize: 13, color: "#ffffff", margin: 0, lineHeight: 1.4,
@@ -53,7 +53,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
               Enneagram results available in{" "}
               <span
                 onClick={() => onNavigate("/weekly-review")}
-                style={{ color: colors.plumLight, cursor: "pointer", textDecoration: "underline", fontWeight: 600 }}
+                style={{ color: colors.coral, cursor: "pointer", textDecoration: "underline", fontWeight: 600 }}
               >
                 Insights
               </span>
@@ -133,7 +133,7 @@ function EnneagramCard() {
       <div style={{
         position: "absolute", top: -30, right: -30,
         width: 120, height: 120, borderRadius: "50%",
-        background: `radial-gradient(circle, rgba(176, 141, 173, 0.15) 0%, transparent 70%)`,
+        background: `radial-gradient(circle, rgba(224, 149, 133, 0.15) 0%, transparent 70%)`,
         pointerEvents: "none",
       }} />
       <span style={{
@@ -141,7 +141,7 @@ function EnneagramCard() {
         fontFamily: body, fontSize: 9, fontWeight: 700,
         letterSpacing: 1.5, textTransform: "uppercase",
         padding: "5px 12px", borderRadius: 6,
-        backgroundColor: colors.plumWash, color: colors.plumLight,
+        backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
         marginBottom: 14,
       }}>
         Deep Insight
@@ -162,7 +162,7 @@ function EnneagramCard() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <span style={{
           fontFamily: display, fontSize: 15, fontWeight: 600,
-          color: colors.plumLight,
+          color: colors.coral,
         }}>
           $300
         </span>
@@ -175,7 +175,7 @@ function EnneagramCard() {
           style={{
             fontFamily: display, fontSize: 13, fontWeight: 600,
             padding: "10px 24px", borderRadius: 100,
-            backgroundColor: colors.plum, color: colors.textPrimary,
+            backgroundColor: colors.coral, color: colors.textPrimary,
             border: "none", cursor: loading ? "default" : "pointer",
             letterSpacing: "0.01em",
             opacity: loading ? 0.7 : 1,

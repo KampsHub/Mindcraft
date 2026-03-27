@@ -131,7 +131,7 @@ export default function PageShell({
             style={{
               position: "absolute", ...positions.plum,
               width: 140, height: 140, borderRadius: "50%",
-              background: colors.plum, pointerEvents: "none", filter: "blur(50px)",
+              background: colors.coral, pointerEvents: "none", filter: "blur(50px)",
               zIndex: 1,
             }}
           />

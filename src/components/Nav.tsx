@@ -20,7 +20,7 @@ function ScrollProgress() {
     <motion.div
       style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 3,
-        background: `linear-gradient(90deg, ${colors.coral}, ${colors.plum})`,
+        background: `linear-gradient(90deg, ${colors.coral}, ${colors.coral})`,
         transformOrigin: "0%", scaleX, zIndex: 200,
       }}
     />

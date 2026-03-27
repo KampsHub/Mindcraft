@@ -58,7 +58,7 @@ export default function ProgramSwitcher({ currentEnrollmentId, onSwitch }: Progr
 
   const slugColor: Record<string, string> = {
     jetstream: colors.coral,
-    parachute: colors.plumLight,
+    parachute: colors.coral,
     basecamp: colors.coralLight,
   };
 

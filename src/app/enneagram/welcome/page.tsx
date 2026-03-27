@@ -141,7 +141,7 @@ function EnneagramWelcome() {
             fontFamily: body, fontSize: 10, fontWeight: 700,
             letterSpacing: 1.5, textTransform: "uppercase" as const,
             padding: "6px 16px", borderRadius: 6,
-            backgroundColor: colors.plumWash, color: colors.plumLight,
+            backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
             marginBottom: 20,
           }}>
             ✓ Enneagram Assessment

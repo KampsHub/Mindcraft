@@ -105,7 +105,7 @@ export default function SpectrumSelector({
           style={{
             fontSize: 12,
             fontWeight: 600,
-            color: colors.plumLight,
+            color: colors.coral,
             fontFamily: display,
             letterSpacing: "0.01em",
           }}
@@ -200,7 +200,7 @@ export default function SpectrumSelector({
               left: 0,
               height: "100%",
               borderRadius: 6,
-              background: `linear-gradient(90deg, ${colors.plum}, ${colors.coral})`,
+              background: `linear-gradient(90deg, ${colors.coral}, ${colors.coral})`,
             }}
           />
         </div>

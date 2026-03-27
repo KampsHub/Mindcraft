@@ -190,7 +190,7 @@ function NinjaDivider({ children, align = "center" }: { children: React.ReactNod
 
 /* ── Glow button ── */
 function GlowButton({ href, children, variant = "coral" }: { href: string; children: React.ReactNode; variant?: "coral" | "plum" }) {
-  const bg = variant === "coral" ? colors.coral : colors.plumLight;
+  const bg = variant === "coral" ? colors.coral : colors.coral;
   const glow = variant === "coral" ? "rgba(224,149,133,0.4)" : "rgba(176,141,173,0.4)";
   return (
     <motion.a
@@ -808,7 +808,7 @@ function HonestTake() {
               fontWeight: 600,
               letterSpacing: 2,
               textTransform: "uppercase" as const,
-              color: colors.plumLight,
+              color: colors.coral,
               marginBottom: 14,
             }}
           >
@@ -882,7 +882,7 @@ function HonestTake() {
           <FadeIn preset="slide-up" delay={0.15} style={{ display: "flex" }}>
             <div
               style={{
-                borderLeft: `3px solid ${colors.plumLight}`,
+                borderLeft: `3px solid ${colors.coral}`,
                 paddingLeft: 24,
                 width: "100%",
               }}
@@ -894,7 +894,7 @@ function HonestTake() {
                   fontWeight: 600,
                   letterSpacing: 1.5,
                   textTransform: "uppercase" as const,
-                  color: colors.plumLight,
+                  color: colors.coral,
                   marginBottom: 12,
                 }}
               >
@@ -1762,7 +1762,7 @@ function TestimonialCarousel() {
           fontWeight: 600,
           letterSpacing: 2,
           textTransform: "uppercase" as const,
-          color: colors.plumLight,
+          color: colors.coral,
           marginBottom: 24,
         }}
       >
@@ -1793,7 +1793,7 @@ function TestimonialCarousel() {
               fontStyle: "italic",
               margin: 0,
               paddingLeft: 20,
-              borderLeft: `3px solid ${activeIdx % 2 === 0 ? colors.plumLight : colors.coral}`,
+              borderLeft: `3px solid ${activeIdx % 2 === 0 ? colors.coral : colors.coral}`,
             }}
           >
             {testimonials[activeIdx].quote}
@@ -2166,7 +2166,7 @@ function Pricing() {
                   position: "absolute" as const,
                   top: -13,
                   left: 20,
-                  backgroundColor: colors.plumLight,
+                  backgroundColor: colors.coral,
                   color: "#ffffff",
                   fontFamily: body,
                   fontSize: 9,
@@ -2557,7 +2557,7 @@ function AfterProgram() {
                   width: 36,
                   height: 36,
                   borderRadius: "50%",
-                  background: colors.plumWash,
+                  background: "rgba(224, 149, 133, 0.12)",
                   border: `1.5px solid rgba(123,82,120,0.25)`,
                   display: "flex",
                   alignItems: "center",
@@ -2565,7 +2565,7 @@ function AfterProgram() {
                   fontFamily: body,
                   fontWeight: 600,
                   fontSize: 14,
-                  color: colors.plumLight,
+                  color: colors.coral,
                   flexShrink: 0,
                 }}
               >
@@ -3236,7 +3236,7 @@ function SocialProof() {
               fontWeight: 600,
               letterSpacing: 2,
               textTransform: "uppercase" as const,
-              color: colors.plumLight,
+              color: colors.coral,
               marginBottom: 24,
             }}
           >
@@ -3259,7 +3259,7 @@ function SocialProof() {
                   fontStyle: "italic",
                   margin: 0,
                   padding: "0 20px",
-                  borderLeft: `3px solid ${colors.plumLight}`,
+                  borderLeft: `3px solid ${colors.coral}`,
                   textAlign: "left" as const,
                 }}
               >

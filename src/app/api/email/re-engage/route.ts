@@ -1,0 +1,185 @@
+import { createClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { dryRun } = body as { dryRun?: boolean };
+
+    // Verify cron secret for internal/cron endpoints
+    const cronSecret = process.env.CRON_SECRET;
+    const authHeader = request.headers.get("authorization");
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Use service role for admin-level queries (user lookups, cross-user data)
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Find active enrollments where the latest session is older than 3 days
+    const threeDaysAgo = new Date(
+      Date.now() - 3 * 24 * 60 * 60 * 1000
+    ).toISOString();
+    const sevenDaysAgo = new Date(
+      Date.now() - 7 * 24 * 60 * 60 * 1000
+    ).toISOString();
+
+    const { data: enrollments, error: enrollError } = await supabase
+      .from("enrollments")
+      .select("id, user_id, current_day, programs(name)")
+      .eq("status", "active");
+
+    if (enrollError) {
+      console.error("Error fetching enrollments:", enrollError);
+      return NextResponse.json(
+        { error: "Failed to fetch enrollments" },
+        { status: 500 }
+      );
+    }
+
+    if (!enrollments || enrollments.length === 0) {
+      return NextResponse.json({ emailed: [], count: 0 });
+    }
+
+    const subjects = [
+      (day: number) => `Day ${day} is waiting`,
+      () => "Your program is still here",
+      () => "3 days \u2014 checking in",
+    ];
+
+    const results: Array<{
+      userId: string;
+      email: string;
+      currentDay: number;
+      programName: string;
+    }> = [];
+
+    for (const enrollment of enrollments) {
+      // Check if latest session is older than 3 days
+      const { data: latestSession } = await supabase
+        .from("daily_sessions")
+        .select("created_at")
+        .eq("enrollment_id", enrollment.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (latestSession && latestSession.created_at > threeDaysAgo) {
+        continue; // Active recently, skip
+      }
+
+      // Check cooldown: don't re-engage if emailed in last 7 days
+      const { data: recentEmail } = await supabase
+        .from("email_events")
+        .select("id")
+        .eq("user_id", enrollment.user_id)
+        .eq("event_type", "re_engage")
+        .gte("created_at", sevenDaysAgo)
+        .limit(1)
+        .single();
+
+      if (recentEmail) {
+        continue; // Already emailed recently
+      }
+
+      // Fetch user email
+      const {
+        data: { user },
+      } = await supabase.auth.admin.getUserById(enrollment.user_id);
+
+      if (!user?.email) continue;
+
+      // Get last themes for personalization
+      const { data: lastThemes } = await supabase
+        .from("daily_sessions")
+        .select("themes")
+        .eq("enrollment_id", enrollment.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      const programName =
+        (enrollment.programs as unknown as { name: string })?.name ||
+        "Mindcraft";
+      const currentDay = enrollment.current_day || 1;
+      const themes: string[] = lastThemes?.themes || [];
+      const lastTheme = themes.length > 0 ? themes[0] : null;
+
+      const subjectPicker =
+        subjects[Math.floor(Math.random() * subjects.length)];
+      const subject = subjectPicker(currentDay);
+
+      const themeReference = lastTheme
+        ? `Your last entry touched on ${lastTheme}.`
+        : "You were making real progress.";
+
+      results.push({
+        userId: enrollment.user_id,
+        email: user.email,
+        currentDay,
+        programName,
+      });
+
+      if (!dryRun) {
+        const resendKey = process.env.RESEND_API_KEY;
+        if (!resendKey) {
+          console.warn("RESEND_API_KEY not set, skipping re-engage emails");
+          return NextResponse.json({
+            skipped: true,
+            reason: "no_api_key",
+          });
+        }
+
+        const { Resend } = await import("resend");
+        const resend = new Resend(resendKey);
+
+        await resend.emails.send({
+          from: "Mindcraft <noreply@allmindsondeck.org>",
+          to: user.email,
+          subject,
+          html: `
+            <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, -apple-system, sans-serif;">
+              <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
+                <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
+                  You were on Day ${currentDay}. ${themeReference}
+                </p>
+                <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
+                  The program doesn&rsquo;t judge gaps. Pick up where you left off.
+                </p>
+                <div style="text-align: center; margin: 32px 0;">
+                  <a href="https://mindcraft.ing/dashboard" style="display: inline-block; padding: 14px 32px; background-color: #e09585; color: #18181c; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 100px;">
+                    Continue Day ${currentDay}
+                  </a>
+                </div>
+                <p style="font-size: 12px; color: #a0a0a8; line-height: 1.5; margin: 24px 0 0 0; text-align: center;">
+                  Reply STOP to opt out of check-ins.
+                </p>
+              </div>
+            </div>
+          `,
+        });
+
+        // Log the email event for cooldown tracking
+        await supabase.from("email_events").insert({
+          user_id: enrollment.user_id,
+          event_type: "re_engage",
+          enrollment_id: enrollment.id,
+        });
+      }
+    }
+
+    return NextResponse.json({
+      emailed: results,
+      count: results.length,
+      dryRun: !!dryRun,
+    });
+  } catch (error: unknown) {
+    console.error("Re-engage email error:", error);
+    const message =
+      error instanceof Error ? error.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

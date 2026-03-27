@@ -508,7 +508,7 @@ export default function ExerciseCard({
                     </div>
                   )}
 
-                  {/* ── Textarea (always available as companion) ── */}
+                  {/* ── Textarea with mic (always available as companion) ── */}
                   <div style={{ marginBottom: 16 }}>
                     <label
                       style={{
@@ -524,18 +524,19 @@ export default function ExerciseCard({
                     >
                       {inputType !== "text" ? "Add any notes" : "Your response"}
                     </label>
+                    <div style={{ position: "relative" }}>
                     <textarea
                       value={response}
                       onChange={(e) => setResponse(e.target.value)}
                       placeholder={
                         inputType !== "text"
-                          ? "Any additional thoughts... (optional)"
-                          : "Take your time. Write what comes up..."
+                          ? "Type or tap the mic to speak... (optional)"
+                          : "Type or tap the mic to speak..."
                       }
                       style={{
                         width: "100%",
                         minHeight: inputType !== "text" ? 80 : 120,
-                        padding: 16,
+                        padding: "16px 48px 16px 16px",
                         fontSize: 15,
                         lineHeight: 1.65,
                         backgroundColor: colors.bgInput,
@@ -551,39 +552,83 @@ export default function ExerciseCard({
                       onFocus={(e) => { e.target.style.borderColor = mod ? mod.text : colors.coral; }}
                       onBlur={(e) => { e.target.style.borderColor = colors.borderDefault; }}
                     />
+                    <button
+                      onClick={() => {
+                        try {
+                          const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+                          if (!SR) return;
+                          const recognition = new SR();
+                          recognition.continuous = true;
+                          recognition.interimResults = false;
+                          recognition.lang = "en-US";
+                          recognition.onresult = (event: any) => {
+                            let text = "";
+                            for (let i = event.resultIndex; i < event.results.length; i++) {
+                              if (event.results[i].isFinal) text += event.results[i][0].transcript;
+                            }
+                            if (text) setResponse((prev) => prev ? prev + " " + text : text);
+                          };
+                          recognition.start();
+                        } catch { /* ignore */ }
+                      }}
+                      style={{
+                        position: "absolute", right: 10, bottom: 10,
+                        width: 32, height: 32, borderRadius: "50%",
+                        backgroundColor: colors.coralWash, border: "none",
+                        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                      }}
+                      title="Speak your response"
+                    >
+                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                        <line x1="12" x2="12" y1="19" y2="22" />
+                      </svg>
+                    </button>
+                    </div>
                   </div>
 
-                  {/* Binary rating + submit row */}
+                  {/* Rating question + submit row */}
                   <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
                     <div>
-                      <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-                        <button
-                          onClick={() => setRating(rating === 5 ? null : 5)}
-                          style={{
-                            padding: "8px 20px", borderRadius: 100, fontSize: 13,
-                            fontWeight: 600, fontFamily: display,
-                            backgroundColor: rating === 5 ? "rgba(74, 222, 128, 0.15)" : colors.bgElevated,
-                            color: rating === 5 ? "#4ade80" : "#ffffff",
-                            border: rating === 5 ? "1px solid rgba(74, 222, 128, 0.3)" : `1px solid ${colors.borderDefault}`,
-                            cursor: "pointer",
-                          }}
-                        >
-                          This landed
-                        </button>
-                        <button
-                          onClick={() => setRating(rating === 2 ? null : 2)}
-                          style={{
-                            padding: "8px 20px", borderRadius: 100, fontSize: 13,
-                            fontWeight: 600, fontFamily: display,
-                            backgroundColor: rating === 2 ? "rgba(255, 255, 255, 0.08)" : colors.bgElevated,
-                            color: "rgba(255, 255, 255, 0.6)",
-                            border: `1px solid ${colors.borderDefault}`,
-                            cursor: "pointer",
-                          }}
-                        >
-                          Not really
-                        </button>
-                      </div>
+                      {response.trim().length > 0 && (
+                        <>
+                          <p style={{
+                            fontSize: 13, color: "rgba(255,255,255,0.5)", margin: "12px 0 8px 0",
+                            fontFamily: body,
+                          }}>
+                            Was this exercise useful?
+                          </p>
+                          <div style={{ display: "flex", gap: 8 }}>
+                            <button
+                              onClick={() => setRating(rating === 5 ? null : 5)}
+                              style={{
+                                padding: "8px 20px", borderRadius: 100, fontSize: 13,
+                                fontWeight: 600, fontFamily: display,
+                                backgroundColor: rating === 5 ? "rgba(74, 222, 128, 0.15)" : colors.bgElevated,
+                                color: rating === 5 ? "#4ade80" : "#ffffff",
+                                border: rating === 5 ? "1px solid rgba(74, 222, 128, 0.3)" : `1px solid ${colors.borderDefault}`,
+                                cursor: "pointer",
+                              }}
+                            >
+                              Yes, useful
+                            </button>
+                            <button
+                              onClick={() => setRating(rating === 2 ? null : 2)}
+                              style={{
+                                padding: "8px 20px", borderRadius: 100, fontSize: 13,
+                                fontWeight: 600, fontFamily: display,
+                                backgroundColor: rating === 2 ? "rgba(255, 255, 255, 0.08)" : colors.bgElevated,
+                                color: "rgba(255, 255, 255, 0.6)",
+                                border: `1px solid ${colors.borderDefault}`,
+                                cursor: "pointer",
+                              }}
+                            >
+                              Not for me
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     {/* Submit */}

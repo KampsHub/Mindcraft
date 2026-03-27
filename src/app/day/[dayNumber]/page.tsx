@@ -378,6 +378,15 @@ function DailyFlowPage() {
     setSavingJournal(false);
     setActiveStep(3);
 
+    // Fire-and-forget sentiment analysis
+    if (session?.id) {
+      fetch("/api/sentiment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: session.id, content: journalContent }),
+      }).catch(() => {}); // non-blocking
+    }
+
     // Auto-trigger Step 3 processing
     processJournal();
   }

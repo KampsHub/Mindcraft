@@ -179,6 +179,7 @@ function WeeklyReviewPage() {
   const [summaryShareSuccess, setSummaryShareSuccess] = useState(false);
   const [showSummaryShare, setShowSummaryShare] = useState(false);
   const [showInsightDetails, setShowInsightDetails] = useState(false);
+  const [shareMode, setShareMode] = useState(false);
   const [selectedDaysForShare, setSelectedDaysForShare] = useState<Set<number>>(new Set());
   const [showDayShare, setShowDayShare] = useState(false);
   const [dayShareEmail, setDayShareEmail] = useState("");
@@ -723,6 +724,37 @@ function WeeklyReviewPage() {
             }}>
               {enrollment.programs?.name}
             </span>
+            {completedSessions.length > 0 && (
+              <button
+                onClick={() => {
+                  setShareMode((prev) => {
+                    if (prev) {
+                      setSelectedDaysForShare(new Set());
+                      setShowDayShare(false);
+                      setDayShareEmail("");
+                    }
+                    return !prev;
+                  });
+                }}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 5,
+                  fontFamily: display, fontWeight: 600, fontSize: 11,
+                  textTransform: "uppercase", letterSpacing: "0.1em",
+                  padding: "5px 14px", borderRadius: 100, cursor: "pointer",
+                  border: `1px solid ${shareMode ? colors.coral : colors.borderDefault}`,
+                  backgroundColor: shareMode ? colors.coralWash : "transparent",
+                  color: shareMode ? colors.coral : colors.textMuted,
+                  transition: "all 0.2s",
+                }}
+              >
+                <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8" />
+                  <polyline points="16 6 12 2 8 6" />
+                  <line x1="12" y1="2" x2="12" y2="15" />
+                </svg>
+                {shareMode ? "Done" : "Share"}
+              </button>
+            )}
           </div>
           {weekTheme && (
             <>
@@ -1192,7 +1224,7 @@ function WeeklyReviewPage() {
       </FadeIn>
 
       {/* ── Share Individual Days ── */}
-      {completedSessions.length > 0 && (
+      {shareMode && completedSessions.length > 0 && (
         <FadeIn preset="fade" delay={0.2} triggerOnMount>
           <div style={{ marginBottom: 32 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
@@ -1244,8 +1276,11 @@ function WeeklyReviewPage() {
                 );
               })}
             </div>
-            <p style={{ fontSize: 11, color: colors.textMuted, margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
-              Your data is yours. Only what you explicitly choose to share will be sent.
+            <p style={{ fontSize: 11, color: colors.textMuted, margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic", display: "flex", alignItems: "center", gap: 4 }}>
+              <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke={colors.textMuted} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0110 0v4" />
+              </svg>
+              Your data is yours. Only what you choose to share will be sent.
             </p>
 
             {/* Share modal */}
@@ -1279,11 +1314,26 @@ function WeeklyReviewPage() {
                       style={{
                         fontFamily: display, fontSize: 12, fontWeight: 600,
                         padding: "8px 18px", borderRadius: 100, cursor: "pointer",
-                        border: "none", backgroundColor: colors.coral, color: colors.bgDeep,
+                        border: "none",
+                        backgroundColor: dayShareSuccess ? "#22c55e" : colors.coral,
+                        color: dayShareSuccess ? "#fff" : colors.bgDeep,
                         opacity: sharingDays || !dayShareEmail ? 0.5 : 1,
+                        transition: "background-color 0.2s",
                       }}
                     >
-                      {sharingDays ? "Sending..." : dayShareSuccess ? "Sent \u2713" : "Send"}
+                      {sharingDays ? "Sending..." : dayShareSuccess ? (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                          style={{ display: "inline-flex", alignItems: "center", gap: 4, color: "#22c55e" }}
+                        >
+                          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          Sent
+                        </motion.span>
+                      ) : "Send"}
                     </button>
                     <button
                       onClick={() => { setShowDayShare(false); setDayShareEmail(""); }}

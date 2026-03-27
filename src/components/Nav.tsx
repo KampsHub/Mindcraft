@@ -63,7 +63,7 @@ export default function Nav() {
         </button>
 
         {/* Desktop links */}
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }} className="nav-desktop">
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }} className="nav-desktop desktop-nav-links">
           {navLinks.map((link) => (
             <button
               key={link.href}

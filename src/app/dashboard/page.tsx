@@ -11,6 +11,7 @@ import ProgramCard from "./ProgramCard";
 import UpsellSection from "./UpsellSection";
 import { colors, fonts } from "@/lib/theme";
 import ExercisesSection from "@/components/ExercisesSection";
+import BottomNav from "@/components/BottomNav";
 
 /* ── Design tokens ── */
 const display = fonts.display;
@@ -241,7 +242,7 @@ export default function DashboardPage() {
 
       <Nav />
 
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
+      <div className="page-content-mobile page-shell-inner" style={{ maxWidth: 720, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
        <div style={{
           backgroundColor: "rgba(51, 51, 57, 0.5)",
           borderRadius: 16,
@@ -347,7 +348,7 @@ export default function DashboardPage() {
 
         {/* ── Quick links (3 per row) ── */}
         <FadeIn preset="fade" delay={0.15} triggerOnMount>
-          <div style={{
+          <div className="responsive-grid" style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: 12,
@@ -416,6 +417,8 @@ export default function DashboardPage() {
 
        </div>
       </div>
+
+      <BottomNav />
 
       {/* Footer */}
       <footer style={{ padding: "48px 24px", borderTop: `1px solid ${colors.borderSubtle}` }}>

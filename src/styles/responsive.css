@@ -1,0 +1,89 @@
+/* Mobile-first responsive utilities */
+
+/* Bottom navigation - mobile only */
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Show bottom nav on mobile */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: rgba(24, 24, 28, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 100;
+    padding: 0 16px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .bottom-nav-item.active {
+    color: #e09585;
+  }
+
+  .bottom-nav-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Hide top nav links on mobile (keep logo) */
+  .desktop-nav-links {
+    display: none !important;
+  }
+
+  /* Add bottom padding to page content so it doesn't hide behind bottom nav */
+  .page-content-mobile {
+    padding-bottom: 80px !important;
+  }
+
+  /* Stack grid columns */
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Full width buttons */
+  .responsive-button {
+    width: 100% !important;
+    min-height: 48px !important;
+  }
+
+  /* Larger touch targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small screens */
+  .page-shell-inner {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}

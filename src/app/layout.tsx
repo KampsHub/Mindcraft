@@ -3,6 +3,7 @@ import { Space_Grotesk, Sora, DM_Sans, Playfair_Display } from "next/font/google
 import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
+import "@/styles/responsive.css";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",

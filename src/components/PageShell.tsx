@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import Logo from "@/components/Logo";
 import { colors, fonts } from "@/lib/theme";
 import { content as c } from "@/content/site";
+import BottomNav from "@/components/BottomNav";
 
 const body = fonts.bodyAlt;
 
@@ -138,7 +139,7 @@ export default function PageShell({
       )}
       <div style={{ position: "relative", zIndex: 1 }}>
         <Nav />
-        <div style={{ maxWidth, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
+        <div className="page-content-mobile page-shell-inner" style={{ maxWidth, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
           {showBgImage ? (
             <div style={{
               backgroundColor: "rgba(51, 51, 57, 0.5)",
@@ -156,6 +157,8 @@ export default function PageShell({
         </div>
 
       </div>
+
+      <BottomNav />
 
       {/* Footer */}
       <footer style={{ padding: "48px 24px", borderTop: showBgImage ? "none" : `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>

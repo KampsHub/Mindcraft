@@ -1158,9 +1158,16 @@ function DailyFlowPage() {
           </p>
           {yesterdayExercise.instruction && (
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", margin: "0 0 8px 0", fontFamily: body, lineHeight: 1.5 }}>
-              {yesterdayExercise.instruction.length > 150
-                ? yesterdayExercise.instruction.substring(0, 150) + "..."
-                : yesterdayExercise.instruction}
+              {(() => {
+                const text = yesterdayExercise.instruction;
+                if (text.length <= 200) return text;
+                // Find the last sentence boundary before 200 chars
+                const truncated = text.substring(0, 200);
+                const lastPeriod = truncated.lastIndexOf(". ");
+                const lastQuestion = truncated.lastIndexOf("? ");
+                const boundary = Math.max(lastPeriod, lastQuestion);
+                return boundary > 50 ? text.substring(0, boundary + 1) : truncated.substring(0, truncated.lastIndexOf(" ")) + "...";
+              })()}
             </p>
           )}
           {yesterdayExercise.userResponse && (

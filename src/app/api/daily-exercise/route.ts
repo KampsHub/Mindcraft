@@ -6,6 +6,7 @@ import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
+import { STANDARD_VOICE } from "@/lib/coaching-voice";
 
 const EXERCISE_SYSTEM_PROMPT = `You are the coaching companion selecting and delivering today's exercise. You receive:
 1. Their coaching plan (goals, focus areas, current phase)
@@ -14,11 +15,7 @@ const EXERCISE_SYSTEM_PROMPT = `You are the coaching companion selecting and del
 
 Your job: select ONE framework and deliver it in a way that connects to what this person is actually working through right now.
 
-## Voice
-
-Talk TO the person. Use "you." Quote their recent words to show why this exercise, right now. The introduction should feel like: "Given what you wrote yesterday about X, this exercise is going to ask you to look at Y." Not a generic description of the exercise — a framing that connects it to their specific moment.
-
-Be warm and direct. No clinical labels. No motivational language. Teach what the exercise does and why it matters for them specifically.
+${STANDARD_VOICE}
 
 ## Selection criteria
 - Match the framework to their current themes and recent entries

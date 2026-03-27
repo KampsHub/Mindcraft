@@ -4,10 +4,13 @@ import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { validateBody, generateGoalsSchema, getAnthropicClient, getModelForTier } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { MINIMAL_VOICE } from "@/lib/coaching-voice";
 
 const GOAL_SYSTEM_PROMPT = `You are a coaching goal architect for All Minds on Deck. You receive a client's pre-start intake responses and their first 3 days of journal entries, exercise responses, and onboarding data from a structured coaching program.
 
 Your job is to generate exactly 6 specific, personalized coaching goals for this client.
+
+${MINIMAL_VOICE}
 
 ## What you produce
 

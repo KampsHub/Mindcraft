@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import ExerciseCard from "@/components/ExerciseCard";
@@ -8,6 +9,7 @@ import CrisisBanner from "@/components/CrisisBanner";
 import ChatCoach from "@/components/ChatCoach";
 import ViewModeToggle from "@/components/ViewModeToggle";
 import { colors, fonts } from "@/lib/theme";
+import { useProgressiveReveal } from "@/hooks/useProgressiveReveal";
 import type { createClient } from "@/lib/supabase";
 import type {
   ProgramDay,
@@ -122,6 +124,41 @@ export default function DoTab({
   crisisDismissedStep3,
   setCrisisDismissedStep3,
 }: DoTabProps) {
+  // Progressive reveal: sections appear as data becomes available
+  const initialRevealed = useMemo(() => {
+    const keys: string[] = [];
+    if (stateAnalysis) {
+      keys.push("reading");
+      keys.push("exercises");
+    }
+    if (completedExercises.size > 0) keys.push("continue");
+    return keys;
+  }, [stateAnalysis, completedExercises]);
+
+  const { isRevealed, revealNext } = useProgressiveReveal(initialRevealed);
+
+  // Reading auto-reveals when stateAnalysis exists
+  useEffect(() => {
+    if (stateAnalysis) {
+      revealNext("reading");
+    }
+  }, [stateAnalysis, revealNext]);
+
+  // Exercises reveal 2 seconds after reading appears
+  useEffect(() => {
+    if (isRevealed("reading") && stateAnalysis) {
+      const timer = setTimeout(() => revealNext("exercises"), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isRevealed, stateAnalysis, revealNext]);
+
+  // Continue CTA reveals when at least one exercise is completed
+  useEffect(() => {
+    if (completedExercises.size > 0) {
+      revealNext("continue");
+    }
+  }, [completedExercises, revealNext]);
+
   return (
     <FadeIn preset="fade" triggerOnMount>
     <div>
@@ -165,7 +202,7 @@ export default function DoTab({
       ) : stateAnalysis ? (
         <div>
           {/* View mode toggle — Read vs Chat */}
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 14 }}>
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 32 }}>
             <ViewModeToggle mode={step3Mode} onChange={setStep3Mode} />
           </div>
 
@@ -226,15 +263,21 @@ export default function DoTab({
           ...(crisisDetectedStep3 && !crisisDismissedStep3
             ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
             : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
-          display: "flex", flexDirection: "column", gap: 16,
+          display: "flex", flexDirection: "column", gap: 32,
         }}>
 
           {/* ── Card 1: Reading ── */}
-          <div style={{
-            backgroundColor: colors.bgSurface,
-            borderRadius: 14, padding: 22,
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+          {isRevealed("reading") && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              backgroundColor: colors.bgSurface,
+              borderRadius: 14, padding: 22,
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%",
@@ -247,7 +290,7 @@ export default function DoTab({
                 </div>
                 <p style={{
                   fontSize: 12, fontWeight: 700, color: colors.coral,
-                  margin: 0, textTransform: "uppercase",
+                  margin: 0,
                   letterSpacing: "0.08em", fontFamily: display,
                 }}>
                   What I noticed
@@ -293,16 +336,17 @@ export default function DoTab({
                 </p>
               </div>
             )}
-          </div>
+          </motion.div>
+          )}
 
           {/* ── Card 2: Coaching Questions ── */}
-          {coachingQuestions.length > 0 && (
+          {isRevealed("reading") && coachingQuestions.length > 0 && (
             <div style={{
               backgroundColor: colors.bgSurface,
               borderRadius: 14, padding: 22,
               borderLeft: `3px solid ${colors.coral}`,
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%",
                   backgroundColor: "rgba(224, 149, 133, 0.12)",
@@ -312,7 +356,7 @@ export default function DoTab({
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                   </svg>
                 </div>
-                <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: 0, letterSpacing: "0.08em", fontFamily: display }}>
                   Questions to sit with
                 </p>
               </div>
@@ -362,13 +406,13 @@ export default function DoTab({
           )}
 
           {/* ── Pattern Challenge ── */}
-          {patternChallenge && (
+          {isRevealed("reading") && patternChallenge && (
             <div style={{
               backgroundColor: colors.bgSurface,
               borderRadius: 14, padding: 22,
               borderLeft: `3px solid ${colors.warning}`,
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%",
                   backgroundColor: "rgba(251, 191, 36, 0.15)",
@@ -378,7 +422,7 @@ export default function DoTab({
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                   </svg>
                 </div>
-                <p style={{ fontSize: 12, fontWeight: 700, color: colors.warning, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: colors.warning, margin: 0, letterSpacing: "0.08em", fontFamily: display }}>
                   Pattern challenge
                 </p>
               </div>
@@ -395,8 +439,8 @@ export default function DoTab({
           )}
 
           {/* Sequence suggestion */}
-          {sequenceSuggestion && (
-            <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 14px 0", fontFamily: body, fontStyle: "italic" }}>
+          {isRevealed("reading") && sequenceSuggestion && (
+            <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 32px 0", fontFamily: body, fontStyle: "italic" }}>
               {sequenceSuggestion}
             </p>
           )}
@@ -428,19 +472,24 @@ export default function DoTab({
         )}
 
         {/* ── Exercises (merged from Practice tab) ── */}
-        {stateAnalysis && !processing && step3Mode === "form" && (
-        <div style={{
-          marginTop: 16,
-          ...(crisisDetectedStep3 && !crisisDismissedStep3
-            ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
-            : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
-        }}>
+        {isRevealed("exercises") && stateAnalysis && !processing && step3Mode === "form" && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            marginTop: 32,
+            ...(crisisDetectedStep3 && !crisisDismissedStep3
+              ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
+              : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
+          }}
+        >
         {/* Coaching Plan Exercises (Required) */}
         {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
-          <div style={{ marginBottom: 22 }}>
+          <div style={{ marginBottom: 32 }}>
             <p style={{
               fontSize: 12, fontWeight: 700, color: "#ffffff",
-              margin: "0 0 12px 0", textTransform: "uppercase",
+              margin: "0 0 12px 0",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
               {dayNumber <= 3 ? "Today's Exercise" : "From Your Coaching Plan"}
@@ -468,10 +517,10 @@ export default function DoTab({
 
         {/* Overflow Exercises (from journal analysis) */}
         {overflowExercises.length > 0 && (
-          <div style={{ marginBottom: 22 }}>
+          <div style={{ marginBottom: 32 }}>
             <p style={{
               fontSize: 12, fontWeight: 700, color: "#ffffff",
-              margin: "0 0 12px 0", textTransform: "uppercase",
+              margin: "0 0 12px 0",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
               {dayNumber <= 3 ? "Based on What You Wrote" : "Matched to Your Journal"}
@@ -513,10 +562,10 @@ export default function DoTab({
             <p style={{ fontSize: 14, color: "#ffffff", fontFamily: body }}>Loading framework analysis...</p>
           </div>
         ) : frameworkAnalysis ? (
-          <div style={{ marginBottom: 22 }}>
+          <div style={{ marginBottom: 32 }}>
             <p style={{
               fontSize: 12, fontWeight: 700, color: "#ffffff",
-              margin: "0 0 12px 0", textTransform: "uppercase",
+              margin: "0 0 12px 0",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
               Framework Analysis
@@ -579,24 +628,32 @@ export default function DoTab({
         ) : null}
 
         {/* Continue to Summary */}
-        <motion.button
-          whileHover={!loadingSummary ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
-          whileTap={!loadingSummary ? { scale: 0.97 } : {}}
-          onClick={generateSummary}
-          disabled={loadingSummary}
-          style={{
-            padding: "12px 28px", fontSize: 14, fontWeight: 600,
-            color: loadingSummary ? "#ffffff" : colors.bgDeep,
-            backgroundColor: loadingSummary ? colors.bgElevated : colors.coral,
-            border: "none", borderRadius: 100,
-            cursor: loadingSummary ? "not-allowed" : "pointer",
-            fontFamily: display, letterSpacing: "0.01em",
-            marginTop: 6,
-          }}
-        >
-          {loadingSummary ? "Generating summary..." : "Complete Exercises & Continue"}
-        </motion.button>
-        </div>
+        {isRevealed("continue") && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <motion.button
+              whileHover={!loadingSummary ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
+              whileTap={!loadingSummary ? { scale: 0.97 } : {}}
+              onClick={generateSummary}
+              disabled={loadingSummary}
+              style={{
+                padding: "12px 28px", fontSize: 14, fontWeight: 600,
+                color: loadingSummary ? "#ffffff" : colors.bgDeep,
+                backgroundColor: loadingSummary ? colors.bgElevated : colors.coral,
+                border: "none", borderRadius: 100,
+                cursor: loadingSummary ? "not-allowed" : "pointer",
+                fontFamily: display, letterSpacing: "0.01em",
+                marginTop: 6,
+              }}
+            >
+              {loadingSummary ? "Generating summary..." : "Complete Exercises & Continue"}
+            </motion.button>
+          </motion.div>
+        )}
+        </motion.div>
         )}
         </div>
       ) : (

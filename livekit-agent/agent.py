@@ -201,7 +201,7 @@ async def entrypoint(ctx: JobContext):
         llm=MindcraftLLM(),
         tts=elevenlabs.TTS(
             voice=elevenlabs.Voice(
-                id="21m00Tcm4TlvDq8ikWAM",  # "Rachel" — warm, calm
+                id="l4Coq6695JDX9xtLqXDE",  # Custom voice selected by coach
                 settings=elevenlabs.VoiceSettings(
                     stability=0.7,
                     similarity_boost=0.8,

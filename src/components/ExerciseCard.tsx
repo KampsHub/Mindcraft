@@ -8,6 +8,7 @@ import SpectrumSelector from "@/components/SpectrumSelector";
 import BodyMap, { type BodyMarker } from "@/components/BodyMap";
 import EmotionChips from "@/components/EmotionChips";
 import FlagButton from "@/components/FlagButton";
+import VoiceResponseArea from "@/components/VoiceResponseArea";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -47,42 +48,12 @@ interface ExerciseCardProps {
   dailySessionId?: string;
 }
 
-const modalityConfig: Record<string, { bg: string; text: string; label: string; stripe: string; icon: string }> = {
-  cognitive: {
-    bg: "rgba(224, 149, 133, 0.08)",
-    text: colors.coral,
-    label: "Cognitive",
-    stripe: `linear-gradient(135deg, ${colors.coral}, ${colors.coral})`,
-    icon: "◇",
-  },
-  somatic: {
-    bg: "rgba(224, 149, 133, 0.08)",
-    text: colors.coral,
-    label: "Somatic",
-    stripe: `linear-gradient(135deg, ${colors.coral}, ${colors.coral})`,
-    icon: "◇",
-  },
-  relational: {
-    bg: "rgba(224, 149, 133, 0.08)",
-    text: colors.coral,
-    label: "Relational",
-    stripe: `linear-gradient(135deg, ${colors.coral}, ${colors.coral})`,
-    icon: "◇",
-  },
-  integrative: {
-    bg: "rgba(224, 149, 133, 0.08)",
-    text: colors.coral,
-    label: "Integrative",
-    stripe: `linear-gradient(135deg, ${colors.coral}80, ${colors.coral}60)`,
-    icon: "◇",
-  },
-  systems: {
-    bg: "rgba(224, 149, 133, 0.08)",
-    text: colors.coral,
-    label: "Systems",
-    stripe: `linear-gradient(135deg, ${colors.coral}, ${colors.coral})`,
-    icon: "◇",
-  },
+const modalityConfig: Record<string, { label: string }> = {
+  cognitive: { label: "Cognitive" },
+  somatic: { label: "Somatic" },
+  relational: { label: "Relational" },
+  integrative: { label: "Integrative" },
+  systems: { label: "Systems" },
 };
 
 export default function ExerciseCard({
@@ -233,18 +204,12 @@ export default function ExerciseCard({
 
   return (
     <motion.div
-      whileHover={!submitted ? { y: -2, boxShadow: `0 8px 28px ${mod ? mod.text + "15" : "rgba(224, 149, 133, 0.1)"}` } : {}}
+      whileHover={!submitted ? { y: -2, boxShadow: "0 8px 28px rgba(0,0,0,0.15)" } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{
         backgroundColor: colors.bgSurface,
         borderRadius: 16,
-        border: `1px solid ${
-          submitted
-            ? colors.borderDefault
-            : type === "coaching_plan"
-            ? "rgba(224, 149, 133, 0.2)"
-            : colors.borderDefault
-        }`,
+        border: `1px solid ${colors.borderDefault}`,
         padding: 0,
         marginBottom: 14,
         overflow: "hidden",
@@ -252,101 +217,51 @@ export default function ExerciseCard({
         position: "relative",
       }}
     >
-      {/* ── Modality accent stripe ── */}
-      {mod && !submitted && (
-        <div
-          style={{
-            height: 3,
-            background: mod.stripe,
-            opacity: 0.7,
-          }}
-        />
-      )}
-      {submitted && (
-        <div
-          style={{
-            height: 3,
-            background: `linear-gradient(135deg, ${colors.coral}80, ${colors.coral}60)`,
-            opacity: 0.6,
-          }}
-        />
-      )}
-
       {/* ── Header ── */}
       <div
         onClick={() => !submitted && setExpanded(!expanded)}
         style={{
           padding: "16px 20px",
           display: "flex",
-          alignItems: "flex-start",
-          gap: 14,
+          alignItems: "center",
+          gap: 10,
           cursor: submitted ? "default" : "pointer",
-          backgroundColor: submitted ? "rgba(176, 141, 173, 0.06)" : "transparent",
           transition: "background-color 0.2s",
         }}
       >
-        {/* Modality icon orb */}
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 12,
-            backgroundColor: submitted
-              ? "rgba(176, 141, 173, 0.06)"
-              : mod
-              ? mod.bg
-              : colors.coralWash,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-            fontSize: submitted ? 16 : 18,
-            marginTop: 1,
-          }}
-        >
-          {submitted ? (
-            <span style={{ color: colors.coral, fontWeight: 700, fontSize: 16 }}>✓</span>
-          ) : mod ? (
-            <span>{mod.icon}</span>
-          ) : (
-            <span style={{ color: colors.coral, fontSize: 14, fontWeight: 700 }}>◆</span>
-          )}
-        </div>
-
-        {/* Title + meta */}
+        {/* Title + time suffix */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 2 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
             <p
               style={{
-                fontSize: 15,
-                fontWeight: 600,
-                color: colors.textPrimary,
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#ffffff",
                 margin: 0,
                 fontFamily: display,
                 letterSpacing: "-0.01em",
               }}
             >
+              {submitted && (
+                <span style={{ color: colors.success, marginRight: 8, fontSize: 16 }}>&#10003;</span>
+              )}
               {name}
             </p>
-            {isRequired && (
+            {estimatedMinutes && (
               <span
                 style={{
-                  fontSize: 9,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  padding: "2px 8px",
-                  borderRadius: 100,
-                  backgroundColor: colors.coralWash,
-                  color: colors.coral,
+                  fontSize: 14,
+                  color: colors.textMuted,
                   fontFamily: display,
+                  fontWeight: 500,
                 }}
               >
-                Required
+                &middot; {estimatedMinutes}m
               </span>
             )}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          {/* Modality label + originator as small text below title */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 2 }}>
             {originator && (
               <p
                 style={{
@@ -363,9 +278,9 @@ export default function ExerciseCard({
             {mod && (
               <span
                 style={{
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: 600,
-                  color: mod.text,
+                  color: colors.textMuted,
                   fontFamily: display,
                   opacity: 0.8,
                 }}
@@ -376,37 +291,21 @@ export default function ExerciseCard({
           </div>
         </div>
 
-        {/* Time + expand */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, marginTop: 2 }}>
-          {estimatedMinutes && (
-            <span
-              style={{
-                fontSize: 11,
-                color: colors.textMuted,
-                fontFamily: display,
-                fontWeight: 500,
-                padding: "3px 8px",
-                backgroundColor: colors.bgElevated,
-                borderRadius: 6,
-              }}
-            >
-              {estimatedMinutes}m
-            </span>
-          )}
-          {!submitted && (
-            <motion.span
-              animate={{ rotate: expanded ? 180 : 0 }}
-              transition={{ duration: 0.25 }}
-              style={{
-                fontSize: 12,
-                color: colors.textMuted,
-                display: "inline-block",
-              }}
-            >
-              ▾
-            </motion.span>
-          )}
-        </div>
+        {/* Expand chevron */}
+        {!submitted && (
+          <motion.span
+            animate={{ rotate: expanded ? 180 : 0 }}
+            transition={{ duration: 0.25 }}
+            style={{
+              fontSize: 12,
+              color: colors.textMuted,
+              display: "inline-block",
+              flexShrink: 0,
+            }}
+          >
+            &#9662;
+          </motion.span>
+        )}
       </div>
 
       {/* ── Expanded content ── */}
@@ -420,57 +319,6 @@ export default function ExerciseCard({
             style={{ overflow: "hidden" }}
           >
             <div style={{ padding: "0 20px 24px 20px" }}>
-              {/* Guided mode — Listen & Respond */}
-              {!guidedMode && instructions && (
-                <button
-                  onClick={startGuidedMode}
-                  style={{
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    width: "100%", padding: "14px 20px", marginBottom: 16,
-                    borderRadius: 12, border: `1px solid rgba(224, 149, 133, 0.3)`,
-                    backgroundColor: "rgba(224, 149, 133, 0.08)",
-                    color: colors.coral, fontSize: 14, fontWeight: 600,
-                    fontFamily: display, cursor: "pointer",
-                    transition: "all 0.2s",
-                  }}
-                >
-                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3" />
-                  </svg>
-                  Read aloud &amp; guide me
-                </button>
-              )}
-
-              {/* Guided mode active — show state */}
-              {guidedMode && (
-                <div style={{
-                  padding: "14px 18px", marginBottom: 16,
-                  borderRadius: 12, backgroundColor: speaking ? "rgba(224, 149, 133, 0.12)" : listening ? "rgba(74, 222, 128, 0.08)" : "rgba(255,255,255,0.04)",
-                  border: `1px solid ${speaking ? "rgba(224, 149, 133, 0.3)" : listening ? "rgba(74, 222, 128, 0.3)" : colors.borderDefault}`,
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{
-                      width: 10, height: 10, borderRadius: "50%",
-                      backgroundColor: speaking ? colors.coral : listening ? "#4ade80" : "rgba(255,255,255,0.3)",
-                      boxShadow: (speaking || listening) ? `0 0 8px ${speaking ? "rgba(224, 149, 133, 0.5)" : "rgba(74, 222, 128, 0.5)"}` : "none",
-                    }} />
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "#ffffff", fontFamily: display }}>
-                      {speaking ? "Reading exercise..." : listening ? "Listening — speak your response" : "Done"}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => { stopSpeaking(); if (recognitionRef.current) { recognitionRef.current.stop(); setListening(false); } setGuidedMode(false); }}
-                    style={{
-                      fontSize: 12, color: "rgba(255,255,255,0.4)", background: "none",
-                      border: "none", cursor: "pointer", fontFamily: display,
-                    }}
-                  >
-                    Stop
-                  </button>
-                </div>
-              )}
-
               {/* Why now — compact one-liner */}
               {whySelected && (
                 <p style={{
@@ -535,12 +383,12 @@ export default function ExerciseCard({
                   parts={parts}
                   onComplete={handleMultiPartComplete}
                   existingResponses={existingResponses}
-                  accentColor={mod ? mod.text : colors.coral}
-                  accentBg={mod ? mod.bg : colors.coralWash}
+                  accentColor={colors.coral}
+                  accentBg={colors.coralWash}
                 />
               ) : (
                 <>
-                  {/* ── Interactive input (before textarea) ── */}
+                  {/* ── Interactive input (before voice area) ── */}
                   {inputType === "spectrum" && spectrumConfig && (
                     <div style={{ marginBottom: 20 }}>
                       <label
@@ -608,7 +456,7 @@ export default function ExerciseCard({
                     </div>
                   )}
 
-                  {/* ── Textarea with mic (always available as companion) ── */}
+                  {/* ── Voice-first response area ── */}
                   <div style={{ marginBottom: 16 }}>
                     <label
                       style={{
@@ -624,89 +472,11 @@ export default function ExerciseCard({
                     >
                       {inputType !== "text" ? "Add any notes" : "Your response"}
                     </label>
-                    <div style={{ position: "relative" }}>
-                    <textarea
+                    <VoiceResponseArea
                       value={response}
-                      onChange={(e) => setResponse(e.target.value)}
-                      placeholder={
-                        inputType !== "text"
-                          ? "Type or tap the mic to speak... (optional)"
-                          : "Type or tap the mic to speak..."
-                      }
-                      style={{
-                        width: "100%",
-                        minHeight: inputType !== "text" ? 80 : 120,
-                        padding: "16px 48px 16px 16px",
-                        fontSize: 15,
-                        lineHeight: 1.65,
-                        backgroundColor: colors.bgInput,
-                        border: `1px solid ${colors.borderDefault}`,
-                        color: colors.textPrimary,
-                        borderRadius: 12,
-                        resize: "vertical",
-                        outline: "none",
-                        fontFamily: body,
-                        boxSizing: "border-box",
-                        transition: "border-color 0.2s",
-                      }}
-                      onFocus={(e) => { e.target.style.borderColor = mod ? mod.text : colors.coral; }}
-                      onBlur={(e) => { e.target.style.borderColor = colors.borderDefault; }}
+                      onChange={setResponse}
+                      disabled={submitted}
                     />
-                    <button
-                      onClick={() => {
-                        if (listening) {
-                          // Stop listening
-                          if (recognitionRef.current) {
-                            recognitionRef.current.stop();
-                            recognitionRef.current = null;
-                          }
-                          setListening(false);
-                          return;
-                        }
-                        try {
-                          const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-                          if (!SR) return;
-                          const recognition = new SR();
-                          recognition.continuous = true;
-                          recognition.interimResults = false;
-                          recognition.lang = "en-US";
-                          recognition.onresult = (event: any) => {
-                            let text = "";
-                            for (let i = event.resultIndex; i < event.results.length; i++) {
-                              if (event.results[i].isFinal) text += event.results[i][0].transcript;
-                            }
-                            if (text) setResponse((prev) => prev ? prev + " " + text : text);
-                          };
-                          recognition.onend = () => { setListening(false); recognitionRef.current = null; };
-                          recognitionRef.current = recognition;
-                          recognition.start();
-                          setListening(true);
-                        } catch { /* ignore */ }
-                      }}
-                      style={{
-                        position: "absolute", right: 10, bottom: 10,
-                        width: 36, height: 36, borderRadius: "50%",
-                        backgroundColor: listening ? "#f87171" : colors.coralWash,
-                        border: "none",
-                        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                        boxShadow: listening ? "0 0 12px rgba(248, 113, 113, 0.5)" : "none",
-                        transition: "all 0.2s",
-                      }}
-                      title={listening ? "Stop listening" : "Speak your response"}
-                    >
-                      {listening ? (
-                        <svg width={14} height={14} viewBox="0 0 24 24" fill="#ffffff">
-                          <rect x="6" y="6" width="12" height="12" rx="2" />
-                        </svg>
-                      ) : (
-                        <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                          <line x1="12" x2="12" y1="19" y2="22" />
-                        </svg>
-                      )}
-                    </button>
-                    </div>
                   </div>
 
                   {/* Rating question + submit row */}
@@ -752,18 +522,22 @@ export default function ExerciseCard({
                       )}
                     </div>
 
-                    {/* Submit */}
+                    {/* Submit — small pill button */}
                     <motion.button
-                      whileHover={canSubmit ? { scale: 1.03, boxShadow: `0 6px 20px ${mod ? mod.text + "30" : "rgba(224, 149, 133, 0.3)"}` } : {}}
+                      whileHover={canSubmit ? { scale: 1.03 } : {}}
                       whileTap={canSubmit ? { scale: 0.97 } : {}}
                       onClick={handleSubmit}
                       disabled={!canSubmit}
                       style={{
-                        padding: "12px 28px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "0 20px",
+                        height: 40,
                         fontSize: 14,
                         fontWeight: 600,
                         color: canSubmit ? colors.bgDeep : colors.textMuted,
-                        backgroundColor: canSubmit ? (mod ? mod.text : colors.coral) : colors.bgElevated,
+                        backgroundColor: canSubmit ? colors.coral : colors.bgElevated,
                         border: "none",
                         borderRadius: 100,
                         cursor: canSubmit ? "pointer" : "not-allowed",
@@ -772,7 +546,10 @@ export default function ExerciseCard({
                         letterSpacing: "0.01em",
                       }}
                     >
-                      Complete Exercise
+                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      Done
                     </motion.button>
                   </div>
                 </>

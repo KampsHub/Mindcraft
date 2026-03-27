@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import FlagButton from "@/components/FlagButton";
 import VoiceToText from "@/components/VoiceToText";
 import { colors, fonts } from "@/lib/theme";
+import { useProgressiveReveal } from "@/hooks/useProgressiveReveal";
 import type { createClient } from "@/lib/supabase";
 import type {
   ProgramDay,
@@ -150,9 +151,36 @@ export default function TellTab({
   setFollowThrough,
   activeTab,
 }: TellTabProps) {
+  // Progressive reveal: auto-reveal based on existing data
+  const initialRevealed = useMemo(() => {
+    const keys: string[] = [];
+    if (themes) keys.push("themes");
+    if (yesterdayExercise) keys.push("followthrough");
+    // Journal is always revealed as the core action
+    keys.push("journal");
+    return keys;
+  }, [themes, yesterdayExercise]);
+
+  const { isRevealed, revealNext } = useProgressiveReveal(initialRevealed);
+
+  // When themes finish loading, reveal follow-through
+  useEffect(() => {
+    if (themes) {
+      revealNext("themes");
+      revealNext("followthrough");
+    }
+  }, [themes, revealNext]);
+
+  // When follow-through is answered or skipped, reveal journal
+  useEffect(() => {
+    if (!yesterdayExercise || followThrough.trim().length > 0) {
+      revealNext("journal");
+    }
+  }, [yesterdayExercise, followThrough, revealNext]);
+
   return (
     <FadeIn preset="fade" triggerOnMount>
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
 
     {/* Yesterday's Themes / Welcome context */}
     <div>
@@ -250,9 +278,9 @@ export default function TellTab({
               backgroundColor: colors.coralWash,
               borderRadius: 12,
               borderLeft: `3px solid ${colors.coral}`,
-              marginBottom: 16,
+              marginBottom: 32,
             }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", letterSpacing: "0.08em", fontFamily: display }}>
                 Carrying forward
               </p>
 
@@ -293,9 +321,9 @@ export default function TellTab({
               backgroundColor: "rgba(224, 149, 133, 0.06)",
               borderRadius: 12,
               borderLeft: `3px solid ${colors.coral}`,
-              marginBottom: 16,
+              marginBottom: 32,
             }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", letterSpacing: "0.08em", fontFamily: display }}>
                 Yesterday&apos;s mini-actions
               </p>
               <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
@@ -311,24 +339,11 @@ export default function TellTab({
             </div>
           )}
 
-          {/* Theme tags */}
-          {themes.themes?.length > 0 && (
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
-              {(themes.themes || []).map((t, i) => (
-                <span key={i} style={{
-                  padding: "4px 12px", fontSize: 12, fontWeight: 600,
-                  backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
-                  borderRadius: 100, fontFamily: display,
-                }}>
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Theme tags — removed from display (data kept for AI) */}
 
           {/* Patterns (collapsed below themes) */}
           {themes.patterns?.length > 0 && (
-            <div style={{ marginBottom: 14 }}>
+            <div style={{ marginBottom: 32 }}>
               {(themes.patterns || []).map((p, i) => (
                 <div key={i} style={{
                   padding: "12px 16px",
@@ -358,17 +373,22 @@ export default function TellTab({
     </div>
 
     {/* Exercise follow-through from yesterday */}
-    {yesterdayExercise && (
-      <div style={{
-        padding: "16px 18px",
-        backgroundColor: "rgba(224, 149, 133, 0.08)",
-        borderRadius: 14,
-        border: "1px solid rgba(224, 149, 133, 0.15)",
-        marginBottom: 16,
-      }}>
+    {isRevealed("followthrough") && yesterdayExercise && (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          padding: "16px 18px",
+          backgroundColor: "rgba(224, 149, 133, 0.08)",
+          borderRadius: 14,
+          border: "1px solid rgba(224, 149, 133, 0.15)",
+          marginBottom: 32,
+        }}
+      >
         <p style={{
           fontSize: 10, fontWeight: 700, color: colors.coral,
-          textTransform: "uppercase", letterSpacing: "0.08em",
+          letterSpacing: "0.08em",
           margin: "0 0 8px 0", fontFamily: display,
         }}>
           Yesterday&apos;s exercise
@@ -395,7 +415,7 @@ export default function TellTab({
             backgroundColor: "rgba(255,255,255,0.04)",
             marginBottom: 8,
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", margin: "0 0 4px 0", fontFamily: display, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", margin: "0 0 4px 0", fontFamily: display, letterSpacing: "0.06em" }}>
               What you wrote
             </p>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: 0, fontFamily: body, lineHeight: 1.5, fontStyle: "italic" }}>
@@ -450,22 +470,28 @@ export default function TellTab({
             </svg>
           </button>
         </div>
-      </div>
+      </motion.div>
     )}
 
     {/* ── Journal Section (within Tab 1) ── */}
-      <div style={{
-        backgroundColor: colors.bgSurface,
-        borderRadius: 14,
-        border: `1px solid ${colors.borderDefault}`,
-        padding: 22,
-      }}>
+    {isRevealed("journal") && (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          backgroundColor: colors.bgSurface,
+          borderRadius: 14,
+          border: `1px solid ${colors.borderDefault}`,
+          padding: 22,
+        }}
+      >
         {/* Thought inspiration — compact prompts */}
         {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
-          <div style={{ marginBottom: 14 }}>
+          <div style={{ marginBottom: 32 }}>
             <p style={{
               fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)",
-              margin: "0 0 8px 0", textTransform: "uppercase",
+              margin: "0 0 8px 0",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
               Thought Inspiration
@@ -587,7 +613,8 @@ export default function TellTab({
             </span>
           )}
         </div>
-      </div>
+      </motion.div>
+    )}
 
     </div>
     </FadeIn>

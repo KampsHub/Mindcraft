@@ -92,7 +92,7 @@ export default function DoneTab({
           </p>
         </div>
       ) : summaryResult ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
           {/* Crisis Banner -- shown above summary when crisis detected */}
           {crisisDetectedStep5 && !crisisDismissedStep5 && enrollment && (
             <CrisisBanner
@@ -103,21 +103,26 @@ export default function DoneTab({
             />
           )}
           {/* Summary */}
-          <div style={{
-            backgroundColor: colors.bgSurface,
-            borderRadius: 14,
-            border: `1px solid ${colors.borderDefault}`,
-            padding: 22,
-          }}>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              backgroundColor: colors.bgSurface,
+              borderRadius: 14,
+              border: `1px solid ${colors.borderDefault}`,
+              padding: 22,
+            }}
+          >
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 4 }}>
               <FlagButton outputType="summary" dailySessionId={session?.id} />
             </div>
-            <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.7, margin: "0 0 14px 0", fontFamily: body }}>
+            <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.7, margin: "0 0 32px 0", fontFamily: body }}>
               {summaryResult.summary}
             </p>
 
             {summaryResult.today_themes?.length > 0 && (
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 32 }}>
                 {(summaryResult.today_themes || []).map((t, i) => (
                   <span key={i} style={{
                     padding: "4px 12px", fontSize: 12, fontWeight: 600,
@@ -142,19 +147,24 @@ export default function DoneTab({
                 </p>
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Exercise insights */}
           {summaryResult.exercise_insights?.length > 0 && (
-            <div style={{
-              backgroundColor: colors.bgSurface,
-              borderRadius: 14,
-              border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
-            }}>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 1 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14,
+                border: `1px solid ${colors.borderDefault}`,
+                padding: 22,
+              }}
+            >
               <p style={{
                 fontSize: 12, fontWeight: 700, color: "#ffffff",
-                margin: "0 0 12px 0", textTransform: "uppercase",
+                margin: "0 0 12px 0",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Exercise Insights
@@ -164,20 +174,25 @@ export default function DoneTab({
                   <span style={{ fontWeight: 600, color: colors.textPrimary }}>{ei.exercise_name}:</span> {ei.insight}
                 </p>
               ))}
-            </div>
+            </motion.div>
           )}
 
           {/* Goal progress */}
           {summaryResult.goal_progress?.length > 0 && (
-            <div style={{
-              backgroundColor: colors.bgSurface,
-              borderRadius: 14,
-              border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
-            }}>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 2 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14,
+                border: `1px solid ${colors.borderDefault}`,
+                padding: 22,
+              }}
+            >
               <p style={{
                 fontSize: 12, fontWeight: 700, color: "#ffffff",
-                margin: "0 0 12px 0", textTransform: "uppercase",
+                margin: "0 0 12px 0",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Goal Progress
@@ -192,21 +207,26 @@ export default function DoneTab({
                   </p>
                 </div>
               ))}
-            </div>
+            </motion.div>
           )}
 
           {/* Tomorrow preview */}
-          <div style={{
-            backgroundColor: colors.bgSurface,
-            borderRadius: 14,
-            border: `1px solid ${colors.borderDefault}`,
-            padding: 22,
-            background: `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.bgSurface} 100%)`,
-            borderColor: "rgba(123,82,120,0.25)",
-          }}>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 3 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              backgroundColor: colors.bgSurface,
+              borderRadius: 14,
+              border: `1px solid ${colors.borderDefault}`,
+              padding: 22,
+              background: `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.bgSurface} 100%)`,
+              borderColor: "rgba(123,82,120,0.25)",
+            }}
+          >
             <p style={{
               fontSize: 12, fontWeight: 700, color: colors.coral,
-              margin: "0 0 8px 0", textTransform: "uppercase",
+              margin: "0 0 8px 0",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
               Tomorrow
@@ -220,19 +240,24 @@ export default function DoneTab({
             <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body, lineHeight: 1.55 }}>
               {summaryResult.tomorrow_preview.connection}
             </p>
-          </div>
+          </motion.div>
 
           {/* Micro-content */}
           {summaryResult.micro_content && (
-            <div style={{
-              backgroundColor: colors.bgSurface,
-              borderRadius: 14,
-              border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
-            }}>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 4 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14,
+                border: `1px solid ${colors.borderDefault}`,
+                padding: 22,
+              }}
+            >
               <p style={{
                 fontSize: 12, fontWeight: 700, color: "#ffffff",
-                margin: "0 0 10px 0", textTransform: "uppercase",
+                margin: "0 0 10px 0",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Today&apos;s Insight
@@ -240,25 +265,30 @@ export default function DoneTab({
               <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.65, fontFamily: body }}>
                 {summaryResult.micro_content}
               </p>
-            </div>
+            </motion.div>
           )}
 
           {/* Mini-actions */}
           {summaryResult.mini_actions && summaryResult.mini_actions.length > 0 && (
-            <div style={{
-              backgroundColor: colors.bgSurface,
-              borderRadius: 14,
-              border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
-            }}>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 5 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14,
+                border: `1px solid ${colors.borderDefault}`,
+                padding: 22,
+              }}
+            >
               <p style={{
                 fontSize: 12, fontWeight: 700, color: colors.coral,
-                margin: "0 0 6px 0", textTransform: "uppercase",
+                margin: "0 0 6px 0",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Pick a Mini-Action for Today
               </p>
-              <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 14px 0", fontFamily: body, lineHeight: 1.5 }}>
+              <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 32px 0", fontFamily: body, lineHeight: 1.5 }}>
                 Each takes under 5 minutes. Choose one (or more) to carry into the rest of your day.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -351,19 +381,24 @@ export default function DoneTab({
                   ))}
                 </div>
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* Day rating + feedback */}
-          <div style={{
-            backgroundColor: colors.bgSurface,
-            borderRadius: 14,
-            border: `1px solid ${colors.borderDefault}`,
-            padding: 22,
-          }}>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 6 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              backgroundColor: colors.bgSurface,
+              borderRadius: 14,
+              border: `1px solid ${colors.borderDefault}`,
+              padding: 22,
+            }}
+          >
             <p style={{
               fontSize: 12, fontWeight: 700, color: "#ffffff",
-              margin: "0 0 14px 0", textTransform: "uppercase",
+              margin: "0 0 32px 0",
               letterSpacing: "0.08em", fontFamily: display,
             }}>
               How did you show up today?
@@ -422,29 +457,35 @@ export default function DoneTab({
               onFocus={(e) => { e.target.style.borderColor = colors.coral; }}
               onBlur={(e) => { e.target.style.borderColor = colors.borderDefault; }}
             />
-          </div>
+          </motion.div>
 
           {/* Complete day */}
-          <motion.button
-            whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}
-            whileTap={{ scale: 0.97 }}
-            onClick={completeDay}
-            style={{
-              width: "100%",
-              padding: "16px 24px",
-              fontSize: 16,
-              fontWeight: 700,
-              color: colors.bgDeep,
-              backgroundColor: colors.coral,
-              border: "none",
-              borderRadius: 100,
-              cursor: "pointer",
-              fontFamily: display,
-              letterSpacing: "-0.01em",
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 7 * 0.15, ease: [0.22, 1, 0.36, 1] }}
           >
-            Complete Day {dayNumber}
-          </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}
+              whileTap={{ scale: 0.97 }}
+              onClick={completeDay}
+              style={{
+                width: "100%",
+                padding: "16px 24px",
+                fontSize: 16,
+                fontWeight: 700,
+                color: colors.bgDeep,
+                backgroundColor: colors.coral,
+                border: "none",
+                borderRadius: 100,
+                cursor: "pointer",
+                fontFamily: display,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              Complete Day {dayNumber}
+            </motion.button>
+          </motion.div>
         </div>
       ) : null}
     </FadeIn>

@@ -140,6 +140,14 @@ export const button = {
   } as React.CSSProperties,
 };
 
+/** Typography presets */
+export const type = {
+  heading: { fontFamily: fonts.display, fontSize: 24, fontWeight: 700 as const, letterSpacing: "-0.03em", lineHeight: 1.3 },
+  body: { fontFamily: fonts.bodyAlt, fontSize: 16, fontWeight: 400 as const, lineHeight: 1.8 },
+  label: { fontFamily: fonts.display, fontSize: 12, fontWeight: 600 as const, letterSpacing: "0.04em" },
+  caption: { fontFamily: fonts.bodyAlt, fontSize: 14, fontWeight: 400 as const, color: colors.textMuted },
+};
+
 /** Card style */
 export const card = {
   padding: 24,

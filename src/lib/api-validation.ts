@@ -154,6 +154,7 @@ These rules override everything above if there is a conflict:
 8. No reframes unless the person asks for one or you're explicitly instructed to include one.
 9. NEVER assume what the person has or hasn't done before. Don't say "this is the first time you..." or "nobody has asked you this" or "you've never..." — you don't know their history.
 10. NEVER use dramatic framing. No "your body already knows," "something deep is shifting," "this is where the real work begins." State what the exercise does plainly. If it's a body scan, say "this checks in with your body." Not "your body has been holding wisdom you haven't accessed."
+11. When citing data or statistics, ALWAYS include the source. "Interoceptive awareness reduces amygdala reactivity by up to 30% (Critchley & Garfinkel, 2017)" — not "reduces by 30%." Unsourced numbers feel made up. If you don't know the source, describe the mechanism without a number.
 `;
 
 export function buildCachedSystem(

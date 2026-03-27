@@ -601,52 +601,36 @@ export default function ExerciseCard({
                     />
                   </div>
 
-                  {/* Star rating + submit row */}
+                  {/* Binary rating + submit row */}
                   <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
                     <div>
-                      <label
-                        style={{
-                          display: "block",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: colors.textMuted,
-                          marginBottom: 8,
-                          fontFamily: display,
-                          letterSpacing: "0.04em",
-                        }}
-                      >
-                        How helpful? (optional)
-                      </label>
-                      <div style={{ display: "flex", gap: 4 }}>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <motion.button
-                            key={star}
-                            whileHover={{ scale: 1.15 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => setRating(rating === star ? null : star)}
-                            style={{
-                              width: 36,
-                              height: 36,
-                              borderRadius: 8,
-                              border: `1px solid ${
-                                rating && star <= rating ? (mod ? mod.text + "50" : "rgba(224,149,133,0.35)") : colors.borderSubtle
-                              }`,
-                              backgroundColor:
-                                rating && star <= rating ? (mod ? mod.bg : colors.coralWash) : "transparent",
-                              color:
-                                rating && star <= rating ? (mod ? mod.text : colors.coral) : colors.textMuted,
-                              fontSize: 16,
-                              cursor: "pointer",
-                              transition: "all 0.2s",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontFamily: display,
-                            }}
-                          >
-                            ★
-                          </motion.button>
-                        ))}
+                      <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                        <button
+                          onClick={() => setRating(rating === 5 ? null : 5)}
+                          style={{
+                            padding: "8px 20px", borderRadius: 100, fontSize: 13,
+                            fontWeight: 600, fontFamily: display,
+                            backgroundColor: rating === 5 ? "rgba(74, 222, 128, 0.15)" : colors.bgElevated,
+                            color: rating === 5 ? "#4ade80" : "#ffffff",
+                            border: rating === 5 ? "1px solid rgba(74, 222, 128, 0.3)" : `1px solid ${colors.borderDefault}`,
+                            cursor: "pointer",
+                          }}
+                        >
+                          This landed
+                        </button>
+                        <button
+                          onClick={() => setRating(rating === 2 ? null : 2)}
+                          style={{
+                            padding: "8px 20px", borderRadius: 100, fontSize: 13,
+                            fontWeight: 600, fontFamily: display,
+                            backgroundColor: rating === 2 ? "rgba(255, 255, 255, 0.08)" : colors.bgElevated,
+                            color: "rgba(255, 255, 255, 0.6)",
+                            border: `1px solid ${colors.borderDefault}`,
+                            cursor: "pointer",
+                          }}
+                        >
+                          Not really
+                        </button>
                       </div>
                     </div>
 
@@ -701,19 +685,12 @@ export default function ExerciseCard({
           </p>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
             {existingRating ? (
-              <div style={{ display: "flex", gap: 3 }}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    style={{
-                      fontSize: 12,
-                      color: star <= existingRating ? (mod ? mod.text : colors.coral) : colors.borderDefault,
-                    }}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
+              <span style={{
+                fontSize: 12, fontWeight: 600, fontFamily: display,
+                color: existingRating >= 4 ? "#4ade80" : "rgba(255, 255, 255, 0.5)",
+              }}>
+                {existingRating >= 4 ? "Landed" : "Didn\u2019t land"}
+              </span>
             ) : <div />}
             <FlagButton
               outputType="exercise"

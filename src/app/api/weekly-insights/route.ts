@@ -31,20 +31,37 @@ Return valid JSON (no markdown, no code fences):
 {
   "insights": [
     {
-      "insight": "One clear sentence — quoting their words where possible. Talk to them directly.",
-      "source": "Brief attribution — 'From Day 3 journal' or 'Across Days 2-4 exercises' or 'Day 5 Saboteur Identification'",
-      "type": "pattern" | "shift" | "sticking_point" | "breakthrough" | "connection"
+      "insight": "One clear sentence — quoting their words where possible.",
+      "source": "Brief attribution — 'Day 3 journal' or 'Across Days 2-4'",
+      "type": "pattern | shift | sticking_point | breakthrough"
     }
-  ]
+  ],
+  "big_reframe": {
+    "old_story": "The narrative they've been running all week — in their words.",
+    "new_story": "The fuller picture. Not the opposite — what's also true.",
+    "evidence": "The specific moment from this week that shows the new story is real."
+  },
+  "coaching_questions": [
+    "One question that names the thing they've been circling around all week but haven't said directly.",
+    "One question that connects two things from different days they haven't connected yet."
+  ],
+  "week_pattern": {
+    "pattern": "The one pattern that defined this week — described simply with evidence from multiple days.",
+    "what_it_protects": "One sentence — what this pattern is protecting them from.",
+    "what_it_costs": "One sentence — what this pattern is costing them."
+  },
+  "next_week_focus": "One sentence — what next week should focus on based on what emerged this week."
 }
 
 ## Guidelines
-1. Quote their actual words — show the evidence from specific days.
-2. Prioritize patterns that span multiple days over single-day observations.
-3. "shift" = something that changed or moved. "sticking_point" = something that stayed stuck despite attention. "breakthrough" = a moment of genuine new understanding. "connection" = a link between two things they hadn't seen before. "pattern" = a recurring theme.
-4. Be direct. No motivational language. No praise.
-5. Each insight should be something a coach would want to know going into next week.
-6. Maximum 6 insights. Quality over quantity.`;
+1. This is the DEPTH moment — daily sessions are light and fast. Weekly is where you go deeper.
+2. Quote their actual words from specific days.
+3. Maximum 4 insights. Quality over quantity.
+4. The big_reframe should be the single most important reframe of the week.
+5. Coaching questions should make them pause. Not therapy questions — coaching questions.
+6. The week_pattern teaches them something about WHY the pattern exists, not just that it exists.
+7. Be direct. No motivational language. No praise.
+8. IMPORTANT: Match their engagement level. If they barely wrote all week, keep it brief. Don't over-analyze thin data.`;
 
 export async function POST(request: Request) {
   try {

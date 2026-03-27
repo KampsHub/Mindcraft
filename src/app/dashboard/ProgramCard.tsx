@@ -24,7 +24,7 @@ interface ProgramEnrollment {
   current_day: number;
   status: string;
   goals_approved: boolean;
-  programs: { name: string; slug: string };
+  programs: { name: string; slug: string; weekly_themes?: any[] };
 }
 
 interface ActiveGoal {
@@ -95,6 +95,38 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, isCom
 
         <div style={{ position: "relative" }}>
           <ProgramBadge name={enrollment.programs?.name} accent={accent} weekNumber={Math.ceil(enrollment.current_day / 7)} />
+
+          {/* Program arc — always visible */}
+          {enrollment.programs?.weekly_themes && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", gap: 2 }}>
+                {(enrollment.programs.weekly_themes as any[]).map((wt: any, i: number) => {
+                  const weekStart = (wt.week - 1) * 7 + 1;
+                  const weekEnd = wt.week * 7;
+                  const isCurrent = enrollment.current_day >= weekStart && enrollment.current_day <= weekEnd;
+                  const isDone = enrollment.current_day > weekEnd;
+                  return (
+                    <div key={wt.week} style={{ flex: 1 }}>
+                      <div style={{
+                        height: 3, borderRadius: 2,
+                        backgroundColor: isDone ? colors.coral : isCurrent ? `${colors.coral}88` : "rgba(255,255,255,0.1)",
+                        marginBottom: 6,
+                      }} />
+                      <p style={{
+                        fontSize: 9, fontWeight: 600, fontFamily: display,
+                        color: isCurrent ? colors.coral : isDone ? "#ffffff" : "rgba(255,255,255,0.3)",
+                        textTransform: "uppercase", letterSpacing: "0.06em",
+                        margin: 0,
+                      }}>
+                        {wt.name}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <h2 style={{
             fontFamily: display, fontSize: 24, fontWeight: 700,
             color: colors.textPrimary, margin: "0 0 4px 0", letterSpacing: "-0.02em",

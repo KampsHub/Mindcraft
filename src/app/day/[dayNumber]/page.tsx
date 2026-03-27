@@ -165,6 +165,10 @@ function DailyFlowPage() {
   const [journalSaved, setJournalSaved] = useState(false);
   const [journalMode, setJournalMode] = useState<"type" | "voice">("type");
 
+  // Exercise follow-through from yesterday
+  const [yesterdayExercise, setYesterdayExercise] = useState<{name: string; id: string} | null>(null);
+  const [followThrough, setFollowThrough] = useState("");
+
   // Step 3
   const [step3Mode, setStep3Mode] = useState<"form" | "chat">("form");
   const [stateAnalysis, setStateAnalysis] = useState<StateAnalysis | null>(null);
@@ -288,9 +292,9 @@ function DailyFlowPage() {
           .then(() => {});
       }
       // Set active tab based on completed steps
-      // Steps 1+2 → Tab 1 (Write), Step 3 → Tab 2 (Explore), Step 4 → Tab 3 (Practice), Step 5 → Tab 4 (Close)
+      // Steps 1+2 → Tab 1 (Write), Steps 3+4 → Tab 2 (Do), Step 5 → Tab 3 (Done)
       const nextStep = [1, 2, 3, 4, 5].find((s) => !steps.includes(s)) || 5;
-      const stepToTab: Record<number, number> = { 1: 1, 2: 1, 3: 2, 4: 3, 5: 4 };
+      const stepToTab: Record<number, number> = { 1: 1, 2: 1, 3: 2, 4: 2, 5: 3 };
       setActiveTab(stepToTab[nextStep] || 1);
       if (steps.includes(2)) setJournalSaved(true);
     } else {
@@ -306,6 +310,24 @@ function DailyFlowPage() {
         .single();
 
       if (newSession) setSession(newSession);
+    }
+
+    // Fetch yesterday's exercise for follow-through
+    if (dayNumber > 1) {
+      const { data: yesterdaySession } = await supabase
+        .from("daily_sessions")
+        .select("step_3_analysis")
+        .eq("enrollment_id", enr.id)
+        .eq("day_number", dayNumber - 1)
+        .single();
+
+      if (yesterdaySession?.step_3_analysis) {
+        const analysis = yesterdaySession.step_3_analysis as Record<string, unknown>;
+        const exercises = (analysis.overflow_exercises || []) as { framework_name: string; framework_id?: string }[];
+        if (exercises.length > 0) {
+          setYesterdayExercise({ name: exercises[0].framework_name, id: exercises[0].framework_id || "" });
+        }
+      }
     }
 
     setLoading(false);
@@ -379,29 +401,34 @@ function DailyFlowPage() {
     if (!session || !journalContent.trim()) return;
     setSavingJournal(true);
 
+    // Prepend follow-through text if provided
+    const fullJournalContent = followThrough
+      ? `[Follow-through on yesterday's exercise "${yesterdayExercise?.name}"]: ${followThrough}\n\n${journalContent}`
+      : journalContent;
+
     await supabase
       .from("daily_sessions")
       .update({
-        step_2_journal: journalContent,
+        step_2_journal: fullJournalContent,
         completed_steps: [...new Set([...(session.completed_steps || []), 2])],
       })
       .eq("id", session.id);
 
     setSession((prev) => prev ? {
       ...prev,
-      step_2_journal: journalContent,
+      step_2_journal: fullJournalContent,
       completed_steps: [...new Set([...(prev.completed_steps || []), 2])],
     } : prev);
     setJournalSaved(true);
     setSavingJournal(false);
-    setActiveTab(2); // Auto-advance to Explore tab
+    setActiveTab(2); // Auto-advance to Do tab
 
     // Fire-and-forget sentiment analysis
     if (session?.id) {
       fetch("/api/sentiment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId: session.id, content: journalContent }),
+        body: JSON.stringify({ sessionId: session.id, content: fullJournalContent }),
       }).catch(() => {}); // non-blocking
     }
 
@@ -423,13 +450,17 @@ function DailyFlowPage() {
     setProcessError(null);
 
     try {
+      const fullContent = followThrough
+        ? `[Follow-through on yesterday's exercise "${yesterdayExercise?.name}"]: ${followThrough}\n\n${journalContent}`
+        : journalContent;
+
       const res = await fetch("/api/process-journal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           enrollmentId: enrollment.id,
           dayNumber,
-          journalContent,
+          journalContent: fullContent,
         }),
       });
 
@@ -618,7 +649,7 @@ function DailyFlowPage() {
           ...prev,
           completed_steps: [...new Set([...(prev.completed_steps || []), 4, 5])],
         } : prev);
-        setActiveTab(4); // Switch to Close tab
+        setActiveTab(3); // Switch to Done tab
       }
     } catch (err) {
       console.error("Summary generation failed:", err);
@@ -817,15 +848,13 @@ function DailyFlowPage() {
         {(() => {
           const TAB_LABELS = [
             { key: 1, label: "Write" },
-            { key: 2, label: "Explore" },
-            { key: 3, label: "Practice" },
-            { key: 4, label: "Close" },
+            { key: 2, label: "Do" },
+            { key: 3, label: "Done" },
           ];
           const tabComplete = (key: number) => {
             if (key === 1) return completedSteps.includes(2); // journal saved
             if (key === 2) return completedSteps.includes(3); // processing done
-            if (key === 3) return completedSteps.includes(4); // exercises done
-            if (key === 4) return !!session?.completed_at;
+            if (key === 3) return !!session?.completed_at;
             return false;
           };
           return (
@@ -836,7 +865,7 @@ function DailyFlowPage() {
             }}>
               {TAB_LABELS.map((tab) => {
                 const isActive = activeTab === tab.key;
-                const isDisabled = (tab.key === 2 && !journalSaved) || (tab.key === 3 && !stateAnalysis);
+                const isDisabled = (tab.key === 2 && !journalSaved) || (tab.key === 3 && !summaryResult && !loadingSummary);
                 const isComplete = tabComplete(tab.key);
                 return (
                   <button
@@ -1084,6 +1113,40 @@ function DailyFlowPage() {
           </div>
         )}
       </div>
+
+      {/* Exercise follow-through from yesterday */}
+      {yesterdayExercise && (
+        <div style={{
+          padding: "16px 18px",
+          backgroundColor: "rgba(224, 149, 133, 0.08)",
+          borderRadius: 14,
+          border: "1px solid rgba(224, 149, 133, 0.15)",
+          marginBottom: 16,
+        }}>
+          <p style={{
+            fontSize: 10, fontWeight: 700, color: colors.coral,
+            textTransform: "uppercase", letterSpacing: "0.08em",
+            margin: "0 0 8px 0", fontFamily: display,
+          }}>
+            Yesterday&apos;s exercise
+          </p>
+          <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body, lineHeight: 1.5 }}>
+            {yesterdayExercise.name}: did the moment come up? What happened?
+          </p>
+          <textarea
+            value={followThrough}
+            onChange={(e) => setFollowThrough(e.target.value)}
+            placeholder="Quick note — what happened? (optional)"
+            style={{
+              width: "100%", minHeight: 60, padding: 12, fontSize: 14,
+              borderRadius: 10, border: `1px solid ${colors.borderDefault}`,
+              backgroundColor: colors.bgInput, color: "#ffffff",
+              fontFamily: body, resize: "none", outline: "none",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
+      )}
 
       {/* ── Journal Section (within Tab 1) ── */}
         <div style={{
@@ -1552,27 +1615,7 @@ function DailyFlowPage() {
               </p>
             )}
 
-            <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
-              {(() => {
-                const total = (programDay?.coaching_exercises?.length || 0) + overflowExercises.length;
-                return `${total} exercise${total !== 1 ? "s" : ""} ready for you today.`;
-              })()}
-            </p>
-
-            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => setActiveTab(3)}
-                style={{
-                  padding: "12px 28px", fontSize: 14, fontWeight: 600,
-                  color: colors.bgDeep, backgroundColor: colors.coral,
-                  border: "none", borderRadius: 100, cursor: "pointer",
-                  fontFamily: display, letterSpacing: "0.01em",
-                }}
-              >
-                Continue to Exercises
-              </motion.button>
+            <div style={{ display: "flex", gap: 12, alignItems: "center", marginTop: 8 }}>
               <motion.button
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
@@ -1596,6 +1639,174 @@ function DailyFlowPage() {
             </div>
           </div>
           </>
+          )}
+
+          {/* ── Exercises (merged from Practice tab) ── */}
+          {stateAnalysis && !processing && step3Mode === "form" && (
+          <div style={{
+            marginTop: 16,
+            ...(crisisDetectedStep3 && !crisisDismissedStep3
+              ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
+              : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
+          }}>
+          {/* Coaching Plan Exercises (Required) */}
+          {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
+            <div style={{ marginBottom: 22 }}>
+              <p style={{
+                fontSize: 12, fontWeight: 700, color: "#ffffff",
+                margin: "0 0 12px 0", textTransform: "uppercase",
+                letterSpacing: "0.08em", fontFamily: display,
+              }}>
+                {dayNumber <= 3 ? "Today's Exercise" : "From Your Coaching Plan"}
+              </p>
+              {programDay.coaching_exercises.map((ex, i) => (
+                <ExerciseCard
+                  key={`cp-${i}`}
+                  name={ex.name}
+                  type="coaching_plan"
+                  customFraming={ex.custom_framing}
+                  estimatedMinutes={ex.duration_min}
+                  isRequired={true}
+                  isCompleted={completedExercises.has(ex.name)}
+                  dailySessionId={session?.id}
+                  onComplete={(responses, rating) =>
+                    handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
+                  }
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Overflow Exercises (from journal analysis) */}
+          {overflowExercises.length > 0 && (
+            <div style={{ marginBottom: 22 }}>
+              <p style={{
+                fontSize: 12, fontWeight: 700, color: "#ffffff",
+                margin: "0 0 12px 0", textTransform: "uppercase",
+                letterSpacing: "0.08em", fontFamily: display,
+              }}>
+                {dayNumber <= 3 ? "Based on What You Wrote" : "Matched to Your Journal"}
+              </p>
+              {overflowExercises.map((ex, i) => (
+                <ExerciseCard
+                  key={`of-${i}`}
+                  name={ex.framework_name}
+                  type="overflow"
+                  modality={ex.modality}
+                  originator={ex.originator}
+                  sourceWork={ex.source_work}
+                  customFraming={ex.custom_framing}
+                  whySelected={ex.why_selected}
+                  whyThisWorks={ex.why_this_works}
+                  estimatedMinutes={ex.estimated_minutes}
+                  isCompleted={completedExercises.has(ex.framework_name)}
+                  dailySessionId={session?.id}
+                  onComplete={(responses, rating) =>
+                    handleExerciseComplete(
+                      ex.framework_name, "overflow", ex.modality,
+                      responses, rating, ex.custom_framing, ex.framework_id
+                    )
+                  }
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Framework Analysis */}
+          {loadingFramework ? (
+            <div style={{
+              backgroundColor: colors.bgSurface,
+              borderRadius: 14,
+              border: `1px solid ${colors.borderDefault}`,
+              padding: 22, textAlign: "center",
+            }}>
+              <p style={{ fontSize: 14, color: "#ffffff", fontFamily: body }}>Loading framework analysis...</p>
+            </div>
+          ) : frameworkAnalysis ? (
+            <div style={{ marginBottom: 22 }}>
+              <p style={{
+                fontSize: 12, fontWeight: 700, color: "#ffffff",
+                margin: "0 0 12px 0", textTransform: "uppercase",
+                letterSpacing: "0.08em", fontFamily: display,
+              }}>
+                Framework Analysis
+              </p>
+              <div style={{
+                backgroundColor: colors.bgSurface,
+                borderRadius: 14,
+                border: `1px solid ${colors.borderDefault}`,
+                padding: 22,
+                borderLeft: `3px solid ${colors.plum}`,
+              }}>
+                <h3 style={{
+                  fontSize: 16, fontWeight: 700, color: colors.textPrimary, margin: "0 0 4px 0",
+                  fontFamily: display, letterSpacing: "-0.02em",
+                }}>
+                  {frameworkAnalysis.framework_name}
+                </h3>
+                <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 16px 0", fontFamily: body }}>
+                  {frameworkAnalysis.originator} — {frameworkAnalysis.source_work}
+                </p>
+
+                <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: "0 0 16px 0", fontFamily: body }}>
+                  {frameworkAnalysis.explanation}
+                </p>
+
+                <div style={{
+                  padding: "14px 18px",
+                  backgroundColor: colors.bgElevated,
+                  borderRadius: 12,
+                  marginBottom: 16,
+                }}>
+                  <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: 0, fontFamily: body }}>
+                    {frameworkAnalysis.application}
+                  </p>
+                </div>
+
+                <p style={{
+                  fontSize: 14, color: colors.plumLight, fontWeight: 600,
+                  fontStyle: "italic", margin: "0 0 16px 0", fontFamily: body,
+                }}>
+                  {frameworkAnalysis.reflection_prompt}
+                </p>
+
+                <ExerciseCard
+                  name={`Reflect: ${frameworkAnalysis.framework_name}`}
+                  type="framework_analysis"
+                  instructions="Write what comes up as you sit with this framework and the reflection question above."
+                  isCompleted={completedExercises.has(`Reflect: ${frameworkAnalysis.framework_name}`)}
+                  dailySessionId={session?.id}
+                  onComplete={(responses, rating) =>
+                    handleExerciseComplete(
+                      `Reflect: ${frameworkAnalysis.framework_name}`,
+                      "framework_analysis", undefined,
+                      responses, rating, undefined, frameworkAnalysis.framework_id
+                    )
+                  }
+                />
+              </div>
+            </div>
+          ) : null}
+
+          {/* Continue to Summary */}
+          <motion.button
+            whileHover={!loadingSummary ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
+            whileTap={!loadingSummary ? { scale: 0.97 } : {}}
+            onClick={generateSummary}
+            disabled={loadingSummary}
+            style={{
+              padding: "12px 28px", fontSize: 14, fontWeight: 600,
+              color: loadingSummary ? "#ffffff" : colors.bgDeep,
+              backgroundColor: loadingSummary ? colors.bgElevated : colors.coral,
+              border: "none", borderRadius: 100,
+              cursor: loadingSummary ? "not-allowed" : "pointer",
+              fontFamily: display, letterSpacing: "0.01em",
+              marginTop: 6,
+            }}
+          >
+            {loadingSummary ? "Generating summary..." : "Complete Exercises & Continue"}
+          </motion.button>
+          </div>
           )}
           </div>
         ) : (
@@ -1632,178 +1843,8 @@ function DailyFlowPage() {
       </FadeIn>
       )}
 
-      {/* ═══════ TAB 3: Practice ═══════ */}
+      {/* ═══════ TAB 3: Done ═══════ */}
       {activeTab === 3 && (
-      <FadeIn preset="fade" triggerOnMount>
-        <div style={{
-          ...(crisisDetectedStep3 && !crisisDismissedStep3
-            ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
-            : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
-        }}>
-        {/* Coaching Plan Exercises (Required) */}
-        {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
-          <div style={{ marginBottom: 22 }}>
-            <p style={{
-              fontSize: 12, fontWeight: 700, color: "#ffffff",
-              margin: "0 0 12px 0", textTransform: "uppercase",
-              letterSpacing: "0.08em", fontFamily: display,
-            }}>
-              {dayNumber <= 3 ? "Today's Exercise" : "From Your Coaching Plan"}
-            </p>
-            {programDay.coaching_exercises.map((ex, i) => (
-              <ExerciseCard
-                key={`cp-${i}`}
-                name={ex.name}
-                type="coaching_plan"
-                customFraming={ex.custom_framing}
-                estimatedMinutes={ex.duration_min}
-                isRequired={true}
-                isCompleted={completedExercises.has(ex.name)}
-                dailySessionId={session?.id}
-                onComplete={(responses, rating) =>
-                  handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
-                }
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Overflow Exercises (from journal analysis) */}
-        {overflowExercises.length > 0 && (
-          <div style={{ marginBottom: 22 }}>
-            <p style={{
-              fontSize: 12, fontWeight: 700, color: "#ffffff",
-              margin: "0 0 12px 0", textTransform: "uppercase",
-              letterSpacing: "0.08em", fontFamily: display,
-            }}>
-              {dayNumber <= 3 ? "Based on What You Wrote" : "Matched to Your Journal"}
-            </p>
-            {overflowExercises.map((ex, i) => (
-              <ExerciseCard
-                key={`of-${i}`}
-                name={ex.framework_name}
-                type="overflow"
-                modality={ex.modality}
-                originator={ex.originator}
-                sourceWork={ex.source_work}
-                customFraming={ex.custom_framing}
-                whySelected={ex.why_selected}
-                whyThisWorks={ex.why_this_works}
-                estimatedMinutes={ex.estimated_minutes}
-                isCompleted={completedExercises.has(ex.framework_name)}
-                dailySessionId={session?.id}
-                onComplete={(responses, rating) =>
-                  handleExerciseComplete(
-                    ex.framework_name, "overflow", ex.modality,
-                    responses, rating, ex.custom_framing, ex.framework_id
-                  )
-                }
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Framework Analysis */}
-        {loadingFramework ? (
-          <div style={{
-            backgroundColor: colors.bgSurface,
-            borderRadius: 14,
-            border: `1px solid ${colors.borderDefault}`,
-            padding: 22, textAlign: "center",
-          }}>
-            <p style={{ fontSize: 14, color: "#ffffff", fontFamily: body }}>Loading framework analysis...</p>
-          </div>
-        ) : frameworkAnalysis ? (
-          <div style={{ marginBottom: 22 }}>
-            <p style={{
-              fontSize: 12, fontWeight: 700, color: "#ffffff",
-              margin: "0 0 12px 0", textTransform: "uppercase",
-              letterSpacing: "0.08em", fontFamily: display,
-            }}>
-              Framework Analysis
-            </p>
-            <div style={{
-              backgroundColor: colors.bgSurface,
-              borderRadius: 14,
-              border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
-              borderLeft: `3px solid ${colors.plum}`,
-            }}>
-              <h3 style={{
-                fontSize: 16, fontWeight: 700, color: colors.textPrimary, margin: "0 0 4px 0",
-                fontFamily: display, letterSpacing: "-0.02em",
-              }}>
-                {frameworkAnalysis.framework_name}
-              </h3>
-              <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 16px 0", fontFamily: body }}>
-                {frameworkAnalysis.originator} — {frameworkAnalysis.source_work}
-              </p>
-
-              <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: "0 0 16px 0", fontFamily: body }}>
-                {frameworkAnalysis.explanation}
-              </p>
-
-              <div style={{
-                padding: "14px 18px",
-                backgroundColor: colors.bgElevated,
-                borderRadius: 12,
-                marginBottom: 16,
-              }}>
-                <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: 0, fontFamily: body }}>
-                  {frameworkAnalysis.application}
-                </p>
-              </div>
-
-              <p style={{
-                fontSize: 14, color: colors.plumLight, fontWeight: 600,
-                fontStyle: "italic", margin: "0 0 16px 0", fontFamily: body,
-              }}>
-                {frameworkAnalysis.reflection_prompt}
-              </p>
-
-              {/* Optional response area for framework analysis */}
-              <ExerciseCard
-                name={`Reflect: ${frameworkAnalysis.framework_name}`}
-                type="framework_analysis"
-                instructions="Write what comes up as you sit with this framework and the reflection question above."
-                isCompleted={completedExercises.has(`Reflect: ${frameworkAnalysis.framework_name}`)}
-                dailySessionId={session?.id}
-                onComplete={(responses, rating) =>
-                  handleExerciseComplete(
-                    `Reflect: ${frameworkAnalysis.framework_name}`,
-                    "framework_analysis", undefined,
-                    responses, rating, undefined, frameworkAnalysis.framework_id
-                  )
-                }
-              />
-            </div>
-          </div>
-        ) : null}
-
-        {/* Continue to Summary */}
-        <motion.button
-          whileHover={!loadingSummary ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
-          whileTap={!loadingSummary ? { scale: 0.97 } : {}}
-          onClick={generateSummary}
-          disabled={loadingSummary}
-          style={{
-            padding: "12px 28px", fontSize: 14, fontWeight: 600,
-            color: loadingSummary ? "#ffffff" : colors.bgDeep,
-            backgroundColor: loadingSummary ? colors.bgElevated : colors.coral,
-            border: "none", borderRadius: 100,
-            cursor: loadingSummary ? "not-allowed" : "pointer",
-            fontFamily: display, letterSpacing: "0.01em",
-            marginTop: 6,
-          }}
-        >
-          {loadingSummary ? "Generating summary..." : "Complete Exercises & Continue"}
-        </motion.button>
-        </div>
-      </FadeIn>
-      )}
-
-      {/* ═══════ TAB 4: Close ═══════ */}
-      {activeTab === 4 && (
       <FadeIn preset="fade" triggerOnMount>
         {loadingSummary ? (
           <div style={{

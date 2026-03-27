@@ -228,7 +228,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
         fontFamily: body, fontSize: 13, color: "#ffffff",
         lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
       }}>
-        Everything in the self-guided program, plus weekly or bi-weekly 1:1 coaching sessions. Includes a personal Enneagram assessment, so you can see where your defaults help and where they cost you.
+        A coach sees what the program can't — the thing you're circling but not saying. Faster reframes, harder questions, and someone who holds you accountable when the motivation dips. Includes a personal Enneagram assessment to sharpen the work.
       </p>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <motion.button

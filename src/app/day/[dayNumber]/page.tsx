@@ -726,22 +726,22 @@ function DailyFlowPage() {
   const weekNames = ["GROUND", "DIG", "BUILD", "ORIENT"];
   const weekPurposes: Record<string, string[]> = {
     parachute: [
-      "Name what happened. Get your feet under you.",
-      "Understand the patterns underneath your reactions.",
-      "Start rebuilding from what's actually true.",
-      "Point yourself forward with clarity.",
+      "This week is about naming what happened and getting your feet under you.",
+      "This week is about understanding the patterns underneath your reactions.",
+      "This week is about rebuilding from what's actually true.",
+      "This week is about pointing yourself forward with clarity.",
     ],
     jetstream: [
-      "Stabilize. See the situation clearly.",
-      "Understand what's yours and what isn't.",
-      "Build your response strategy.",
-      "Decide your next move from a grounded place.",
+      "This week is about stabilizing and seeing the situation clearly.",
+      "This week is about understanding what's yours and what isn't.",
+      "This week is about building your response strategy.",
+      "This week is about deciding your next move from a grounded place.",
     ],
     basecamp: [
-      "Arrive. Notice what you brought with you.",
-      "Understand how you show up under pressure.",
-      "Build confidence from the inside out.",
-      "Own your place. Stop auditioning.",
+      "This week is about arriving and noticing what you brought with you.",
+      "This week is about understanding how you show up under pressure.",
+      "This week is about building confidence from the inside out.",
+      "This week is about owning your place and stopping the audition.",
     ],
   };
   const programSlug = enrollment?.programs?.slug || "parachute";

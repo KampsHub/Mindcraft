@@ -87,6 +87,7 @@ interface OverflowExercise {
   modality: string;
   why_selected: string;
   custom_framing: string;
+  instruction?: string;
   estimated_minutes: number;
   originator: string;
   source_work: string;
@@ -1775,6 +1776,7 @@ function DailyFlowPage() {
                   name={ex.name}
                   type="coaching_plan"
                   customFraming={ex.custom_framing}
+                  instructions={ex.custom_framing}
                   estimatedMinutes={ex.duration_min}
                   isRequired={true}
                   isCompleted={completedExercises.has(ex.name)}
@@ -1806,6 +1808,7 @@ function DailyFlowPage() {
                   originator={ex.originator}
                   sourceWork={ex.source_work}
                   customFraming={ex.custom_framing}
+                  instructions={ex.instruction || ex.custom_framing}
                   whySelected={ex.why_selected}
                   whyThisWorks={ex.why_this_works}
                   estimatedMinutes={ex.estimated_minutes}

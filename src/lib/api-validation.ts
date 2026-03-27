@@ -136,6 +136,24 @@ export function getAnthropicClient():
 // Usage:
 //   system: buildCachedSystem(STANDARD_VOICE, routeSpecificPrompt)
 //
+// Hard constraints appended AFTER every route-specific prompt.
+// Claude pays most attention to the beginning and end of system prompts.
+// This ensures the voice rules are the last thing it reads before generating.
+const VOICE_GUARDRAILS = `
+## CRITICAL — READ BEFORE RESPONDING
+
+These rules override everything above if there is a conflict:
+
+1. You are NOT an expert on this person. You have their words on a page. That's it.
+2. NEVER declare a pattern as fact. Say "I notice" or "I'm wondering" — never "The pattern is clear" or "You're doing X because Y."
+3. NEVER extrapolate from journal entries to their whole life, relationships, career, or character.
+4. If someone wrote very little, respond with very little. Match their energy. One word in = one question back.
+5. NEVER assign meaning to brevity. You don't know why they wrote one word.
+6. Every observation is a guess. Frame it as one. "This might be off, but..." or "Does this land?"
+7. Keep it SHORT. Reading: 2-3 sentences max. Not paragraphs.
+8. No reframes unless the person asks for one or you're explicitly instructed to include one.
+`;
+
 export function buildCachedSystem(
   voiceConfig: string,
   routePrompt: string
@@ -149,6 +167,10 @@ export function buildCachedSystem(
     {
       type: "text" as const,
       text: routePrompt,
+    },
+    {
+      type: "text" as const,
+      text: VOICE_GUARDRAILS,
     },
   ];
 }

@@ -112,7 +112,66 @@ export default function ExerciseCard({
   const [submitted, setSubmitted] = useState(isCompleted);
   const [showScience, setShowScience] = useState(false);
   const [listening, setListening] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [guidedMode, setGuidedMode] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  const readAloud = (text: string, onDone?: () => void) => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    // Prefer a calm female voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => v.name.includes("Samantha") || v.name.includes("Karen") || v.name.includes("Google UK English Female"));
+    if (preferred) utterance.voice = preferred;
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => { setSpeaking(false); if (onDone) onDone(); };
+    utteranceRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    if (typeof window !== "undefined") window.speechSynthesis.cancel();
+    setSpeaking(false);
+  };
+
+  const startGuidedMode = () => {
+    setGuidedMode(true);
+    setExpanded(true);
+    // Read the exercise instructions, then auto-start listening
+    const textToRead = instructions || customFraming || "";
+    if (textToRead) {
+      readAloud(textToRead, () => {
+        // After reading, auto-start mic
+        startListeningForResponse();
+      });
+    }
+  };
+
+  const startListeningForResponse = () => {
+    try {
+      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SR) return;
+      const recognition = new SR();
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+      recognition.onresult = (event: any) => {
+        let text = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) text += event.results[i][0].transcript;
+        }
+        if (text) setResponse((prev) => prev ? prev + " " + text : text);
+      };
+      recognition.onend = () => { setListening(false); recognitionRef.current = null; };
+      recognitionRef.current = recognition;
+      recognition.start();
+      setListening(true);
+    } catch { /* ignore */ }
+  };
 
   // Interactive input state
   const [spectrumValue, setSpectrumValue] = useState<number>(
@@ -361,6 +420,57 @@ export default function ExerciseCard({
             style={{ overflow: "hidden" }}
           >
             <div style={{ padding: "0 20px 24px 20px" }}>
+              {/* Guided mode — Listen & Respond */}
+              {!guidedMode && instructions && (
+                <button
+                  onClick={startGuidedMode}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    width: "100%", padding: "14px 20px", marginBottom: 16,
+                    borderRadius: 12, border: `1px solid rgba(224, 149, 133, 0.3)`,
+                    backgroundColor: "rgba(224, 149, 133, 0.08)",
+                    color: colors.coral, fontSize: 14, fontWeight: 600,
+                    fontFamily: display, cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Read aloud &amp; guide me
+                </button>
+              )}
+
+              {/* Guided mode active — show state */}
+              {guidedMode && (
+                <div style={{
+                  padding: "14px 18px", marginBottom: 16,
+                  borderRadius: 12, backgroundColor: speaking ? "rgba(224, 149, 133, 0.12)" : listening ? "rgba(74, 222, 128, 0.08)" : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${speaking ? "rgba(224, 149, 133, 0.3)" : listening ? "rgba(74, 222, 128, 0.3)" : colors.borderDefault}`,
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{
+                      width: 10, height: 10, borderRadius: "50%",
+                      backgroundColor: speaking ? colors.coral : listening ? "#4ade80" : "rgba(255,255,255,0.3)",
+                      boxShadow: (speaking || listening) ? `0 0 8px ${speaking ? "rgba(224, 149, 133, 0.5)" : "rgba(74, 222, 128, 0.5)"}` : "none",
+                    }} />
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#ffffff", fontFamily: display }}>
+                      {speaking ? "Reading exercise..." : listening ? "Listening — speak your response" : "Done"}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => { stopSpeaking(); if (recognitionRef.current) { recognitionRef.current.stop(); setListening(false); } setGuidedMode(false); }}
+                    style={{
+                      fontSize: 12, color: "rgba(255,255,255,0.4)", background: "none",
+                      border: "none", cursor: "pointer", fontFamily: display,
+                    }}
+                  >
+                    Stop
+                  </button>
+                </div>
+              )}
+
               {/* Why now — compact one-liner */}
               {whySelected && (
                 <p style={{

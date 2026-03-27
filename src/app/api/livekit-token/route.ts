@@ -47,6 +47,12 @@ export async function POST(request: Request) {
       name: user.email || "Client",
     });
 
+    // Pass exercise/session metadata as participant metadata
+    // The LiveKit agent reads this to determine session mode
+    if (body.metadata) {
+      token.metadata = JSON.stringify(body.metadata);
+    }
+
     token.addGrant({
       room: roomName,
       roomJoin: true,

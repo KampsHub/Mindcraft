@@ -164,53 +164,139 @@ class _TextLLMStream(llm.LLMStream):
         )
 
 
+def _build_exercise_system_prompt(exercise_name: str, instructions: str, why_now: str) -> str:
+    """Build a system prompt for guided exercise mode."""
+    return f"""You are a voice coaching assistant guiding someone through a specific exercise.
+
+You are having a SPOKEN conversation. Speak naturally — no bullet points, no headers, no formatting.
+
+EXERCISE: {exercise_name}
+{f"WHY NOW: {why_now}" if why_now else ""}
+
+INSTRUCTIONS TO GUIDE THROUGH:
+{instructions}
+
+Your job:
+1. Start by briefly naming the exercise and why you're doing it (1-2 sentences max)
+2. Walk through the instructions step by step — break them into small, digestible pieces
+3. After each step, pause and ask the person to respond or share what comes up
+4. Listen to their response, reflect back briefly (quote their words, not your interpretation), then move to the next step
+5. When all steps are done, give a brief closing — name the one thing that seemed to matter most
+
+Voice rules:
+- Keep every response under 3 sentences
+- Break instructions into small steps — never read a whole paragraph at once
+- After giving a step, ask a question and WAIT
+- Match their energy — if they give a short answer, respond briefly
+- Never say "I understand" or "That makes sense" — those are filler
+- Quote their actual words when reflecting back
+- No clinical language, no motivational filler, no praise
+- Make somatic exercises accessible: "data collection, not feelings exploration"
+- If they seem stuck, offer a concrete example or reframe the question"""
+
+
 async def entrypoint(ctx: JobContext):
     """Main entrypoint for the voice coaching agent."""
 
     logger.info(f"Voice coaching session starting: room={ctx.room.name}")
 
-    # Parse session context from room metadata
-    session = SessionContext()
-    if ctx.room.metadata:
+    # Connect to the room first
+    await ctx.connect(auto_subscribe=AutoSubscribe.AUDIO_ONLY)
+
+    # Wait for participant
+    participant = await ctx.wait_for_participant()
+    logger.info(f"Participant joined: {participant.identity}")
+
+    # Check participant metadata for exercise mode
+    exercise_meta = None
+    if participant.metadata:
         try:
-            meta = json.loads(ctx.room.metadata)
-            session = SessionContext(**{k: v for k, v in meta.items() if hasattr(session, k)})
+            meta = json.loads(participant.metadata)
+            if meta.get("mode") == "exercise":
+                exercise_meta = meta
+                logger.info(f"Exercise mode: {meta.get('exerciseName', 'unknown')}")
         except (json.JSONDecodeError, TypeError):
-            logger.warning("Could not parse room metadata")
+            pass
 
-    # Build initial greeting
-    greeting_parts = [f"Hey. Welcome to Day {session.day_number}."]
+    if exercise_meta:
+        # ── Exercise mode ──
+        exercise_name = exercise_meta.get("exerciseName", "Exercise")
+        instructions = exercise_meta.get("instructions", "")
+        why_now = exercise_meta.get("whyNow", "")
 
-    if session.week_purpose:
-        greeting_parts.append(session.week_purpose)
+        system_prompt = _build_exercise_system_prompt(exercise_name, instructions, why_now)
 
-    if session.yesterday_exercise:
-        greeting_parts.append(
-            f"Yesterday you worked on {session.yesterday_exercise}. "
-            f"Did anything come up since then? What did you notice?"
-        )
-    else:
-        greeting_parts.append("Ready to start? Just talk — I'm listening.")
-
-    initial_greeting = " ".join(greeting_parts)
-
-    # Set up the voice pipeline
-    agent = VoicePipelineAgent(
-        vad=silero.VAD.load(),
-        stt=deepgram.STT(),
-        llm=MindcraftLLM(),
-        tts=elevenlabs.TTS(
-            voice=elevenlabs.Voice(
-                id="l4Coq6695JDX9xtLqXDE",  # Custom voice selected by coach
-                settings=elevenlabs.VoiceSettings(
-                    stability=0.7,
-                    similarity_boost=0.8,
+        agent = VoicePipelineAgent(
+            vad=silero.VAD.load(),
+            stt=deepgram.STT(),
+            llm=MindcraftLLM(),
+            tts=elevenlabs.TTS(
+                voice=elevenlabs.Voice(
+                    id="l4Coq6695JDX9xtLqXDE",
+                    settings=elevenlabs.VoiceSettings(
+                        stability=0.7,
+                        similarity_boost=0.8,
+                    ),
                 ),
             ),
-        ),
-        chat_ctx=llm.ChatContext().append(
-            role="system",
-            text=f"""Session context:
+            chat_ctx=llm.ChatContext().append(
+                role="system",
+                text=system_prompt,
+            ),
+        )
+
+        agent.start(ctx.room, participant)
+
+        greeting = f"Let's work through {exercise_name}."
+        if why_now:
+            greeting += f" {why_now}"
+        greeting += " I'll walk you through it step by step."
+
+        await agent.say(greeting, allow_interruptions=True)
+
+    else:
+        # ── Standard coaching session mode ──
+        session = SessionContext()
+        if ctx.room.metadata:
+            try:
+                meta = json.loads(ctx.room.metadata)
+                session = SessionContext(**{k: v for k, v in meta.items() if hasattr(session, k)})
+            except (json.JSONDecodeError, TypeError):
+                logger.warning("Could not parse room metadata")
+
+        # Build initial greeting
+        greeting_parts = [f"Hey. Welcome to Day {session.day_number}."]
+
+        if session.week_purpose:
+            greeting_parts.append(session.week_purpose)
+
+        if session.yesterday_exercise:
+            greeting_parts.append(
+                f"Yesterday you worked on {session.yesterday_exercise}. "
+                f"Did anything come up since then? What did you notice?"
+            )
+        else:
+            greeting_parts.append("Ready to start? Just talk — I'm listening.")
+
+        initial_greeting = " ".join(greeting_parts)
+
+        # Set up the voice pipeline
+        agent = VoicePipelineAgent(
+            vad=silero.VAD.load(),
+            stt=deepgram.STT(),
+            llm=MindcraftLLM(),
+            tts=elevenlabs.TTS(
+                voice=elevenlabs.Voice(
+                    id="l4Coq6695JDX9xtLqXDE",
+                    settings=elevenlabs.VoiceSettings(
+                        stability=0.7,
+                        similarity_boost=0.8,
+                    ),
+                ),
+            ),
+            chat_ctx=llm.ChatContext().append(
+                role="system",
+                text=f"""Session context:
 Program: {session.program_name}
 Day: {session.day_number}
 Territory: {session.territory}
@@ -221,21 +307,11 @@ Thought prompts for today: {json.dumps(session.thought_prompts)}
 Start by greeting the client and asking about yesterday's exercise.
 Then guide them through today's session conversationally.
 Ask one question at a time. Wait for their response before moving on."""
-        ),
-    )
+            ),
+        )
 
-    # Connect to the room
-    await ctx.connect(auto_subscribe=AutoSubscribe.AUDIO_ONLY)
-
-    # Wait for participant
-    participant = await ctx.wait_for_participant()
-    logger.info(f"Participant joined: {participant.identity}")
-
-    # Start the agent
-    agent.start(ctx.room, participant)
-
-    # Say the greeting
-    await agent.say(initial_greeting, allow_interruptions=True)
+        agent.start(ctx.room, participant)
+        await agent.say(initial_greeting, allow_interruptions=True)
 
 
 if __name__ == "__main__":

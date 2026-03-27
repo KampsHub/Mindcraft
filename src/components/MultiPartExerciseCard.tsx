@@ -164,7 +164,6 @@ export default function MultiPartExerciseCard({
                 style={{
                   fontSize: 10,
                   fontWeight: 700,
-                  textTransform: "uppercase",
                   letterSpacing: "0.08em",
                   padding: "3px 10px",
                   borderRadius: 100,
@@ -319,8 +318,7 @@ export default function MultiPartExerciseCard({
                 fontWeight: 700,
                 color: accentColor,
                 margin: "0 0 14px 0",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
+                letterSpacing: "0.02em",
                 fontFamily: display,
               }}
             >
@@ -360,8 +358,7 @@ export default function MultiPartExerciseCard({
                       fontWeight: 700,
                       color: colors.textMuted,
                       margin: "0 0 6px 0",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
+                          letterSpacing: "0.06em",
                       fontFamily: display,
                     }}
                   >

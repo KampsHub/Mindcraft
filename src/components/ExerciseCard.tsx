@@ -377,7 +377,7 @@ export default function ExerciseCard({
                       background: "none", border: "none", cursor: "pointer",
                       padding: "4px 0", fontFamily: display, fontSize: 11,
                       fontWeight: 600, color: "rgba(255,255,255,0.35)",
-                      textTransform: "uppercase", letterSpacing: "0.06em",
+                      letterSpacing: "0.02em",
                     }}
                   >
                     <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}
@@ -421,8 +421,7 @@ export default function ExerciseCard({
                           fontWeight: 600,
                           color: colors.textMuted,
                           marginBottom: 8,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.06em",
+                          letterSpacing: "0.02em",
                           fontFamily: display,
                         }}
                       >
@@ -448,8 +447,7 @@ export default function ExerciseCard({
                           fontWeight: 600,
                           color: colors.textMuted,
                           marginBottom: 8,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.06em",
+                          letterSpacing: "0.02em",
                           fontFamily: display,
                         }}
                       >
@@ -468,8 +466,7 @@ export default function ExerciseCard({
                           fontWeight: 600,
                           color: colors.textMuted,
                           marginBottom: 8,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.06em",
+                          letterSpacing: "0.02em",
                           fontFamily: display,
                         }}
                       >
@@ -488,8 +485,7 @@ export default function ExerciseCard({
                         fontWeight: 600,
                         color: colors.textMuted,
                         marginBottom: 8,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.06em",
+                        letterSpacing: "0.02em",
                         fontFamily: display,
                       }}
                     >

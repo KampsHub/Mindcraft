@@ -16,103 +16,253 @@ interface GuidedExerciseFlowProps {
   onClose: () => void;
 }
 
-type FlowState = "reading" | "breathing" | "listening" | "review" | "done";
+type FlowState = "loading" | "speaking" | "listening" | "processing" | "ended" | "error";
+
+interface Turn {
+  role: "coach" | "user";
+  text: string;
+}
 
 export default function GuidedExerciseFlow({
   exerciseName, instructions, whyNow, onComplete, onClose,
 }: GuidedExerciseFlowProps) {
-  const [state, setState] = useState<FlowState>("reading");
-  const [currentSentence, setCurrentSentence] = useState(0);
-  const [transcript, setTranscript] = useState("");
-  const [editedTranscript, setEditedTranscript] = useState("");
+  const [state, setState] = useState<FlowState>("loading");
+  const [turns, setTurns] = useState<Turn[]>([]);
+  const [liveTranscript, setLiveTranscript] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const historyRef = useRef<Array<{ role: string; text: string }>>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const mountedRef = useRef(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Split instructions into sentences
-  const sentences = instructions.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
-
-  // Read aloud one sentence at a time
-  const readNextSentence = useCallback((index: number) => {
-    if (typeof window === "undefined" || !window.speechSynthesis) {
-      // No TTS support — show all text and skip to listening
-      setCurrentSentence(sentences.length);
-      setState("breathing");
-      setTimeout(() => setState("listening"), 2000);
-      return;
-    }
-
-    if (index >= sentences.length) {
-      // Done reading — breathing pause then listen
-      setState("breathing");
-      setTimeout(() => setState("listening"), 2500);
-      return;
-    }
-
-    setCurrentSentence(index + 1);
-    const utterance = new SpeechSynthesisUtterance(sentences[index]);
-    utterance.rate = 0.85;
-    utterance.pitch = 1.0;
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v =>
-      v.name.includes("Samantha") || v.name.includes("Karen") ||
-      v.name.includes("Google UK English Female")
-    );
-    if (preferred) utterance.voice = preferred;
-    utterance.onend = () => {
-      // Small pause between sentences
-      setTimeout(() => readNextSentence(index + 1), 400);
-    };
-    utteranceRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-  }, [sentences]);
-
-  // Start reading when component mounts
+  // Auto-scroll
   useEffect(() => {
-    const timer = setTimeout(() => readNextSentence(0), 800);
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [turns, liveTranscript]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    mountedRef.current = true;
     return () => {
-      clearTimeout(timer);
-      if (typeof window !== "undefined") window.speechSynthesis.cancel();
-      if (recognitionRef.current) recognitionRef.current.stop();
+      mountedRef.current = false;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      stopListening();
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-start listening when state changes to "listening"
-  useEffect(() => {
-    if (state !== "listening") return;
+  // Get coach response from Claude
+  const getCoachResponse = useCallback(async () => {
+    const res = await fetch("/api/exercise-voice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        exerciseName,
+        instructions,
+        whyNow,
+        history: historyRef.current,
+      }),
+    });
+    if (!res.ok) throw new Error("Failed to get coach response");
+    const data = await res.json();
+    return data.text as string;
+  }, [exerciseName, instructions, whyNow]);
+
+  // Speak text via ElevenLabs TTS
+  const speak = useCallback(async (text: string) => {
+    if (!mountedRef.current) return;
+    setState("speaking");
+
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!res.ok) {
+        // Fallback to browser TTS if ElevenLabs fails
+        return speakBrowserFallback(text);
+      }
+
+      const audioBlob = await res.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      return new Promise<void>((resolve) => {
+        audio.onended = () => {
+          URL.revokeObjectURL(audioUrl);
+          audioRef.current = null;
+          resolve();
+        };
+        audio.onerror = () => {
+          URL.revokeObjectURL(audioUrl);
+          audioRef.current = null;
+          // Fallback to browser TTS
+          speakBrowserFallback(text).then(resolve);
+        };
+        audio.play().catch(() => {
+          // Autoplay blocked — fallback
+          speakBrowserFallback(text).then(resolve);
+        });
+      });
+    } catch {
+      return speakBrowserFallback(text);
+    }
+  }, []);
+
+  // Browser TTS fallback
+  const speakBrowserFallback = useCallback((text: string): Promise<void> => {
+    return new Promise((resolve) => {
+      if (typeof window === "undefined" || !window.speechSynthesis) {
+        resolve();
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find(v =>
+        v.name.includes("Samantha") || v.name.includes("Karen")
+      );
+      if (preferred) utterance.voice = preferred;
+      utterance.onend = () => resolve();
+      utterance.onerror = () => resolve();
+      window.speechSynthesis.speak(utterance);
+    });
+  }, []);
+
+  // Start listening via browser SpeechRecognition
+  const startListening = useCallback(() => {
+    if (!mountedRef.current) return;
+    setState("listening");
+    setLiveTranscript("");
+
     try {
       const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!SR) return;
+
       const recognition = new SR();
       recognition.continuous = true;
-      recognition.interimResults = false;
+      recognition.interimResults = true;
       recognition.lang = "en-US";
+
+      let finalText = "";
+
       recognition.onresult = (event: any) => {
-        let text = "";
+        let interim = "";
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) text += event.results[i][0].transcript;
+          const t = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalText += (finalText ? " " : "") + t;
+          } else {
+            interim = t;
+          }
         }
-        if (text) setTranscript(prev => prev ? prev + " " + text : text);
+        setLiveTranscript(finalText + (interim ? " " + interim : ""));
       };
-      recognition.onend = () => { recognitionRef.current = null; };
+
+      recognition.onend = () => {
+        recognitionRef.current = null;
+      };
+
       recognitionRef.current = recognition;
       recognition.start();
-    } catch { /* no speech support */ }
-  }, [state]);
+    } catch {
+      // Speech recognition not available
+    }
+  }, []);
 
-  const stopListening = () => {
+  const stopListening = useCallback(() => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       recognitionRef.current = null;
     }
-    setEditedTranscript(transcript);
-    setState("review");
-  };
+  }, []);
 
-  const handleDone = () => {
-    const finalText = editedTranscript || transcript;
-    onComplete(finalText);
-    setState("done");
-  };
+  // Process a full conversation turn: coach speaks → user listens → send to Claude → repeat
+  const doCoachTurn = useCallback(async () => {
+    try {
+      if (!mountedRef.current) return;
+      setState("loading");
+
+      // Get Claude's response
+      const coachText = await getCoachResponse();
+      if (!mountedRef.current) return;
+
+      // Add to conversation
+      historyRef.current.push({ role: "assistant", text: coachText });
+      setTurns(prev => [...prev, { role: "coach", text: coachText }]);
+
+      // Speak it
+      await speak(coachText);
+      if (!mountedRef.current) return;
+
+      // Start listening for user response
+      startListening();
+    } catch (err) {
+      if (!mountedRef.current) return;
+      console.error("Coach turn error:", err);
+      setErrorMsg("Lost connection to coach. Your progress has been saved.");
+      setState("error");
+    }
+  }, [getCoachResponse, speak, startListening]);
+
+  // Start the conversation on mount
+  useEffect(() => {
+    doCoachTurn();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // User sends their response
+  const sendResponse = useCallback(async () => {
+    const text = liveTranscript.trim();
+    stopListening();
+
+    if (!text) {
+      // Nothing said — just go back to listening
+      startListening();
+      return;
+    }
+
+    // Add user turn
+    setTurns(prev => [...prev, { role: "user", text }]);
+    historyRef.current.push({ role: "user", text });
+    setLiveTranscript("");
+
+    // Get next coach response
+    await doCoachTurn();
+  }, [liveTranscript, stopListening, startListening, doCoachTurn]);
+
+  // End the session
+  const endSession = useCallback(() => {
+    stopListening();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+
+    // Build transcript for saving
+    const fullTranscript = turns
+      .map(t => `${t.role === "coach" ? "Coach" : "You"}: ${t.text}`)
+      .join("\n\n");
+
+    setState("ended");
+    onComplete(fullTranscript);
+  }, [turns, stopListening, onComplete]);
+
+  const handleClose = useCallback(() => {
+    stopListening();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+    onClose();
+  }, [stopListening, onClose]);
 
   return (
     <motion.div
@@ -123,275 +273,307 @@ export default function GuidedExerciseFlow({
         position: "fixed", inset: 0, zIndex: 200,
         backgroundColor: colors.bgDeep,
         display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center",
-        padding: "40px 24px",
-        overflow: "auto",
+        alignItems: "center",
+        padding: "40px 24px 24px",
       }}
     >
       {/* Close button */}
       <button
-        onClick={() => {
-          if (typeof window !== "undefined") window.speechSynthesis.cancel();
-          if (recognitionRef.current) recognitionRef.current.stop();
-          onClose();
-        }}
+        onClick={handleClose}
         style={{
           position: "absolute", top: 20, right: 20,
           background: "none", border: "none", cursor: "pointer",
           color: "rgba(255,255,255,0.4)", fontSize: 24,
+          zIndex: 10,
         }}
       >
-        ✕
+        &#10005;
       </button>
 
       {/* Exercise name */}
       <p style={{
-        fontSize: 12, fontWeight: 600, color: colors.coral,
-        fontFamily: display, letterSpacing: "0.04em",
-        marginBottom: 8,
+        fontSize: 13, fontWeight: 600, color: colors.coral,
+        fontFamily: display, letterSpacing: "0.02em",
+        marginBottom: 24, marginTop: 0,
       }}>
         {exerciseName}
       </p>
 
-      <div style={{ maxWidth: 560, width: "100%", textAlign: "center" }}>
-
-        {/* READING STATE — sentences appear one at a time */}
-        {state === "reading" && (
-          <motion.div
-            key="reading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <div style={{ minHeight: 200, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              {sentences.slice(0, currentSentence).map((s, i) => (
-                <motion.p
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: i === currentSentence - 1 ? 1 : 0.4, y: 0 }}
-                  transition={{ duration: 0.4 }}
-                  style={{
-                    fontSize: 20, color: "#ffffff", lineHeight: 1.8,
-                    fontFamily: body, margin: "0 0 16px 0",
-                    textAlign: "left",
-                  }}
-                >
-                  {s}
-                </motion.p>
-              ))}
-            </div>
-            <button
-              onClick={() => {
-                if (typeof window !== "undefined") window.speechSynthesis.cancel();
-                setCurrentSentence(sentences.length);
-                setState("breathing");
-                setTimeout(() => setState("listening"), 2000);
-              }}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: 13, color: "rgba(255,255,255,0.3)", fontFamily: body,
-                marginTop: 20,
-              }}
-            >
-              Skip to respond →
-            </button>
-          </motion.div>
-        )}
-
-        {/* BREATHING STATE — pause before listening */}
-        {state === "breathing" && (
-          <motion.div
-            key="breathing"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}
-          >
+      {/* Central orb — shows state */}
+      <div style={{
+        position: "relative",
+        width: 88, height: 88,
+        marginBottom: 28,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <PulseRing
+          active={state === "speaking"}
+          size={72}
+          color={colors.coral}
+        />
+        <PulseRing
+          active={state === "listening"}
+          size={72}
+          color={colors.plumLight || "rgba(176, 141, 173, 0.6)"}
+        />
+        <motion.div
+          animate={{
+            scale: (state === "speaking" || state === "listening") ? [1, 1.06, 1] : 1,
+            backgroundColor:
+              state === "speaking" ? "rgba(196, 148, 58, 0.12)"
+              : state === "listening" ? "rgba(176, 141, 173, 0.12)"
+              : state === "loading" || state === "processing" ? "rgba(255,255,255,0.06)"
+              : "rgba(255,255,255,0.04)",
+          }}
+          transition={{
+            duration: 2, repeat: (state === "speaking" || state === "listening") ? Infinity : 0,
+            ease: "easeInOut",
+          }}
+          style={{
+            width: 64, height: 64, borderRadius: "50%",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            position: "relative", zIndex: 1,
+          }}
+        >
+          {(state === "loading" || state === "processing") ? (
             <motion.div
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
               style={{
-                width: 80, height: 80, borderRadius: "50%",
-                backgroundColor: "rgba(224, 149, 133, 0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
+                width: 20, height: 20, borderRadius: "50%",
+                border: "2px solid rgba(255,255,255,0.1)",
+                borderTopColor: colors.coral,
               }}
+            />
+          ) : (
+            <svg width={20} height={20} viewBox="0 0 24 24" fill="none"
+              stroke={state === "speaking" ? colors.coral : state === "listening" ? (colors.plumLight || "#b08dad") : "rgba(255,255,255,0.25)"}
+              strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
             >
-              <div style={{
-                width: 40, height: 40, borderRadius: "50%",
-                backgroundColor: "rgba(224, 149, 133, 0.3)",
-              }} />
-            </motion.div>
-            <p style={{
-              fontSize: 16, color: "rgba(255,255,255,0.5)",
-              fontFamily: body,
-            }}>
-              Take a moment...
-            </p>
-          </motion.div>
-        )}
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" x2="12" y1="19" y2="22" />
+            </svg>
+          )}
+        </motion.div>
+      </div>
 
-        {/* LISTENING STATE — mic active */}
-        {state === "listening" && (
-          <motion.div
-            key="listening"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}
-          >
-            {transcript && (
+      {/* State label */}
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={state}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          style={{
+            fontSize: 12, fontFamily: display, fontWeight: 600,
+            color: state === "speaking" ? colors.coral
+              : state === "listening" ? (colors.plumLight || "#b08dad")
+              : "rgba(255,255,255,0.3)",
+            letterSpacing: "0.03em",
+            marginBottom: 20,
+          }}
+        >
+          {state === "loading" ? "Thinking..."
+            : state === "speaking" ? "Coach speaking"
+            : state === "listening" ? "Your turn"
+            : state === "processing" ? "Processing..."
+            : ""}
+        </motion.p>
+      </AnimatePresence>
+
+      {/* Transcript area */}
+      {(state !== "ended" && state !== "error") && (
+        <div
+          ref={scrollRef}
+          style={{
+            flex: 1, width: "100%", maxWidth: 520,
+            overflowY: "auto", paddingBottom: 16,
+            maskImage: "linear-gradient(to bottom, transparent 0%, black 24px, black calc(100% - 24px), transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 24px, black calc(100% - 24px), transparent 100%)",
+          }}
+        >
+          <div style={{ paddingTop: 16 }}>
+            {turns.map((turn, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{
+                  marginBottom: 20,
+                  textAlign: turn.role === "coach" ? "left" : "right",
+                }}
+              >
+                <p style={{
+                  fontSize: 15, lineHeight: 1.75,
+                  color: turn.role === "coach" ? "rgba(255,255,255,0.9)" : (colors.plumLight || "#b08dad"),
+                  fontFamily: body,
+                  margin: 0,
+                }}>
+                  {turn.text}
+                </p>
+              </motion.div>
+            ))}
+
+            {/* Live transcript while listening */}
+            {state === "listening" && liveTranscript && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                style={{
-                  padding: "16px 20px", borderRadius: 14, width: "100%",
-                  backgroundColor: "rgba(255,255,255,0.04)",
-                  textAlign: "left", marginBottom: 8,
-                }}
+                style={{ textAlign: "right", marginBottom: 16 }}
               >
-                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body, lineHeight: 1.7 }}>
-                  {transcript}
+                <p style={{
+                  fontSize: 15, lineHeight: 1.75,
+                  color: "rgba(176, 141, 173, 0.5)",
+                  fontFamily: body, fontStyle: "italic",
+                  margin: 0,
+                }}>
+                  {liveTranscript}
                 </p>
               </motion.div>
             )}
+          </div>
+        </div>
+      )}
 
-            <div style={{ position: "relative" }}>
-              <PulseRing active={true} size={80} />
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={stopListening}
-                style={{
-                  width: 80, height: 80, borderRadius: "50%",
-                  backgroundColor: "#f87171",
-                  border: "none", cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: "0 0 30px rgba(248, 113, 113, 0.4)",
-                  position: "relative", zIndex: 1,
-                }}
-              >
-                <svg width={28} height={28} viewBox="0 0 24 24" fill="#ffffff">
-                  <rect x="6" y="6" width="12" height="12" rx="2" />
-                </svg>
-              </motion.button>
-            </div>
-
-            <p style={{
-              fontSize: 14, color: "rgba(255,255,255,0.5)",
-              fontFamily: display, fontWeight: 600,
-            }}>
-              Listening — tap to stop
-            </p>
-
-            {!transcript && (
-              <button
-                onClick={() => { stopListening(); setState("review"); }}
-                style={{
-                  background: "none", border: "none", cursor: "pointer",
-                  fontSize: 13, color: "rgba(255,255,255,0.3)", fontFamily: body,
-                  marginTop: 12,
-                }}
-              >
-                Type instead
-              </button>
-            )}
-          </motion.div>
-        )}
-
-        {/* REVIEW STATE — edit transcript */}
-        {state === "review" && (
-          <motion.div
-            key="review"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={{ display: "flex", flexDirection: "column", gap: 16, textAlign: "left" }}
+      {/* Bottom controls */}
+      {state === "listening" && (
+        <div style={{
+          paddingTop: 12,
+          display: "flex", gap: 12, justifyContent: "center",
+        }}>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={sendResponse}
+            style={{
+              padding: "12px 28px", borderRadius: 100,
+              backgroundColor: liveTranscript.trim() ? colors.coral : colors.bgElevated,
+              border: liveTranscript.trim() ? "none" : `1px solid ${colors.borderDefault}`,
+              color: liveTranscript.trim() ? colors.bgDeep : "rgba(255,255,255,0.5)",
+              fontSize: 14, fontWeight: 600,
+              fontFamily: display, cursor: "pointer",
+            }}
           >
-            <p style={{
-              fontSize: 14, color: "rgba(255,255,255,0.5)",
-              fontFamily: display, fontWeight: 600,
-            }}>
-              Review your response
-            </p>
-            <textarea
-              value={editedTranscript}
-              onChange={(e) => setEditedTranscript(e.target.value)}
-              placeholder="Type or edit your response..."
-              style={{
-                width: "100%", minHeight: 150,
-                padding: 16, fontSize: 16, lineHeight: 1.7,
-                backgroundColor: colors.bgInput,
-                border: `1px solid ${colors.borderDefault}`,
-                color: "#ffffff", borderRadius: 14,
-                resize: "vertical", outline: "none",
-                fontFamily: body, boxSizing: "border-box",
-              }}
-            />
-            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-              <button
-                onClick={() => { setTranscript(""); setEditedTranscript(""); setState("listening"); }}
-                style={{
-                  padding: "12px 24px", borderRadius: 100,
-                  backgroundColor: "transparent",
-                  border: `1px solid ${colors.borderDefault}`,
-                  color: "#ffffff", fontSize: 14, fontWeight: 600,
-                  fontFamily: display, cursor: "pointer",
-                }}
-              >
-                Redo
-              </button>
-              <button
-                onClick={handleDone}
-                style={{
-                  padding: "12px 32px", borderRadius: 100,
-                  backgroundColor: colors.coral,
-                  border: "none",
-                  color: colors.bgDeep, fontSize: 14, fontWeight: 600,
-                  fontFamily: display, cursor: "pointer",
-                }}
-              >
-                Accept
-              </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* DONE STATE — brief confirmation */}
-        {state === "done" && (
-          <motion.div
-            key="done"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}
+            {liveTranscript.trim() ? "Send" : "Skip"}
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={endSession}
+            style={{
+              padding: "12px 24px", borderRadius: 100,
+              backgroundColor: "transparent",
+              border: `1px solid ${colors.borderDefault}`,
+              color: "rgba(255,255,255,0.5)", fontSize: 14, fontWeight: 600,
+              fontFamily: display, cursor: "pointer",
+            }}
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              style={{
-                width: 56, height: 56, borderRadius: "50%",
-                backgroundColor: colors.coral,
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}
+            End &amp; Save
+          </motion.button>
+        </div>
+      )}
+
+      {state === "speaking" && (
+        <div style={{ paddingTop: 12, display: "flex", justifyContent: "center" }}>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={endSession}
+            style={{
+              padding: "10px 20px", borderRadius: 100,
+              backgroundColor: "transparent",
+              border: `1px solid rgba(255,255,255,0.15)`,
+              color: "rgba(255,255,255,0.35)", fontSize: 13,
+              fontFamily: display, cursor: "pointer",
+            }}
+          >
+            End &amp; Save
+          </motion.button>
+        </div>
+      )}
+
+      {/* ERROR */}
+      {state === "error" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={{
+            flex: 1, display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center", gap: 16,
+            maxWidth: 400, textAlign: "center",
+          }}
+        >
+          <p style={{
+            fontSize: 15, color: "#f87171", fontFamily: body, margin: 0,
+          }}>
+            {errorMsg || "Something went wrong."}
+          </p>
+          <button
+            onClick={handleClose}
+            style={{
+              padding: "10px 24px", borderRadius: 100,
+              backgroundColor: "transparent",
+              border: `1px solid ${colors.borderDefault}`,
+              color: "#ffffff", fontSize: 14,
+              fontFamily: display, fontWeight: 600,
+              cursor: "pointer", marginTop: 8,
+            }}
+          >
+            Close
+          </button>
+        </motion.div>
+      )}
+
+      {/* ENDED */}
+      {state === "ended" && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={{
+            flex: 1, display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center", gap: 16,
+          }}
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            style={{
+              width: 56, height: 56, borderRadius: "50%",
+              backgroundColor: colors.coral,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}
+          >
+            <svg width={24} height={24} viewBox="0 0 24 24" fill="none"
+              stroke={colors.bgDeep} strokeWidth={3}
+              strokeLinecap="round" strokeLinejoin="round"
             >
-              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={colors.bgDeep} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </motion.div>
-            <p style={{ fontSize: 16, color: "#ffffff", fontFamily: display, fontWeight: 600 }}>
-              Response saved
-            </p>
-            <button
-              onClick={onClose}
-              style={{
-                padding: "10px 24px", borderRadius: 100,
-                backgroundColor: "transparent",
-                border: `1px solid ${colors.borderDefault}`,
-                color: "#ffffff", fontSize: 14,
-                fontFamily: display, cursor: "pointer",
-                marginTop: 8,
-              }}
-            >
-              Back to exercise
-            </button>
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
           </motion.div>
-        )}
-      </div>
+          <p style={{
+            fontSize: 16, color: "#ffffff",
+            fontFamily: display, fontWeight: 600,
+          }}>
+            Session saved
+          </p>
+          <button
+            onClick={onClose}
+            style={{
+              padding: "10px 24px", borderRadius: 100,
+              backgroundColor: "transparent",
+              border: `1px solid ${colors.borderDefault}`,
+              color: "#ffffff", fontSize: 14,
+              fontFamily: display, cursor: "pointer",
+              marginTop: 8,
+            }}
+          >
+            Back to exercise
+          </button>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

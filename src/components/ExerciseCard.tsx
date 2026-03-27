@@ -10,6 +10,7 @@ import EmotionChips from "@/components/EmotionChips";
 import FlagButton from "@/components/FlagButton";
 import VoiceResponseArea from "@/components/VoiceResponseArea";
 import GuidedExerciseFlow from "@/components/GuidedExerciseFlow";
+import ListenRespondFlow from "@/components/ListenRespondFlow";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -47,6 +48,10 @@ interface ExerciseCardProps {
   spectrumConfig?: SpectrumConfig;
   /** Daily session ID for flagging */
   dailySessionId?: string;
+  /** Called when user parks the exercise for later */
+  onPark?: () => void;
+  /** Whether the exercise is currently parked */
+  isParked?: boolean;
 }
 
 const modalityConfig: Record<string, { label: string }> = {
@@ -77,6 +82,8 @@ export default function ExerciseCard({
   parts,
   spectrumConfig,
   dailySessionId,
+  onPark,
+  isParked = false,
 }: ExerciseCardProps) {
   const [expanded, setExpanded] = useState(type === "coaching_plan");
   const [response, setResponse] = useState(existingResponses?.main || "");
@@ -87,6 +94,9 @@ export default function ExerciseCard({
   const [speaking, setSpeaking] = useState(false);
   const [guidedMode, setGuidedMode] = useState(false);
   const [showGuided, setShowGuided] = useState(false);
+  const [showListen, setShowListen] = useState(false);
+  const [parked, setParked] = useState(false);
+  const [showParkInfo, setShowParkInfo] = useState(false);
   const recognitionRef = useRef<any>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
@@ -322,42 +332,155 @@ export default function ExerciseCard({
             style={{ overflow: "hidden" }}
           >
             <div style={{ padding: "0 20px 24px 20px" }}>
-              {/* Why now — compact one-liner */}
-              {whySelected && (
-                <p style={{
-                  fontSize: 13, color: "rgba(255,255,255,0.55)", margin: "0 0 14px 0",
-                  lineHeight: 1.5, fontFamily: body, fontStyle: "italic",
+              {/* ── Intro: why now + why this works merged ── */}
+              {(whySelected || whyThisWorks) && (
+                <div style={{
+                  padding: "12px 16px", borderRadius: 12,
+                  backgroundColor: "rgba(255, 255, 255, 0.03)",
+                  marginBottom: 16,
                 }}>
-                  {whySelected}
-                </p>
+                  {whySelected && (
+                    <p style={{
+                      fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0,
+                      lineHeight: 1.6, fontFamily: body, fontStyle: "italic",
+                    }}>
+                      {whySelected}
+                    </p>
+                  )}
+                  {whySelected && whyThisWorks && (
+                    <div style={{ height: 1, backgroundColor: "rgba(255,255,255,0.06)", margin: "10px 0" }} />
+                  )}
+                  {whyThisWorks && (
+                    <p style={{
+                      fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0,
+                      lineHeight: 1.55, fontFamily: body,
+                    }}>
+                      {whyThisWorks}
+                    </p>
+                  )}
+                </div>
               )}
 
-              {/* Guide me button */}
+              {/* ── 3-mode exercise picker ── */}
               {instructions && !submitted && (
-                <button
-                  onClick={() => setShowGuided(true)}
+                <div style={{
+                  display: "flex", gap: 8, marginBottom: 18,
+                }}>
+                  {/* Conversation mode */}
+                  <button
+                    onClick={() => setShowGuided(true)}
+                    style={{
+                      flex: 1, display: "flex", flexDirection: "column",
+                      alignItems: "center", gap: 6,
+                      padding: "14px 8px", borderRadius: 12,
+                      backgroundColor: "rgba(196, 148, 58, 0.06)",
+                      border: `1px solid rgba(196, 148, 58, 0.2)`,
+                      cursor: "pointer", transition: "border-color 0.2s, background-color 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(196, 148, 58, 0.4)";
+                      e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(196, 148, 58, 0.2)";
+                      e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.06)";
+                    }}
+                  >
+                    <svg width={18} height={18} viewBox="0 0 24 24" fill="none"
+                      stroke={colors.coral} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span style={{
+                      fontSize: 11, fontWeight: 600, color: colors.coral,
+                      fontFamily: display, letterSpacing: "0.01em",
+                    }}>
+                      Conversation
+                    </span>
+                  </button>
+
+                  {/* Listen mode */}
+                  <button
+                    onClick={() => setShowListen(true)}
+                    style={{
+                      flex: 1, display: "flex", flexDirection: "column",
+                      alignItems: "center", gap: 6,
+                      padding: "14px 8px", borderRadius: 12,
+                      backgroundColor: "rgba(176, 141, 173, 0.06)",
+                      border: `1px solid rgba(176, 141, 173, 0.2)`,
+                      cursor: "pointer", transition: "border-color 0.2s, background-color 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(176, 141, 173, 0.4)";
+                      e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(176, 141, 173, 0.2)";
+                      e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.06)";
+                    }}
+                  >
+                    <svg width={18} height={18} viewBox="0 0 24 24" fill="none"
+                      stroke={colors.plumLight} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+                    >
+                      <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                      <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                    </svg>
+                    <span style={{
+                      fontSize: 11, fontWeight: 600, color: colors.plumLight,
+                      fontFamily: display, letterSpacing: "0.01em",
+                    }}>
+                      Listen
+                    </span>
+                  </button>
+
+                  {/* Read mode (scroll down) — just highlights the section below */}
+                  <button
+                    onClick={() => {
+                      // Already reading — just scroll to instructions
+                      const el = document.getElementById(`instructions-${name}`);
+                      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }}
+                    style={{
+                      flex: 1, display: "flex", flexDirection: "column",
+                      alignItems: "center", gap: 6,
+                      padding: "14px 8px", borderRadius: 12,
+                      backgroundColor: "rgba(255, 255, 255, 0.03)",
+                      border: `1px solid ${colors.borderDefault}`,
+                      cursor: "pointer", transition: "border-color 0.2s, background-color 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
+                      e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.06)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = colors.borderDefault;
+                      e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.03)";
+                    }}
+                  >
+                    <svg width={18} height={18} viewBox="0 0 24 24" fill="none"
+                      stroke="rgba(255,255,255,0.5)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+                    >
+                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                    </svg>
+                    <span style={{
+                      fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)",
+                      fontFamily: display, letterSpacing: "0.01em",
+                    }}>
+                      Read
+                    </span>
+                  </button>
+                </div>
+              )}
+
+              {/* Instructions — always visible for Read mode */}
+              {instructions && (
+                <div
+                  id={`instructions-${name}`}
                   style={{
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    width: "100%", padding: "12px 20px", marginBottom: 20,
-                    borderRadius: 12, border: `1px solid rgba(224, 149, 133, 0.25)`,
-                    backgroundColor: "rgba(224, 149, 133, 0.06)",
-                    color: colors.coral, fontSize: 14, fontWeight: 600,
-                    fontFamily: display, cursor: "pointer",
+                    padding: "16px 18px", backgroundColor: "rgba(255, 255, 255, 0.04)",
+                    borderRadius: 12, marginBottom: 14,
                   }}
                 >
-                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3" />
-                  </svg>
-                  Guide me through this
-                </button>
-              )}
-
-              {/* Instructions — always visible, the main content */}
-              {instructions && (
-                <div style={{
-                  padding: "16px 18px", backgroundColor: "rgba(255, 255, 255, 0.04)",
-                  borderRadius: 12, marginBottom: 14,
-                }}>
                   <p style={{
                     fontSize: 15, color: "#ffffff", margin: 0,
                     lineHeight: 1.75, whiteSpace: "pre-wrap", fontFamily: body,
@@ -367,32 +490,78 @@ export default function ExerciseCard({
                 </div>
               )}
 
-              {/* How this helps — collapsed accordion */}
-              {whyThisWorks && (
-                <div style={{ marginBottom: 14 }}>
+              {/* ── Park button ── */}
+              {!submitted && onPark && (
+                <div style={{
+                  display: "flex", alignItems: "center", justifyContent: "flex-end",
+                  marginBottom: 14, position: "relative",
+                }}>
                   <button
-                    onClick={() => setShowScience(!showScience)}
+                    onClick={() => { setParked(true); onPark(); }}
+                    disabled={parked || isParked}
                     style={{
-                      display: "flex", alignItems: "center", gap: 6,
-                      background: "none", border: "none", cursor: "pointer",
-                      padding: "4px 0", fontFamily: display, fontSize: 11,
-                      fontWeight: 600, color: "rgba(255,255,255,0.35)",
-                      letterSpacing: "0.02em",
+                      display: "flex", alignItems: "center", gap: 5,
+                      background: "none", border: "none", cursor: parked || isParked ? "default" : "pointer",
+                      fontSize: 12, fontWeight: 600, fontFamily: display,
+                      color: parked || isParked ? colors.success : "rgba(255,255,255,0.35)",
+                      padding: "4px 0",
+                      transition: "color 0.2s",
                     }}
                   >
-                    <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}
-                      style={{ transform: showScience ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
-                    Why this works
+                    {parked || isParked ? (
+                      <>
+                        <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
+                          stroke={colors.success} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
+                        >
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Parked for later
+                      </>
+                    ) : (
+                      <>
+                        <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                        >
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="8" x2="8" y1="12" y2="12" />
+                          <line x1="8" x2="16" y1="12" y2="12" />
+                        </svg>
+                        Park for later
+                      </>
+                    )}
                   </button>
-                  {showScience && (
-                    <p style={{
-                      fontSize: 13, color: "rgba(255,255,255,0.45)", margin: "8px 0 0 16px",
-                      lineHeight: 1.55, fontFamily: body,
+                  {/* Info tooltip */}
+                  <button
+                    onMouseEnter={() => setShowParkInfo(true)}
+                    onMouseLeave={() => setShowParkInfo(false)}
+                    style={{
+                      background: "none", border: "none", cursor: "help",
+                      padding: "4px", marginLeft: 4,
+                      color: "rgba(255,255,255,0.2)", fontSize: 12,
+                    }}
+                  >
+                    <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                      <line x1="12" x2="12.01" y1="17" y2="17" />
+                    </svg>
+                  </button>
+                  {showParkInfo && (
+                    <div style={{
+                      position: "absolute", bottom: "100%", right: 0,
+                      padding: "8px 12px", borderRadius: 8,
+                      backgroundColor: colors.bgElevated,
+                      border: `1px solid ${colors.borderDefault}`,
+                      fontSize: 11, color: "rgba(255,255,255,0.6)",
+                      fontFamily: body, lineHeight: 1.5,
+                      maxWidth: 220, zIndex: 10,
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                      marginBottom: 4,
                     }}>
-                      {whyThisWorks}
-                    </p>
+                      Park this exercise to do later. It will appear in your Parked section on the dashboard so you can continue your day.
+                    </div>
                   )}
                 </div>
               )}
@@ -627,6 +796,18 @@ export default function ExerciseCard({
             setShowGuided(false);
           }}
           onClose={() => setShowGuided(false)}
+        />
+      )}
+      {showListen && instructions && (
+        <ListenRespondFlow
+          exerciseName={name}
+          instructions={instructions}
+          whyNow={whySelected}
+          onComplete={(text) => {
+            setResponse(text);
+            setShowListen(false);
+          }}
+          onClose={() => setShowListen(false)}
         />
       )}
     </AnimatePresence>

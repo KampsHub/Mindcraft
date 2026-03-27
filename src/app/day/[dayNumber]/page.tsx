@@ -166,7 +166,7 @@ function DailyFlowPage() {
   const [journalMode, setJournalMode] = useState<"type" | "voice">("type");
 
   // Exercise follow-through from yesterday
-  const [yesterdayExercise, setYesterdayExercise] = useState<{name: string; id: string} | null>(null);
+  const [yesterdayExercise, setYesterdayExercise] = useState<{name: string; id: string; whyNow: string} | null>(null);
   const [followThrough, setFollowThrough] = useState("");
 
   // Step 3
@@ -323,9 +323,14 @@ function DailyFlowPage() {
 
       if (yesterdaySession?.step_3_analysis) {
         const analysis = yesterdaySession.step_3_analysis as Record<string, unknown>;
-        const exercises = (analysis.overflow_exercises || []) as { framework_name: string; framework_id?: string }[];
+        const exercises = (analysis.overflow_exercises || []) as { framework_name: string; framework_id?: string; why_now?: string; why_selected?: string; instruction?: string }[];
         if (exercises.length > 0) {
-          setYesterdayExercise({ name: exercises[0].framework_name, id: exercises[0].framework_id || "" });
+          const ex = exercises[0];
+          setYesterdayExercise({
+            name: ex.framework_name,
+            id: ex.framework_id || "",
+            whyNow: ex.why_now || ex.why_selected || "",
+          });
         }
       }
     }
@@ -1137,8 +1142,16 @@ function DailyFlowPage() {
           }}>
             Yesterday&apos;s exercise
           </p>
-          <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body, lineHeight: 1.5 }}>
-            {yesterdayExercise.name}: did the moment come up? What happened?
+          <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body, fontWeight: 600, lineHeight: 1.4 }}>
+            {yesterdayExercise.name}
+          </p>
+          {yesterdayExercise.whyNow && (
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 10px 0", fontFamily: body, lineHeight: 1.4 }}>
+              {yesterdayExercise.whyNow}
+            </p>
+          )}
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", margin: "0 0 10px 0", fontFamily: body }}>
+            Did you notice anything related to this? What came up?
           </p>
           <textarea
             value={followThrough}

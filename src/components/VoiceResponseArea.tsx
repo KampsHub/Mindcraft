@@ -165,57 +165,43 @@ export default function VoiceResponseArea({
       )}
 
       <AnimatePresence mode="wait">
-        {/* ── IDLE: Two equal buttons ── */}
+        {/* ── IDLE: Compact inline pills ── */}
         {mode === "idle" && !hasContent && (
           <motion.div
             key="idle"
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             style={{
-              display: "flex", gap: 10,
+              display: "flex", gap: 8,
             }}
           >
-            {/* Voice button */}
             {hasSpeechSupport && (
               <button
                 onClick={switchToVoice}
                 style={{
                   flex: 1,
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                  padding: "18px 16px",
-                  borderRadius: 14,
-                  backgroundColor: colors.bgInput,
-                  border: `1px solid ${colors.borderDefault}`,
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  backgroundColor: "rgba(196, 148, 58, 0.08)",
+                  border: "none",
                   cursor: "pointer",
-                  transition: "border-color 0.2s, background-color 0.2s",
+                  transition: "background-color 0.15s",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = colors.coral;
-                  e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.06)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = colors.borderDefault;
-                  e.currentTarget.style.backgroundColor = colors.bgInput;
-                }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.15)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.08)"; }}
               >
-                <div style={{
-                  width: 36, height: 36, borderRadius: "50%",
-                  backgroundColor: colors.coralWash,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  flexShrink: 0,
-                }}>
-                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none"
-                    stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-                  >
-                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                    <line x1="12" x2="12" y1="19" y2="22" />
-                  </svg>
-                </div>
+                <svg width={15} height={15} viewBox="0 0 24 24" fill="none"
+                  stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" x2="12" y1="19" y2="22" />
+                </svg>
                 <span style={{
-                  fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)",
+                  fontSize: 13, fontWeight: 600, color: colors.coral,
                   fontFamily: display,
                 }}>
                   Speak
@@ -223,43 +209,29 @@ export default function VoiceResponseArea({
               </button>
             )}
 
-            {/* Text button */}
             <button
               onClick={switchToText}
               style={{
                 flex: 1,
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                padding: "18px 16px",
-                borderRadius: 14,
-                backgroundColor: colors.bgInput,
-                border: `1px solid ${colors.borderDefault}`,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                padding: "12px 14px",
+                borderRadius: 12,
+                backgroundColor: "rgba(255, 255, 255, 0.05)",
+                border: "none",
                 cursor: "pointer",
-                transition: "border-color 0.2s, background-color 0.2s",
+                transition: "background-color 0.15s",
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = colors.plumLight;
-                e.currentTarget.style.backgroundColor = "rgba(123, 82, 120, 0.06)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = colors.borderDefault;
-                e.currentTarget.style.backgroundColor = colors.bgInput;
-              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.09)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.05)"; }}
             >
-              <div style={{
-                width: 36, height: 36, borderRadius: "50%",
-                backgroundColor: colors.plumWash,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0,
-              }}>
-                <svg width={16} height={16} viewBox="0 0 24 24" fill="none"
-                  stroke={colors.plumLight} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-                >
-                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                  <path d="m15 5 4 4" />
-                </svg>
-              </div>
+              <svg width={15} height={15} viewBox="0 0 24 24" fill="none"
+                stroke="rgba(255,255,255,0.5)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+              >
+                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                <path d="m15 5 4 4" />
+              </svg>
               <span style={{
-                fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)",
+                fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.55)",
                 fontFamily: display,
               }}>
                 Write

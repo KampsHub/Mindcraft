@@ -331,243 +331,133 @@ export default function ExerciseCard({
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{ overflow: "hidden" }}
           >
-            <div style={{ padding: "0 20px 24px 20px" }}>
-              {/* ── Intro: why now + why this works merged ── */}
-              {(whySelected || whyThisWorks) && (
-                <div style={{
-                  padding: "12px 16px", borderRadius: 12,
-                  backgroundColor: "rgba(255, 255, 255, 0.03)",
-                  marginBottom: 16,
+            <div style={{ padding: "0 20px 20px 20px" }}>
+              {/* ── Intro: flowing text, no box ── */}
+              {whySelected && (
+                <p style={{
+                  fontSize: 13, color: "rgba(255,255,255,0.5)", margin: "0 0 12px 0",
+                  lineHeight: 1.6, fontFamily: body, fontStyle: "italic",
                 }}>
-                  {whySelected && (
-                    <p style={{
-                      fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0,
-                      lineHeight: 1.6, fontFamily: body, fontStyle: "italic",
-                    }}>
-                      {whySelected}
-                    </p>
-                  )}
-                  {whySelected && whyThisWorks && (
-                    <div style={{ height: 1, backgroundColor: "rgba(255,255,255,0.06)", margin: "10px 0" }} />
-                  )}
+                  {whySelected}
                   {whyThisWorks && (
-                    <p style={{
-                      fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0,
-                      lineHeight: 1.55, fontFamily: body,
-                    }}>
-                      {whyThisWorks}
-                    </p>
+                    <span style={{ color: "rgba(255,255,255,0.3)" }}>
+                      {" \u00B7 "}{whyThisWorks}
+                    </span>
                   )}
-                </div>
+                </p>
+              )}
+              {!whySelected && whyThisWorks && (
+                <p style={{
+                  fontSize: 12, color: "rgba(255,255,255,0.35)", margin: "0 0 12px 0",
+                  lineHeight: 1.55, fontFamily: body,
+                }}>
+                  {whyThisWorks}
+                </p>
               )}
 
-              {/* ── 3-mode exercise picker ── */}
+              {/* ── Mode chips: inline pills ── */}
               {instructions && !submitted && (
                 <div style={{
-                  display: "flex", gap: 8, marginBottom: 18,
+                  display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap",
                 }}>
-                  {/* Conversation mode */}
                   <button
                     onClick={() => setShowGuided(true)}
                     style={{
-                      flex: 1, display: "flex", flexDirection: "column",
-                      alignItems: "center", gap: 6,
-                      padding: "14px 8px", borderRadius: 12,
-                      backgroundColor: "rgba(196, 148, 58, 0.06)",
-                      border: `1px solid rgba(196, 148, 58, 0.2)`,
-                      cursor: "pointer", transition: "border-color 0.2s, background-color 0.2s",
+                      display: "inline-flex", alignItems: "center", gap: 5,
+                      padding: "6px 14px", borderRadius: 100,
+                      backgroundColor: "rgba(196, 148, 58, 0.1)",
+                      border: "none", cursor: "pointer",
+                      fontSize: 12, fontWeight: 600, color: colors.coral,
+                      fontFamily: display, transition: "background-color 0.15s",
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(196, 148, 58, 0.4)";
-                      e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.1)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(196, 148, 58, 0.2)";
-                      e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.06)";
-                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.18)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.1)"; }}
                   >
-                    <svg width={18} height={18} viewBox="0 0 24 24" fill="none"
-                      stroke={colors.coral} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-                    >
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                    <span style={{
-                      fontSize: 11, fontWeight: 600, color: colors.coral,
-                      fontFamily: display, letterSpacing: "0.01em",
-                    }}>
-                      Conversation
-                    </span>
+                    <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                    ><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                    Talk through it
                   </button>
-
-                  {/* Listen mode */}
                   <button
                     onClick={() => setShowListen(true)}
                     style={{
-                      flex: 1, display: "flex", flexDirection: "column",
-                      alignItems: "center", gap: 6,
-                      padding: "14px 8px", borderRadius: 12,
-                      backgroundColor: "rgba(176, 141, 173, 0.06)",
-                      border: `1px solid rgba(176, 141, 173, 0.2)`,
-                      cursor: "pointer", transition: "border-color 0.2s, background-color 0.2s",
+                      display: "inline-flex", alignItems: "center", gap: 5,
+                      padding: "6px 14px", borderRadius: 100,
+                      backgroundColor: "rgba(176, 141, 173, 0.1)",
+                      border: "none", cursor: "pointer",
+                      fontSize: 12, fontWeight: 600, color: colors.plumLight,
+                      fontFamily: display, transition: "background-color 0.15s",
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(176, 141, 173, 0.4)";
-                      e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.1)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(176, 141, 173, 0.2)";
-                      e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.06)";
-                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.18)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.1)"; }}
                   >
-                    <svg width={18} height={18} viewBox="0 0 24 24" fill="none"
-                      stroke={colors.plumLight} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-                    >
-                      <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                      <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
-                    </svg>
-                    <span style={{
-                      fontSize: 11, fontWeight: 600, color: colors.plumLight,
-                      fontFamily: display, letterSpacing: "0.01em",
-                    }}>
-                      Listen
-                    </span>
+                    <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                    ><path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" /></svg>
+                    Listen
                   </button>
-
-                  {/* Read mode (scroll down) — just highlights the section below */}
-                  <button
-                    onClick={() => {
-                      // Already reading — just scroll to instructions
-                      const el = document.getElementById(`instructions-${name}`);
-                      el?.scrollIntoView({ behavior: "smooth", block: "center" });
-                    }}
-                    style={{
-                      flex: 1, display: "flex", flexDirection: "column",
-                      alignItems: "center", gap: 6,
-                      padding: "14px 8px", borderRadius: 12,
-                      backgroundColor: "rgba(255, 255, 255, 0.03)",
-                      border: `1px solid ${colors.borderDefault}`,
-                      cursor: "pointer", transition: "border-color 0.2s, background-color 0.2s",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
-                      e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.06)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = colors.borderDefault;
-                      e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.03)";
-                    }}
-                  >
-                    <svg width={18} height={18} viewBox="0 0 24 24" fill="none"
-                      stroke="rgba(255,255,255,0.5)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-                    >
-                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-                    </svg>
+                  {onPark && !parked && !isParked && (
+                    <div style={{ position: "relative", display: "inline-flex", marginLeft: "auto" }}>
+                      <button
+                        onClick={() => { setParked(true); onPark(); }}
+                        style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
+                          padding: "6px 12px", borderRadius: 100,
+                          backgroundColor: "transparent", border: "none",
+                          cursor: "pointer", fontSize: 12, fontWeight: 500,
+                          color: "rgba(255,255,255,0.3)", fontFamily: display,
+                          transition: "color 0.15s",
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.5)"; setShowParkInfo(true); }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.3)"; setShowParkInfo(false); }}
+                      >
+                        <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                        ><circle cx="12" cy="12" r="10" /><line x1="8" x2="16" y1="12" y2="12" /></svg>
+                        Park
+                      </button>
+                      {showParkInfo && (
+                        <div style={{
+                          position: "absolute", bottom: "calc(100% + 6px)", right: 0,
+                          padding: "6px 10px", borderRadius: 8,
+                          backgroundColor: colors.bgElevated,
+                          fontSize: 11, color: "rgba(255,255,255,0.55)",
+                          fontFamily: body, lineHeight: 1.45,
+                          maxWidth: 200, zIndex: 10, whiteSpace: "nowrap",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+                        }}>
+                          Save for later, keep going
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {(parked || isParked) && (
                     <span style={{
-                      fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)",
-                      fontFamily: display, letterSpacing: "0.01em",
+                      display: "inline-flex", alignItems: "center", gap: 4,
+                      padding: "6px 12px", marginLeft: "auto",
+                      fontSize: 12, fontWeight: 500, color: colors.success,
+                      fontFamily: display,
                     }}>
-                      Read
+                      <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
+                      ><polyline points="20 6 9 17 4 12" /></svg>
+                      Parked
                     </span>
-                  </button>
+                  )}
                 </div>
               )}
 
-              {/* Instructions — always visible for Read mode */}
+              {/* Instructions — clean, no background box */}
               {instructions && (
-                <div
-                  id={`instructions-${name}`}
-                  style={{
-                    padding: "16px 18px", backgroundColor: "rgba(255, 255, 255, 0.04)",
-                    borderRadius: 12, marginBottom: 14,
-                  }}
-                >
+                <div id={`instructions-${name}`} style={{ marginBottom: 16 }}>
                   <p style={{
-                    fontSize: 15, color: "#ffffff", margin: 0,
-                    lineHeight: 1.75, whiteSpace: "pre-wrap", fontFamily: body,
+                    fontSize: 15, color: "rgba(255,255,255,0.88)", margin: 0,
+                    lineHeight: 1.8, whiteSpace: "pre-wrap", fontFamily: body,
                   }}>
                     {instructions}
                   </p>
                 </div>
               )}
-
-              {/* ── Park button ── */}
-              {!submitted && onPark && (
-                <div style={{
-                  display: "flex", alignItems: "center", justifyContent: "flex-end",
-                  marginBottom: 14, position: "relative",
-                }}>
-                  <button
-                    onClick={() => { setParked(true); onPark(); }}
-                    disabled={parked || isParked}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 5,
-                      background: "none", border: "none", cursor: parked || isParked ? "default" : "pointer",
-                      fontSize: 12, fontWeight: 600, fontFamily: display,
-                      color: parked || isParked ? colors.success : "rgba(255,255,255,0.35)",
-                      padding: "4px 0",
-                      transition: "color 0.2s",
-                    }}
-                  >
-                    {parked || isParked ? (
-                      <>
-                        <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
-                          stroke={colors.success} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
-                        >
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        Parked for later
-                      </>
-                    ) : (
-                      <>
-                        <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-                        >
-                          <circle cx="12" cy="12" r="10" />
-                          <line x1="8" x2="8" y1="12" y2="12" />
-                          <line x1="8" x2="16" y1="12" y2="12" />
-                        </svg>
-                        Park for later
-                      </>
-                    )}
-                  </button>
-                  {/* Info tooltip */}
-                  <button
-                    onMouseEnter={() => setShowParkInfo(true)}
-                    onMouseLeave={() => setShowParkInfo(false)}
-                    style={{
-                      background: "none", border: "none", cursor: "help",
-                      padding: "4px", marginLeft: 4,
-                      color: "rgba(255,255,255,0.2)", fontSize: 12,
-                    }}
-                  >
-                    <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-                    >
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                      <line x1="12" x2="12.01" y1="17" y2="17" />
-                    </svg>
-                  </button>
-                  {showParkInfo && (
-                    <div style={{
-                      position: "absolute", bottom: "100%", right: 0,
-                      padding: "8px 12px", borderRadius: 8,
-                      backgroundColor: colors.bgElevated,
-                      border: `1px solid ${colors.borderDefault}`,
-                      fontSize: 11, color: "rgba(255,255,255,0.6)",
-                      fontFamily: body, lineHeight: 1.5,
-                      maxWidth: 220, zIndex: 10,
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-                      marginBottom: 4,
-                    }}>
-                      Park this exercise to do later. It will appear in your Parked section on the dashboard so you can continue your day.
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Divider before response area */}
-              <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 18 }} />
 
               {/* ── Multi-part mode: delegate entirely ── */}
               {inputType === "multi-part" && parts && parts.length > 0 ? (
@@ -645,21 +535,8 @@ export default function ExerciseCard({
                     </div>
                   )}
 
-                  {/* ── Voice-first response area ── */}
+                  {/* ── Response area ── */}
                   <div style={{ marginBottom: 16 }}>
-                    <label
-                      style={{
-                        display: "block",
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: colors.textMuted,
-                        marginBottom: 8,
-                        letterSpacing: "0.02em",
-                        fontFamily: display,
-                      }}
-                    >
-                      {inputType !== "text" ? "Add any notes" : "Your response"}
-                    </label>
                     <VoiceResponseArea
                       value={response}
                       onChange={setResponse}

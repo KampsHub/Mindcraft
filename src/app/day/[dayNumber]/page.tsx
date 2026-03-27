@@ -1045,21 +1045,7 @@ function DailyFlowPage() {
               </p>
             )}
 
-            {!completedSteps.includes(2) && (
-              <motion.button
-                whileHover={{ scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => setActiveStep(2)}
-                style={{
-                  padding: "12px 28px", fontSize: 14, fontWeight: 600,
-                  color: colors.bgDeep, backgroundColor: colors.coral,
-                  border: "none", borderRadius: 100, cursor: "pointer",
-                  fontFamily: display, letterSpacing: "0.01em", marginTop: 18,
-                }}
-              >
-                Continue to Journal
-              </motion.button>
-            )}
+            {/* Auto-advance to journal when themes load */}
           </div>
         )}
       </DailyStep>
@@ -1079,27 +1065,7 @@ function DailyFlowPage() {
           border: `1px solid ${colors.borderDefault}`,
           padding: 22,
         }}>
-          {/* Personal prompt — generated from Thread context */}
-          {themes?.personal_prompt && (
-            <div style={{ marginBottom: 18 }}>
-              <div style={{
-                padding: "14px 18px",
-                backgroundColor: colors.coralWash,
-                borderRadius: 12,
-                borderLeft: `3px solid ${colors.coral}`,
-                marginBottom: 8,
-              }}>
-                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
-                  {themes.personal_prompt.prompt}
-                </p>
-                {themes.personal_prompt.context && (
-                  <p style={{ fontSize: 12, color: "#ffffff", margin: "6px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
-                    {themes.personal_prompt.context}
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
+          {/* Coaching question prompts from themes */}
 
           {/* Seed prompts */}
           {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
@@ -1109,7 +1075,7 @@ function DailyFlowPage() {
                 margin: "0 0 10px 0", textTransform: "uppercase",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
-                Today&apos;s territory prompts (optional)
+                Thought Inspiration
               </p>
               {programDay.seed_prompts.map((sp, i) => (
                 <div key={i} style={{

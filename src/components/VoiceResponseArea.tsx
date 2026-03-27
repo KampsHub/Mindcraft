@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
-import PulseRing from "@/components/PulseRing";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -15,31 +14,73 @@ interface VoiceResponseAreaProps {
   disabled?: boolean;
 }
 
-export default function VoiceResponseArea({ value, onChange, placeholder = "Tap to respond", disabled = false }: VoiceResponseAreaProps) {
-  const [mode, setMode] = useState<"mic" | "text">("mic");
+export default function VoiceResponseArea({
+  value,
+  onChange,
+  placeholder = "Share your response...",
+  disabled = false,
+}: VoiceResponseAreaProps) {
+  const [mode, setMode] = useState<"idle" | "voice" | "text">("idle");
   const [listening, setListening] = useState(false);
+  const [interim, setInterim] = useState("");
   const recognitionRef = useRef<any>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current && mode === "text") {
+      const el = textareaRef.current;
+      el.style.height = "auto";
+      el.style.height = Math.min(el.scrollHeight, 200) + "px";
+    }
+  }, [value, mode]);
+
+  // Switch to text mode if speech recognition not supported
+  const hasSpeechSupport = typeof window !== "undefined" &&
+    ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
 
   const startListening = () => {
     try {
       const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (!SR) { setMode("text"); return; } // Fallback to text if no speech support
+      if (!SR) { setMode("text"); return; }
+
       const recognition = new SR();
       recognition.continuous = true;
-      recognition.interimResults = false;
+      recognition.interimResults = true;
       recognition.lang = "en-US";
+
       recognition.onresult = (event: any) => {
-        let text = "";
+        let finalText = "";
+        let interimText = "";
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) text += event.results[i][0].transcript;
+          const t = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalText += t;
+          } else {
+            interimText += t;
+          }
         }
-        if (text) onChange(value ? value + " " + text : text);
+        if (finalText) {
+          onChange(value ? value + " " + finalText : finalText);
+          setInterim("");
+        } else {
+          setInterim(interimText);
+        }
       };
-      recognition.onend = () => { setListening(false); recognitionRef.current = null; };
+
+      recognition.onend = () => {
+        setListening(false);
+        setInterim("");
+        recognitionRef.current = null;
+      };
+
       recognitionRef.current = recognition;
       recognition.start();
       setListening(true);
-    } catch { setMode("text"); }
+      setMode("voice");
+    } catch {
+      setMode("text");
+    }
   };
 
   const stopListening = () => {
@@ -48,147 +89,361 @@ export default function VoiceResponseArea({ value, onChange, placeholder = "Tap 
       recognitionRef.current = null;
     }
     setListening(false);
+    setInterim("");
   };
 
+  const switchToText = () => {
+    stopListening();
+    setMode("text");
+    setTimeout(() => textareaRef.current?.focus(), 50);
+  };
+
+  const switchToVoice = () => {
+    setMode("voice");
+    startListening();
+  };
+
+  // Disabled / completed state
   if (disabled) {
     return value ? (
       <div style={{
-        padding: "14px 18px", borderRadius: 12,
+        padding: "14px 18px", borderRadius: 14,
         backgroundColor: "rgba(255,255,255,0.04)",
       }}>
-        <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", margin: 0, fontFamily: body, lineHeight: 1.6, fontStyle: "italic" }}>
+        <p style={{
+          fontSize: 15, color: "rgba(255,255,255,0.7)",
+          margin: 0, fontFamily: body, lineHeight: 1.6, fontStyle: "italic",
+        }}>
           &ldquo;{value}&rdquo;
         </p>
       </div>
     ) : null;
   }
 
+  // Already has content — show it with ability to edit
+  const hasContent = value.trim().length > 0;
+
   return (
     <div>
-      <AnimatePresence mode="wait">
-        {mode === "mic" ? (
-          <motion.div
-            key="mic"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "24px 0" }}
-          >
-            {/* Transcribed text so far */}
-            {value && (
-              <div style={{
-                padding: "12px 16px", borderRadius: 12, width: "100%",
-                backgroundColor: "rgba(255,255,255,0.04)",
-                marginBottom: 8,
-              }}>
-                <p style={{ fontSize: 15, color: "#ffffff", margin: 0, fontFamily: body, lineHeight: 1.6 }}>
-                  {value}
-                </p>
-              </div>
-            )}
+      {/* Show existing response if any */}
+      {hasContent && mode !== "text" && (
+        <motion.div
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            padding: "14px 16px", borderRadius: 14,
+            backgroundColor: "rgba(255,255,255,0.04)",
+            marginBottom: 12,
+          }}
+        >
+          <p style={{
+            fontSize: 15, color: "rgba(255,255,255,0.85)",
+            margin: 0, fontFamily: body, lineHeight: 1.7,
+          }}>
+            {value}
+          </p>
+        </motion.div>
+      )}
 
-            {/* Mic button with pulse */}
-            <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <PulseRing active={listening} size={64} />
-              <motion.button
-                whileHover={!listening ? { scale: 1.05 } : {}}
-                whileTap={{ scale: 0.95 }}
-                onClick={listening ? stopListening : startListening}
+      {/* Interim voice text */}
+      {listening && interim && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={{
+            padding: "10px 16px", borderRadius: 12,
+            marginBottom: 10,
+          }}
+        >
+          <p style={{
+            fontSize: 15, color: "rgba(255,255,255,0.35)",
+            margin: 0, fontFamily: body, lineHeight: 1.6, fontStyle: "italic",
+          }}>
+            {interim}
+          </p>
+        </motion.div>
+      )}
+
+      <AnimatePresence mode="wait">
+        {/* ── IDLE: Two equal buttons ── */}
+        {mode === "idle" && !hasContent && (
+          <motion.div
+            key="idle"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              display: "flex", gap: 10,
+            }}
+          >
+            {/* Voice button */}
+            {hasSpeechSupport && (
+              <button
+                onClick={switchToVoice}
                 style={{
-                  width: 64, height: 64, borderRadius: "50%",
-                  backgroundColor: listening ? "#f87171" : colors.coral,
-                  border: "none", cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: listening
-                    ? "0 0 24px rgba(248, 113, 113, 0.4)"
-                    : "0 4px 20px rgba(196, 148, 58, 0.25)",
-                  transition: "background-color 0.2s, box-shadow 0.2s",
-                  position: "relative", zIndex: 1,
+                  flex: 1,
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                  padding: "18px 16px",
+                  borderRadius: 14,
+                  backgroundColor: colors.bgInput,
+                  border: `1px solid ${colors.borderDefault}`,
+                  cursor: "pointer",
+                  transition: "border-color 0.2s, background-color 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = colors.coral;
+                  e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = colors.borderDefault;
+                  e.currentTarget.style.backgroundColor = colors.bgInput;
                 }}
               >
-                {listening ? (
-                  <svg width={22} height={22} viewBox="0 0 24 24" fill="#ffffff">
-                    <rect x="6" y="6" width="12" height="12" rx="2" />
-                  </svg>
-                ) : (
-                  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={colors.bgDeep} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <div style={{
+                  width: 36, height: 36, borderRadius: "50%",
+                  backgroundColor: colors.coralWash,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  flexShrink: 0,
+                }}>
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none"
+                    stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                  >
                     <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                     <line x1="12" x2="12" y1="19" y2="22" />
                   </svg>
-                )}
-              </motion.button>
-            </div>
+                </div>
+                <span style={{
+                  fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)",
+                  fontFamily: display,
+                }}>
+                  Speak
+                </span>
+              </button>
+            )}
 
-            <p style={{
-              fontSize: 13, color: listening ? "#f87171" : "rgba(255,255,255,0.4)",
-              fontFamily: display, fontWeight: 600,
-            }}>
-              {listening ? "Listening — tap to stop" : placeholder}
-            </p>
-
-            {/* Type instead link */}
+            {/* Text button */}
             <button
-              onClick={() => { stopListening(); setMode("text"); }}
+              onClick={switchToText}
               style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: body,
-                textDecoration: "underline", padding: 0,
+                flex: 1,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                padding: "18px 16px",
+                borderRadius: 14,
+                backgroundColor: colors.bgInput,
+                border: `1px solid ${colors.borderDefault}`,
+                cursor: "pointer",
+                transition: "border-color 0.2s, background-color 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = colors.plumLight;
+                e.currentTarget.style.backgroundColor = "rgba(123, 82, 120, 0.06)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = colors.borderDefault;
+                e.currentTarget.style.backgroundColor = colors.bgInput;
               }}
             >
-              Type instead
+              <div style={{
+                width: 36, height: 36, borderRadius: "50%",
+                backgroundColor: colors.plumWash,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0,
+              }}>
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none"
+                  stroke={colors.plumLight} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                  <path d="m15 5 4 4" />
+                </svg>
+              </div>
+              <span style={{
+                fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)",
+                fontFamily: display,
+              }}>
+                Write
+              </span>
             </button>
           </motion.div>
-        ) : (
+        )}
+
+        {/* ── VOICE MODE ── */}
+        {(mode === "voice" || (mode === "idle" && hasContent && !listening)) && (
           <motion.div
-            key="text"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            key="voice-active"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              display: "flex", alignItems: "center", gap: 12,
+              padding: "10px 14px",
+              borderRadius: 14,
+              backgroundColor: listening ? "rgba(196, 148, 58, 0.06)" : colors.bgInput,
+              border: `1px solid ${listening ? "rgba(196, 148, 58, 0.3)" : colors.borderDefault}`,
+              transition: "border-color 0.3s, background-color 0.3s",
+            }}
           >
-            <div style={{ position: "relative" }}>
-              <textarea
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder="Write your response..."
-                style={{
-                  width: "100%", minHeight: 120,
-                  padding: "16px 48px 16px 16px",
-                  fontSize: 15, lineHeight: 1.65,
-                  backgroundColor: colors.bgInput,
-                  border: `1px solid ${colors.borderDefault}`,
-                  color: "#ffffff", borderRadius: 12,
-                  resize: "vertical", outline: "none",
-                  fontFamily: body, boxSizing: "border-box",
-                }}
-              />
-              {/* Small mic button in corner for quick voice add */}
-              <button
-                onClick={startListening}
-                style={{
-                  position: "absolute", right: 10, bottom: 10,
-                  width: 32, height: 32, borderRadius: "50%",
-                  backgroundColor: colors.coralWash, border: "none",
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                }}
-              >
-                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+            {/* Mic button */}
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              onClick={listening ? stopListening : startListening}
+              style={{
+                width: 44, height: 44, borderRadius: "50%",
+                backgroundColor: listening ? "#ef4444" : colors.coral,
+                border: "none", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0,
+                boxShadow: listening
+                  ? "0 0 16px rgba(239, 68, 68, 0.3)"
+                  : "0 2px 8px rgba(196, 148, 58, 0.2)",
+                transition: "background-color 0.2s, box-shadow 0.2s",
+              }}
+            >
+              {listening ? (
+                <svg width={18} height={18} viewBox="0 0 24 24" fill="#ffffff">
+                  <rect x="6" y="6" width="12" height="12" rx="2" />
+                </svg>
+              ) : (
+                <svg width={18} height={18} viewBox="0 0 24 24" fill="none"
+                  stroke={colors.bgDeep} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                >
                   <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                   <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                   <line x1="12" x2="12" y1="19" y2="22" />
                 </svg>
-              </button>
+              )}
+            </motion.button>
+
+            {/* Status text + waveform area */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              {listening ? (
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {/* Simple waveform bars */}
+                  <div style={{ display: "flex", gap: 2, alignItems: "center", height: 24 }}>
+                    {[...Array(8)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        animate={{
+                          height: [4, 12 + Math.random() * 10, 4],
+                        }}
+                        transition={{
+                          duration: 0.6 + Math.random() * 0.4,
+                          repeat: Infinity,
+                          delay: i * 0.08,
+                          ease: "easeInOut",
+                        }}
+                        style={{
+                          width: 2.5, borderRadius: 2,
+                          backgroundColor: colors.coral,
+                          opacity: 0.7,
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <span style={{
+                    fontSize: 13, color: "rgba(255,255,255,0.45)",
+                    fontFamily: body,
+                  }}>
+                    Listening...
+                  </span>
+                </div>
+              ) : (
+                <span style={{
+                  fontSize: 13, color: "rgba(255,255,255,0.35)",
+                  fontFamily: body,
+                }}>
+                  {hasContent ? "Tap to add more" : "Tap to speak"}
+                </span>
+              )}
             </div>
+
+            {/* Switch to text button */}
             <button
-              onClick={() => setMode("mic")}
+              onClick={switchToText}
               style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: body,
-                textDecoration: "underline", padding: "8px 0 0 0",
+                width: 36, height: 36, borderRadius: 10,
+                backgroundColor: "rgba(255,255,255,0.06)",
+                border: "none", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0,
+                transition: "background-color 0.2s",
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.06)"; }}
+              title="Switch to typing"
             >
-              Switch to voice
+              <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
+                stroke="rgba(255,255,255,0.4)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+              >
+                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                <path d="m15 5 4 4" />
+              </svg>
             </button>
+          </motion.div>
+        )}
+
+        {/* ── TEXT MODE ── */}
+        {mode === "text" && (
+          <motion.div
+            key="text-active"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div style={{
+              position: "relative",
+              borderRadius: 14,
+              backgroundColor: colors.bgInput,
+              border: `1px solid ${colors.borderDefault}`,
+              overflow: "hidden",
+            }}>
+              <textarea
+                ref={textareaRef}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={placeholder}
+                rows={3}
+                style={{
+                  width: "100%",
+                  padding: "14px 50px 14px 16px",
+                  fontSize: 15, lineHeight: 1.65,
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "#ffffff",
+                  resize: "none", outline: "none",
+                  fontFamily: body, boxSizing: "border-box",
+                  minHeight: 80,
+                }}
+              />
+              {/* Mic button inside textarea */}
+              {hasSpeechSupport && (
+                <button
+                  onClick={switchToVoice}
+                  style={{
+                    position: "absolute", right: 10, bottom: 10,
+                    width: 34, height: 34, borderRadius: 10,
+                    backgroundColor: colors.coralWash,
+                    border: "none", cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    transition: "background-color 0.2s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.2)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = colors.coralWash; }}
+                  title="Switch to voice"
+                >
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
+                    stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                  >
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" x2="12" y1="19" y2="22" />
+                  </svg>
+                </button>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

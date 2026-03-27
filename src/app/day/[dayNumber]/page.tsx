@@ -716,6 +716,28 @@ function DailyFlowPage() {
   // ── Helpers ──
   const completedSteps = session?.completed_steps || [];
   const weekNames = ["GROUND", "DIG", "BUILD", "ORIENT"];
+  const weekPurposes: Record<string, string[]> = {
+    parachute: [
+      "Name what happened. Get your feet under you.",
+      "Understand the patterns underneath your reactions.",
+      "Start rebuilding from what's actually true.",
+      "Point yourself forward with clarity.",
+    ],
+    jetstream: [
+      "Stabilize. See the situation clearly.",
+      "Understand what's yours and what isn't.",
+      "Build your response strategy.",
+      "Decide your next move from a grounded place.",
+    ],
+    basecamp: [
+      "Arrive. Notice what you brought with you.",
+      "Understand how you show up under pressure.",
+      "Build confidence from the inside out.",
+      "Own your place. Stop auditioning.",
+    ],
+  };
+  const programSlug = enrollment?.programs?.slug || "parachute";
+  const weekPurpose = weekPurposes[programSlug]?.[programDay?.week_number ? programDay.week_number - 1 : 0] || "";
 
   // ── Loading ──
   if (loading) {
@@ -854,19 +876,17 @@ function DailyFlowPage() {
               {enrollment.programs?.name}
             </span>
           </div>
+          {weekPurpose && (
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", margin: "0 0 12px 0", fontFamily: body }}>
+              {weekPurpose}
+            </p>
+          )}
           <h1 style={{
             fontFamily: display, fontSize: 30, fontWeight: 700,
             letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 6px 0",
           }}>
             Day {dayNumber}: {programDay.title}
           </h1>
-          <p style={{
-            fontSize: 10, fontWeight: 700, color: colors.coral,
-            textTransform: "uppercase", letterSpacing: "0.08em",
-            margin: "0 0 4px 0", fontFamily: display,
-          }}>
-            Today&apos;s focus
-          </p>
           <p style={{ fontSize: 16, color: "rgba(255,255,255,0.8)", margin: 0, lineHeight: 1.55, fontFamily: body }}>
             {programDay.territory}
           </p>

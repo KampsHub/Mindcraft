@@ -1,0 +1,595 @@
+"use client";
+
+import { useEffect } from "react";
+import { motion } from "framer-motion";
+import FadeIn from "@/components/FadeIn";
+import FlagButton from "@/components/FlagButton";
+import VoiceToText from "@/components/VoiceToText";
+import { colors, fonts } from "@/lib/theme";
+import type { createClient } from "@/lib/supabase";
+import type {
+  ProgramDay,
+  DailySession,
+  ThemesResult,
+} from "./useDaySession";
+
+const display = fonts.display;
+const body = fonts.bodyAlt;
+
+// ── ThemesAutoLoader (local to TellTab) ──
+
+function ThemesAutoLoader({ loading, error, isActive, onLoad, onSkip }: {
+  loading: boolean; error: string | null; isActive: boolean;
+  onLoad: () => void; onSkip: () => void;
+}) {
+  useEffect(() => {
+    if (isActive && !loading && !error) {
+      onLoad();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive]);
+
+  return (
+    <div style={{
+      backgroundColor: colors.bgSurface, borderRadius: 14,
+      border: `1px solid ${colors.borderDefault}`, padding: 22,
+    }}>
+      {loading ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+            style={{
+              width: 20, height: 20, borderRadius: "50%",
+              border: `2px solid ${colors.borderDefault}`, borderTopColor: colors.coral,
+            }}
+          />
+          <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+            Loading yesterday&apos;s themes...
+          </p>
+        </div>
+      ) : error ? (
+        <div>
+          <p style={{ fontSize: 14, color: "#f87171", margin: "0 0 12px 0", fontFamily: body }}>
+            {error}
+          </p>
+          <div style={{ display: "flex", gap: 10 }}>
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={onLoad}
+              style={{
+                padding: "10px 20px", fontSize: 14, fontWeight: 600,
+                color: colors.bgDeep, backgroundColor: colors.coral,
+                border: "none", borderRadius: 100, cursor: "pointer",
+                fontFamily: display,
+              }}
+            >
+              Retry
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={onSkip}
+              style={{
+                padding: "10px 20px", fontSize: 14, fontWeight: 600,
+                color: "#ffffff", backgroundColor: "transparent",
+                border: `1px solid ${colors.borderDefault}`, borderRadius: 100,
+                cursor: "pointer", fontFamily: display,
+              }}
+            >
+              Skip to journal →
+            </motion.button>
+          </div>
+        </div>
+      ) : (
+        <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+          Loading...
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ── Props ──
+
+export interface TellTabProps {
+  dayNumber: number;
+  programDay: ProgramDay;
+  session: DailySession | null;
+  completedSteps: number[];
+  supabase: ReturnType<typeof createClient>;
+  setSession: React.Dispatch<React.SetStateAction<DailySession | null>>;
+
+  // Themes
+  themes: ThemesResult | null;
+  setThemes: React.Dispatch<React.SetStateAction<ThemesResult | null>>;
+  loadingThemes: boolean;
+  themesError: string | null;
+  loadThemes: () => Promise<void>;
+
+  // Journal
+  journalContent: string;
+  setJournalContent: React.Dispatch<React.SetStateAction<string>>;
+  savingJournal: boolean;
+  journalSaved: boolean;
+  journalMode: "type" | "voice";
+  setJournalMode: React.Dispatch<React.SetStateAction<"type" | "voice">>;
+  saveJournal: () => Promise<void>;
+
+  // Exercise follow-through
+  yesterdayExercise: { name: string; id: string; whyNow: string; instruction: string; userResponse: string } | null;
+  followThrough: string;
+  setFollowThrough: React.Dispatch<React.SetStateAction<string>>;
+
+  // Active tab (for ThemesAutoLoader)
+  activeTab: number;
+}
+
+export default function TellTab({
+  dayNumber,
+  programDay,
+  session,
+  completedSteps,
+  supabase,
+  setSession,
+  themes,
+  setThemes,
+  loadingThemes,
+  themesError,
+  loadThemes,
+  journalContent,
+  setJournalContent,
+  savingJournal,
+  journalSaved,
+  journalMode,
+  setJournalMode,
+  saveJournal,
+  yesterdayExercise,
+  followThrough,
+  setFollowThrough,
+  activeTab,
+}: TellTabProps) {
+  return (
+    <FadeIn preset="fade" triggerOnMount>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+    {/* Yesterday's Themes / Welcome context */}
+    <div>
+      {dayNumber === 1 ? (
+        completedSteps.includes(1) ? (
+          <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+            Day 1 — no prior themes.
+          </p>
+        ) : (
+        <div style={{
+          backgroundColor: colors.bgSurface,
+          borderRadius: 14,
+          border: `1px solid ${colors.borderDefault}`,
+          padding: 22,
+        }}>
+          <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 18px 0", lineHeight: 1.65, fontFamily: body }}>
+            Welcome to Day 1 of your program. There are no themes to review yet — today is where it begins.
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => {
+              setThemes({ themes: [], summary: "Day 1 — no prior themes.", patterns: [], carry_forward: "" });
+              if (session) {
+                supabase.from("daily_sessions")
+                  .update({ completed_steps: [...(session.completed_steps || []), 1] })
+                  .eq("id", session.id)
+                  .then(() => {
+                    setSession((prev) => prev ? { ...prev, completed_steps: [...(prev.completed_steps || []), 1] } : prev);
+                  });
+              }
+            }}
+            style={{
+              padding: "12px 28px", fontSize: 14, fontWeight: 600,
+              color: colors.bgDeep, backgroundColor: colors.coral,
+              border: "none", borderRadius: 100, cursor: "pointer",
+              fontFamily: display, letterSpacing: "0.01em",
+            }}
+          >
+            Begin Day 1
+          </motion.button>
+        </div>
+        )
+      ) : !themes ? (
+        <ThemesAutoLoader
+          loading={loadingThemes}
+          error={themesError}
+          isActive={activeTab === 1}
+          onLoad={loadThemes}
+          onSkip={() => {
+            setThemes({ themes: [], summary: "Skipped — no themes loaded.", patterns: [], carry_forward: "" });
+            if (session) {
+              supabase.from("daily_sessions")
+                .update({ completed_steps: [...(session.completed_steps || []), 1] })
+                .eq("id", session.id)
+                .then(() => {
+                  setSession((prev) => prev ? { ...prev, completed_steps: [...(prev.completed_steps || []), 1] } : prev);
+                });
+            }
+          }}
+        />
+      ) : (
+        <div style={{
+          backgroundColor: colors.bgSurface,
+          borderRadius: 14,
+          border: `1px solid ${colors.borderDefault}`,
+          padding: 22,
+        }}>
+          {/* Thread — primary content (narrative prose) */}
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 4 }}>
+            <FlagButton outputType="themes" dailySessionId={session?.id} />
+          </div>
+          {themes.thread ? (
+            <div style={{ marginBottom: 18 }}>
+              {themes.thread.split("\n\n").map((para, i) => (
+                <p key={i} style={{
+                  fontSize: 16, color: "#ffffff", lineHeight: 1.75,
+                  margin: i === 0 ? "0 0 12px 0" : "12px 0",
+                  fontFamily: body,
+                }}>
+                  {para}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: "0 0 14px 0", fontFamily: body }}>
+              {themes.summary}
+            </p>
+          )}
+
+          {/* Follow-Up — commitments, coaching questions, highlight */}
+          {themes.follow_up && (themes.follow_up.commitments?.length > 0 || themes.follow_up.coaching_questions?.length > 0 || themes.follow_up.highlight) && (
+            <div style={{
+              padding: "16px 18px",
+              backgroundColor: colors.coralWash,
+              borderRadius: 12,
+              borderLeft: `3px solid ${colors.coral}`,
+              marginBottom: 16,
+            }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                Carrying forward
+              </p>
+
+              {themes.follow_up.commitments?.length > 0 && (
+                <div style={{ marginBottom: 10 }}>
+                  <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body }}>You said you would:</p>
+                  {themes.follow_up.commitments.map((c, i) => (
+                    <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "4px 0", fontFamily: body, paddingLeft: 12 }}>
+                      &bull; {c}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              {themes.follow_up.coaching_questions?.length > 0 && (
+                <div style={{ marginBottom: 10 }}>
+                  <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body }}>From last time:</p>
+                  {themes.follow_up.coaching_questions.map((q, i) => (
+                    <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "4px 0", fontFamily: body, fontStyle: "italic", paddingLeft: 12 }}>
+                      {q}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              {themes.follow_up.highlight && (
+                <p style={{ fontSize: 16, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
+                  {themes.follow_up.highlight}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Yesterday's committed mini-actions follow-up */}
+          {themes.yesterday_committed_actions && themes.yesterday_committed_actions.length > 0 && (
+            <div style={{
+              padding: "16px 18px",
+              backgroundColor: "rgba(224, 149, 133, 0.06)",
+              borderRadius: 12,
+              borderLeft: `3px solid ${colors.coral}`,
+              marginBottom: 16,
+            }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
+                Yesterday&apos;s mini-actions
+              </p>
+              <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
+                You committed to these. How did they go?
+              </p>
+              {(themes.yesterday_committed_actions || []).map((action, i) => (
+                <div key={i} style={{ marginBottom: 8 }}>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
+                    {action}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Theme tags */}
+          {themes.themes?.length > 0 && (
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
+              {(themes.themes || []).map((t, i) => (
+                <span key={i} style={{
+                  padding: "4px 12px", fontSize: 12, fontWeight: 600,
+                  backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
+                  borderRadius: 100, fontFamily: display,
+                }}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Patterns (collapsed below themes) */}
+          {themes.patterns?.length > 0 && (
+            <div style={{ marginBottom: 14 }}>
+              {(themes.patterns || []).map((p, i) => (
+                <div key={i} style={{
+                  padding: "12px 16px",
+                  backgroundColor: colors.bgElevated,
+                  borderRadius: 12,
+                  borderLeft: `3px solid ${colors.coral}`,
+                  marginBottom: 8,
+                }}>
+                  <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
+                    {p.observation}
+                  </p>
+                  <p style={{ fontSize: 12, color: "#ffffff", margin: "4px 0 0 0", fontFamily: body }}>
+                    Seen across {p.days_observed} days • {p.connection}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {themes.carry_forward && (
+            <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body }}>
+              {themes.carry_forward}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+
+    {/* Exercise follow-through from yesterday */}
+    {yesterdayExercise && (
+      <div style={{
+        padding: "16px 18px",
+        backgroundColor: "rgba(224, 149, 133, 0.08)",
+        borderRadius: 14,
+        border: "1px solid rgba(224, 149, 133, 0.15)",
+        marginBottom: 16,
+      }}>
+        <p style={{
+          fontSize: 10, fontWeight: 700, color: colors.coral,
+          textTransform: "uppercase", letterSpacing: "0.08em",
+          margin: "0 0 8px 0", fontFamily: display,
+        }}>
+          Yesterday&apos;s exercise
+        </p>
+        <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body, fontWeight: 600, lineHeight: 1.4 }}>
+          {yesterdayExercise.name}
+        </p>
+        {yesterdayExercise.instruction && (
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", margin: "0 0 8px 0", fontFamily: body, lineHeight: 1.5 }}>
+            {(() => {
+              const text = yesterdayExercise.instruction;
+              if (text.length <= 200) return text;
+              const truncated = text.substring(0, 200);
+              const lastPeriod = truncated.lastIndexOf(". ");
+              const lastQuestion = truncated.lastIndexOf("? ");
+              const boundary = Math.max(lastPeriod, lastQuestion);
+              return boundary > 50 ? text.substring(0, boundary + 1) : truncated.substring(0, truncated.lastIndexOf(" ")) + "...";
+            })()}
+          </p>
+        )}
+        {yesterdayExercise.userResponse && (
+          <div style={{
+            padding: "10px 14px", borderRadius: 10,
+            backgroundColor: "rgba(255,255,255,0.04)",
+            marginBottom: 8,
+          }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", margin: "0 0 4px 0", fontFamily: display, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              What you wrote
+            </p>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: 0, fontFamily: body, lineHeight: 1.5, fontStyle: "italic" }}>
+              &ldquo;{yesterdayExercise.userResponse}&rdquo;
+            </p>
+          </div>
+        )}
+        <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
+          Did anything come up since? What did you notice?
+        </p>
+        <div style={{ position: "relative" }}>
+          <textarea
+            value={followThrough}
+            onChange={(e) => setFollowThrough(e.target.value)}
+            placeholder="Type or tap the mic to speak... (optional)"
+            style={{
+              width: "100%", minHeight: 60, padding: "12px 48px 12px 12px", fontSize: 14,
+              borderRadius: 10, border: `1px solid ${colors.borderDefault}`,
+              backgroundColor: colors.bgInput, color: "#ffffff",
+              fontFamily: body, resize: "none", outline: "none",
+              boxSizing: "border-box",
+            }}
+          />
+          <button
+            onClick={async () => {
+              try {
+                const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+                if (!SpeechRecognition) { alert("Voice not supported in this browser"); return; }
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = "en-US";
+                recognition.onresult = (event: any) => {
+                  const transcript = event.results[0][0].transcript;
+                  setFollowThrough((prev) => prev ? prev + " " + transcript : transcript);
+                };
+                recognition.start();
+              } catch { /* ignore */ }
+            }}
+            style={{
+              position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
+              width: 32, height: 32, borderRadius: "50%",
+              backgroundColor: "transparent", border: "none",
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            }}
+            title="Speak your response"
+          >
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" x2="12" y1="19" y2="22" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* ── Journal Section (within Tab 1) ── */}
+      <div style={{
+        backgroundColor: colors.bgSurface,
+        borderRadius: 14,
+        border: `1px solid ${colors.borderDefault}`,
+        padding: 22,
+      }}>
+        {/* Thought inspiration — compact prompts */}
+        {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
+          <div style={{ marginBottom: 14 }}>
+            <p style={{
+              fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)",
+              margin: "0 0 8px 0", textTransform: "uppercase",
+              letterSpacing: "0.08em", fontFamily: display,
+            }}>
+              Thought Inspiration
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {programDay.seed_prompts.map((sp, i) => (
+                <div key={i} style={{
+                  padding: "8px 14px",
+                  backgroundColor: colors.bgElevated,
+                  borderRadius: 100,
+                  cursor: "default",
+                }}>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: 0, lineHeight: 1.4, fontFamily: body }}>
+                    {sp.prompt}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Journal input — textarea with inline mic button */}
+        <div style={{ position: "relative" }}>
+          <textarea
+            value={journalContent}
+            onChange={(e) => setJournalContent(e.target.value)}
+            disabled={journalSaved}
+            placeholder="Write freely. What's coming up? What are you noticing?"
+            style={{
+              width: "100%",
+              minHeight: 180,
+              padding: "16px 50px 16px 16px",
+              fontSize: 16,
+              lineHeight: 1.7,
+              border: journalSaved
+                ? `1px solid ${colors.coral}`
+                : `1px solid ${colors.borderDefault}`,
+              borderRadius: 14,
+              resize: "vertical",
+              outline: "none",
+              fontFamily: body,
+              boxSizing: "border-box",
+              color: colors.textPrimary,
+              backgroundColor: journalSaved ? "rgba(224, 149, 133, 0.08)" : colors.bgInput,
+              transition: "border-color 0.2s, background-color 0.2s",
+            }}
+            onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
+            onBlur={(e) => { if (!journalSaved) e.target.style.borderColor = colors.borderDefault; }}
+          />
+          {!journalSaved && (
+            <button
+              onClick={() => setJournalMode(journalMode === "voice" ? "type" : "voice")}
+              title={journalMode === "voice" ? "Switch to typing" : "Use voice input"}
+              style={{
+                position: "absolute",
+                right: 12,
+                bottom: 12,
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                border: "none",
+                backgroundColor: journalMode === "voice" ? colors.coral : colors.bgElevated,
+                color: journalMode === "voice" ? colors.bgDeep : "rgba(255,255,255,0.6)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.2s",
+              }}
+            >
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="22" />
+              </svg>
+            </button>
+          )}
+        </div>
+        {journalMode === "voice" && !journalSaved && (
+          <VoiceToText onTranscript={(text) => setJournalContent((prev) => prev ? prev + " " + text : text)} />
+        )}
+
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
+          <span style={{ fontSize: 12, color: "#ffffff", fontFamily: body }}>
+            {journalContent.length > 0 ? `${journalContent.split(/\s+/).filter(Boolean).length} words` : ""}
+          </span>
+
+          {!journalSaved ? (
+            <motion.button
+              whileHover={journalContent.trim() && !savingJournal ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
+              whileTap={journalContent.trim() && !savingJournal ? { scale: 0.97 } : {}}
+              onClick={saveJournal}
+              disabled={!journalContent.trim() || savingJournal}
+              style={{
+                padding: "12px 28px", fontSize: 14, fontWeight: 600,
+                color: !journalContent.trim() || savingJournal ? "#ffffff" : colors.bgDeep,
+                backgroundColor: !journalContent.trim() || savingJournal ? colors.bgElevated : colors.coral,
+                border: "none", borderRadius: 100,
+                cursor: !journalContent.trim() || savingJournal ? "not-allowed" : "pointer",
+                fontFamily: display, letterSpacing: "0.01em",
+                transition: "background-color 0.2s",
+              }}
+            >
+              {savingJournal ? "Saving..." : "Save & Continue"}
+            </motion.button>
+          ) : (
+            <span style={{
+              fontSize: 14, color: colors.coral, fontWeight: 600,
+              fontFamily: display, display: "flex", alignItems: "center", gap: 6,
+            }}>
+              <span style={{
+                width: 20, height: 20, borderRadius: "50%",
+                backgroundColor: colors.coral,
+                color: colors.bgDeep,
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                fontSize: 12,
+              }}>✓</span>
+              Journal saved
+            </span>
+          )}
+        </div>
+      </div>
+
+    </div>
+    </FadeIn>
+  );
+}

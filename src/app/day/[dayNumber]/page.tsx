@@ -166,7 +166,7 @@ function DailyFlowPage() {
   const [journalMode, setJournalMode] = useState<"type" | "voice">("type");
 
   // Exercise follow-through from yesterday
-  const [yesterdayExercise, setYesterdayExercise] = useState<{name: string; id: string; whyNow: string} | null>(null);
+  const [yesterdayExercise, setYesterdayExercise] = useState<{name: string; id: string; whyNow: string; instruction: string; userResponse: string} | null>(null);
   const [followThrough, setFollowThrough] = useState("");
 
   // Step 3
@@ -316,20 +316,38 @@ function DailyFlowPage() {
     if (dayNumber > 1) {
       const { data: yesterdaySession } = await supabase
         .from("daily_sessions")
-        .select("step_3_analysis")
+        .select("id, step_3_analysis")
         .eq("enrollment_id", enr.id)
         .eq("day_number", dayNumber - 1)
         .single();
 
       if (yesterdaySession?.step_3_analysis) {
         const analysis = yesterdaySession.step_3_analysis as Record<string, unknown>;
-        const exercises = (analysis.overflow_exercises || []) as { framework_name: string; framework_id?: string; why_now?: string; why_selected?: string; instruction?: string }[];
+        const exercises = (analysis.overflow_exercises || []) as { framework_name: string; framework_id?: string; why_now?: string; why_selected?: string; instruction?: string; custom_framing?: string }[];
         if (exercises.length > 0) {
           const ex = exercises[0];
+
+          // Also fetch what the user responded with
+          let userResponse = "";
+          const { data: completion } = await supabase
+            .from("exercise_completions")
+            .select("responses")
+            .eq("daily_session_id", yesterdaySession.id)
+            .eq("framework_id", ex.framework_id || "")
+            .maybeSingle();
+          if (completion?.responses) {
+            const resp = completion.responses as Record<string, string>;
+            // Get the first non-empty response value
+            const firstResponse = Object.values(resp).find((v) => v && v.length > 0);
+            if (firstResponse) userResponse = firstResponse.substring(0, 200);
+          }
+
           setYesterdayExercise({
             name: ex.framework_name,
             id: ex.framework_id || "",
             whyNow: ex.why_now || ex.why_selected || "",
+            instruction: ex.instruction || ex.custom_framing || "",
+            userResponse,
           });
         }
       }
@@ -1142,16 +1160,32 @@ function DailyFlowPage() {
           }}>
             Yesterday&apos;s exercise
           </p>
-          <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body, fontWeight: 600, lineHeight: 1.4 }}>
+          <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body, fontWeight: 600, lineHeight: 1.4 }}>
             {yesterdayExercise.name}
           </p>
-          {yesterdayExercise.whyNow && (
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 10px 0", fontFamily: body, lineHeight: 1.4 }}>
-              {yesterdayExercise.whyNow}
+          {yesterdayExercise.instruction && (
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", margin: "0 0 8px 0", fontFamily: body, lineHeight: 1.5 }}>
+              {yesterdayExercise.instruction.length > 150
+                ? yesterdayExercise.instruction.substring(0, 150) + "..."
+                : yesterdayExercise.instruction}
             </p>
           )}
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", margin: "0 0 10px 0", fontFamily: body }}>
-            Did you notice anything related to this? What came up?
+          {yesterdayExercise.userResponse && (
+            <div style={{
+              padding: "10px 14px", borderRadius: 10,
+              backgroundColor: "rgba(255,255,255,0.04)",
+              marginBottom: 8,
+            }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", margin: "0 0 4px 0", fontFamily: display, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                What you wrote
+              </p>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: 0, fontFamily: body, lineHeight: 1.5, fontStyle: "italic" }}>
+                &ldquo;{yesterdayExercise.userResponse}&rdquo;
+              </p>
+            </div>
+          )}
+          <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
+            Did anything come up since? What did you notice?
           </p>
           <textarea
             value={followThrough}

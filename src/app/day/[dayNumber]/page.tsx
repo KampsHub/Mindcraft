@@ -1107,7 +1107,7 @@ function DailyFlowPage() {
                 <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
                   You committed to these. How did they go?
                 </p>
-                {themes.yesterday_committed_actions.map((action, i) => (
+                {(themes.yesterday_committed_actions || []).map((action, i) => (
                   <div key={i} style={{ marginBottom: 8 }}>
                     <p style={{ fontSize: 14, fontWeight: 600, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
                       {action}
@@ -1120,7 +1120,7 @@ function DailyFlowPage() {
             {/* Theme tags */}
             {themes.themes?.length > 0 && (
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
-                {themes.themes.map((t, i) => (
+                {(themes.themes || []).map((t, i) => (
                   <span key={i} style={{
                     padding: "4px 12px", fontSize: 12, fontWeight: 600,
                     backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
@@ -1135,7 +1135,7 @@ function DailyFlowPage() {
             {/* Patterns (collapsed below themes) */}
             {themes.patterns?.length > 0 && (
               <div style={{ marginBottom: 14 }}>
-                {themes.patterns.map((p, i) => (
+                {(themes.patterns || []).map((p, i) => (
                   <div key={i} style={{
                     padding: "12px 16px",
                     backgroundColor: colors.bgElevated,
@@ -1359,7 +1359,7 @@ function DailyFlowPage() {
             )}
           </div>
           {journalMode === "voice" && !journalSaved && (
-            <VoiceToText onTranscript={(text) => setJournalContent((prev) => prev ? prev + "\n" + text : text)} />
+            <VoiceToText onTranscript={(text) => setJournalContent((prev) => prev ? prev + " " + text : text)} />
           )}
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
@@ -2004,7 +2004,7 @@ function DailyFlowPage() {
 
               {summaryResult.today_themes?.length > 0 && (
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
-                  {summaryResult.today_themes.map((t, i) => (
+                  {(summaryResult.today_themes || []).map((t, i) => (
                     <span key={i} style={{
                       padding: "4px 12px", fontSize: 12, fontWeight: 600,
                       backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
@@ -2045,7 +2045,7 @@ function DailyFlowPage() {
                 }}>
                   Exercise Insights
                 </p>
-                {summaryResult.exercise_insights.map((ei, i) => (
+                {(summaryResult.exercise_insights || []).map((ei, i) => (
                   <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "0 0 10px 0", lineHeight: 1.55, fontFamily: body }}>
                     <span style={{ fontWeight: 600, color: colors.textPrimary }}>{ei.exercise_name}:</span> {ei.insight}
                   </p>
@@ -2068,7 +2068,7 @@ function DailyFlowPage() {
                 }}>
                   Goal Progress
                 </p>
-                {summaryResult.goal_progress.map((gp, i) => (
+                {(summaryResult.goal_progress || []).map((gp, i) => (
                   <div key={i} style={{ marginBottom: 12 }}>
                     <p style={{ fontSize: 14, fontWeight: 600, color: colors.textPrimary, margin: 0, fontFamily: body }}>
                       {gp.goal_text}
@@ -2148,7 +2148,7 @@ function DailyFlowPage() {
                   Each takes under 5 minutes. Choose one (or more) to carry into the rest of your day.
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {summaryResult.mini_actions.map((action, i) => {
+                  {(summaryResult.mini_actions || []).map((action, i) => {
                     const isSelected = selectedActions.has(i);
                     return (
                       <button
@@ -2231,7 +2231,7 @@ function DailyFlowPage() {
                     <p style={{ fontSize: 12, fontWeight: 600, color: colors.coral, margin: "0 0 6px 0", fontFamily: display }}>
                       Committed
                     </p>
-                    {summaryResult.committed_actions.map((a, i) => (
+                    {(summaryResult.committed_actions || []).map((a, i) => (
                       <p key={i} style={{ fontSize: 14, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
                         \u2713 {a}
                       </p>

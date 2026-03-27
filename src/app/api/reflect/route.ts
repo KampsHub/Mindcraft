@@ -3,14 +3,12 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { generateQueryEmbedding } from "@/lib/embeddings";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, reflectSchema, getAnthropicClient } from "@/lib/api-validation";
+import { validateBody, reflectSchema, getAnthropicClient, buildCachedSystem } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 import { FULL_COACHING_VOICE } from "@/lib/coaching-voice";
 
-const SYSTEM_PROMPT = `${FULL_COACHING_VOICE}
-
-## 5. Tone and Voice
+const REFLECT_ROUTE_PROMPT = `## 5. Tone and Voice
 
 You are warm but not sweet. Direct but not cold. Grounded but not dry. Your humour is witty and intelligent — the kind that makes someone laugh because they just saw something about themselves clearly for the first time. You sound like a smart, experienced colleague who happens to know a lot about human behaviour — not like a wellness app or a motivational poster.
 
@@ -173,7 +171,7 @@ export async function POST(request: NextRequest) {
       const stream = anthropic.messages.stream({
         model: "claude-sonnet-4-20250514",
         max_tokens: 1024,
-        system: SYSTEM_PROMPT,
+        system: buildCachedSystem(FULL_COACHING_VOICE, REFLECT_ROUTE_PROMPT),
         messages: [{ role: "user", content: userContent }],
       });
 
@@ -209,7 +207,7 @@ export async function POST(request: NextRequest) {
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+      system: buildCachedSystem(FULL_COACHING_VOICE, REFLECT_ROUTE_PROMPT),
       messages: [{ role: "user", content: userContent }],
     });
 

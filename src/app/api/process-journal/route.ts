@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, processJournalSchema, getAnthropicClient } from "@/lib/api-validation";
+import { validateBody, processJournalSchema, getAnthropicClient, buildCachedSystem } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { extractMemories, getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
@@ -15,8 +15,6 @@ const PROCESS_SYSTEM_PROMPT = `You are the coaching companion for a structured d
 5. Today's program day context (territory, coaching exercises already assigned)
 
 Your job is to read what someone actually wrote, name what you see in it, and select exercises that respond to what surfaced.
-
-${STANDARD_VOICE}
 
 ## What you produce
 
@@ -238,7 +236,7 @@ Analyze the journal content and select the best overflow exercises for this clie
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 2000,
-      system: systemPrompt,
+      system: buildCachedSystem(STANDARD_VOICE, systemPrompt),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
 

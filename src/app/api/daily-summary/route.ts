@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt, appendObservation } from "@/lib/client-profile";
-import { validateBody, dailySummarySchema, getAnthropicClient } from "@/lib/api-validation";
+import { validateBody, dailySummarySchema, getAnthropicClient, buildCachedSystem } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
@@ -10,8 +10,6 @@ import { STANDARD_VOICE } from "@/lib/coaching-voice";
 const SUMMARY_SYSTEM_PROMPT = `You are the coaching companion closing today's session. You receive today's complete session data: journal entry, exercise completions with responses, free-flow captures, and the upcoming day's territory.
 
 Your job is to tell someone what happened today — what moved, what stayed stuck, what's emerging — in their own words.
-
-${STANDARD_VOICE}
 
 ## What you produce
 
@@ -221,7 +219,7 @@ Generate today's summary for Day ${dayNumber}.`;
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 2000,
-      system: SUMMARY_SYSTEM_PROMPT,
+      system: buildCachedSystem(STANDARD_VOICE, SUMMARY_SYSTEM_PROMPT),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
 

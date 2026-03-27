@@ -2,15 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, dailyThemesSchema, getAnthropicClient, getModelForTier } from "@/lib/api-validation";
+import { validateBody, dailyThemesSchema, getAnthropicClient, getModelForTier, buildCachedSystem } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { STANDARD_VOICE } from "@/lib/coaching-voice";
+import { COMPRESSED_VOICE } from "@/lib/coaching-voice";
 
 const THEMES_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive the last 2-3 journal entries, exercise responses, free-flow captures, a thread seed from yesterday's summary, and today's program territory.
 
 Your primary output is the Thread — a narrative that traces the person's movement across their last 2-3 sessions. This is not a summary. It is a reading of where they are in their development arc.
-
-${STANDARD_VOICE}
 
 ## What you produce
 
@@ -249,7 +247,7 @@ Generate the Thread and today's themes for Day ${dayNumber}.`;
     const message = await anthropic.messages.create({
       model: getModelForTier("fast"),
       max_tokens: 2048,
-      system: THEMES_SYSTEM_PROMPT,
+      system: buildCachedSystem(COMPRESSED_VOICE, THEMES_SYSTEM_PROMPT),
       messages: [{ role: "user", content: profileContext + promptData }],
     });
 

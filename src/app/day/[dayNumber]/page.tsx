@@ -685,6 +685,80 @@ function DailyFlowPage() {
     );
   }
 
+  // Auto-loader for Yesterday's Themes — starts loading automatically and allows skip
+  function ThemesAutoLoader({ loading, error, isActive, onLoad, onSkip }: {
+    loading: boolean; error: string | null; isActive: boolean;
+    onLoad: () => void; onSkip: () => void;
+  }) {
+    useEffect(() => {
+      if (isActive && !loading && !error) {
+        onLoad();
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isActive]);
+
+    return (
+      <div style={{
+        backgroundColor: colors.bgSurface, borderRadius: 14,
+        border: `1px solid ${colors.borderDefault}`, padding: 22,
+      }}>
+        {loading ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+              style={{
+                width: 20, height: 20, borderRadius: "50%",
+                border: `2px solid ${colors.borderDefault}`, borderTopColor: colors.coral,
+              }}
+            />
+            <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+              Loading yesterday&apos;s themes...
+            </p>
+          </div>
+        ) : error ? (
+          <div>
+            <p style={{ fontSize: 14, color: "#f87171", margin: "0 0 12px 0", fontFamily: body }}>
+              {error}
+            </p>
+            <div style={{ display: "flex", gap: 10 }}>
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={onLoad}
+                style={{
+                  padding: "10px 20px", fontSize: 14, fontWeight: 600,
+                  color: colors.bgDeep, backgroundColor: colors.coral,
+                  border: "none", borderRadius: 100, cursor: "pointer",
+                  fontFamily: display,
+                }}
+              >
+                Retry
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={onSkip}
+                style={{
+                  padding: "10px 20px", fontSize: 14, fontWeight: 600,
+                  color: "#ffffff", backgroundColor: "transparent",
+                  border: `1px solid ${colors.borderDefault}`, borderRadius: 100,
+                  cursor: "pointer", fontFamily: display,
+                }}
+              >
+                Skip to journal →
+              </motion.button>
+            </div>
+          </div>
+        ) : (
+          <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+            Loading...
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <PageShell>
       {/* Day header */}
@@ -797,34 +871,24 @@ function DailyFlowPage() {
           </div>
           )
         ) : !themes ? (
-          <div style={{
-            backgroundColor: colors.bgSurface,
-            borderRadius: 14,
-            border: `1px solid ${colors.borderDefault}`,
-            padding: 22,
-          }}>
-            <motion.button
-              whileHover={!loadingThemes ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
-              whileTap={!loadingThemes ? { scale: 0.97 } : {}}
-              onClick={loadThemes}
-              disabled={loadingThemes}
-              style={{
-                padding: "12px 28px", fontSize: 14, fontWeight: 600,
-                color: loadingThemes ? "#ffffff" : colors.bgDeep,
-                backgroundColor: loadingThemes ? colors.bgElevated : colors.coral,
-                border: "none", borderRadius: 100,
-                cursor: loadingThemes ? "not-allowed" : "pointer",
-                fontFamily: display, letterSpacing: "0.01em",
-              }}
-            >
-              {loadingThemes ? "Loading themes..." : "Load Yesterday's Themes"}
-            </motion.button>
-            {themesError && (
-              <p style={{ fontSize: 14, color: colors.coral, margin: "10px 0 0 0", fontFamily: body }}>
-                {themesError}
-              </p>
-            )}
-          </div>
+          <ThemesAutoLoader
+            loading={loadingThemes}
+            error={themesError}
+            isActive={activeStep === 1}
+            onLoad={loadThemes}
+            onSkip={() => {
+              setThemes({ themes: [], summary: "Skipped — no themes loaded.", patterns: [], carry_forward: "" });
+              setActiveStep(2);
+              if (session) {
+                supabase.from("daily_sessions")
+                  .update({ completed_steps: [...(session.completed_steps || []), 1] })
+                  .eq("id", session.id)
+                  .then(() => {
+                    setSession((prev) => prev ? { ...prev, completed_steps: [...(prev.completed_steps || []), 1] } : prev);
+                  });
+              }
+            }}
+          />
         ) : (
           <div style={{
             backgroundColor: colors.bgSurface,

@@ -98,9 +98,9 @@ export function validateBody<T>(
 export type ModelTier = "fast" | "standard" | "deep";
 
 const MODEL_MAP: Record<ModelTier, string> = {
-  fast: "claude-haiku-4-5-20241022",
+  fast: "claude-haiku-4-5-20251001",
   standard: "claude-sonnet-4-20250514",
-  deep: "claude-sonnet-4-20250514", // upgrade to Opus when available
+  deep: "claude-opus-4-6",
 };
 
 export function getModelForTier(tier: ModelTier = "standard"): string {

@@ -256,13 +256,11 @@ export default function DashboardPage() {
         <FadeIn preset="fade" duration={0.6} triggerOnMount>
           <div style={{ marginBottom: 32 }}>
             <p style={{
-              fontFamily: display, fontSize: 16, fontWeight: 500,
-              letterSpacing: "-0.01em", color: colors.textPrimary, margin: "0 0 6px 0",
+              fontFamily: display, fontSize: 14, fontWeight: 700,
+              letterSpacing: "-0.01em", color: colors.textPrimary, margin: 0,
+              textAlign: "center",
             }}>
               {getGreeting(enrollments[0]?.enrollment?.programs?.slug)}
-            </p>
-            <p style={{ fontSize: 14, color: "#ffffff", margin: 0, fontFamily: body }}>
-              {user.email}
             </p>
           </div>
         </FadeIn>
@@ -383,17 +381,12 @@ export default function DashboardPage() {
                   pointerEvents: "none",
                 }} />
                 <div style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
-                  backgroundColor: `${link.accent}12`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   margin: "0 auto 10px",
-                  position: "relative",
                 }}>
-                  <span style={{ fontSize: 18, color: link.accent }}>{link.icon}</span>
+                  <span style={{ fontSize: 22, color: link.accent }}>{link.icon}</span>
                 </div>
                 <p style={{
                   fontFamily: display, fontSize: 14, fontWeight: 600,

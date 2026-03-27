@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import MultiPartExerciseCard, { type ExercisePart } from "@/components/MultiPartExerciseCard";
@@ -111,6 +111,8 @@ export default function ExerciseCard({
   const [rating, setRating] = useState<number | null>(existingRating || null);
   const [submitted, setSubmitted] = useState(isCompleted);
   const [showScience, setShowScience] = useState(false);
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
 
   // Interactive input state
   const [spectrumValue, setSpectrumValue] = useState<number>(
@@ -542,6 +544,15 @@ export default function ExerciseCard({
                     />
                     <button
                       onClick={() => {
+                        if (listening) {
+                          // Stop listening
+                          if (recognitionRef.current) {
+                            recognitionRef.current.stop();
+                            recognitionRef.current = null;
+                          }
+                          setListening(false);
+                          return;
+                        }
                         try {
                           const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
                           if (!SR) return;
@@ -556,22 +567,34 @@ export default function ExerciseCard({
                             }
                             if (text) setResponse((prev) => prev ? prev + " " + text : text);
                           };
+                          recognition.onend = () => { setListening(false); recognitionRef.current = null; };
+                          recognitionRef.current = recognition;
                           recognition.start();
+                          setListening(true);
                         } catch { /* ignore */ }
                       }}
                       style={{
                         position: "absolute", right: 10, bottom: 10,
-                        width: 32, height: 32, borderRadius: "50%",
-                        backgroundColor: colors.coralWash, border: "none",
+                        width: 36, height: 36, borderRadius: "50%",
+                        backgroundColor: listening ? "#f87171" : colors.coralWash,
+                        border: "none",
                         cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                        boxShadow: listening ? "0 0 12px rgba(248, 113, 113, 0.5)" : "none",
+                        transition: "all 0.2s",
                       }}
-                      title="Speak your response"
+                      title={listening ? "Stop listening" : "Speak your response"}
                     >
-                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                        <line x1="12" x2="12" y1="19" y2="22" />
-                      </svg>
+                      {listening ? (
+                        <svg width={14} height={14} viewBox="0 0 24 24" fill="#ffffff">
+                          <rect x="6" y="6" width="12" height="12" rx="2" />
+                        </svg>
+                      ) : (
+                        <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                          <line x1="12" x2="12" y1="19" y2="22" />
+                        </svg>
+                      )}
                     </button>
                     </div>
                   </div>

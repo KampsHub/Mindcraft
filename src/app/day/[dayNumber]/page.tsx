@@ -907,7 +907,7 @@ function DailyFlowPage() {
       <FadeIn preset="fade" delay={0.1} triggerOnMount>
         {(() => {
           const TAB_LABELS = [
-            { key: 1, label: "Write or Tell" },
+            { key: 1, label: "Tell" },
             { key: 2, label: "Do" },
             { key: 3, label: "Done" },
           ];

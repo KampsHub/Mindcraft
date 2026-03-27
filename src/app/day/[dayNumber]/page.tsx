@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageShell from "@/components/PageShell";
 import FadeIn from "@/components/FadeIn";
+import PhaseIndicator from "@/components/PhaseIndicator";
 import { colors, fonts } from "@/lib/theme";
 import { useDaySession } from "./useDaySession";
 import TellTab from "./TellTab";
@@ -106,153 +107,126 @@ function DailyFlowPage() {
         </div>
       </FadeIn>
 
-      {/* Tab bar */}
+      {/* Phase indicator */}
       <FadeIn preset="fade" delay={0.1} triggerOnMount>
-        {(() => {
-          const TAB_LABELS = [
-            { key: 1, label: "Tell" },
-            { key: 2, label: "Do" },
-            { key: 3, label: "Done" },
-          ];
-          const tabComplete = (key: number) => {
-            if (key === 1) return s.completedSteps.includes(2);
-            if (key === 2) return s.completedSteps.includes(3);
-            if (key === 3) return !!s.session?.completed_at;
-            return false;
-          };
-          return (
-            <div style={{
-              display: "flex", gap: 4, padding: 4, borderRadius: 100,
-              backgroundColor: "rgba(255, 255, 255, 0.06)",
-              marginBottom: 24,
-            }}>
-              {TAB_LABELS.map((tab) => {
-                const isActive = s.activeTab === tab.key;
-                const isDisabled = (tab.key === 2 && !s.journalSaved) || (tab.key === 3 && !s.summaryResult && !s.loadingSummary);
-                const isComplete = tabComplete(tab.key);
-                return (
-                  <button
-                    key={tab.key}
-                    onClick={() => !isDisabled && s.setActiveTab(tab.key)}
-                    disabled={isDisabled}
-                    style={{
-                      flex: 1,
-                      padding: "10px 0",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      fontFamily: display,
-                      borderRadius: 100,
-                      border: "none",
-                      cursor: isDisabled ? "not-allowed" : "pointer",
-                      backgroundColor: isActive ? colors.coral : "transparent",
-                      color: isActive ? colors.bgDeep : isDisabled ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.6)",
-                      transition: "all 0.2s",
-                      position: "relative",
-                      letterSpacing: "0.02em",
-                    }}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-          );
-        })()}
+        <PhaseIndicator
+          activePhase={s.activeTab}
+          completedPhases={[
+            ...(s.completedSteps.includes(2) ? [1] : []),
+            ...(s.completedSteps.includes(3) ? [2] : []),
+            ...(s.session?.completed_at ? [3] : []),
+          ]}
+          onPhaseClick={(phase) => s.setActiveTab(phase)}
+          disabled={[
+            ...(s.journalSaved ? [] : [2]),
+            ...(s.summaryResult || s.loadingSummary ? [] : [3]),
+          ]}
+        />
       </FadeIn>
 
-      {/* ═══════ TAB 1: Tell ═══════ */}
-      {s.activeTab === 1 && (
-        <TellTab
-          dayNumber={s.dayNumber}
-          programDay={s.programDay}
-          session={s.session}
-          completedSteps={s.completedSteps}
-          supabase={s.supabase}
-          setSession={s.setSession}
-          themes={s.themes}
-          setThemes={s.setThemes}
-          loadingThemes={s.loadingThemes}
-          themesError={s.themesError}
-          loadThemes={s.loadThemes}
-          journalContent={s.journalContent}
-          setJournalContent={s.setJournalContent}
-          savingJournal={s.savingJournal}
-          journalSaved={s.journalSaved}
-          journalMode={s.journalMode}
-          setJournalMode={s.setJournalMode}
-          saveJournal={s.saveJournal}
-          yesterdayExercise={s.yesterdayExercise}
-          followThrough={s.followThrough}
-          setFollowThrough={s.setFollowThrough}
-          activeTab={s.activeTab}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={s.activeTab}
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -30 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* ═══════ TAB 1: Tell ═══════ */}
+          {s.activeTab === 1 && (
+            <TellTab
+              dayNumber={s.dayNumber}
+              programDay={s.programDay}
+              session={s.session}
+              completedSteps={s.completedSteps}
+              supabase={s.supabase}
+              setSession={s.setSession}
+              themes={s.themes}
+              setThemes={s.setThemes}
+              loadingThemes={s.loadingThemes}
+              themesError={s.themesError}
+              loadThemes={s.loadThemes}
+              journalContent={s.journalContent}
+              setJournalContent={s.setJournalContent}
+              savingJournal={s.savingJournal}
+              journalSaved={s.journalSaved}
+              journalMode={s.journalMode}
+              setJournalMode={s.setJournalMode}
+              saveJournal={s.saveJournal}
+              yesterdayExercise={s.yesterdayExercise}
+              followThrough={s.followThrough}
+              setFollowThrough={s.setFollowThrough}
+              activeTab={s.activeTab}
+            />
+          )}
 
-      {/* ═══════ TAB 2: Do ═══════ */}
-      {s.activeTab === 2 && (
-        <DoTab
-          dayNumber={s.dayNumber}
-          programDay={s.programDay}
-          session={s.session}
-          enrollment={s.enrollment}
-          supabase={s.supabase}
-          processing={s.processing}
-          processError={s.processError}
-          processJournal={s.processJournal}
-          stateAnalysis={s.stateAnalysis}
-          setStateAnalysis={s.setStateAnalysis}
-          step3Mode={s.step3Mode}
-          setStep3Mode={s.setStep3Mode}
-          coachingQuestions={s.coachingQuestions}
-          questionResponses={s.questionResponses}
-          setQuestionResponses={s.setQuestionResponses}
-          savingResponses={s.savingResponses}
-          responsesSaved={s.responsesSaved}
-          saveQuestionResponses={s.saveQuestionResponses}
-          patternChallenge={s.patternChallenge}
-          setPatternChallenge={s.setPatternChallenge}
-          reframe={s.reframe}
-          setReframe={s.setReframe}
-          sequenceSuggestion={s.sequenceSuggestion}
-          overflowExercises={s.overflowExercises}
-          setOverflowExercises={s.setOverflowExercises}
-          setCoachingQuestions={s.setCoachingQuestions}
-          frameworkAnalysis={s.frameworkAnalysis}
-          loadingFramework={s.loadingFramework}
-          completedExercises={s.completedExercises}
-          handleExerciseComplete={s.handleExerciseComplete}
-          loadingSummary={s.loadingSummary}
-          generateSummary={s.generateSummary}
-          crisisDetectedStep3={s.crisisDetectedStep3}
-          crisisDismissedStep3={s.crisisDismissedStep3}
-          setCrisisDismissedStep3={s.setCrisisDismissedStep3}
-        />
-      )}
+          {/* ═══════ TAB 2: Do ═══════ */}
+          {s.activeTab === 2 && (
+            <DoTab
+              dayNumber={s.dayNumber}
+              programDay={s.programDay}
+              session={s.session}
+              enrollment={s.enrollment}
+              supabase={s.supabase}
+              processing={s.processing}
+              processError={s.processError}
+              processJournal={s.processJournal}
+              stateAnalysis={s.stateAnalysis}
+              setStateAnalysis={s.setStateAnalysis}
+              step3Mode={s.step3Mode}
+              setStep3Mode={s.setStep3Mode}
+              coachingQuestions={s.coachingQuestions}
+              questionResponses={s.questionResponses}
+              setQuestionResponses={s.setQuestionResponses}
+              savingResponses={s.savingResponses}
+              responsesSaved={s.responsesSaved}
+              saveQuestionResponses={s.saveQuestionResponses}
+              patternChallenge={s.patternChallenge}
+              setPatternChallenge={s.setPatternChallenge}
+              reframe={s.reframe}
+              setReframe={s.setReframe}
+              sequenceSuggestion={s.sequenceSuggestion}
+              overflowExercises={s.overflowExercises}
+              setOverflowExercises={s.setOverflowExercises}
+              setCoachingQuestions={s.setCoachingQuestions}
+              frameworkAnalysis={s.frameworkAnalysis}
+              loadingFramework={s.loadingFramework}
+              completedExercises={s.completedExercises}
+              handleExerciseComplete={s.handleExerciseComplete}
+              loadingSummary={s.loadingSummary}
+              generateSummary={s.generateSummary}
+              crisisDetectedStep3={s.crisisDetectedStep3}
+              crisisDismissedStep3={s.crisisDismissedStep3}
+              setCrisisDismissedStep3={s.setCrisisDismissedStep3}
+            />
+          )}
 
-      {/* ═══════ TAB 3: Done ═══════ */}
-      {s.activeTab === 3 && (
-        <DoneTab
-          dayNumber={s.dayNumber}
-          session={s.session}
-          enrollment={s.enrollment}
-          supabase={s.supabase}
-          summaryResult={s.summaryResult}
-          setSummaryResult={s.setSummaryResult}
-          loadingSummary={s.loadingSummary}
-          dayRating={s.dayRating}
-          setDayRating={s.setDayRating}
-          dayFeedback={s.dayFeedback}
-          setDayFeedback={s.setDayFeedback}
-          selectedActions={s.selectedActions}
-          setSelectedActions={s.setSelectedActions}
-          customAction={s.customAction}
-          setCustomAction={s.setCustomAction}
-          completeDay={s.completeDay}
-          crisisDetectedStep5={s.crisisDetectedStep5}
-          crisisDismissedStep5={s.crisisDismissedStep5}
-          setCrisisDismissedStep5={s.setCrisisDismissedStep5}
-        />
-      )}
+          {/* ═══════ TAB 3: Done ═══════ */}
+          {s.activeTab === 3 && (
+            <DoneTab
+              dayNumber={s.dayNumber}
+              session={s.session}
+              enrollment={s.enrollment}
+              supabase={s.supabase}
+              summaryResult={s.summaryResult}
+              setSummaryResult={s.setSummaryResult}
+              loadingSummary={s.loadingSummary}
+              dayRating={s.dayRating}
+              setDayRating={s.setDayRating}
+              dayFeedback={s.dayFeedback}
+              setDayFeedback={s.setDayFeedback}
+              selectedActions={s.selectedActions}
+              setSelectedActions={s.setSelectedActions}
+              customAction={s.customAction}
+              setCustomAction={s.setCustomAction}
+              completeDay={s.completeDay}
+              crisisDetectedStep5={s.crisisDetectedStep5}
+              crisisDismissedStep5={s.crisisDismissedStep5}
+              setCrisisDismissedStep5={s.setCrisisDismissedStep5}
+            />
+          )}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Insights prompt modal */}
       <AnimatePresence>

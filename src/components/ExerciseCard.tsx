@@ -9,6 +9,7 @@ import BodyMap, { type BodyMarker } from "@/components/BodyMap";
 import EmotionChips from "@/components/EmotionChips";
 import FlagButton from "@/components/FlagButton";
 import VoiceResponseArea from "@/components/VoiceResponseArea";
+import GuidedExerciseFlow from "@/components/GuidedExerciseFlow";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -85,6 +86,7 @@ export default function ExerciseCard({
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [guidedMode, setGuidedMode] = useState(false);
+  const [showGuided, setShowGuided] = useState(false);
   const recognitionRef = useRef<any>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
@@ -203,6 +205,7 @@ export default function ExerciseCard({
   }
 
   return (
+    <>
     <motion.div
       whileHover={!submitted ? { y: -2, boxShadow: "0 8px 28px rgba(0,0,0,0.15)" } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -327,6 +330,26 @@ export default function ExerciseCard({
                 }}>
                   {whySelected}
                 </p>
+              )}
+
+              {/* Guide me button */}
+              {instructions && !submitted && (
+                <button
+                  onClick={() => setShowGuided(true)}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    width: "100%", padding: "12px 20px", marginBottom: 20,
+                    borderRadius: 12, border: `1px solid rgba(224, 149, 133, 0.25)`,
+                    backgroundColor: "rgba(224, 149, 133, 0.06)",
+                    color: colors.coral, fontSize: 14, fontWeight: 600,
+                    fontFamily: display, cursor: "pointer",
+                  }}
+                >
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Guide me through this
+                </button>
               )}
 
               {/* Instructions — always visible, the main content */}
@@ -596,5 +619,21 @@ export default function ExerciseCard({
         </div>
       )}
     </motion.div>
+
+    <AnimatePresence>
+      {showGuided && instructions && (
+        <GuidedExerciseFlow
+          exerciseName={name}
+          instructions={instructions}
+          whyNow={whySelected}
+          onComplete={(text) => {
+            setResponse(text);
+            setShowGuided(false);
+          }}
+          onClose={() => setShowGuided(false)}
+        />
+      )}
+    </AnimatePresence>
+    </>
   );
 }

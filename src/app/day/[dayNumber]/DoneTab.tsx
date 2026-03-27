@@ -211,6 +211,7 @@ export default function DoneTab({
           )}
 
           {/* Tomorrow preview */}
+          {summaryResult.tomorrow_preview && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -241,6 +242,7 @@ export default function DoneTab({
               {summaryResult.tomorrow_preview.connection}
             </p>
           </motion.div>
+          )}
 
           {/* Micro-content */}
           {summaryResult.micro_content && (

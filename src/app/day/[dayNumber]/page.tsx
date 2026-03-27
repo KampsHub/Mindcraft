@@ -1067,86 +1067,47 @@ function DailyFlowPage() {
         }}>
           {/* Coaching question prompts from themes */}
 
-          {/* Seed prompts */}
+          {/* Thought inspiration — compact prompts */}
           {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
-            <div style={{ marginBottom: 18 }}>
+            <div style={{ marginBottom: 14 }}>
               <p style={{
-                fontSize: 12, fontWeight: 700, color: "#ffffff",
-                margin: "0 0 10px 0", textTransform: "uppercase",
+                fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)",
+                margin: "0 0 8px 0", textTransform: "uppercase",
                 letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Thought Inspiration
               </p>
-              {programDay.seed_prompts.map((sp, i) => (
-                <div key={i} style={{
-                  padding: "14px 18px",
-                  backgroundColor: colors.bgElevated,
-                  borderRadius: 12,
-                  marginBottom: 8,
-                }}>
-                  <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
-                    {sp.prompt}
-                  </p>
-                  {sp.context && (
-                    <p style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", margin: "8px 0 0 0", lineHeight: 1.5, fontFamily: body, fontStyle: "italic" }}>
-                      {sp.context}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {programDay.seed_prompts.map((sp, i) => (
+                  <div key={i} style={{
+                    padding: "8px 14px",
+                    backgroundColor: colors.bgElevated,
+                    borderRadius: 100,
+                    cursor: "default",
+                  }}>
+                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: 0, lineHeight: 1.4, fontFamily: body }}>
+                      {sp.prompt}
                     </p>
-                  )}
-                  {sp.purpose && !sp.context && (
-                    <p style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", margin: "4px 0 0 0", fontFamily: body }}>
-                      {sp.purpose}
-                    </p>
-                  )}
-                </div>
-              ))}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
-          {/* Journal mode toggle */}
-          {!journalSaved && (
-            <div style={{ display: "inline-flex", gap: 2, padding: 3, borderRadius: 100, backgroundColor: colors.bgElevated, border: `1px solid ${colors.borderDefault}`, marginBottom: 14 }}>
-              <button
-                onClick={() => setJournalMode("type")}
-                style={{
-                  fontFamily: display, fontSize: 11, fontWeight: 600,
-                  padding: "6px 14px", borderRadius: 100,
-                  backgroundColor: journalMode === "type" ? colors.bgSurface : "transparent",
-                  color: journalMode === "type" ? colors.coral : colors.textMuted,
-                  border: journalMode === "type" ? `1px solid rgba(224, 149, 133, 0.3)` : "1px solid transparent",
-                  cursor: "pointer", letterSpacing: "0.04em", textTransform: "uppercase" as const,
-                  transition: "all 0.2s",
-                }}
-              >
-                Type
-              </button>
-              <button
-                onClick={() => setJournalMode("voice")}
-                style={{
-                  fontFamily: display, fontSize: 11, fontWeight: 600,
-                  padding: "6px 14px", borderRadius: 100,
-                  backgroundColor: journalMode === "voice" ? colors.bgSurface : "transparent",
-                  color: journalMode === "voice" ? colors.coral : colors.textMuted,
-                  border: journalMode === "voice" ? `1px solid rgba(224, 149, 133, 0.3)` : "1px solid transparent",
-                  cursor: "pointer", letterSpacing: "0.04em", textTransform: "uppercase" as const,
-                  transition: "all 0.2s",
-                }}
-              >
-                Voice
-              </button>
-            </div>
-          )}
+          {/* Journal input mode — mic button beside textarea */}
 
           {/* Journal input — textarea or voice */}
-          {journalMode === "type" ? (
+          {/* Textarea with inline mic button */}
+          <div style={{ position: "relative" }}>
             <textarea
               value={journalContent}
               onChange={(e) => setJournalContent(e.target.value)}
               disabled={journalSaved}
-              placeholder="Write freely. What's coming up? What are you noticing? There's no wrong way to do this."
+              placeholder="Write freely. What's coming up? What are you noticing?"
               style={{
                 width: "100%",
-                minHeight: 200,
-                padding: 18,
+                minHeight: 180,
+                padding: "16px 50px 16px 16px",
                 fontSize: 16,
                 lineHeight: 1.7,
                 border: journalSaved
@@ -1164,10 +1125,41 @@ function DailyFlowPage() {
               onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
               onBlur={(e) => { if (!journalSaved) e.target.style.borderColor = colors.borderDefault; }}
             />
-          ) : (
-            <VoiceCoach
-              onTranscript={(text) => setJournalContent((prev) => prev ? prev + "\n" + text : text)}
-            />
+            {!journalSaved && (
+              <button
+                onClick={() => setJournalMode(journalMode === "voice" ? "type" : "voice")}
+                title={journalMode === "voice" ? "Switch to typing" : "Use voice input"}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  bottom: 12,
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  border: "none",
+                  backgroundColor: journalMode === "voice" ? colors.coral : colors.bgElevated,
+                  color: journalMode === "voice" ? colors.bgDeep : "rgba(255,255,255,0.6)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s",
+                }}
+              >
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" x2="12" y1="19" y2="22" />
+                </svg>
+              </button>
+            )}
+          </div>
+          {journalMode === "voice" && !journalSaved && (
+            <div style={{ marginTop: 10 }}>
+              <VoiceCoach
+                onTranscript={(text) => setJournalContent((prev) => prev ? prev + "\n" + text : text)}
+              />
+            </div>
           )}
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
@@ -1216,7 +1208,7 @@ function DailyFlowPage() {
       <DailyStep
         stepNumber={3}
         title="Processing Your Journal"
-        subtitle="Your coach's AI reads what you wrote and selects exercises"
+        subtitle=""
         isActive={activeStep === 3}
         isCompleted={completedSteps.includes(3)}
         estimatedTime="~15 sec"
@@ -1267,7 +1259,11 @@ function DailyFlowPage() {
 
             {step3Mode === "chat" ? (
               <ChatCoach
-                initialMessage={stateAnalysis?.reading || "Let me read your journal..."}
+                initialMessage={
+                  stateAnalysis?.reading
+                    ? `${stateAnalysis.reading}${stateAnalysis.reading.endsWith("?") ? "" : "\n\nWhat feels most true about this to you?"}`
+                    : "I've read your journal. What would you like to explore together?"
+                }
                 onSend={async (message) => {
                   const res = await fetch("/api/reflect", {
                     method: "POST",
@@ -1277,7 +1273,7 @@ function DailyFlowPage() {
                   const data = await res.json();
                   return data.reflection || data.error || "Let me think about that...";
                 }}
-                placeholder="Ask your coach anything..."
+                placeholder="Ask your coach assistant anything..."
                 showComplete={true}
                 completeLabel="Back to overview"
                 onComplete={() => setStep3Mode("form")}

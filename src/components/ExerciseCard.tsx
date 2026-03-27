@@ -358,51 +358,13 @@ export default function ExerciseCard({
             style={{ overflow: "hidden" }}
           >
             <div style={{ padding: "0 20px 24px 20px" }}>
-              {/* Why selected (for overflow exercises) */}
+              {/* Why now — one sentence context */}
               {whySelected && (
-                <div
-                  style={{
-                    padding: "14px 16px",
-                    backgroundColor: colors.bgRecessed,
-                    borderRadius: 12,
-                    marginBottom: 16,
-                    borderLeft: `3px solid ${mod ? mod.text : colors.coral}`,
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: mod ? mod.text : colors.coral,
-                      margin: "0 0 6px 0",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      fontFamily: display,
-                    }}
-                  >
-                    Why this exercise
-                  </p>
-                  <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0, lineHeight: 1.6, fontFamily: body }}>
-                    {whySelected}
-                  </p>
-                </div>
-              )}
-
-              {/* Custom framing */}
-              {customFraming && (
-                <p
-                  style={{
-                    fontSize: 14,
-                    color: colors.textBody,
-                    lineHeight: 1.65,
-                    margin: "0 0 16px 0",
-                    fontFamily: body,
-                    fontStyle: "italic",
-                    paddingLeft: 16,
-                    borderLeft: `2px solid ${colors.borderSubtle}`,
-                  }}
-                >
-                  {customFraming}
+                <p style={{
+                  fontSize: 14, color: "rgba(255,255,255,0.7)", margin: "0 0 12px 0",
+                  lineHeight: 1.5, fontFamily: body,
+                }}>
+                  {whySelected}
                 </p>
               )}
 
@@ -440,36 +402,6 @@ export default function ExerciseCard({
                     }}
                   >
                     {instructions}
-                  </p>
-                </div>
-              )}
-
-              {/* Why this works — neuroscience context */}
-              {whyThisWorks && (
-                <div
-                  style={{
-                    padding: "14px 16px",
-                    borderRadius: 12,
-                    marginBottom: 16,
-                    background: `linear-gradient(135deg, ${colors.bgRecessed} 0%, ${colors.plumWash} 100%)`,
-                    border: `1px solid ${colors.borderSubtle}`,
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: colors.plumLight,
-                      margin: "0 0 6px 0",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      fontFamily: display,
-                    }}
-                  >
-                    Why this works
-                  </p>
-                  <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0, lineHeight: 1.6, fontFamily: body }}>
-                    {whyThisWorks}
                   </p>
                 </div>
               )}

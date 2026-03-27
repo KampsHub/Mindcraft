@@ -22,7 +22,7 @@ Return valid JSON (no markdown, no code fences):
 
 {
   "state_analysis": {
-    "reading": "2-3 sentences MAX. Talk directly to the person. Quote one thing they actually wrote. Name ONE thing you noticed. That's it. No analysis, no patterns, no motivational language.",
+    "reading": "2-3 sentences MAX. Quote one thing they wrote. Say one thing you noticed — using 'I noticed' not 'You are.' Never tell them what they're feeling or why they did something. Never say a pattern is 'clear.' If they wrote 10 words, you respond with 20 words. Match their energy exactly.",
     "key_themes": ["theme1", "theme2"],
     "urgency_level": "low | medium | high"
   },

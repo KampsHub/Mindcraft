@@ -88,8 +88,9 @@ Missing statuses = users see "No active program" even though they're enrolled.
 
 ### Deployment Monitoring (MANDATORY)
 - After every `git push`, check that the Vercel build succeeds
-- Run `gh api repos/KampsHub/Mindcraft/deployments --jq '.[0] | {sha: .sha[0:7], state, created_at}'` to verify
-- If state is `null` or `error`, investigate immediately — don't move on to the next task
+- Run: `gh api repos/KampsHub/Mindcraft/deployments --jq '.[0].id' | xargs -I{} gh api repos/KampsHub/Mindcraft/deployments/{}/statuses --jq '.[0] | {state, description, created_at}'`
+- Note: the `deployments` endpoint shows `state: null` — this is normal. The actual status is on the `/statuses` sub-endpoint.
+- If state is `error` or `failure`, investigate immediately — don't move on to the next task
 - If build fails, fix and repush before doing anything else
 
 ## Database Content Updates

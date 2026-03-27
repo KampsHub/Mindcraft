@@ -10,7 +10,7 @@ const body = fonts.bodyAlt;
 
 const PROGRAM_ACCENTS: Record<string, { border: string; wash: string; color: string }> = {
   jetstream: { border: "rgba(224, 149, 133, 0.2)", wash: colors.coralWash, color: colors.coral },
-  parachute: { border: "rgba(123, 82, 120, 0.2)", wash: colors.plumWash, color: colors.plumLight },
+  parachute: { border: "rgba(224, 149, 133, 0.2)", wash: colors.coralWash, color: colors.coral },
   basecamp: { border: "rgba(224, 149, 133, 0.2)", wash: colors.coralWash, color: colors.coralLight },
 };
 

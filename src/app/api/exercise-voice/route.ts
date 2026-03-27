@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const systemPrompt = `You are a voice coaching guide for Mindcraft. You are guiding someone through a specific exercise via spoken conversation.
+    const systemPrompt = `You are a coaching assistant for Mindcraft. You are guiding someone through a specific exercise via spoken conversation.
 
 Exercise: ${exerciseName}
 Instructions: ${instructions}

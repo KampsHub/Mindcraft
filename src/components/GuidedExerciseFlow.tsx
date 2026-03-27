@@ -206,7 +206,7 @@ export default function GuidedExerciseFlow({
     } catch (err) {
       if (!mountedRef.current) return;
       console.error("Coach turn error:", err);
-      setErrorMsg("Lost connection to coach. Your progress has been saved.");
+      setErrorMsg("Lost connection. Your progress has been saved.");
       setState("error");
     }
   }, [getCoachResponse, speak, startListening]);
@@ -247,7 +247,7 @@ export default function GuidedExerciseFlow({
 
     // Build transcript for saving
     const fullTranscript = turns
-      .map(t => `${t.role === "coach" ? "Coach" : "You"}: ${t.text}`)
+      .map(t => `${t.role === "coach" ? "Coach Assistant" : "You"}: ${t.text}`)
       .join("\n\n");
 
     setState("ended");
@@ -375,7 +375,7 @@ export default function GuidedExerciseFlow({
           }}
         >
           {state === "loading" ? "Thinking..."
-            : state === "speaking" ? "Coach speaking"
+            : state === "speaking" ? "Coach assistant"
             : state === "listening" ? "Your turn"
             : state === "processing" ? "Processing..."
             : ""}

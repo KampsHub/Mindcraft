@@ -919,13 +919,6 @@ function DailyFlowPage() {
                     }}
                   >
                     {tab.label}
-                    {isComplete && !isActive && (
-                      <span style={{
-                        position: "absolute", top: 4, right: 8,
-                        width: 6, height: 6, borderRadius: "50%",
-                        backgroundColor: colors.coral,
-                      }} />
-                    )}
                   </button>
                 );
               })}

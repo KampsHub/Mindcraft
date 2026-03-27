@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt, appendObservation } from "@/lib/client-profile";
-import { validateBody, dailySummarySchema, getAnthropicClient, buildCachedSystem } from "@/lib/api-validation";
+import { validateBody, dailySummarySchema, getAnthropicClient, getModelForTier, buildCachedSystem } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
@@ -217,8 +217,8 @@ Generate today's summary for Day ${dayNumber}.`;
     const memoryContext = formatMemoriesForPrompt(memories);
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 2000,
+      model: getModelForTier("standard"),
+      max_tokens: 1200,
       system: buildCachedSystem(STANDARD_VOICE, SUMMARY_SYSTEM_PROMPT),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
@@ -240,7 +240,7 @@ Generate today's summary for Day ${dayNumber}.`;
     if (profile && session.step_2_journal && dayNumber > 3) {
       try {
         const obsMsg = await anthropic.messages.create({
-          model: "claude-sonnet-4-20250514",
+          model: getModelForTier("fast"),
           max_tokens: 300,
           system: `You are noting what's new about this person based on today's session. Only note genuine observations — things that shifted, surprised, or revealed something that wasn't visible before. If nothing new surfaced today, return exactly: null
 

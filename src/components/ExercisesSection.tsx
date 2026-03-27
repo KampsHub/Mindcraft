@@ -217,7 +217,15 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
   ];
 
   return (
-    <div style={{ marginBottom: 28 }}>
+    <div style={{
+      marginBottom: 28,
+      backgroundColor: "rgba(51, 51, 57, 0.5)",
+      backdropFilter: "blur(20px)",
+      WebkitBackdropFilter: "blur(20px)",
+      borderRadius: 16,
+      border: "1px solid rgba(255, 255, 255, 0.08)",
+      padding: "20px 22px",
+    }}>
       {/* Section header — collapsible */}
       <div
         onClick={() => setCollapsed(!collapsed)}

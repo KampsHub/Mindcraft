@@ -231,18 +231,29 @@ export default function ChatCoach({
       {/* Complete button */}
       {showComplete && (
         <div style={{
-          padding: "10px 16px",
-          borderTop: `1px solid rgba(255, 255, 255, 0.04)`,
-          display: "flex", justifyContent: "flex-end",
+          padding: "14px 16px",
+          borderTop: `1px solid rgba(255, 255, 255, 0.06)`,
+          display: "flex", justifyContent: "center",
         }}>
           <button
             onClick={() => onComplete?.(messages)}
             style={{
-              fontFamily: display, fontSize: 12, fontWeight: 600,
-              padding: "8px 16px", borderRadius: 100,
-              backgroundColor: "transparent",
-              color: colors.coral, border: `1px solid rgba(224, 149, 133, 0.3)`,
-              cursor: "pointer", letterSpacing: "0.02em",
+              fontFamily: display, fontSize: 14, fontWeight: 600,
+              padding: "12px 28px", borderRadius: 100,
+              backgroundColor: colors.coral,
+              color: colors.bgDeep, border: "none",
+              cursor: "pointer", letterSpacing: "0.01em",
+              boxShadow: "0 2px 12px rgba(196, 148, 58, 0.25)",
+              transition: "transform 0.15s, box-shadow 0.15s",
+              width: "100%", maxWidth: 320,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.boxShadow = "0 4px 16px rgba(196, 148, 58, 0.35)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 2px 12px rgba(196, 148, 58, 0.25)";
             }}
           >
             {completeLabel}

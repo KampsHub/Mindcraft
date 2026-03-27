@@ -1540,7 +1540,7 @@ function DailyFlowPage() {
                     margin: 0, textTransform: "uppercase",
                     letterSpacing: "0.08em", fontFamily: display,
                   }}>
-                    What your journal reveals
+                    What I noticed
                   </p>
                 </div>
                 <FlagButton outputType="reflection" dailySessionId={session?.id} />
@@ -1651,43 +1651,7 @@ function DailyFlowPage() {
               </div>
             )}
 
-            {/* ── Card 3: Reframe ── */}
-            {reframe && (
-              <div style={{
-                backgroundColor: colors.bgSurface,
-                borderRadius: 14, padding: 22,
-                borderLeft: `3px solid ${colors.coral}`,
-              }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{
-                      width: 30, height: 30, borderRadius: "50%",
-                      backgroundColor: colors.coralWash,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21.5 2v6h-6" /><path d="M2.5 22v-6h6" /><path d="M21.34 15.57a10 10 0 0 1-17.68 2.86" /><path d="M2.66 8.43a10 10 0 0 1 17.68-2.86" />
-                      </svg>
-                    </div>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: display }}>
-                      Reframe
-                    </p>
-                  </div>
-                  <FlagButton outputType="reframe" dailySessionId={session?.id} />
-                </div>
-                <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 12px 0", fontFamily: body, fontStyle: "italic", lineHeight: 1.6 }}>
-                  &ldquo;{reframe.source_quote}&rdquo;
-                </p>
-                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body, textDecoration: "line-through", opacity: 0.7, lineHeight: 1.6 }}>
-                  {reframe.old_thought}
-                </p>
-                <p style={{ fontSize: 16, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontWeight: 600, lineHeight: 1.6 }}>
-                  {reframe.new_thought}
-                </p>
-              </div>
-            )}
-
-            {/* ── Card 4: Pattern Challenge ── */}
+            {/* ── Pattern Challenge ── */}
             {patternChallenge && (
               <div style={{
                 backgroundColor: colors.bgSurface,

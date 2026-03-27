@@ -38,11 +38,6 @@ Return valid JSON (no markdown, no code fences):
       "originator": "Framework originator name"
     }
   ],
-  "reframe": {
-    "old_thought": "A direct quote from their journal.",
-    "new_thought": "A reframe in one sentence. Not the opposite — the fuller picture.",
-    "source_quote": "The exact words this responds to."
-  }
 }
 
 ## Selection Rules

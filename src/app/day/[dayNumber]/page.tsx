@@ -16,6 +16,9 @@ import ForTomorrowCard from "@/components/ForTomorrowCard";
 import ActivePatternChallenge, { type PatternChallengeData } from "@/components/ActivePatternChallenge";
 import { colors, fonts } from "@/lib/theme";
 import FlagButton from "@/components/FlagButton";
+import VoiceCoach from "@/components/VoiceCoach";
+import ChatCoach from "@/components/ChatCoach";
+import ViewModeToggle from "@/components/ViewModeToggle";
 
 /* ── Design tokens ── */
 const display = fonts.display;
@@ -160,8 +163,10 @@ function DailyFlowPage() {
   const [journalContent, setJournalContent] = useState("");
   const [savingJournal, setSavingJournal] = useState(false);
   const [journalSaved, setJournalSaved] = useState(false);
+  const [journalMode, setJournalMode] = useState<"type" | "voice">("type");
 
   // Step 3
+  const [step3Mode, setStep3Mode] = useState<"form" | "chat">("form");
   const [stateAnalysis, setStateAnalysis] = useState<StateAnalysis | null>(null);
   const [overflowExercises, setOverflowExercises] = useState<OverflowExercise[]>([]);
   const [coachingQuestions, setCoachingQuestions] = useState<string[]>([]);
@@ -1039,33 +1044,73 @@ function DailyFlowPage() {
             </div>
           )}
 
-          {/* Journal textarea */}
-          <textarea
-            value={journalContent}
-            onChange={(e) => setJournalContent(e.target.value)}
-            disabled={journalSaved}
-            placeholder="Write freely. What's coming up? What are you noticing? There's no wrong way to do this."
-            style={{
-              width: "100%",
-              minHeight: 200,
-              padding: 18,
-              fontSize: 16,
-              lineHeight: 1.7,
-              border: journalSaved
-                ? `1px solid ${colors.coral}`
-                : `1px solid ${colors.borderDefault}`,
-              borderRadius: 14,
-              resize: "vertical",
-              outline: "none",
-              fontFamily: body,
-              boxSizing: "border-box",
-              color: colors.textPrimary,
-              backgroundColor: journalSaved ? "rgba(224, 149, 133, 0.08)" : colors.bgInput,
-              transition: "border-color 0.2s, background-color 0.2s",
-            }}
-            onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
-            onBlur={(e) => { if (!journalSaved) e.target.style.borderColor = colors.borderDefault; }}
-          />
+          {/* Journal mode toggle */}
+          {!journalSaved && (
+            <div style={{ display: "inline-flex", gap: 2, padding: 3, borderRadius: 100, backgroundColor: colors.bgElevated, border: `1px solid ${colors.borderDefault}`, marginBottom: 14 }}>
+              <button
+                onClick={() => setJournalMode("type")}
+                style={{
+                  fontFamily: display, fontSize: 11, fontWeight: 600,
+                  padding: "6px 14px", borderRadius: 100,
+                  backgroundColor: journalMode === "type" ? colors.bgSurface : "transparent",
+                  color: journalMode === "type" ? colors.coral : colors.textMuted,
+                  border: journalMode === "type" ? `1px solid rgba(224, 149, 133, 0.3)` : "1px solid transparent",
+                  cursor: "pointer", letterSpacing: "0.04em", textTransform: "uppercase" as const,
+                  transition: "all 0.2s",
+                }}
+              >
+                Type
+              </button>
+              <button
+                onClick={() => setJournalMode("voice")}
+                style={{
+                  fontFamily: display, fontSize: 11, fontWeight: 600,
+                  padding: "6px 14px", borderRadius: 100,
+                  backgroundColor: journalMode === "voice" ? colors.bgSurface : "transparent",
+                  color: journalMode === "voice" ? colors.coral : colors.textMuted,
+                  border: journalMode === "voice" ? `1px solid rgba(224, 149, 133, 0.3)` : "1px solid transparent",
+                  cursor: "pointer", letterSpacing: "0.04em", textTransform: "uppercase" as const,
+                  transition: "all 0.2s",
+                }}
+              >
+                Voice
+              </button>
+            </div>
+          )}
+
+          {/* Journal input — textarea or voice */}
+          {journalMode === "type" ? (
+            <textarea
+              value={journalContent}
+              onChange={(e) => setJournalContent(e.target.value)}
+              disabled={journalSaved}
+              placeholder="Write freely. What's coming up? What are you noticing? There's no wrong way to do this."
+              style={{
+                width: "100%",
+                minHeight: 200,
+                padding: 18,
+                fontSize: 16,
+                lineHeight: 1.7,
+                border: journalSaved
+                  ? `1px solid ${colors.coral}`
+                  : `1px solid ${colors.borderDefault}`,
+                borderRadius: 14,
+                resize: "vertical",
+                outline: "none",
+                fontFamily: body,
+                boxSizing: "border-box",
+                color: colors.textPrimary,
+                backgroundColor: journalSaved ? "rgba(224, 149, 133, 0.08)" : colors.bgInput,
+                transition: "border-color 0.2s, background-color 0.2s",
+              }}
+              onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
+              onBlur={(e) => { if (!journalSaved) e.target.style.borderColor = colors.borderDefault; }}
+            />
+          ) : (
+            <VoiceCoach
+              onTranscript={(text) => setJournalContent((prev) => prev ? prev + "\n" + text : text)}
+            />
+          )}
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
             <span style={{ fontSize: 12, color: "#ffffff", fontFamily: body }}>
@@ -1157,6 +1202,30 @@ function DailyFlowPage() {
           </div>
         ) : stateAnalysis ? (
           <div>
+            {/* View mode toggle — Read vs Chat */}
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 14 }}>
+              <ViewModeToggle mode={step3Mode} onChange={setStep3Mode} />
+            </div>
+
+            {step3Mode === "chat" ? (
+              <ChatCoach
+                initialMessage={stateAnalysis?.reading || "Let me read your journal..."}
+                onSend={async (message) => {
+                  const res = await fetch("/api/reflect", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ entry: message, stream: false }),
+                  });
+                  const data = await res.json();
+                  return data.reflection || data.error || "Let me think about that...";
+                }}
+                placeholder="Ask your coach anything..."
+                showComplete={true}
+                completeLabel="Back to overview"
+                onComplete={() => setStep3Mode("form")}
+              />
+            ) : (
+            <>
             {/* Crisis Banner -- shown above analysis when urgency is high */}
             {crisisDetectedStep3 && !crisisDismissedStep3 && enrollment && (
               <CrisisBanner
@@ -1424,6 +1493,8 @@ function DailyFlowPage() {
               </motion.button>
             </div>
           </div>
+          </>
+          )}
           </div>
         ) : (
           <div style={{

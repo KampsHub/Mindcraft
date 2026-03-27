@@ -1118,7 +1118,7 @@ function DailyFlowPage() {
             )}
 
             {/* Theme tags */}
-            {themes.themes.length > 0 && (
+            {themes.themes?.length > 0 && (
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
                 {themes.themes.map((t, i) => (
                   <span key={i} style={{
@@ -1133,7 +1133,7 @@ function DailyFlowPage() {
             )}
 
             {/* Patterns (collapsed below themes) */}
-            {themes.patterns.length > 0 && (
+            {themes.patterns?.length > 0 && (
               <div style={{ marginBottom: 14 }}>
                 {themes.patterns.map((p, i) => (
                   <div key={i} style={{
@@ -1570,7 +1570,7 @@ function DailyFlowPage() {
                   </>
                 )}
               </div>
-              {stateAnalysis.goal_connections.length > 0 && (
+              {stateAnalysis.goal_connections?.length > 0 && (
                 <div style={{
                   padding: "10px 14px", marginTop: 16,
                   backgroundColor: "rgba(224, 149, 133, 0.12)",
@@ -2002,7 +2002,7 @@ function DailyFlowPage() {
                 {summaryResult.summary}
               </p>
 
-              {summaryResult.today_themes.length > 0 && (
+              {summaryResult.today_themes?.length > 0 && (
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
                   {summaryResult.today_themes.map((t, i) => (
                     <span key={i} style={{
@@ -2031,7 +2031,7 @@ function DailyFlowPage() {
             </div>
 
             {/* Exercise insights */}
-            {summaryResult.exercise_insights.length > 0 && (
+            {summaryResult.exercise_insights?.length > 0 && (
               <div style={{
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
@@ -2054,7 +2054,7 @@ function DailyFlowPage() {
             )}
 
             {/* Goal progress */}
-            {summaryResult.goal_progress.length > 0 && (
+            {summaryResult.goal_progress?.length > 0 && (
               <div style={{
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,

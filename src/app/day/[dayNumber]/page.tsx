@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import { motion, AnimatePresence } from "framer-motion";
 import PageShell from "@/components/PageShell";
-import DailyStep from "@/components/DailyStep";
+// DailyStep removed — using tabbed interface
 import ExerciseCard from "@/components/ExerciseCard";
 import FreeFlowCapture from "@/components/FreeFlowCapture";
 import FadeIn from "@/components/FadeIn";
@@ -151,7 +151,7 @@ function DailyFlowPage() {
   const [programDay, setProgramDay] = useState<ProgramDay | null>(null);
   const [session, setSession] = useState<DailySession | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeTab, setActiveTab] = useState(1);
 
   // Step 1
   const [themes, setThemes] = useState<ThemesResult | null>(null);
@@ -287,9 +287,11 @@ function DailyFlowPage() {
           .eq("id", existingSession.id)
           .then(() => {});
       }
-      // Set active step to the next incomplete one
+      // Set active tab based on completed steps
+      // Steps 1+2 → Tab 1 (Write), Step 3 → Tab 2 (Explore), Step 4 → Tab 3 (Practice), Step 5 → Tab 4 (Close)
       const nextStep = [1, 2, 3, 4, 5].find((s) => !steps.includes(s)) || 5;
-      setActiveStep(nextStep);
+      const stepToTab: Record<number, number> = { 1: 1, 2: 1, 3: 2, 4: 3, 5: 4 };
+      setActiveTab(stepToTab[nextStep] || 1);
       if (steps.includes(2)) setJournalSaved(true);
     } else {
       // Create new session
@@ -334,7 +336,7 @@ function DailyFlowPage() {
             .eq("id", session.id);
           setSession((prev) => prev ? { ...prev, completed_steps: [...(prev.completed_steps || []), 1] } : prev);
         }
-        setActiveStep(2);
+        // Stay on Tab 1 (Write) — themes are context above the journal
         setLoadingThemes(false);
         return;
       }
@@ -360,7 +362,7 @@ function DailyFlowPage() {
           .eq("id", session.id);
 
         setSession((prev) => prev ? { ...prev, completed_steps: [...(prev.completed_steps || []), 1] } : prev);
-        setActiveStep(2);
+        // Stay on Tab 1 (Write) — themes loaded, journal next
       } else {
         const errData = await res.json().catch(() => ({}));
         setThemesError(errData.error || `Request failed (${res.status})`);
@@ -392,7 +394,7 @@ function DailyFlowPage() {
     } : prev);
     setJournalSaved(true);
     setSavingJournal(false);
-    setActiveStep(3);
+    setActiveTab(2); // Auto-advance to Explore tab
 
     // Fire-and-forget sentiment analysis
     if (session?.id) {
@@ -477,7 +479,7 @@ function DailyFlowPage() {
         step_3_analysis: data,
         completed_steps: [...new Set([...(prev.completed_steps || []), 3])],
       } : prev);
-      setActiveStep(4);
+      // Stay on Tab 2 (Explore) — processing complete, user reviews here
 
       // Also trigger framework analysis (skip if crisis)
       if (!isHighUrgency) {
@@ -616,7 +618,7 @@ function DailyFlowPage() {
           ...prev,
           completed_steps: [...new Set([...(prev.completed_steps || []), 4, 5])],
         } : prev);
-        setActiveStep(5);
+        setActiveTab(4); // Switch to Close tab
       }
     } catch (err) {
       console.error("Summary generation failed:", err);
@@ -810,41 +812,76 @@ function DailyFlowPage() {
         </div>
       </FadeIn>
 
-      {/* Progress bar */}
+      {/* Tab bar */}
       <FadeIn preset="fade" delay={0.1} triggerOnMount>
-        <div style={{ display: "flex", gap: 5, marginBottom: 36 }}>
-          {[1, 2, 3, 4, 5].map((step) => (
-            <motion.div
-              key={step}
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: step * 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              style={{
-                flex: 1,
-                height: 4,
-                borderRadius: 100,
-                backgroundColor: completedSteps.includes(step)
-                  ? colors.coral
-                  : step === activeStep
-                  ? colors.coral
-                  : colors.bgElevated,
-                transition: "background-color 0.4s",
-                transformOrigin: "left",
-              }}
-            />
-          ))}
-        </div>
+        {(() => {
+          const TAB_LABELS = [
+            { key: 1, label: "Write" },
+            { key: 2, label: "Explore" },
+            { key: 3, label: "Practice" },
+            { key: 4, label: "Close" },
+          ];
+          const tabComplete = (key: number) => {
+            if (key === 1) return completedSteps.includes(2); // journal saved
+            if (key === 2) return completedSteps.includes(3); // processing done
+            if (key === 3) return completedSteps.includes(4); // exercises done
+            if (key === 4) return !!session?.completed_at;
+            return false;
+          };
+          return (
+            <div style={{
+              display: "flex", gap: 4, padding: 4, borderRadius: 100,
+              backgroundColor: "rgba(255, 255, 255, 0.06)",
+              marginBottom: 24,
+            }}>
+              {TAB_LABELS.map((tab) => {
+                const isActive = activeTab === tab.key;
+                const isDisabled = (tab.key === 2 && !journalSaved) || (tab.key === 3 && !stateAnalysis);
+                const isComplete = tabComplete(tab.key);
+                return (
+                  <button
+                    key={tab.key}
+                    onClick={() => !isDisabled && setActiveTab(tab.key)}
+                    disabled={isDisabled}
+                    style={{
+                      flex: 1,
+                      padding: "10px 0",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      fontFamily: display,
+                      borderRadius: 100,
+                      border: "none",
+                      cursor: isDisabled ? "not-allowed" : "pointer",
+                      backgroundColor: isActive ? colors.coral : "transparent",
+                      color: isActive ? colors.bgDeep : isDisabled ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.6)",
+                      transition: "all 0.2s",
+                      position: "relative",
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    {tab.label}
+                    {isComplete && !isActive && (
+                      <span style={{
+                        position: "absolute", top: 4, right: 8,
+                        width: 6, height: 6, borderRadius: "50%",
+                        backgroundColor: colors.coral,
+                      }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })()}
       </FadeIn>
 
-      {/* ═══════ STEP 1: Yesterday's Themes ═══════ */}
-      <DailyStep
-        stepNumber={1}
-        title={dayNumber === 1 ? "Welcome" : "Yesterday's Themes"}
-        subtitle={dayNumber === 1 ? "Your program starts here" : "What surfaced yesterday"}
-        isActive={activeStep === 1}
-        isCompleted={completedSteps.includes(1)}
-        estimatedTime="2 min"
-      >
+      {/* ═══════ TAB 1: Write ═══════ */}
+      {activeTab === 1 && (
+      <FadeIn preset="fade" triggerOnMount>
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+      {/* Yesterday's Themes / Welcome context */}
+      <div>
         {dayNumber === 1 ? (
           completedSteps.includes(1) ? (
             <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
@@ -865,7 +902,6 @@ function DailyFlowPage() {
               whileTap={{ scale: 0.97 }}
               onClick={() => {
                 setThemes({ themes: [], summary: "Day 1 — no prior themes.", patterns: [], carry_forward: "" });
-                setActiveStep(2);
                 if (session) {
                   supabase.from("daily_sessions")
                     .update({ completed_steps: [...(session.completed_steps || []), 1] })
@@ -890,11 +926,10 @@ function DailyFlowPage() {
           <ThemesAutoLoader
             loading={loadingThemes}
             error={themesError}
-            isActive={activeStep === 1}
+            isActive={activeTab === 1}
             onLoad={loadThemes}
             onSkip={() => {
               setThemes({ themes: [], summary: "Skipped — no themes loaded.", patterns: [], carry_forward: "" });
-              setActiveStep(2);
               if (session) {
                 supabase.from("daily_sessions")
                   .update({ completed_steps: [...(session.completed_steps || []), 1] })
@@ -1048,17 +1083,9 @@ function DailyFlowPage() {
             {/* Auto-advance to journal when themes load */}
           </div>
         )}
-      </DailyStep>
+      </div>
 
-      {/* ═══════ STEP 2: Free-Flow Journal ═══════ */}
-      <DailyStep
-        stepNumber={2}
-        title="Free-Flow Journal"
-        subtitle="Write what's alive. Prompts are optional scaffolding."
-        isActive={activeStep === 2}
-        isCompleted={completedSteps.includes(2)}
-        estimatedTime="5-10 min"
-      >
+      {/* ── Journal Section (within Tab 1) ── */}
         <div style={{
           backgroundColor: colors.bgSurface,
           borderRadius: 14,
@@ -1202,17 +1229,15 @@ function DailyFlowPage() {
             )}
           </div>
         </div>
-      </DailyStep>
 
-      {/* ═══════ STEP 3: System Processing ═══════ */}
-      <DailyStep
-        stepNumber={3}
-        title="Processing Your Journal"
-        subtitle=""
-        isActive={activeStep === 3}
-        isCompleted={completedSteps.includes(3)}
-        estimatedTime="~15 sec"
-      >
+      </div>
+      </FadeIn>
+      )}
+
+      {/* ═══════ TAB 2: Explore ═══════ */}
+      {activeTab === 2 && (
+      <FadeIn preset="fade" triggerOnMount>
+      <div>
         {processing ? (
           <div style={{
             backgroundColor: colors.bgSurface,
@@ -1538,7 +1563,7 @@ function DailyFlowPage() {
               <motion.button
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => setActiveStep(4)}
+                onClick={() => setActiveTab(3)}
                 style={{
                   padding: "12px 28px", fontSize: 14, fontWeight: 600,
                   color: colors.bgDeep, backgroundColor: colors.coral,
@@ -1603,17 +1628,13 @@ function DailyFlowPage() {
             )}
           </div>
         )}
-      </DailyStep>
+      </div>
+      </FadeIn>
+      )}
 
-      {/* ═══════ STEP 4: Exercises + Framework Analysis ═══════ */}
-      <DailyStep
-        stepNumber={4}
-        title={dayNumber <= 3 ? "Exercises & Intake" : "Exercises & Framework Analysis"}
-        subtitle={dayNumber <= 3 ? "Onboarding exercises that also serve as your intake" : "Today's exercises — structured and matched to your journal"}
-        isActive={activeStep === 4}
-        isCompleted={completedSteps.includes(4)}
-        estimatedTime="15-30 min"
-      >
+      {/* ═══════ TAB 3: Practice ═══════ */}
+      {activeTab === 3 && (
+      <FadeIn preset="fade" triggerOnMount>
         <div style={{
           ...(crisisDetectedStep3 && !crisisDismissedStep3
             ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
@@ -1778,17 +1799,12 @@ function DailyFlowPage() {
           {loadingSummary ? "Generating summary..." : "Complete Exercises & Continue"}
         </motion.button>
         </div>
-      </DailyStep>
+      </FadeIn>
+      )}
 
-      {/* ═══════ STEP 5: Daily Summary ═══════ */}
-      <DailyStep
-        stepNumber={5}
-        title="Daily Summary"
-        subtitle="What surfaced today + tomorrow's preview"
-        isActive={activeStep === 5}
-        isCompleted={!!summaryResult && !!session?.completed_at}
-        estimatedTime="2-5 min"
-      >
+      {/* ═══════ TAB 4: Close ═══════ */}
+      {activeTab === 4 && (
+      <FadeIn preset="fade" triggerOnMount>
         {loadingSummary ? (
           <div style={{
             backgroundColor: colors.bgSurface,
@@ -2167,9 +2183,10 @@ function DailyFlowPage() {
             </motion.button>
           </div>
         ) : null}
-      </DailyStep>
+      </FadeIn>
+      )}
 
-      {/* Free-flow capture widget — removed (ad-hoc journaling moved into Step 2) */}
+      {/* Free-flow capture widget — removed (ad-hoc journaling moved into Tab 1) */}
 
       {/* Insights prompt modal */}
       <AnimatePresence>

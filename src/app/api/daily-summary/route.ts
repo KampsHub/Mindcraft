@@ -18,54 +18,20 @@ IMPORTANT: Match their energy. Short input = short summary. Deep input = you can
 Return valid JSON (no markdown, no code fences):
 
 {
-  "today_themes": ["theme1", "theme2", "theme3"],
-  "summary": "2-4 sentences reflecting what they said and did. Use their actual words. Talk to them directly. Don't say 'you explored' or 'you processed' — say what actually happened. 'You wrote about X. The exercise on Y brought up Z.' Keep it grounded.",
-  "exercise_insights": [
-    {
-      "exercise_name": "Name of the exercise",
-      "insight": "One sentence about what this exercise revealed or shifted — not praise for completing it."
-    }
-  ],
-  "goal_progress": [
-    {
-      "goal_text": "The goal",
-      "observation": "What today's work showed about this goal. Talk to them: 'You wrote about X, which connects to your goal to Y.'"
-    }
-  ],
-  "tomorrow_preview": {
-    "title": "Tomorrow's day title",
-    "territory": "What territory tomorrow covers",
-    "connection": "One sentence connecting today's work to what's coming — organic, not prescriptive."
-  },
-  "pattern_note": "Optional. If you see a multi-day pattern forming, name it boldly with evidence. Otherwise null.",
-  "for_tomorrow": {
-    "watch_for": "A specific moment or pattern to notice tomorrow — connected to what surfaced today. Concrete enough to catch in real life.",
-    "try_this": "A small behavioral experiment to carry into tomorrow. One action, under 2 minutes, verb-first.",
-    "sit_with": "A question to hold without answering. A living question that needs holding, not resolving."
-  },
-  "pattern_challenge": {
-    "pattern": "A recurring pattern you noticed across today's journal and exercises — described simply. If nothing recurring, set to null.",
-    "challenge": "A specific real-world action to try when this pattern shows up in the next few days. Not an exercise — something to do in a real moment.",
-    "counter_move": "What to do in the moment when the pattern activates. One sentence. Verb first."
-  },
-  "thread_seed": "2-3 sentences that explicitly seed tomorrow's Thread. Name what was discovered today and the open question going forward. This should be specific enough that tomorrow's Thread can build directly on it. Reference the person's words. Name the edge they are approaching. Do not give instructions — name what happened and what is emerging.",
-  "extracted_commitments": ["Things the person explicitly said they would do, in their own words. Only include genuine commitments from the journal or exercise responses — not things you suggested."],
-  "mini_actions": [
-    "A specific, concrete action completable in under 5 minutes. Must be behavioral (do something, not think something). Reference their specific situation from today's journal.",
-    "Second option — different category. If the first involves another person, this one should be solo (self-care, writing, movement).",
-    "Third option — different again. At least one of the three should involve reaching out to someone."
-  ]
+  "today_themes": ["theme1", "theme2"],
+  "summary": "2 sentences max. What they said. What happened. No interpretation.",
+  "one_action": "One specific thing to try before tomorrow. Under 2 minutes. Verb first. Connected to what they wrote today. Not an exercise — a real-world action.",
+  "thread_seed": "1-2 sentences for tomorrow's context. What happened today and what's still open. Reference their words.",
+  "extracted_commitments": ["Only things they explicitly said they would do. If nothing, empty array."]
 }
 
 ## Guidelines
-1. Quote their actual words — from the journal and exercise responses.
-2. Be direct. No motivational language. No "great work" or "well done."
-3. Exercise insights should focus on what was revealed, not praise for completing them.
-4. Goal observations should be factual and direct: "You wrote about X, which connects to your goal to Y" — not "You're making progress."
-5. The pattern_note is only for genuine multi-day patterns. Don't force it. When you name one, teach something about why it exists.
-6. Tomorrow's connection should feel organic, not like a homework assignment.
-7. **Framework attribution**: When referencing exercises by name, use the exact official framework name and include the originator. Specifically: "The Seven Levels of Personal, Group and Organizational Effectiveness" must always use the full name and be attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate or paraphrase copyrighted framework names.
-8. SAFETY: If today's journal or exercise responses contain signals of crisis (suicidal ideation, self-harm, hopelessness, abuse disclosures, expressions of being a burden), include in summary: "What you wrote carries real weight, and it's beyond what exercises can hold right now. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or email crew@allmindsondeck.com." Set pattern_note to flag this for review.`;
+1. Keep it SHORT. 2 sentences for the summary. 1 sentence for the action. That's it.
+2. Quote one thing they actually wrote. No paraphrasing.
+3. No motivational language. No "great work." No "you explored."
+4. The one_action should be something they can do in a real moment — not an exercise. Verb first.
+5. Match their energy. If they wrote 20 words today, your entire output should be under 50 words.
+6. SAFETY: If today's journal contains signals of crisis, include: "What you wrote carries real weight. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or crew@allmindsondeck.com."`;
 
 export async function POST(request: Request) {
   try {
@@ -225,7 +191,7 @@ Generate today's summary for Day ${dayNumber}.`;
 
     const message = await anthropic.messages.create({
       model: getModelForTier("standard"),
-      max_tokens: 1200,
+      max_tokens: 500,
       system: buildCachedSystem(STANDARD_VOICE, SUMMARY_SYSTEM_PROMPT),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });

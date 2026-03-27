@@ -22,46 +22,35 @@ Return valid JSON (no markdown, no code fences):
 
 {
   "state_analysis": {
-    "reading": "3-5 sentences MAX. Talk directly to the person. Only quote words they ACTUALLY wrote — never paraphrase or fabricate quotes. Name the 1-2 core patterns you see. Be precise and brief. No filler, no motivational language, no over-explaining.",
-    "key_themes": ["theme1", "theme2", "theme3"],
-    "urgency_level": "low | medium | high",
-    "goal_connections": ["Which active goals this connects to — stated as natural observations, e.g. 'This connects to your goal to separate professional identity from core worth'"]
+    "reading": "2-3 sentences MAX. Talk directly to the person. Quote one thing they actually wrote. Name ONE thing you noticed. That's it. No analysis, no patterns, no motivational language.",
+    "key_themes": ["theme1", "theme2"],
+    "urgency_level": "low | medium | high"
   },
   "overflow_exercises": [
     {
       "framework_name": "Exact name from the library",
       "framework_id": "UUID from the library",
       "modality": "cognitive | somatic | relational | integrative | systems",
-      "why_selected": "1-2 sentences connecting this exercise to what you named in the reading. Use their words. Show why THIS exercise fits THIS moment.",
-      "custom_framing": "How to present this exercise right now — frame it in terms of what just surfaced. Not a generic description of the exercise, but why it matters given what they wrote today.",
+      "instruction": "The actual exercise instruction. Action-first. Tell them exactly what to do, step by step, in plain language. No background, no theory, no 'why this works.' Just: do this. 3-5 steps max. Start each step with a verb.",
+      "why_now": "One sentence: why this exercise fits what they wrote today.",
       "estimated_minutes": 10,
-      "originator": "Framework originator name",
-      "source_work": "Source methodology",
-      "why_this_works": "1-2 sentences grounding this exercise in research or mechanism. What happens in the brain or nervous system when someone does this? Not jargon — plain language about why this specific type of work produces change. E.g. 'Naming emotions activates the prefrontal cortex and dampens amygdala reactivity — it's called affect labeling, and it literally reduces the intensity of what you're feeling.'"
+      "originator": "Framework originator name"
     }
   ],
-  "coaching_questions": [
-    "A genuinely probing question that names the thing the person is circling around but has not said directly. It should feel slightly uncomfortable to sit with. It assumes the person is capable and pushes toward the edge. Not a therapy question — a coaching question.",
-    "Another question that connects to a different thread from today's journal."
-  ],
   "reframe": {
-    "old_thought": "A direct quote or close paraphrase from their journal — the specific thought pattern being addressed.",
-    "new_thought": "A reframe that the person has not said yet but that connects to their own language. Not the opposite of the old thought — the fuller picture.",
-    "source_quote": "The exact words from their journal this reframe responds to."
-  },
-  "pattern_challenge": null,
-  "sequence_suggestion": "Recommended order for the exercises with brief rationale. Start with grounding/somatic, then cognitive, then relational or integrative. Include approximate total time."
+    "old_thought": "A direct quote from their journal.",
+    "new_thought": "A reframe in one sentence. Not the opposite — the fuller picture.",
+    "source_quote": "The exact words this responds to."
+  }
 }
 
 ## Selection Rules
-1. Select exactly 4 exercises total. Prioritize relevance over modality coverage. If the person needs three somatic exercises today, select three somatic and one from another modality. Quality and fit over balance.
-2. Every exercise must respond to something specific in today's journal. No generic selections.
-3. If the person is in high distress, prioritize somatic (grounding) and cognitive (containment) over relational and systems.
+1. Select exactly 1 exercise. The single most relevant one for today. Quality over quantity.
+2. The exercise must respond to something specific in today's journal.
+3. If the person is in high distress, prioritize somatic (grounding) over everything else.
 4. Never repeat an exercise they did in the last 3 days.
-5. Use the when_to_use field from the library to match signals in the journal.
-6. Reference their actual words in why_selected and custom_framing.
-7. If a modality doesn't have a relevant match, skip it. Quality over coverage.
-8. Order by relevance — most needed first.
+5. Instructions must be action-first. No background. No theory. Just steps.
+6. IMPORTANT: Your total output should be SHORT. If the user wrote 50 words, your reading should be 2 sentences and the exercise instruction should be 3-5 steps. Match their energy.
 9. **Framework attribution**: When selecting a framework, use its exact official name and originator as listed in the library. Specifically: "The Seven Levels of Personal, Group and Organizational Effectiveness" must always use the full name and be attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate or paraphrase copyrighted framework names.
 10. SAFETY: If the journal contains signals of crisis (suicidal ideation, self-harm, hopelessness, abuse, or being a burden), do NOT select exercises. Instead return an empty overflow_exercises array and include in state_analysis.reading: "What you wrote carries real weight, and it's beyond what exercises can hold right now. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or email crew@allmindsondeck.com." Set urgency_level to "high".`;
 
@@ -231,7 +220,7 @@ Analyze the journal content and select the best overflow exercises for this clie
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 2000,
+      max_tokens: 800,
       system: buildCachedSystem(STANDARD_VOICE, systemPrompt),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });

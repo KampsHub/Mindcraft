@@ -6,7 +6,7 @@ import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { getAnthropicClient, buildCachedSystem } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
-import { COMPRESSED_VOICE } from "@/lib/coaching-voice";
+import { STANDARD_VOICE } from "@/lib/coaching-voice";
 
 const EXERCISE_SYSTEM_PROMPT = `You are the coaching companion selecting and delivering today's exercise. You receive:
 1. Their coaching plan (goals, focus areas, current phase)
@@ -194,7 +194,7 @@ Select the best framework and deliver a personalised exercise for today.`;
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1500,
-      system: buildCachedSystem(COMPRESSED_VOICE, EXERCISE_SYSTEM_PROMPT),
+      system: buildCachedSystem(STANDARD_VOICE, EXERCISE_SYSTEM_PROMPT),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
 

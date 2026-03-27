@@ -762,10 +762,10 @@ function WeeklyReviewPage() {
                 fontFamily: display, fontSize: 32, fontWeight: 700,
                 letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 6px 0",
               }}>
-                {weekTheme.name}: {weekTheme.title}
+                Week {weekTheme.week} — {weekTheme.name}
               </h1>
               <p style={{ fontSize: 15, color: colors.textSecondary, margin: 0, fontFamily: body, lineHeight: 1.6 }}>
-                {weekTheme.territory}
+                {weekTheme.title}
               </p>
             </>
           )}
@@ -1075,7 +1075,7 @@ function WeeklyReviewPage() {
                 </span>
                 {weekTheme && (
                   <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: body }}>
-                    {weekTheme.name}: {weekTheme.title}
+                    {weekTheme.name} — {weekTheme.title}
                   </span>
                 )}
               </div>

@@ -127,3 +127,28 @@ export function getAnthropicClient():
     client: new Anthropic({ apiKey: process.env.CLAUDE_API_KEY }),
   };
 }
+
+// ── Prompt caching helper ──
+// Wraps system prompt with cache_control to avoid re-processing
+// the voice config on every call. Cuts input token costs by ~90%
+// for the cached portion after the first call in a session.
+//
+// Usage:
+//   system: buildCachedSystem(STANDARD_VOICE, routeSpecificPrompt)
+//
+export function buildCachedSystem(
+  voiceConfig: string,
+  routePrompt: string
+): Array<{ type: "text"; text: string; cache_control?: { type: "ephemeral" } }> {
+  return [
+    {
+      type: "text" as const,
+      text: voiceConfig,
+      cache_control: { type: "ephemeral" as const },
+    },
+    {
+      type: "text" as const,
+      text: routePrompt,
+    },
+  ];
+}

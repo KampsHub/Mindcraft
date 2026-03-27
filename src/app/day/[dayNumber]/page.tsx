@@ -2101,13 +2101,7 @@ function DailyFlowPage() {
         ) : null}
       </DailyStep>
 
-      {/* Free-flow capture widget */}
-      {enrollment && session && (
-        <FreeFlowCapture
-          enrollmentId={enrollment.id}
-          sessionId={session.id}
-        />
-      )}
+      {/* Free-flow capture widget — removed (ad-hoc journaling moved into Step 2) */}
 
       {/* Insights prompt modal */}
       <AnimatePresence>

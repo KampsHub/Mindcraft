@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Nav from "@/components/Nav";
 import Logo from "@/components/Logo";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, radii } from "@/lib/theme";
 import { content as c } from "@/content/site";
 import BottomNav from "@/components/BottomNav";
 
@@ -139,12 +139,12 @@ export default function PageShell({
       )}
       <div style={{ position: "relative", zIndex: 1 }}>
         <Nav />
-        <div className="page-content-mobile page-shell-inner" style={{ maxWidth, margin: "0 auto", padding: "40px 24px 80px", position: "relative" }}>
+        <div className="page-content-mobile page-shell-inner" style={{ maxWidth, margin: "0 auto", padding: `${space[7]}px ${space[5]}px 80px`, position: "relative" }}>
           {showBgImage ? (
             <div style={{
               backgroundColor: "rgba(51, 51, 57, 0.5)",
-              borderRadius: 16,
-              padding: "28px 24px",
+              borderRadius: radii.lg,
+              padding: `${space[6]}px ${space[5]}px`,
               border: `1px solid rgba(255, 255, 255, 0.06)`,
               backdropFilter: "blur(8px)",
               WebkitBackdropFilter: "blur(8px)",
@@ -161,13 +161,13 @@ export default function PageShell({
       <BottomNav />
 
       {/* Footer */}
-      <footer style={{ padding: "48px 24px", borderTop: showBgImage ? "none" : `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>
+      <footer style={{ padding: `${space[7]}px ${space[5]}px`, borderTop: showBgImage ? "none" : `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>
         <div style={{
           maxWidth, margin: "0 auto",
           display: "flex", alignItems: "center", justifyContent: "center",
-          flexWrap: "wrap", gap: 16,
+          flexWrap: "wrap", gap: space[4],
         }}>
-          <div style={{ display: "flex", gap: 24, fontSize: 13, color: "#ffffff", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: space[5], fontSize: 13, color: "#ffffff", alignItems: "center" }}>
             <span>
               {c.footer.copyright} &middot; Made with{" "}
               <span style={{ color: colors.coral, fontSize: 18 }}>&#9829;</span> by{" "}

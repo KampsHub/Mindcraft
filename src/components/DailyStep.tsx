@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text as textScale, radii } from "@/lib/theme";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -39,8 +39,8 @@ export default function DailyStep({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 14,
-          marginBottom: 18,
+          gap: space[3],
+          marginBottom: space[4],
         }}
       >
         {/* Step number circle with glow */}
@@ -83,7 +83,7 @@ export default function DailyStep({
             style={{
               width: 38,
               height: 38,
-              borderRadius: "50%",
+              borderRadius: radii.full,
               backgroundColor: isCompleted
                 ? colors.coral
                 : isActive
@@ -118,13 +118,10 @@ export default function DailyStep({
         <div style={{ flex: 1 }}>
           <h2
             style={{
-              fontSize: 18,
-              fontWeight: 700,
+              ...textScale.heading,
               color: isActive || isCompleted ? colors.textPrimary : colors.textMuted,
               margin: 0,
-              fontFamily: display,
               lineHeight: 1.3,
-              letterSpacing: "-0.02em",
             }}
           >
             {title}
@@ -132,11 +129,9 @@ export default function DailyStep({
           {subtitle && (
             <p
               style={{
-                fontSize: 13,
+                ...textScale.secondary,
                 color: colors.textMuted,
                 margin: "3px 0 0 0",
-                fontFamily: body,
-                lineHeight: 1.4,
               }}
             >
               {subtitle}
@@ -147,16 +142,13 @@ export default function DailyStep({
         {estimatedTime && (
           <span
             style={{
-              fontSize: 11,
-              fontWeight: 600,
+              ...textScale.caption,
               color: isActive ? colors.coral : colors.textMuted,
               flexShrink: 0,
-              fontFamily: display,
-              letterSpacing: "0.04em",
               textTransform: "uppercase",
-              padding: "4px 10px",
+              padding: `${space[1]}px ${space[3]}px`,
               backgroundColor: isActive ? colors.coralWash : "transparent",
-              borderRadius: 6,
+              borderRadius: radii.sm,
               transition: "all 0.3s",
             }}
           >

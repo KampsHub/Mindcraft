@@ -6,7 +6,7 @@ import type { User } from "@supabase/supabase-js";
 import { motion, AnimatePresence } from "framer-motion";
 import PillButton from "@/components/PillButton";
 import FadeIn from "@/components/FadeIn";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text, radii } from "@/lib/theme";
 
 /* ── Design tokens ── */
 const display = fonts.display;
@@ -222,9 +222,9 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
       backgroundColor: "rgba(51, 51, 57, 0.5)",
       backdropFilter: "blur(20px)",
       WebkitBackdropFilter: "blur(20px)",
-      borderRadius: 16,
+      borderRadius: radii.lg,
       border: "1px solid rgba(255, 255, 255, 0.08)",
-      padding: "20px 22px",
+      padding: space[5],
     }}>
       {/* Section header — collapsible */}
       <div
@@ -236,14 +236,12 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <h3 style={{
-            fontFamily: display, fontSize: 14, fontWeight: 600,
-            color: "#ffffff", margin: 0, letterSpacing: "0.01em",
+            ...text.heading, color: "#ffffff", margin: 0,
           }}>
             Exercises
           </h3>
           <span style={{
-            fontSize: 11, fontFamily: display, fontWeight: 600,
-            padding: "2px 8px", borderRadius: 100,
+            ...text.caption, padding: "2px 8px", borderRadius: radii.full,
             backgroundColor: colors.bgElevated, color: "#ffffff",
           }}>
             {completedExercises.length} completed • {parkedExercises.length} parked
@@ -275,11 +273,11 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
                   style={{
-                    padding: "7px 16px", fontSize: 12, fontWeight: 600,
-                    fontFamily: display, letterSpacing: "0.01em",
+                    ...text.secondary, fontWeight: 600,
+                    padding: "7px 16px",
                     color: activeTab === tab.key ? colors.bgDeep : colors.textSecondary,
                     backgroundColor: activeTab === tab.key ? colors.coral : colors.bgElevated,
-                    border: "none", borderRadius: 100, cursor: "pointer",
+                    border: "none", borderRadius: radii.full, cursor: "pointer",
                     transition: "all 0.2s",
                   }}
                 >
@@ -302,8 +300,8 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                       key={mod}
                       onClick={() => setModalityFilter(mod)}
                       style={{
-                        padding: "4px 10px", fontSize: 10, fontWeight: 600,
-                        fontFamily: display, letterSpacing: "0.04em",
+                        ...text.caption,
+                        padding: "4px 10px",
                         textTransform: "uppercase",
                         color: modalityFilter === mod
                           ? (modStyle?.text || colors.textPrimary)
@@ -314,7 +312,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                         border: `1px solid ${modalityFilter === mod
                           ? (modStyle?.text || colors.borderDefault) + "30"
                           : colors.borderDefault}`,
-                        borderRadius: 100, cursor: "pointer",
+                        borderRadius: radii.full, cursor: "pointer",
                         transition: "all 0.2s",
                       }}
                     >
@@ -339,11 +337,11 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                 >
                   {filteredCompleted.length === 0 ? (
                     <div style={{
-                      backgroundColor: colors.bgSurface, borderRadius: 14,
+                      backgroundColor: colors.bgSurface, borderRadius: radii.md,
                       border: `1px solid ${colors.borderDefault}`,
-                      padding: 24, textAlign: "center",
+                      padding: space[4], textAlign: "center",
                     }}>
-                      <p style={{ fontSize: 13, color: "#ffffff", margin: 0, fontFamily: body }}>
+                      <p style={{ ...text.secondary, color: "#ffffff", margin: 0 }}>
                         {modalityFilter !== "all"
                           ? `No ${modalityFilter} exercises completed yet.`
                           : "No exercises completed yet."}
@@ -362,7 +360,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                           transition={{ type: "spring", stiffness: 400, damping: 25 }}
                           style={{
                             backgroundColor: colors.bgSurface,
-                            borderRadius: 14,
+                            borderRadius: radii.md,
                             border: `1px solid ${isExpanded ? colors.coral + "33" : colors.borderDefault}`,
                             overflow: "hidden",
                             transition: "border-color 0.2s",
@@ -371,7 +369,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                           <div
                             onClick={() => setExpandedId(isExpanded ? null : ex.id)}
                             style={{
-                              padding: "14px 18px",
+                              padding: space[4],
                               display: "flex", alignItems: "center", gap: 10,
                               cursor: "pointer",
                             }}
@@ -386,16 +384,15 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <p style={{
-                                fontSize: 13, fontWeight: 600, color: colors.textPrimary,
-                                margin: 0, fontFamily: body, lineHeight: 1.35,
+                                ...text.secondary, fontWeight: 600, color: colors.textPrimary,
+                                margin: 0,
                               }}>
                                 {ex.framework_name}
                               </p>
                               <div style={{ display: "flex", gap: 6, marginTop: 4, flexWrap: "wrap", alignItems: "center" }}>
                                 <span style={{
-                                  fontSize: 9, fontWeight: 700, fontFamily: display,
-                                  textTransform: "uppercase", letterSpacing: "0.06em",
-                                  padding: "2px 7px", borderRadius: 100,
+                                  ...text.caption,
+                                  padding: "2px 7px", borderRadius: radii.full,
                                   backgroundColor: tStyle.color + "14",
                                   color: tStyle.color,
                                 }}>
@@ -403,9 +400,9 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                 </span>
                                 {modStyle && (
                                   <span style={{
-                                    fontSize: 9, fontWeight: 600, fontFamily: display,
-                                    textTransform: "uppercase", letterSpacing: "0.06em",
-                                    padding: "2px 7px", borderRadius: 100,
+                                    ...text.caption,
+                                    textTransform: "uppercase",
+                                    padding: "2px 7px", borderRadius: radii.full,
                                     backgroundColor: modStyle.bg, color: modStyle.text,
                                   }}>
                                     {modStyle.label}
@@ -454,9 +451,8 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                       borderRadius: 10, marginBottom: 10,
                                     }}>
                                       <p style={{
-                                        fontSize: 10, fontWeight: 700, color: colors.textMuted,
-                                        margin: "0 0 6px 0", textTransform: "uppercase",
-                                        letterSpacing: "0.08em", fontFamily: display,
+                                        ...text.caption, color: colors.textMuted,
+                                        margin: "0 0 6px 0",
                                       }}>
                                         Your response
                                       </p>
@@ -498,11 +494,11 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                 >
                   {parkedExercises.length === 0 ? (
                     <div style={{
-                      backgroundColor: colors.bgSurface, borderRadius: 14,
+                      backgroundColor: colors.bgSurface, borderRadius: radii.md,
                       border: `1px solid ${colors.borderDefault}`,
-                      padding: 24, textAlign: "center",
+                      padding: space[4], textAlign: "center",
                     }}>
-                      <p style={{ fontSize: 13, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
+                      <p style={{ ...text.secondary, color: "#ffffff", margin: "0 0 4px 0" }}>
                         No parked exercises.
                       </p>
                       <p style={{ fontSize: 12, color: colors.borderDefault, margin: 0, fontFamily: body }}>
@@ -524,7 +520,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                             transition={{ type: "spring", stiffness: 400, damping: 25 }}
                             style={{
                               backgroundColor: colors.bgSurface,
-                              borderRadius: 14,
+                              borderRadius: radii.md,
                               border: `1px solid ${isExpParked ? colors.coral + "33" : colors.borderDefault}`,
                               overflow: "hidden",
                               transition: "border-color 0.2s",
@@ -536,7 +532,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                 else { setExpandedParked(parkedKey); setParkedResponse(""); setParkedRating(null); }
                               }}
                               style={{
-                                padding: "14px 18px",
+                                padding: space[4],
                                 display: "flex", alignItems: "center", gap: 12,
                                 cursor: "pointer",
                               }}
@@ -552,16 +548,15 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                               </div>
                               <div style={{ flex: 1 }}>
                                 <p style={{
-                                  fontSize: 13, fontWeight: 600, color: colors.textPrimary,
-                                  margin: 0, fontFamily: body, lineHeight: 1.35,
+                                  ...text.secondary, fontWeight: 600, color: colors.textPrimary,
+                                  margin: 0,
                                 }}>
                                   {ex.name}
                                 </p>
                                 <div style={{ display: "flex", gap: 6, alignItems: "center", marginTop: 3 }}>
                                   <span style={{
-                                    fontSize: 9, fontWeight: 700, fontFamily: display,
-                                    textTransform: "uppercase", letterSpacing: "0.06em",
-                                    padding: "2px 7px", borderRadius: 100,
+                                    ...text.caption,
+                                    padding: "2px 7px", borderRadius: radii.full,
                                     backgroundColor: colors.warningWash, color: colors.warning,
                                   }}>
                                     Parked

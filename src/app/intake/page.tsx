@@ -923,7 +923,7 @@ export default function IntakePage() {
             disabled={saving}
             style={{
               marginTop: 32, padding: "14px 36px", fontSize: 15, fontWeight: 600,
-              color: colors.white,
+              color: colors.bgDeep,
               backgroundColor: saving ? colors.bgElevated : colors.coral,
               border: "none", borderRadius: 100,
               cursor: saving ? "not-allowed" : "pointer",
@@ -983,7 +983,7 @@ export default function IntakePage() {
               onClick={() => router.push("/dashboard")}
               style={{
                 padding: "14px 36px", fontSize: 15, fontWeight: 600,
-                color: colors.white, backgroundColor: colors.black,
+                color: "#ffffff", backgroundColor: colors.textPrimary,
                 border: "none", borderRadius: 100, cursor: "pointer",
                 fontFamily: display, letterSpacing: "0.01em",
               }}

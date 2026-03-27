@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text, radii } from "@/lib/theme";
 import WeekProgressTracker from "@/components/WeekProgressTracker";
 
 const display = fonts.display;
@@ -72,9 +72,9 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
 
   const cardStyle: React.CSSProperties = {
     backgroundColor: colors.bgSurface,
-    borderRadius: 14,
+    borderRadius: radii.md,
     border: `1px solid ${accent.border}`,
-    padding: 28,
+    padding: space[5],
     position: "relative",
     overflow: "hidden",
   };
@@ -114,9 +114,8 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
                         marginBottom: 6,
                       }} />
                       <p style={{
-                        fontSize: 9, fontWeight: 600, fontFamily: display,
+                        ...text.caption,
                         color: isCurrent ? colors.coral : isDone ? "#ffffff" : "rgba(255,255,255,0.3)",
-                        textTransform: "uppercase", letterSpacing: "0.06em",
                         margin: 0,
                       }}>
                         {wt.name}
@@ -129,12 +128,11 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
           )}
 
           <h2 style={{
-            fontFamily: display, fontSize: 24, fontWeight: 700,
-            color: colors.textPrimary, margin: "0 0 4px 0", letterSpacing: "-0.02em",
+            ...text.title, color: colors.textPrimary, margin: "0 0 4px 0",
           }}>
             Day {enrollment.current_day}
           </h2>
-          <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
+          <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
             {todaySessionDone ? "Session complete — nice work." : todaySessionStarted ? "You have an open session." : "Your daily session is ready."}
           </p>
           <motion.button
@@ -145,7 +143,7 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
             style={{
               padding: "12px 28px", fontSize: 14, fontWeight: 600,
               color: colors.bgDeep, backgroundColor: colors.coral,
-              border: "none", borderRadius: 100, cursor: "pointer",
+              border: "none", borderRadius: radii.full, cursor: "pointer",
               fontFamily: display, letterSpacing: "0.01em",
             }}
           >
@@ -167,9 +165,8 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
             <button
               onClick={() => isCompact && setGoalsOpen(!goalsOpen)}
               style={{
-                fontFamily: display, fontSize: 11, fontWeight: 700,
-                color: colors.textMuted, textTransform: "uppercase",
-                letterSpacing: "0.08em", margin: "0 0 10px 0",
+                ...text.caption, color: colors.textMuted,
+                margin: "0 0 10px 0",
                 background: "none", border: "none", cursor: isCompact ? "pointer" : "default",
                 padding: 0, display: "flex", alignItems: "center", gap: 6,
               }}
@@ -193,9 +190,8 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     {goals.map((g) => (
                       <p key={g.id} style={{
-                        fontSize: 13, color: colors.textBody, margin: 0,
+                        ...text.secondary, color: colors.textBody, margin: 0,
                         paddingLeft: 14, borderLeft: `2px solid ${accent.color}`,
-                        lineHeight: 1.5, fontFamily: body,
                       }}>
                         {g.goal_text}
                       </p>
@@ -219,12 +215,11 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
       >
         <ProgramBadge name={enrollment.programs?.name} accent={accent} weekNumber={Math.ceil(enrollment.current_day / 7)} />
         <h2 style={{
-          fontFamily: display, fontSize: 22, fontWeight: 700,
-          color: colors.textPrimary, margin: "0 0 6px 0", letterSpacing: "-0.02em",
+          ...text.title, color: colors.textPrimary, margin: "0 0 6px 0",
         }}>
           Ready to begin
         </h2>
-        <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
+        <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
           Your first three days are onboarding — the exercises double as intake.
         </p>
         <motion.button
@@ -259,22 +254,19 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
       }}
     >
       <span style={{
-        display: "inline-block",
+        ...text.caption, display: "inline-block",
         background: isAwaiting ? colors.warningWash : accent.wash,
         color: isAwaiting ? colors.warning : accent.color,
-        fontFamily: display, fontWeight: 700, fontSize: 11,
-        textTransform: "uppercase", letterSpacing: "0.1em",
-        padding: "5px 14px", borderRadius: 100, marginBottom: 14,
+        padding: "5px 14px", borderRadius: radii.full, marginBottom: 14,
       }}>
         {enrollment.programs?.name} — Day {enrollment.current_day}
       </span>
       <h2 style={{
-        fontFamily: display, fontSize: 22, fontWeight: 700,
-        color: colors.textPrimary, margin: "0 0 6px 0", letterSpacing: "-0.02em",
+        ...text.title, color: colors.textPrimary, margin: "0 0 6px 0",
       }}>
         {isAwaiting ? "Goals ready for review" : "Continue onboarding"}
       </h2>
-      <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 18px 0", fontFamily: body }}>
+      <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
         {isAwaiting
           ? "Your goals have been generated from your first three days. Review and approve them."
           : "Pick up where you left off in your onboarding sessions."}
@@ -302,21 +294,17 @@ function ProgramBadge({ name, accent, weekNumber }: { name: string; accent: { wa
     <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
       {weekNumber && (
         <span style={{
-          display: "inline-block",
+          ...text.caption, display: "inline-block",
           background: colors.coralWash, color: colors.coral,
-          fontFamily: display, fontWeight: 700, fontSize: 11,
-          textTransform: "uppercase", letterSpacing: "0.1em",
-          padding: "5px 14px", borderRadius: 100,
+          padding: "5px 14px", borderRadius: radii.full,
         }}>
           Week {weekNumber}
         </span>
       )}
       <span style={{
-        display: "inline-block",
+        ...text.caption, display: "inline-block",
         background: colors.bgElevated, color: colors.textPrimary,
-        fontFamily: display, fontWeight: 700, fontSize: 11,
-        textTransform: "uppercase", letterSpacing: "0.1em",
-        padding: "5px 14px", borderRadius: 100,
+        padding: "5px 14px", borderRadius: radii.full,
       }}>
         {name}
       </span>

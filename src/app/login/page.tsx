@@ -40,7 +40,7 @@ export default function LoginPage() {
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: 12, fontSize: 15,
-    border: `1px solid ${colors.gray200}`, borderRadius: 8,
+    border: `1px solid ${colors.borderSubtle}`, borderRadius: 8,
     marginBottom: 16, boxSizing: "border-box",
     outline: "none", transition: "border-color 0.15s",
   };
@@ -48,24 +48,24 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: "100vh", display: "flex", alignItems: "center",
-      justifyContent: "center", backgroundColor: colors.gray50,
+      justifyContent: "center", backgroundColor: colors.bgDeep,
       fontFamily: fonts.body, padding: 24,
     }}>
       <div style={{
-        width: "100%", maxWidth: 400, backgroundColor: colors.white,
+        width: "100%", maxWidth: 400, backgroundColor: colors.bgSurface,
         borderRadius: 16, padding: "40px 32px",
         boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-        border: `1px solid ${colors.gray100}`,
+        border: `1px solid ${colors.bgRecessed}`,
       }}>
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ display: "inline-block", marginBottom: 16 }}>
             <Logo size={20} />
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.black }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.textPrimary }}>
             {c.login.headline}
           </h1>
-          <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>
+          <p style={{ fontSize: 14, color: colors.textMuted, margin: 0 }}>
             {c.login.subheadline}
           </p>
         </div>
@@ -81,7 +81,7 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleLogin}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
+          <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.textSecondary }}>
             {c.login.emailLabel}
           </label>
           <input
@@ -89,7 +89,7 @@ export default function LoginPage() {
             required placeholder={c.login.emailPlaceholder} style={inputStyle}
           />
 
-          <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.gray600 }}>
+          <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.textSecondary }}>
             {c.login.passwordLabel}
           </label>
           <input
@@ -99,7 +99,7 @@ export default function LoginPage() {
 
           {error && (
             <div style={{
-              padding: 12, backgroundColor: colors.errorLight,
+              padding: 12, backgroundColor: colors.errorWash,
               border: "1px solid #fecaca", borderRadius: 8,
               color: colors.error, fontSize: 13, marginBottom: 16,
             }}>
@@ -109,8 +109,8 @@ export default function LoginPage() {
 
           <button type="submit" disabled={loading} style={{
             width: "100%", padding: 13, fontSize: 15, fontWeight: 600,
-            color: colors.white,
-            backgroundColor: loading ? colors.gray400 : colors.primary,
+            color: colors.bgDeep,
+            backgroundColor: loading ? colors.textMuted : colors.coral,
             border: "none", borderRadius: 8,
             cursor: loading ? "not-allowed" : "pointer",
             transition: "background-color 0.15s",
@@ -118,16 +118,16 @@ export default function LoginPage() {
             {loading ? c.login.submitLoading : c.login.submitButton}
           </button>
 
-          <p style={{ marginTop: 12, textAlign: "center", fontSize: 13, color: colors.gray500 }}>
-            <a href="/forgot-password" style={{ color: colors.gray500, textDecoration: "none" }}>
+          <p style={{ marginTop: 12, textAlign: "center", fontSize: 13, color: colors.textMuted }}>
+            <a href="/forgot-password" style={{ color: colors.textMuted, textDecoration: "none" }}>
               Forgot password?
             </a>
           </p>
         </form>
 
-        <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.gray500 }}>
+        <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.textMuted }}>
           {c.login.newHere}{" "}
-          <a href="/#programs" style={{ color: colors.primary, fontWeight: 500, textDecoration: "none" }}>
+          <a href="/#programs" style={{ color: colors.coral, fontWeight: 500, textDecoration: "none" }}>
             {c.login.newHereLink}
           </a>
         </p>

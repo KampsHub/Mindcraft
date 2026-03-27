@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
     width: "100%",
     padding: 12,
     fontSize: 15,
-    border: `1px solid ${colors.gray200}`,
+    border: `1px solid ${colors.borderSubtle}`,
     borderRadius: 8,
     marginBottom: 16,
     boxSizing: "border-box",
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: colors.gray50,
+          backgroundColor: colors.bgDeep,
           fontFamily: fonts.body,
           padding: 24,
         }}
@@ -62,11 +62,11 @@ export default function ForgotPasswordPage() {
           style={{
             width: "100%",
             maxWidth: 400,
-            backgroundColor: colors.white,
+            backgroundColor: colors.bgSurface,
             borderRadius: 16,
             padding: "40px 32px",
             boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-            border: `1px solid ${colors.gray100}`,
+            border: `1px solid ${colors.bgRecessed}`,
             textAlign: "center",
           }}
         >
@@ -91,7 +91,7 @@ export default function ForgotPasswordPage() {
               fontSize: 24,
               fontWeight: 700,
               margin: "0 0 8px 0",
-              color: colors.black,
+              color: colors.textPrimary,
               fontFamily: fonts.display,
             }}
           >
@@ -99,7 +99,7 @@ export default function ForgotPasswordPage() {
           </h1>
           <p
             style={{
-              color: colors.gray500,
+              color: colors.textMuted,
               lineHeight: 1.6,
               fontSize: 14,
             }}
@@ -112,7 +112,7 @@ export default function ForgotPasswordPage() {
             style={{
               display: "inline-block",
               marginTop: 24,
-              color: colors.primary,
+              color: colors.coral,
               fontWeight: 500,
               textDecoration: "none",
               fontSize: 15,
@@ -132,7 +132,7 @@ export default function ForgotPasswordPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: colors.gray50,
+        backgroundColor: colors.bgDeep,
         fontFamily: fonts.body,
         padding: 24,
       }}
@@ -141,11 +141,11 @@ export default function ForgotPasswordPage() {
         style={{
           width: "100%",
           maxWidth: 400,
-          backgroundColor: colors.white,
+          backgroundColor: colors.bgSurface,
           borderRadius: 16,
           padding: "40px 32px",
           boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          border: `1px solid ${colors.gray100}`,
+          border: `1px solid ${colors.bgRecessed}`,
         }}
       >
         {/* Logo */}
@@ -158,13 +158,13 @@ export default function ForgotPasswordPage() {
               fontSize: 24,
               fontWeight: 700,
               margin: "0 0 4px 0",
-              color: colors.black,
+              color: colors.textPrimary,
               fontFamily: fonts.display,
             }}
           >
             Reset your password
           </h1>
-          <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>
+          <p style={{ fontSize: 14, color: colors.textMuted, margin: 0 }}>
             Enter your email and we&apos;ll send you a reset link.
           </p>
         </div>
@@ -176,7 +176,7 @@ export default function ForgotPasswordPage() {
               marginBottom: 4,
               fontSize: 13,
               fontWeight: 500,
-              color: colors.gray600,
+              color: colors.textSecondary,
             }}
           >
             Email
@@ -194,7 +194,7 @@ export default function ForgotPasswordPage() {
             <div
               style={{
                 padding: 12,
-                backgroundColor: colors.errorLight,
+                backgroundColor: colors.errorWash,
                 border: "1px solid #fecaca",
                 borderRadius: 8,
                 color: colors.error,
@@ -214,8 +214,8 @@ export default function ForgotPasswordPage() {
               padding: 13,
               fontSize: 15,
               fontWeight: 600,
-              color: colors.white,
-              backgroundColor: loading ? colors.gray400 : colors.primary,
+              color: colors.bgDeep,
+              backgroundColor: loading ? colors.textMuted : colors.coral,
               border: "none",
               borderRadius: 8,
               cursor: loading ? "not-allowed" : "pointer",
@@ -231,13 +231,13 @@ export default function ForgotPasswordPage() {
             marginTop: 20,
             textAlign: "center",
             fontSize: 14,
-            color: colors.gray500,
+            color: colors.textMuted,
           }}
         >
           <a
             href="/login"
             style={{
-              color: colors.primary,
+              color: colors.coral,
               fontWeight: 500,
               textDecoration: "none",
             }}

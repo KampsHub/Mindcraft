@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import PageShell from "@/components/PageShell";
 import FadeIn from "@/components/FadeIn";
 import PhaseIndicator from "@/components/PhaseIndicator";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text, radii } from "@/lib/theme";
 import { useDaySession } from "./useDaySession";
 import TellTab from "./TellTab";
 import DoTab from "./DoTab";
@@ -71,37 +71,34 @@ function DailyFlowPage() {
     <PageShell>
       {/* Day header */}
       <FadeIn preset="fade" triggerOnMount>
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+        <div style={{ marginBottom: space[6] }}>
+          <div style={{ display: "flex", gap: space[2], marginBottom: 10 }}>
             <span style={{
               display: "inline-block", background: colors.coralWash, color: colors.coral,
-              fontFamily: display, fontWeight: 700, fontSize: 12,
-              textTransform: "uppercase", letterSpacing: "0.1em",
-              padding: "5px 14px", borderRadius: 100,
+              ...text.caption,
+              padding: "5px 14px", borderRadius: radii.full,
             }}>
               Week {s.programDay.week_number} — {weekNames[s.programDay.week_number - 1] || ""}
             </span>
             <span style={{
               display: "inline-block", background: colors.bgSurface, color: colors.textPrimary,
-              fontFamily: display, fontWeight: 700, fontSize: 12,
-              textTransform: "uppercase", letterSpacing: "0.1em",
-              padding: "5px 14px", borderRadius: 100,
+              ...text.caption,
+              padding: "5px 14px", borderRadius: radii.full,
             }}>
               {s.enrollment.programs?.name}
             </span>
           </div>
           {s.weekPurpose && (
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", margin: "0 0 12px 0", fontFamily: body }}>
+            <p style={{ ...text.secondary, color: "rgba(255,255,255,0.5)", margin: "0 0 12px 0" }}>
               {s.weekPurpose}
             </p>
           )}
           <h1 style={{
-            fontFamily: display, fontSize: 30, fontWeight: 700,
-            letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 6px 0",
+            ...text.title, color: colors.textPrimary, margin: "0 0 6px 0",
           }}>
             Day {s.dayNumber}: {s.programDay.title}
           </h1>
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.8)", margin: 0, lineHeight: 1.55, fontFamily: body }}>
+          <p style={{ ...text.body, color: "rgba(255,255,255,0.8)", margin: 0 }}>
             {s.programDay.territory}
           </p>
         </div>

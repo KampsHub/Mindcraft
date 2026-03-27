@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import FlagButton from "@/components/FlagButton";
 import CrisisBanner from "@/components/CrisisBanner";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text as textPreset, radii } from "@/lib/theme";
 import type { createClient } from "@/lib/supabase";
 import type {
   DailySession,
@@ -75,7 +75,7 @@ export default function DoneTab({
           backgroundColor: colors.bgSurface,
           borderRadius: 14,
           border: `1px solid ${colors.borderDefault}`,
-          padding: 28, textAlign: "center",
+          padding: space[5], textAlign: "center",
         }}>
           <motion.div
             animate={{ rotate: 360 }}
@@ -87,12 +87,12 @@ export default function DoneTab({
               margin: "0 auto 18px auto",
             }}
           />
-          <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+          <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
             Generating your daily summary...
           </p>
         </div>
       ) : summaryResult ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: space[6] }}>
           {/* Crisis Banner -- shown above summary when crisis detected */}
           {crisisDetectedStep5 && !crisisDismissedStep5 && enrollment && (
             <CrisisBanner
@@ -111,23 +111,24 @@ export default function DoneTab({
               backgroundColor: colors.bgSurface,
               borderRadius: 14,
               border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
+              padding: space[5],
             }}
           >
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 4 }}>
               <FlagButton outputType="summary" dailySessionId={session?.id} />
             </div>
-            <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.7, margin: "0 0 32px 0", fontFamily: body }}>
+            <p style={{ ...textPreset.body, color: "#ffffff", margin: `0 0 ${space[6]}px 0` }}>
               {summaryResult.summary}
             </p>
 
             {summaryResult.today_themes?.length > 0 && (
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 32 }}>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: space[6] }}>
                 {(summaryResult.today_themes || []).map((t, i) => (
                   <span key={i} style={{
-                    padding: "4px 12px", fontSize: 12, fontWeight: 600,
+                    ...textPreset.caption,
+                    padding: "4px 12px",
                     backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
-                    borderRadius: 100, fontFamily: display,
+                    borderRadius: radii.full,
                   }}>
                     {t}
                   </span>
@@ -139,10 +140,10 @@ export default function DoneTab({
               <div style={{
                 padding: "12px 16px",
                 backgroundColor: colors.bgElevated,
-                borderRadius: 12,
+                borderRadius: radii.md,
                 borderLeft: `3px solid ${colors.coral}`,
               }}>
-                <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
+                <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                   <span style={{ fontWeight: 700 }}>Pattern forming:</span> {summaryResult.pattern_note}
                 </p>
               </div>
@@ -159,18 +160,17 @@ export default function DoneTab({
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
                 border: `1px solid ${colors.borderDefault}`,
-                padding: 22,
+                padding: space[5],
               }}
             >
               <p style={{
-                fontSize: 12, fontWeight: 700, color: "#ffffff",
+                ...textPreset.caption, color: "#ffffff",
                 margin: "0 0 12px 0",
-                letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Exercise Insights
               </p>
               {(summaryResult.exercise_insights || []).map((ei, i) => (
-                <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "0 0 10px 0", lineHeight: 1.55, fontFamily: body }}>
+                <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 10px 0" }}>
                   <span style={{ fontWeight: 600, color: colors.textPrimary }}>{ei.exercise_name}:</span> {ei.insight}
                 </p>
               ))}
@@ -187,22 +187,21 @@ export default function DoneTab({
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
                 border: `1px solid ${colors.borderDefault}`,
-                padding: 22,
+                padding: space[5],
               }}
             >
               <p style={{
-                fontSize: 12, fontWeight: 700, color: "#ffffff",
+                ...textPreset.caption, color: "#ffffff",
                 margin: "0 0 12px 0",
-                letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Goal Progress
               </p>
               {(summaryResult.goal_progress || []).map((gp, i) => (
                 <div key={i} style={{ marginBottom: 12 }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: colors.textPrimary, margin: 0, fontFamily: body }}>
+                  <p style={{ ...textPreset.secondary, fontWeight: 600, color: colors.textPrimary, margin: 0 }}>
                     {gp.goal_text}
                   </p>
-                  <p style={{ fontSize: 16, color: "#ffffff", margin: "3px 0 0 0", fontFamily: body, lineHeight: 1.5 }}>
+                  <p style={{ ...textPreset.body, color: "#ffffff", margin: "3px 0 0 0" }}>
                     {gp.observation}
                   </p>
                 </div>
@@ -220,25 +219,24 @@ export default function DoneTab({
               backgroundColor: colors.bgSurface,
               borderRadius: 14,
               border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
+              padding: space[5],
               background: `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.bgSurface} 100%)`,
               borderColor: "rgba(123,82,120,0.25)",
             }}
           >
             <p style={{
-              fontSize: 12, fontWeight: 700, color: colors.coral,
+              ...textPreset.caption, color: colors.coral,
               margin: "0 0 8px 0",
-              letterSpacing: "0.08em", fontFamily: display,
             }}>
               Tomorrow
             </p>
-            <p style={{ fontSize: 16, fontWeight: 700, color: colors.textPrimary, margin: "0 0 4px 0", fontFamily: display, letterSpacing: "-0.02em" }}>
+            <p style={{ ...textPreset.heading, color: colors.textPrimary, margin: "0 0 4px 0" }}>
               Day {dayNumber + 1}: {summaryResult.tomorrow_preview.title}
             </p>
-            <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 8px 0", fontFamily: body }}>
+            <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 8px 0" }}>
               {summaryResult.tomorrow_preview.territory}
             </p>
-            <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body, lineHeight: 1.55 }}>
+            <p style={{ ...textPreset.body, color: "#ffffff", margin: 0, fontStyle: "italic" }}>
               {summaryResult.tomorrow_preview.connection}
             </p>
           </motion.div>
@@ -254,17 +252,16 @@ export default function DoneTab({
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
                 border: `1px solid ${colors.borderDefault}`,
-                padding: 22,
+                padding: space[5],
               }}
             >
               <p style={{
-                fontSize: 12, fontWeight: 700, color: "#ffffff",
+                ...textPreset.caption, color: "#ffffff",
                 margin: "0 0 10px 0",
-                letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Today&apos;s Insight
               </p>
-              <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.65, fontFamily: body }}>
+              <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                 {summaryResult.micro_content}
               </p>
             </motion.div>
@@ -280,17 +277,16 @@ export default function DoneTab({
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
                 border: `1px solid ${colors.borderDefault}`,
-                padding: 22,
+                padding: space[5],
               }}
             >
               <p style={{
-                fontSize: 12, fontWeight: 700, color: colors.coral,
+                ...textPreset.caption, color: colors.coral,
                 margin: "0 0 6px 0",
-                letterSpacing: "0.08em", fontFamily: display,
               }}>
                 Pick a Mini-Action for Today
               </p>
-              <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 32px 0", fontFamily: body, lineHeight: 1.5 }}>
+              <p style={{ ...textPreset.secondary, color: "#ffffff", margin: `0 0 ${space[6]}px 0` }}>
                 Each takes under 5 minutes. Choose one (or more) to carry into the rest of your day.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -323,7 +319,7 @@ export default function DoneTab({
                       }}>
                         {isSelected ? "\u2713" : ""}
                       </div>
-                      <span style={{ fontSize: 14, color: "#ffffff", fontFamily: body, lineHeight: 1.45 }}>
+                      <span style={{ ...textPreset.secondary, color: "#ffffff" }}>
                         {action}
                       </span>
                     </button>
@@ -337,8 +333,8 @@ export default function DoneTab({
                   onChange={(e) => setCustomAction(e.target.value)}
                   placeholder="Or write your own..."
                   style={{
-                    flex: 1, padding: "10px 14px", fontSize: 14, fontFamily: body,
-                    border: `1px solid ${colors.borderDefault}`, borderRadius: 10,
+                    flex: 1, padding: "10px 14px", ...textPreset.secondary,
+                    border: `1px solid ${colors.borderDefault}`, borderRadius: radii.sm,
                     backgroundColor: colors.bgInput, color: colors.textPrimary,
                     outline: "none",
                   }}
@@ -373,11 +369,11 @@ export default function DoneTab({
               )}
               {summaryResult.committed_actions && summaryResult.committed_actions.length > 0 && (
                 <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, backgroundColor: colors.bgElevated }}>
-                  <p style={{ fontSize: 12, fontWeight: 600, color: colors.coral, margin: "0 0 6px 0", fontFamily: display }}>
+                  <p style={{ ...textPreset.caption, color: colors.coral, margin: "0 0 6px 0" }}>
                     Committed
                   </p>
                   {(summaryResult.committed_actions || []).map((a, i) => (
-                    <p key={i} style={{ fontSize: 14, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
+                    <p key={i} style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 4px 0" }}>
                       {"\u2713"} {a}
                     </p>
                   ))}
@@ -395,13 +391,12 @@ export default function DoneTab({
               backgroundColor: colors.bgSurface,
               borderRadius: 14,
               border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
+              padding: space[5],
             }}
           >
             <p style={{
-              fontSize: 12, fontWeight: 700, color: "#ffffff",
-              margin: "0 0 32px 0",
-              letterSpacing: "0.08em", fontFamily: display,
+              ...textPreset.caption, color: "#ffffff",
+              margin: `0 0 ${space[6]}px 0`,
             }}>
               How did you show up today?
             </p>
@@ -444,13 +439,11 @@ export default function DoneTab({
                 width: "100%",
                 minHeight: 70,
                 padding: 14,
-                fontSize: 14,
-                lineHeight: 1.55,
+                ...textPreset.body,
                 border: `1px solid ${colors.borderDefault}`,
-                borderRadius: 14,
+                borderRadius: radii.md,
                 resize: "none",
                 outline: "none",
-                fontFamily: body,
                 boxSizing: "border-box",
                 color: colors.textPrimary,
                 backgroundColor: colors.bgInput,

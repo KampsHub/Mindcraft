@@ -8,7 +8,7 @@ import FlagButton from "@/components/FlagButton";
 import CrisisBanner from "@/components/CrisisBanner";
 import ChatCoach from "@/components/ChatCoach";
 import ViewModeToggle from "@/components/ViewModeToggle";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text as textPreset, radii } from "@/lib/theme";
 import { useProgressiveReveal } from "@/hooks/useProgressiveReveal";
 import type { createClient } from "@/lib/supabase";
 import type {
@@ -167,12 +167,12 @@ export default function DoTab({
           backgroundColor: colors.bgSurface,
           borderRadius: 14,
           border: `1px solid ${colors.borderDefault}`,
-          padding: 28, textAlign: "center",
+          padding: space[5], textAlign: "center",
         }}>
           {/* Progress bar */}
           <div style={{
             width: "100%", height: 4, borderRadius: 2,
-            backgroundColor: colors.bgElevated, marginBottom: 24,
+            backgroundColor: colors.bgElevated, marginBottom: space[5],
             overflow: "hidden",
           }}>
             <motion.div
@@ -195,14 +195,14 @@ export default function DoTab({
               margin: "0 auto 18px auto",
             }}
           />
-          <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+          <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
             Processing your entry and selecting exercises that match what came up and where you are in the program.
           </p>
         </div>
       ) : stateAnalysis ? (
         <div>
           {/* View mode toggle — Read vs Chat */}
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 32 }}>
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: space[6] }}>
             <ViewModeToggle mode={step3Mode} onChange={setStep3Mode} />
           </div>
 
@@ -263,7 +263,7 @@ export default function DoTab({
           ...(crisisDetectedStep3 && !crisisDismissedStep3
             ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
             : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
-          display: "flex", flexDirection: "column", gap: 32,
+          display: "flex", flexDirection: "column", gap: space[6],
         }}>
 
           {/* ── Card 1: Reading ── */}
@@ -274,10 +274,10 @@ export default function DoTab({
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
               backgroundColor: colors.bgSurface,
-              borderRadius: 14, padding: 22,
+              borderRadius: 14, padding: space[5],
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: space[6] }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%",
@@ -289,9 +289,8 @@ export default function DoTab({
                   </svg>
                 </div>
                 <p style={{
-                  fontSize: 12, fontWeight: 700, color: colors.coral,
+                  ...textPreset.caption, color: colors.coral,
                   margin: 0,
-                  letterSpacing: "0.08em", fontFamily: display,
                 }}>
                   What I noticed
                 </p>
@@ -301,24 +300,24 @@ export default function DoTab({
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {stateAnalysis.reading ? (
                 stateAnalysis.reading.split("\n\n").map((para, i) => (
-                  <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.7, fontFamily: body }}>
+                  <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                     {para}
                   </p>
                 ))
               ) : (
                 <>
                   {stateAnalysis.emotional_state && (
-                    <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                    <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                       {stateAnalysis.emotional_state}
                     </p>
                   )}
                   {stateAnalysis.cognitive_patterns && (
-                    <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                    <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                       {stateAnalysis.cognitive_patterns}
                     </p>
                   )}
                   {stateAnalysis.somatic_signals && (
-                    <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.6, fontFamily: body }}>
+                    <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                       {stateAnalysis.somatic_signals}
                     </p>
                   )}
@@ -331,7 +330,7 @@ export default function DoTab({
                 backgroundColor: "rgba(224, 149, 133, 0.12)",
                 borderRadius: 10,
               }}>
-                <p style={{ fontSize: 14, color: colors.coral, margin: 0, fontFamily: body, fontWeight: 500 }}>
+                <p style={{ ...textPreset.secondary, color: colors.coral, margin: 0, fontWeight: 500 }}>
                   <span style={{ fontWeight: 700 }}>Goal connections:</span> {stateAnalysis.goal_connections.join(" • ")}
                 </p>
               </div>
@@ -343,10 +342,10 @@ export default function DoTab({
           {isRevealed("reading") && coachingQuestions.length > 0 && (
             <div style={{
               backgroundColor: colors.bgSurface,
-              borderRadius: 14, padding: 22,
+              borderRadius: 14, padding: space[5],
               borderLeft: `3px solid ${colors.coral}`,
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: space[6] }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%",
                   backgroundColor: "rgba(224, 149, 133, 0.12)",
@@ -356,13 +355,13 @@ export default function DoTab({
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                   </svg>
                 </div>
-                <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: 0, letterSpacing: "0.08em", fontFamily: display }}>
+                <p style={{ ...textPreset.caption, color: colors.coral, margin: 0 }}>
                   Questions to sit with
                 </p>
               </div>
               {coachingQuestions.map((q, i) => (
                 <div key={i} style={{ marginBottom: i < coachingQuestions.length - 1 ? 20 : 0 }}>
-                  <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 10px 0", lineHeight: 1.6, fontFamily: body, fontStyle: "italic" }}>
+                  <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 10px 0", fontStyle: "italic" }}>
                     {q}
                   </p>
                   <textarea
@@ -372,8 +371,8 @@ export default function DoTab({
                     rows={2}
                     disabled={responsesSaved}
                     style={{
-                      width: "100%", padding: "12px 16px", fontSize: 16, fontFamily: body,
-                      border: `1px solid ${colors.borderDefault}`, borderRadius: 12,
+                      width: "100%", padding: "12px 16px", ...textPreset.body,
+                      border: `1px solid ${colors.borderDefault}`, borderRadius: radii.md,
                       backgroundColor: colors.bgRecessed, color: "#ffffff",
                       resize: "vertical", minHeight: 70, boxSizing: "border-box",
                       outline: "none", opacity: responsesSaved ? 0.6 : 1,
@@ -409,10 +408,10 @@ export default function DoTab({
           {isRevealed("reading") && patternChallenge && (
             <div style={{
               backgroundColor: colors.bgSurface,
-              borderRadius: 14, padding: 22,
+              borderRadius: 14, padding: space[5],
               borderLeft: `3px solid ${colors.warning}`,
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: space[6] }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%",
                   backgroundColor: "rgba(251, 191, 36, 0.15)",
@@ -422,17 +421,17 @@ export default function DoTab({
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                   </svg>
                 </div>
-                <p style={{ fontSize: 12, fontWeight: 700, color: colors.warning, margin: 0, letterSpacing: "0.08em", fontFamily: display }}>
+                <p style={{ ...textPreset.caption, color: colors.warning, margin: 0 }}>
                   Pattern challenge
                 </p>
               </div>
-              <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 8px 0", lineHeight: 1.55, fontFamily: body }}>
+              <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 8px 0" }}>
                 {patternChallenge.pattern}
               </p>
-              <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 4px 0", fontWeight: 600, fontFamily: body }}>
+              <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 4px 0", fontWeight: 600 }}>
                 {patternChallenge.challenge}
               </p>
-              <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body, fontStyle: "italic" }}>
+              <p style={{ ...textPreset.body, color: "#ffffff", margin: 0, fontStyle: "italic" }}>
                 Counter-move: {patternChallenge.counter_move}
               </p>
             </div>
@@ -440,7 +439,7 @@ export default function DoTab({
 
           {/* Sequence suggestion */}
           {isRevealed("reading") && sequenceSuggestion && (
-            <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 32px 0", fontFamily: body, fontStyle: "italic" }}>
+            <p style={{ ...textPreset.secondary, color: "#ffffff", margin: `0 0 ${space[6]}px 0`, fontStyle: "italic" }}>
               {sequenceSuggestion}
             </p>
           )}
@@ -478,7 +477,7 @@ export default function DoTab({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           style={{
-            marginTop: 32,
+            marginTop: space[6],
             ...(crisisDetectedStep3 && !crisisDismissedStep3
               ? { filter: "blur(3px)", opacity: 0.5, pointerEvents: "none" as const, transition: "filter 0.4s, opacity 0.4s" }
               : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
@@ -486,11 +485,10 @@ export default function DoTab({
         >
         {/* Coaching Plan Exercises (Required) */}
         {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
-          <div style={{ marginBottom: 32 }}>
+          <div style={{ marginBottom: space[6] }}>
             <p style={{
-              fontSize: 12, fontWeight: 700, color: "#ffffff",
+              ...textPreset.caption, color: "#ffffff",
               margin: "0 0 12px 0",
-              letterSpacing: "0.08em", fontFamily: display,
             }}>
               {dayNumber <= 3 ? "Today's Exercise" : "From Your Coaching Plan"}
             </p>
@@ -517,11 +515,10 @@ export default function DoTab({
 
         {/* Overflow Exercises (from journal analysis) */}
         {overflowExercises.length > 0 && (
-          <div style={{ marginBottom: 32 }}>
+          <div style={{ marginBottom: space[6] }}>
             <p style={{
-              fontSize: 12, fontWeight: 700, color: "#ffffff",
+              ...textPreset.caption, color: "#ffffff",
               margin: "0 0 12px 0",
-              letterSpacing: "0.08em", fontFamily: display,
             }}>
               {dayNumber <= 3 ? "Based on What You Wrote" : "Matched to Your Journal"}
             </p>
@@ -557,16 +554,15 @@ export default function DoTab({
             backgroundColor: colors.bgSurface,
             borderRadius: 14,
             border: `1px solid ${colors.borderDefault}`,
-            padding: 22, textAlign: "center",
+            padding: space[5], textAlign: "center",
           }}>
-            <p style={{ fontSize: 14, color: "#ffffff", fontFamily: body }}>Loading framework analysis...</p>
+            <p style={{ ...textPreset.secondary, color: "#ffffff" }}>Loading framework analysis...</p>
           </div>
         ) : frameworkAnalysis ? (
-          <div style={{ marginBottom: 32 }}>
+          <div style={{ marginBottom: space[6] }}>
             <p style={{
-              fontSize: 12, fontWeight: 700, color: "#ffffff",
+              ...textPreset.caption, color: "#ffffff",
               margin: "0 0 12px 0",
-              letterSpacing: "0.08em", fontFamily: display,
             }}>
               Framework Analysis
             </p>
@@ -574,37 +570,36 @@ export default function DoTab({
               backgroundColor: colors.bgSurface,
               borderRadius: 14,
               border: `1px solid ${colors.borderDefault}`,
-              padding: 22,
+              padding: space[5],
               borderLeft: `3px solid ${colors.coral}`,
             }}>
               <h3 style={{
-                fontSize: 16, fontWeight: 700, color: colors.textPrimary, margin: "0 0 4px 0",
-                fontFamily: display, letterSpacing: "-0.02em",
+                ...textPreset.heading, color: colors.textPrimary, margin: "0 0 4px 0",
               }}>
                 {frameworkAnalysis.framework_name}
               </h3>
-              <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 16px 0", fontFamily: body }}>
+              <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 16px 0" }}>
                 {frameworkAnalysis.originator} — {frameworkAnalysis.source_work}
               </p>
 
-              <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: "0 0 16px 0", fontFamily: body }}>
+              <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 16px 0" }}>
                 {frameworkAnalysis.explanation}
               </p>
 
               <div style={{
                 padding: "14px 18px",
                 backgroundColor: colors.bgElevated,
-                borderRadius: 12,
+                borderRadius: radii.md,
                 marginBottom: 16,
               }}>
-                <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: 0, fontFamily: body }}>
+                <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                   {frameworkAnalysis.application}
                 </p>
               </div>
 
               <p style={{
-                fontSize: 14, color: colors.coral, fontWeight: 600,
-                fontStyle: "italic", margin: "0 0 16px 0", fontFamily: body,
+                ...textPreset.secondary, color: colors.coral, fontWeight: 600,
+                fontStyle: "italic", margin: "0 0 16px 0",
               }}>
                 {frameworkAnalysis.reflection_prompt}
               </p>
@@ -661,9 +656,9 @@ export default function DoTab({
           backgroundColor: colors.bgSurface,
           borderRadius: 14,
           border: `1px solid ${colors.borderDefault}`,
-          padding: 22, textAlign: "center",
+          padding: space[5], textAlign: "center",
         }}>
-          <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 18px 0", lineHeight: 1.65, fontFamily: body }}>
+          <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 18px 0" }}>
             Your journal is ready to be processed. Your coaching AI will read what you wrote and select exercises matched to what surfaced.
           </p>
           <motion.button
@@ -680,7 +675,7 @@ export default function DoTab({
             Process My Journal
           </motion.button>
           {processError && (
-            <p style={{ fontSize: 14, color: "#f87171", margin: "14px 0 0 0", fontFamily: body }}>
+            <p style={{ ...textPreset.secondary, color: "#f87171", margin: "14px 0 0 0" }}>
               {processError}
             </p>
           )}

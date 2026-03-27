@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text as textScale, radii } from "@/lib/theme";
 import MultiPartExerciseCard, { type ExercisePart } from "@/components/MultiPartExerciseCard";
 import SpectrumSelector from "@/components/SpectrumSelector";
 import BodyMap, { type BodyMarker } from "@/components/BodyMap";
@@ -221,10 +221,10 @@ export default function ExerciseCard({
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{
         backgroundColor: colors.bgSurface,
-        borderRadius: 16,
+        borderRadius: radii.md,
         border: `1px solid ${colors.borderDefault}`,
         padding: 0,
-        marginBottom: 14,
+        marginBottom: space[3],
         overflow: "hidden",
         transition: "border-color 0.2s, box-shadow 0.3s",
         position: "relative",
@@ -234,7 +234,7 @@ export default function ExerciseCard({
       <div
         onClick={() => !submitted && setExpanded(!expanded)}
         style={{
-          padding: "16px 20px",
+          padding: `${space[4]}px ${space[5]}px`,
           display: "flex",
           alignItems: "center",
           gap: 10,
@@ -247,12 +247,9 @@ export default function ExerciseCard({
           <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
             <p
               style={{
-                fontSize: 18,
-                fontWeight: 700,
+                ...textScale.heading,
                 color: "#ffffff",
                 margin: 0,
-                fontFamily: display,
-                letterSpacing: "-0.01em",
               }}
             >
               {submitted && (
@@ -263,9 +260,8 @@ export default function ExerciseCard({
             {estimatedMinutes && (
               <span
                 style={{
-                  fontSize: 14,
+                  ...textScale.secondary,
                   color: colors.textMuted,
-                  fontFamily: display,
                   fontWeight: 500,
                 }}
               >
@@ -278,10 +274,10 @@ export default function ExerciseCard({
             {originator && (
               <p
                 style={{
+                  ...textScale.secondary,
                   fontSize: 12,
                   color: colors.textMuted,
                   margin: 0,
-                  fontFamily: body,
                 }}
               >
                 {originator}
@@ -291,10 +287,8 @@ export default function ExerciseCard({
             {mod && (
               <span
                 style={{
-                  fontSize: 11,
-                  fontWeight: 600,
+                  ...textScale.caption,
                   color: colors.textMuted,
-                  fontFamily: display,
                   opacity: 0.8,
                 }}
               >
@@ -331,12 +325,12 @@ export default function ExerciseCard({
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{ overflow: "hidden" }}
           >
-            <div style={{ padding: "0 20px 20px 20px" }}>
+            <div style={{ padding: `0 ${space[5]}px ${space[5]}px ${space[5]}px` }}>
               {/* ── Intro: flowing text, no box ── */}
               {whySelected && (
                 <p style={{
-                  fontSize: 13, color: "rgba(255,255,255,0.5)", margin: "0 0 12px 0",
-                  lineHeight: 1.6, fontFamily: body, fontStyle: "italic",
+                  ...textScale.secondary, color: "rgba(255,255,255,0.5)", margin: `0 0 ${space[3]}px 0`,
+                  fontStyle: "italic",
                 }}>
                   {whySelected}
                   {whyThisWorks && (
@@ -348,8 +342,7 @@ export default function ExerciseCard({
               )}
               {!whySelected && whyThisWorks && (
                 <p style={{
-                  fontSize: 12, color: "rgba(255,255,255,0.35)", margin: "0 0 12px 0",
-                  lineHeight: 1.55, fontFamily: body,
+                  ...textScale.secondary, fontSize: 12, color: "rgba(255,255,255,0.35)", margin: `0 0 ${space[3]}px 0`,
                 }}>
                   {whyThisWorks}
                 </p>
@@ -358,17 +351,17 @@ export default function ExerciseCard({
               {/* ── Mode chips: inline pills ── */}
               {instructions && !submitted && (
                 <div style={{
-                  display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap",
+                  display: "flex", gap: 6, marginBottom: space[3], flexWrap: "wrap",
                 }}>
                   <button
                     onClick={() => setShowGuided(true)}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 5,
-                      padding: "6px 14px", borderRadius: 100,
+                      padding: `6px ${space[3]}px`, borderRadius: radii.full,
                       backgroundColor: "rgba(196, 148, 58, 0.1)",
                       border: "none", cursor: "pointer",
-                      fontSize: 12, fontWeight: 600, color: colors.coral,
-                      fontFamily: display, transition: "background-color 0.15s",
+                      ...textScale.caption, fontSize: 12, color: colors.coral,
+                      transition: "background-color 0.15s",
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.18)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.1)"; }}
@@ -382,11 +375,11 @@ export default function ExerciseCard({
                     onClick={() => setShowListen(true)}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 5,
-                      padding: "6px 14px", borderRadius: 100,
+                      padding: `6px ${space[3]}px`, borderRadius: radii.full,
                       backgroundColor: "rgba(176, 141, 173, 0.1)",
                       border: "none", cursor: "pointer",
-                      fontSize: 12, fontWeight: 600, color: colors.plumLight,
-                      fontFamily: display, transition: "background-color 0.15s",
+                      ...textScale.caption, fontSize: 12, color: colors.plumLight,
+                      transition: "background-color 0.15s",
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.18)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.1)"; }}
@@ -401,11 +394,11 @@ export default function ExerciseCard({
                       <button
                         onClick={() => { setParked(true); onPark(); }}
                         style={{
-                          display: "inline-flex", alignItems: "center", gap: 4,
-                          padding: "6px 12px", borderRadius: 100,
+                          display: "inline-flex", alignItems: "center", gap: space[1],
+                          padding: `6px ${space[3]}px`, borderRadius: radii.full,
                           backgroundColor: "transparent", border: "none",
-                          cursor: "pointer", fontSize: 12, fontWeight: 500,
-                          color: "rgba(255,255,255,0.3)", fontFamily: display,
+                          cursor: "pointer", ...textScale.caption, fontSize: 12, fontWeight: 500,
+                          color: "rgba(255,255,255,0.3)",
                           transition: "color 0.15s",
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.5)"; setShowParkInfo(true); }}
@@ -419,10 +412,9 @@ export default function ExerciseCard({
                       {showParkInfo && (
                         <div style={{
                           position: "absolute", bottom: "calc(100% + 6px)", right: 0,
-                          padding: "6px 10px", borderRadius: 8,
+                          padding: `6px 10px`, borderRadius: radii.sm,
                           backgroundColor: colors.bgElevated,
-                          fontSize: 11, color: "rgba(255,255,255,0.55)",
-                          fontFamily: body, lineHeight: 1.45,
+                          ...textScale.caption, color: "rgba(255,255,255,0.55)",
                           maxWidth: 200, zIndex: 10, whiteSpace: "nowrap",
                           boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
                         }}>
@@ -433,10 +425,9 @@ export default function ExerciseCard({
                   )}
                   {(parked || isParked) && (
                     <span style={{
-                      display: "inline-flex", alignItems: "center", gap: 4,
-                      padding: "6px 12px", marginLeft: "auto",
-                      fontSize: 12, fontWeight: 500, color: colors.success,
-                      fontFamily: display,
+                      display: "inline-flex", alignItems: "center", gap: space[1],
+                      padding: `6px ${space[3]}px`, marginLeft: "auto",
+                      ...textScale.caption, fontSize: 12, fontWeight: 500, color: colors.success,
                     }}>
                       <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
@@ -449,10 +440,10 @@ export default function ExerciseCard({
 
               {/* Instructions — clean, no background box */}
               {instructions && (
-                <div id={`instructions-${name}`} style={{ marginBottom: 16 }}>
+                <div id={`instructions-${name}`} style={{ marginBottom: space[4] }}>
                   <p style={{
-                    fontSize: 15, color: "rgba(255,255,255,0.88)", margin: 0,
-                    lineHeight: 1.8, whiteSpace: "pre-wrap", fontFamily: body,
+                    ...textScale.body, color: "rgba(255,255,255,0.88)", margin: 0,
+                    lineHeight: 1.8, whiteSpace: "pre-wrap",
                   }}>
                     {instructions}
                   </p>
@@ -472,16 +463,13 @@ export default function ExerciseCard({
                 <>
                   {/* ── Interactive input (before voice area) ── */}
                   {inputType === "spectrum" && spectrumConfig && (
-                    <div style={{ marginBottom: 20 }}>
+                    <div style={{ marginBottom: space[5] }}>
                       <label
                         style={{
                           display: "block",
-                          fontSize: 12,
-                          fontWeight: 600,
+                          ...textScale.caption,
                           color: colors.textMuted,
-                          marginBottom: 8,
-                          letterSpacing: "0.02em",
-                          fontFamily: display,
+                          marginBottom: space[2],
                         }}
                       >
                         Where are you on this spectrum?
@@ -498,16 +486,13 @@ export default function ExerciseCard({
                   )}
 
                   {inputType === "body-map" && (
-                    <div style={{ marginBottom: 20 }}>
+                    <div style={{ marginBottom: space[5] }}>
                       <label
                         style={{
                           display: "block",
-                          fontSize: 12,
-                          fontWeight: 600,
+                          ...textScale.caption,
                           color: colors.textMuted,
-                          marginBottom: 8,
-                          letterSpacing: "0.02em",
-                          fontFamily: display,
+                          marginBottom: space[2],
                         }}
                       >
                         Body scan
@@ -517,16 +502,13 @@ export default function ExerciseCard({
                   )}
 
                   {inputType === "emotions" && (
-                    <div style={{ marginBottom: 20 }}>
+                    <div style={{ marginBottom: space[5] }}>
                       <label
                         style={{
                           display: "block",
-                          fontSize: 12,
-                          fontWeight: 600,
+                          ...textScale.caption,
                           color: colors.textMuted,
-                          marginBottom: 8,
-                          letterSpacing: "0.02em",
-                          fontFamily: display,
+                          marginBottom: space[2],
                         }}
                       >
                         What are you feeling?
@@ -536,7 +518,7 @@ export default function ExerciseCard({
                   )}
 
                   {/* ── Response area ── */}
-                  <div style={{ marginBottom: 16 }}>
+                  <div style={{ marginBottom: space[4] }}>
                     <VoiceResponseArea
                       value={response}
                       onChange={setResponse}
@@ -545,21 +527,20 @@ export default function ExerciseCard({
                   </div>
 
                   {/* Rating question + submit row */}
-                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
+                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: space[3] }}>
                     <div>
                       {response.trim().length > 0 && (
                         <>
                           <p style={{
-                            fontSize: 13, color: "rgba(255,255,255,0.5)", margin: "12px 0 8px 0",
-                            fontFamily: body,
+                            ...textScale.secondary, color: "rgba(255,255,255,0.5)", margin: `${space[3]}px 0 ${space[2]}px 0`,
                           }}>
                             Was this exercise useful?
                           </p>
-                          <div style={{ display: "flex", gap: 8 }}>
+                          <div style={{ display: "flex", gap: space[2] }}>
                             <button
                               onClick={() => setRating(rating === 5 ? null : 5)}
                               style={{
-                                padding: "8px 20px", borderRadius: 100, fontSize: 13,
+                                padding: `${space[2]}px ${space[5]}px`, borderRadius: radii.full, fontSize: 13,
                                 fontWeight: 600, fontFamily: display,
                                 backgroundColor: rating === 5 ? "rgba(74, 222, 128, 0.15)" : colors.bgElevated,
                                 color: rating === 5 ? "#4ade80" : "#ffffff",
@@ -572,7 +553,7 @@ export default function ExerciseCard({
                             <button
                               onClick={() => setRating(rating === 2 ? null : 2)}
                               style={{
-                                padding: "8px 20px", borderRadius: 100, fontSize: 13,
+                                padding: `${space[2]}px ${space[5]}px`, borderRadius: radii.full, fontSize: 13,
                                 fontWeight: 600, fontFamily: display,
                                 backgroundColor: rating === 2 ? "rgba(255, 255, 255, 0.08)" : colors.bgElevated,
                                 color: "rgba(255, 255, 255, 0.6)",
@@ -597,14 +578,14 @@ export default function ExerciseCard({
                         display: "flex",
                         alignItems: "center",
                         gap: 6,
-                        padding: "0 20px",
+                        padding: `0 ${space[5]}px`,
                         height: 40,
                         fontSize: 14,
                         fontWeight: 600,
                         color: canSubmit ? colors.bgDeep : colors.textMuted,
                         backgroundColor: canSubmit ? colors.coral : colors.bgElevated,
                         border: "none",
-                        borderRadius: 100,
+                        borderRadius: radii.full,
                         cursor: canSubmit ? "pointer" : "not-allowed",
                         transition: "background-color 0.2s",
                         fontFamily: display,
@@ -626,13 +607,12 @@ export default function ExerciseCard({
 
       {/* ── Completed state ── */}
       {submitted && existingResponses?.main && (
-        <div style={{ padding: "0 20px 18px 20px" }}>
+        <div style={{ padding: `0 ${space[5]}px ${space[4]}px ${space[5]}px` }}>
           <p
             style={{
-              fontSize: 13,
+              ...textScale.secondary,
               color: colors.textSecondary,
               margin: 0,
-              lineHeight: 1.55,
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "-webkit-box",
@@ -643,10 +623,10 @@ export default function ExerciseCard({
           >
             {existingResponses.main}
           </p>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: space[2] }}>
             {existingRating ? (
               <span style={{
-                fontSize: 12, fontWeight: 600, fontFamily: display,
+                ...textScale.caption, fontSize: 12,
                 color: existingRating >= 4 ? "#4ade80" : "rgba(255, 255, 255, 0.5)",
               }}>
                 {existingRating >= 4 ? "Landed" : "Didn\u2019t land"}

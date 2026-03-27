@@ -120,7 +120,7 @@ export default function TextReveal({
                   {/* Glow flash — fades out after slash draws */}
                   <motion.path
                     d="M10 0 L90 100"
-                    stroke={colors.primary}
+                    stroke={colors.coral}
                     strokeWidth="8"
                     strokeLinecap="round"
                     fill="none"
@@ -135,7 +135,7 @@ export default function TextReveal({
                   {/* Main slash line — stays permanently */}
                   <motion.path
                     d="M10 0 L90 100"
-                    stroke={colors.primary}
+                    stroke={colors.coral}
                     strokeWidth="3"
                     strokeLinecap="round"
                     fill="none"

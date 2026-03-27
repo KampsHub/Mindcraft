@@ -36,7 +36,7 @@ function ScrollProgress() {
         left: 0,
         right: 0,
         height: 3,
-        background: `linear-gradient(90deg, ${colors.accent}, ${colors.primary})`,
+        background: `linear-gradient(90deg, ${colors.plum}, ${colors.coral})`,
         transformOrigin: "0%",
         scaleX,
         zIndex: 200,
@@ -57,8 +57,8 @@ function Divider({ accent = false }: { accent?: boolean }) {
         style={{
           height: 1,
           background: accent
-            ? `linear-gradient(90deg, transparent, ${colors.accent}, transparent)`
-            : `linear-gradient(90deg, transparent, ${colors.gray200}, transparent)`,
+            ? `linear-gradient(90deg, transparent, ${colors.plum}, transparent)`
+            : `linear-gradient(90deg, transparent, ${colors.borderSubtle}, transparent)`,
           transformOrigin: "center",
         }}
       />
@@ -301,7 +301,7 @@ function PainPointMarquee() {
             fontFamily: display,
             fontSize: "clamp(32px, 5vw, 52px)",
             fontWeight: 700,
-            color: colors.black,
+            color: colors.textPrimary,
             textAlign: "center",
             marginBottom: 40,
           }}
@@ -1108,7 +1108,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          style={{ color: colors.gray400, fontFamily: fonts.body }}
+          style={{ color: colors.textMuted, fontFamily: fonts.body }}
         >
           Loading...
         </motion.p>

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import FlagButton from "@/components/FlagButton";
 import VoiceToText from "@/components/VoiceToText";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text as textPreset, radii } from "@/lib/theme";
 import { useProgressiveReveal } from "@/hooks/useProgressiveReveal";
 import type { createClient } from "@/lib/supabase";
 import type {
@@ -33,7 +33,7 @@ function ThemesAutoLoader({ loading, error, isActive, onLoad, onSkip }: {
   return (
     <div style={{
       backgroundColor: colors.bgSurface, borderRadius: 14,
-      border: `1px solid ${colors.borderDefault}`, padding: 22,
+      border: `1px solid ${colors.borderDefault}`, padding: space[5],
     }}>
       {loading ? (
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -45,13 +45,13 @@ function ThemesAutoLoader({ loading, error, isActive, onLoad, onSkip }: {
               border: `2px solid ${colors.borderDefault}`, borderTopColor: colors.coral,
             }}
           />
-          <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+          <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
             Loading yesterday&apos;s themes...
           </p>
         </div>
       ) : error ? (
         <div>
-          <p style={{ fontSize: 14, color: "#f87171", margin: "0 0 12px 0", fontFamily: body }}>
+          <p style={{ ...textPreset.secondary, color: "#f87171", margin: "0 0 12px 0" }}>
             {error}
           </p>
           <div style={{ display: "flex", gap: 10 }}>
@@ -84,7 +84,7 @@ function ThemesAutoLoader({ loading, error, isActive, onLoad, onSkip }: {
           </div>
         </div>
       ) : (
-        <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+        <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
           Loading...
         </p>
       )}
@@ -180,13 +180,13 @@ export default function TellTab({
 
   return (
     <FadeIn preset="fade" triggerOnMount>
-    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: space[6] }}>
 
     {/* Yesterday's Themes / Welcome context */}
     <div>
       {dayNumber === 1 ? (
         completedSteps.includes(1) ? (
-          <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontFamily: body }}>
+          <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
             Day 1 — no prior themes.
           </p>
         ) : (
@@ -194,9 +194,9 @@ export default function TellTab({
           backgroundColor: colors.bgSurface,
           borderRadius: 14,
           border: `1px solid ${colors.borderDefault}`,
-          padding: 22,
+          padding: space[5],
         }}>
-          <p style={{ fontSize: 16, color: "#ffffff", margin: "0 0 18px 0", lineHeight: 1.65, fontFamily: body }}>
+          <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 18px 0" }}>
             Welcome to Day 1 of your program. There are no themes to review yet — today is where it begins.
           </p>
           <motion.button
@@ -247,7 +247,7 @@ export default function TellTab({
           backgroundColor: colors.bgSurface,
           borderRadius: 14,
           border: `1px solid ${colors.borderDefault}`,
-          padding: 22,
+          padding: space[5],
         }}>
           {/* Thread — primary content (narrative prose) */}
           <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 4 }}>
@@ -257,16 +257,15 @@ export default function TellTab({
             <div style={{ marginBottom: 18 }}>
               {themes.thread.split("\n\n").map((para, i) => (
                 <p key={i} style={{
-                  fontSize: 16, color: "#ffffff", lineHeight: 1.75,
+                  ...textPreset.body, color: "#ffffff",
                   margin: i === 0 ? "0 0 12px 0" : "12px 0",
-                  fontFamily: body,
                 }}>
                   {para}
                 </p>
               ))}
             </div>
           ) : (
-            <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.65, margin: "0 0 14px 0", fontFamily: body }}>
+            <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 14px 0" }}>
               {themes.summary}
             </p>
           )}
@@ -276,19 +275,19 @@ export default function TellTab({
             <div style={{
               padding: "16px 18px",
               backgroundColor: colors.coralWash,
-              borderRadius: 12,
+              borderRadius: radii.md,
               borderLeft: `3px solid ${colors.coral}`,
-              marginBottom: 32,
+              marginBottom: space[6],
             }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", letterSpacing: "0.08em", fontFamily: display }}>
+              <p style={{ ...textPreset.caption, color: colors.coral, margin: "0 0 10px 0" }}>
                 Carrying forward
               </p>
 
               {themes.follow_up.commitments?.length > 0 && (
                 <div style={{ marginBottom: 10 }}>
-                  <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body }}>You said you would:</p>
+                  <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 6px 0" }}>You said you would:</p>
                   {themes.follow_up.commitments.map((c, i) => (
-                    <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "4px 0", fontFamily: body, paddingLeft: 12 }}>
+                    <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", paddingLeft: 12 }}>
                       &bull; {c}
                     </p>
                   ))}
@@ -297,9 +296,9 @@ export default function TellTab({
 
               {themes.follow_up.coaching_questions?.length > 0 && (
                 <div style={{ marginBottom: 10 }}>
-                  <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body }}>From last time:</p>
+                  <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 6px 0" }}>From last time:</p>
                   {themes.follow_up.coaching_questions.map((q, i) => (
-                    <p key={i} style={{ fontSize: 16, color: "#ffffff", margin: "4px 0", fontFamily: body, fontStyle: "italic", paddingLeft: 12 }}>
+                    <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", fontStyle: "italic", paddingLeft: 12 }}>
                       {q}
                     </p>
                   ))}
@@ -307,7 +306,7 @@ export default function TellTab({
               )}
 
               {themes.follow_up.highlight && (
-                <p style={{ fontSize: 16, color: "#ffffff", margin: "8px 0 0 0", fontFamily: body, fontStyle: "italic" }}>
+                <p style={{ ...textPreset.body, color: "#ffffff", margin: "8px 0 0 0", fontStyle: "italic" }}>
                   {themes.follow_up.highlight}
                 </p>
               )}
@@ -319,19 +318,19 @@ export default function TellTab({
             <div style={{
               padding: "16px 18px",
               backgroundColor: "rgba(224, 149, 133, 0.06)",
-              borderRadius: 12,
+              borderRadius: radii.md,
               borderLeft: `3px solid ${colors.coral}`,
-              marginBottom: 32,
+              marginBottom: space[6],
             }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: colors.coral, margin: "0 0 10px 0", letterSpacing: "0.08em", fontFamily: display }}>
+              <p style={{ ...textPreset.caption, color: colors.coral, margin: "0 0 10px 0" }}>
                 Yesterday&apos;s mini-actions
               </p>
-              <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
+              <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 10px 0" }}>
                 You committed to these. How did they go?
               </p>
               {(themes.yesterday_committed_actions || []).map((action, i) => (
                 <div key={i} style={{ marginBottom: 8 }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
+                  <p style={{ ...textPreset.secondary, fontWeight: 600, color: "#ffffff", margin: "0 0 4px 0" }}>
                     {action}
                   </p>
                 </div>
@@ -343,19 +342,19 @@ export default function TellTab({
 
           {/* Patterns (collapsed below themes) */}
           {themes.patterns?.length > 0 && (
-            <div style={{ marginBottom: 32 }}>
+            <div style={{ marginBottom: space[6] }}>
               {(themes.patterns || []).map((p, i) => (
                 <div key={i} style={{
                   padding: "12px 16px",
                   backgroundColor: colors.bgElevated,
-                  borderRadius: 12,
+                  borderRadius: radii.md,
                   borderLeft: `3px solid ${colors.coral}`,
                   marginBottom: 8,
                 }}>
-                  <p style={{ fontSize: 16, color: "#ffffff", margin: 0, lineHeight: 1.55, fontFamily: body }}>
+                  <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                     {p.observation}
                   </p>
-                  <p style={{ fontSize: 12, color: "#ffffff", margin: "4px 0 0 0", fontFamily: body }}>
+                  <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "4px 0 0 0" }}>
                     Seen across {p.days_observed} days • {p.connection}
                   </p>
                 </div>
@@ -364,7 +363,7 @@ export default function TellTab({
           )}
 
           {themes.carry_forward && (
-            <p style={{ fontSize: 16, color: "#ffffff", margin: 0, fontStyle: "italic", fontFamily: body }}>
+            <p style={{ ...textPreset.body, color: "#ffffff", margin: 0, fontStyle: "italic" }}>
               {themes.carry_forward}
             </p>
           )}
@@ -383,21 +382,20 @@ export default function TellTab({
           backgroundColor: "rgba(224, 149, 133, 0.08)",
           borderRadius: 14,
           border: "1px solid rgba(224, 149, 133, 0.15)",
-          marginBottom: 32,
+          marginBottom: space[6],
         }}
       >
         <p style={{
-          fontSize: 10, fontWeight: 700, color: colors.coral,
-          letterSpacing: "0.08em",
-          margin: "0 0 8px 0", fontFamily: display,
+          ...textPreset.caption, color: colors.coral,
+          margin: "0 0 8px 0",
         }}>
           Yesterday&apos;s exercise
         </p>
-        <p style={{ fontSize: 15, color: "#ffffff", margin: "0 0 6px 0", fontFamily: body, fontWeight: 600, lineHeight: 1.4 }}>
+        <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 6px 0", fontWeight: 600 }}>
           {yesterdayExercise.name}
         </p>
         {yesterdayExercise.instruction && (
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", margin: "0 0 8px 0", fontFamily: body, lineHeight: 1.5 }}>
+          <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.55)", margin: "0 0 8px 0" }}>
             {(() => {
               const text = yesterdayExercise.instruction;
               if (text.length <= 200) return text;
@@ -415,15 +413,15 @@ export default function TellTab({
             backgroundColor: "rgba(255,255,255,0.04)",
             marginBottom: 8,
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", margin: "0 0 4px 0", fontFamily: display, letterSpacing: "0.06em" }}>
+            <p style={{ ...textPreset.caption, color: "rgba(255,255,255,0.4)", margin: "0 0 4px 0" }}>
               What you wrote
             </p>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: 0, fontFamily: body, lineHeight: 1.5, fontStyle: "italic" }}>
+            <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.7)", margin: 0, fontStyle: "italic" }}>
               &ldquo;{yesterdayExercise.userResponse}&rdquo;
             </p>
           </div>
         )}
-        <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 10px 0", fontFamily: body }}>
+        <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 10px 0" }}>
           Did anything come up since? What did you notice?
         </p>
         <div style={{ position: "relative" }}>
@@ -432,10 +430,11 @@ export default function TellTab({
             onChange={(e) => setFollowThrough(e.target.value)}
             placeholder="Type or tap the mic to speak... (optional)"
             style={{
-              width: "100%", minHeight: 60, padding: "12px 48px 12px 12px", fontSize: 14,
-              borderRadius: 10, border: `1px solid ${colors.borderDefault}`,
+              width: "100%", minHeight: 60, padding: "12px 48px 12px 12px",
+              ...textPreset.body,
+              borderRadius: radii.md, border: `1px solid ${colors.borderDefault}`,
               backgroundColor: colors.bgInput, color: "#ffffff",
-              fontFamily: body, resize: "none", outline: "none",
+              resize: "none", outline: "none",
               boxSizing: "border-box",
             }}
           />
@@ -483,16 +482,15 @@ export default function TellTab({
           backgroundColor: colors.bgSurface,
           borderRadius: 14,
           border: `1px solid ${colors.borderDefault}`,
-          padding: 22,
+          padding: space[5],
         }}
       >
         {/* Thought inspiration — compact prompts */}
         {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
-          <div style={{ marginBottom: 32 }}>
+          <div style={{ marginBottom: space[6] }}>
             <p style={{
-              fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)",
+              ...textPreset.caption, color: "rgba(255,255,255,0.5)",
               margin: "0 0 8px 0",
-              letterSpacing: "0.08em", fontFamily: display,
             }}>
               Thought Inspiration
             </p>
@@ -501,10 +499,10 @@ export default function TellTab({
                 <div key={i} style={{
                   padding: "8px 14px",
                   backgroundColor: colors.bgElevated,
-                  borderRadius: 100,
+                  borderRadius: radii.full,
                   cursor: "default",
                 }}>
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: 0, lineHeight: 1.4, fontFamily: body }}>
+                  <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.8)", margin: 0 }}>
                     {sp.prompt}
                   </p>
                 </div>
@@ -524,15 +522,13 @@ export default function TellTab({
               width: "100%",
               minHeight: 180,
               padding: "16px 50px 16px 16px",
-              fontSize: 16,
-              lineHeight: 1.7,
+              ...textPreset.body,
               border: journalSaved
                 ? `1px solid ${colors.coral}`
                 : `1px solid ${colors.borderDefault}`,
-              borderRadius: 14,
+              borderRadius: radii.md,
               resize: "vertical",
               outline: "none",
-              fontFamily: body,
               boxSizing: "border-box",
               color: colors.textPrimary,
               backgroundColor: journalSaved ? "rgba(224, 149, 133, 0.08)" : colors.bgInput,
@@ -575,7 +571,7 @@ export default function TellTab({
         )}
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
-          <span style={{ fontSize: 12, color: "#ffffff", fontFamily: body }}>
+          <span style={{ ...textPreset.caption, color: "#ffffff" }}>
             {journalContent.length > 0 ? `${journalContent.split(/\s+/).filter(Boolean).length} words` : ""}
           </span>
 

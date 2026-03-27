@@ -60,17 +60,17 @@ export default function InteractiveDemo() {
           padding: 16,
           fontSize: 16,
           lineHeight: 1.6,
-          border: `1px solid ${colors.gray200}`,
+          border: `1px solid ${colors.borderSubtle}`,
           borderRadius: 10,
           resize: "none",
           outline: "none",
           boxSizing: "border-box",
           fontFamily: "inherit",
-          backgroundColor: colors.white,
+          backgroundColor: colors.bgSurface,
           transition: "border-color 0.2s",
         }}
-        onFocus={(e) => (e.target.style.borderColor = colors.primary)}
-        onBlur={(e) => (e.target.style.borderColor = colors.gray200)}
+        onFocus={(e) => (e.target.style.borderColor = colors.coral)}
+        onBlur={(e) => (e.target.style.borderColor = colors.borderSubtle)}
         disabled={loading}
       />
 
@@ -82,9 +82,9 @@ export default function InteractiveDemo() {
           padding: "12px 32px",
           fontSize: 15,
           fontWeight: 600,
-          color: colors.white,
+          color: colors.bgDeep,
           backgroundColor:
-            loading || !entry.trim() ? colors.gray400 : colors.primary,
+            loading || !entry.trim() ? colors.textMuted : colors.coral,
           border: "none",
           borderRadius: 8,
           cursor: loading || !entry.trim() ? "not-allowed" : "pointer",
@@ -105,9 +105,9 @@ export default function InteractiveDemo() {
             style={{
               marginTop: 24,
               padding: 20,
-              backgroundColor: colors.primaryLight,
+              backgroundColor: colors.coralLight,
               borderRadius: 10,
-              borderLeft: `3px solid ${colors.primary}`,
+              borderLeft: `3px solid ${colors.coral}`,
             }}
           >
             {loading ? (
@@ -116,15 +116,15 @@ export default function InteractiveDemo() {
                   display: "flex",
                   alignItems: "center",
                   gap: 12,
-                  color: colors.gray500,
+                  color: colors.textMuted,
                 }}
               >
                 <div
                   style={{
                     width: 18,
                     height: 18,
-                    border: `2px solid ${colors.gray200}`,
-                    borderTopColor: colors.primary,
+                    border: `2px solid ${colors.borderSubtle}`,
+                    borderTopColor: colors.coral,
                     borderRadius: "50%",
                     animation: "spin 0.8s linear infinite",
                   }}
@@ -139,7 +139,7 @@ export default function InteractiveDemo() {
                 <p
                   style={{
                     fontSize: 14,
-                    color: colors.gray400,
+                    color: colors.textMuted,
                     margin: "0 0 8px 0",
                     fontStyle: "italic",
                   }}
@@ -149,7 +149,7 @@ export default function InteractiveDemo() {
                 <p
                   style={{
                     fontSize: 15,
-                    color: colors.dark,
+                    color: colors.textSecondary,
                     margin: 0,
                     lineHeight: 1.7,
                   }}
@@ -161,7 +161,7 @@ export default function InteractiveDemo() {
                         display: "inline-block",
                         width: 2,
                         height: 16,
-                        backgroundColor: colors.primary,
+                        backgroundColor: colors.coral,
                         marginLeft: 2,
                         verticalAlign: "text-bottom",
                         animation: "blink 1s step-end infinite",

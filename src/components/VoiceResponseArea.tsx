@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text as textScale, radii } from "@/lib/theme";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -107,12 +107,12 @@ export default function VoiceResponseArea({
   if (disabled) {
     return value ? (
       <div style={{
-        padding: "14px 18px", borderRadius: 14,
+        padding: `${space[3]}px ${space[4]}px`, borderRadius: radii.md,
         backgroundColor: "rgba(255,255,255,0.04)",
       }}>
         <p style={{
-          fontSize: 15, color: "rgba(255,255,255,0.7)",
-          margin: 0, fontFamily: body, lineHeight: 1.6, fontStyle: "italic",
+          ...textScale.body, color: "rgba(255,255,255,0.7)",
+          margin: 0, lineHeight: 1.6, fontStyle: "italic",
         }}>
           &ldquo;{value}&rdquo;
         </p>
@@ -131,14 +131,14 @@ export default function VoiceResponseArea({
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
           style={{
-            padding: "14px 16px", borderRadius: 14,
+            padding: `${space[3]}px ${space[4]}px`, borderRadius: radii.md,
             backgroundColor: "rgba(255,255,255,0.04)",
-            marginBottom: 12,
+            marginBottom: space[3],
           }}
         >
           <p style={{
-            fontSize: 15, color: "rgba(255,255,255,0.85)",
-            margin: 0, fontFamily: body, lineHeight: 1.7,
+            ...textScale.body, color: "rgba(255,255,255,0.85)",
+            margin: 0,
           }}>
             {value}
           </p>
@@ -151,13 +151,13 @@ export default function VoiceResponseArea({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           style={{
-            padding: "10px 16px", borderRadius: 12,
-            marginBottom: 10,
+            padding: `${space[3]}px ${space[4]}px`, borderRadius: radii.md,
+            marginBottom: space[3],
           }}
         >
           <p style={{
-            fontSize: 15, color: "rgba(255,255,255,0.35)",
-            margin: 0, fontFamily: body, lineHeight: 1.6, fontStyle: "italic",
+            ...textScale.body, color: "rgba(255,255,255,0.35)",
+            margin: 0, lineHeight: 1.6, fontStyle: "italic",
           }}>
             {interim}
           </p>
@@ -174,7 +174,7 @@ export default function VoiceResponseArea({
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
             style={{
-              display: "flex", gap: 8,
+              display: "flex", gap: space[2],
             }}
           >
             {hasSpeechSupport && (
@@ -182,9 +182,9 @@ export default function VoiceResponseArea({
                 onClick={switchToVoice}
                 style={{
                   flex: 1,
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  padding: "12px 14px",
-                  borderRadius: 12,
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: space[2],
+                  padding: `${space[3]}px ${space[3]}px`,
+                  borderRadius: radii.md,
                   backgroundColor: "rgba(196, 148, 58, 0.08)",
                   border: "none",
                   cursor: "pointer",
@@ -201,8 +201,7 @@ export default function VoiceResponseArea({
                   <line x1="12" x2="12" y1="19" y2="22" />
                 </svg>
                 <span style={{
-                  fontSize: 13, fontWeight: 600, color: colors.coral,
-                  fontFamily: display,
+                  ...textScale.secondary, fontWeight: 600, color: colors.coral,
                 }}>
                   Speak
                 </span>
@@ -213,9 +212,9 @@ export default function VoiceResponseArea({
               onClick={switchToText}
               style={{
                 flex: 1,
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                padding: "12px 14px",
-                borderRadius: 12,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: space[2],
+                padding: `${space[3]}px ${space[3]}px`,
+                borderRadius: radii.md,
                 backgroundColor: "rgba(255, 255, 255, 0.05)",
                 border: "none",
                 cursor: "pointer",
@@ -231,8 +230,7 @@ export default function VoiceResponseArea({
                 <path d="m15 5 4 4" />
               </svg>
               <span style={{
-                fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.55)",
-                fontFamily: display,
+                ...textScale.secondary, fontWeight: 600, color: "rgba(255,255,255,0.55)",
               }}>
                 Write
               </span>
@@ -249,9 +247,9 @@ export default function VoiceResponseArea({
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2 }}
             style={{
-              display: "flex", alignItems: "center", gap: 12,
-              padding: "10px 14px",
-              borderRadius: 14,
+              display: "flex", alignItems: "center", gap: space[3],
+              padding: `${space[3]}px ${space[3]}px`,
+              borderRadius: radii.md,
               backgroundColor: listening ? "rgba(196, 148, 58, 0.06)" : colors.bgInput,
               border: `1px solid ${listening ? "rgba(196, 148, 58, 0.3)" : colors.borderDefault}`,
               transition: "border-color 0.3s, background-color 0.3s",
@@ -315,16 +313,14 @@ export default function VoiceResponseArea({
                     ))}
                   </div>
                   <span style={{
-                    fontSize: 13, color: "rgba(255,255,255,0.45)",
-                    fontFamily: body,
+                    ...textScale.secondary, color: "rgba(255,255,255,0.45)",
                   }}>
                     Listening...
                   </span>
                 </div>
               ) : (
                 <span style={{
-                  fontSize: 13, color: "rgba(255,255,255,0.35)",
-                  fontFamily: body,
+                  ...textScale.secondary, color: "rgba(255,255,255,0.35)",
                 }}>
                   {hasContent ? "Tap to add more" : "Tap to speak"}
                 </span>
@@ -335,7 +331,7 @@ export default function VoiceResponseArea({
             <button
               onClick={switchToText}
               style={{
-                width: 36, height: 36, borderRadius: 10,
+                width: 36, height: 36, borderRadius: radii.sm,
                 backgroundColor: "rgba(255,255,255,0.06)",
                 border: "none", cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center",
@@ -367,7 +363,7 @@ export default function VoiceResponseArea({
           >
             <div style={{
               position: "relative",
-              borderRadius: 14,
+              borderRadius: radii.md,
               backgroundColor: colors.bgInput,
               border: `1px solid ${colors.borderDefault}`,
               overflow: "hidden",
@@ -380,8 +376,8 @@ export default function VoiceResponseArea({
                 rows={3}
                 style={{
                   width: "100%",
-                  padding: "14px 50px 14px 16px",
-                  fontSize: 15, lineHeight: 1.65,
+                  padding: `${space[3]}px 50px ${space[3]}px ${space[4]}px`,
+                  fontSize: textScale.body.fontSize, lineHeight: 1.65,
                   backgroundColor: "transparent",
                   border: "none",
                   color: "#ffffff",
@@ -396,7 +392,7 @@ export default function VoiceResponseArea({
                   onClick={switchToVoice}
                   style={{
                     position: "absolute", right: 10, bottom: 10,
-                    width: 34, height: 34, borderRadius: 10,
+                    width: 34, height: 34, borderRadius: radii.sm,
                     backgroundColor: colors.coralWash,
                     border: "none", cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center",

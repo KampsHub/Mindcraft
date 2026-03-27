@@ -9,7 +9,7 @@ import Nav from "@/components/Nav";
 import FadeIn from "@/components/FadeIn";
 import ProgramCard from "./ProgramCard";
 import UpsellSection from "./UpsellSection";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, space, text, radii } from "@/lib/theme";
 import ExercisesSection from "@/components/ExercisesSection";
 import BottomNav from "@/components/BottomNav";
 
@@ -19,7 +19,7 @@ const body = fonts.bodyAlt;
 
 const cardStyle: React.CSSProperties = {
   backgroundColor: colors.bgSurface,
-  borderRadius: 14,
+  borderRadius: radii.md,
   border: "none",
 };
 
@@ -258,8 +258,7 @@ export default function DashboardPage() {
         <FadeIn preset="fade" duration={0.6} triggerOnMount>
           <div style={{ marginBottom: 32 }}>
             <p style={{
-              fontFamily: display, fontSize: 14, fontWeight: 700,
-              letterSpacing: "-0.01em", color: colors.textPrimary, margin: 0,
+              ...text.heading, color: colors.textPrimary, margin: 0,
               textAlign: "center",
             }}>
               {getGreeting(enrollments[0]?.enrollment?.programs?.slug)}
@@ -272,20 +271,19 @@ export default function DashboardPage() {
           <FadeIn preset="slide-up" delay={0.1} triggerOnMount>
             <div style={{
               padding: "48px 32px",
-              borderRadius: 16,
+              borderRadius: radii.lg,
               border: `1px solid ${colors.borderDefault}`,
               backgroundColor: colors.bgSurface,
               textAlign: "center",
               marginBottom: 28,
             }}>
               <p style={{
-                fontFamily: display, fontSize: 22, fontWeight: 700,
-                color: colors.textPrimary, margin: "0 0 12px 0",
+                ...text.title, color: colors.textPrimary, margin: "0 0 12px 0",
               }}>
                 No program yet.
               </p>
               <p style={{
-                fontSize: 15, color: colors.textSecondary, lineHeight: 1.6,
+                ...text.body, color: colors.textSecondary,
                 margin: "0 0 24px 0", maxWidth: 400, marginLeft: "auto", marginRight: "auto",
               }}>
                 Choose a program that fits where you are right now. Each one is 30 days of structured, personalized coaching.
@@ -300,7 +298,7 @@ export default function DashboardPage() {
                   cursor: "pointer",
                   color: "#ffffff",
                   backgroundColor: colors.coral,
-                  borderRadius: 8,
+                  borderRadius: radii.sm,
                   textDecoration: "none",
                   transition: "opacity 0.2s",
                   border: "none",
@@ -314,7 +312,7 @@ export default function DashboardPage() {
 
         {/* ── Program cards ── */}
         {enrollments.length > 0 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 28 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: space[4], marginBottom: 28 }}>
             {enrollments.map((ctx, i) => (
               <FadeIn key={ctx.enrollment.id} preset="slide-up" delay={0.1 + i * 0.08} triggerOnMount>
                 <ProgramCard
@@ -352,7 +350,7 @@ export default function DashboardPage() {
           <div className="responsive-grid" style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 12,
+            gap: space[3],
             marginBottom: 28,
           }}>
             {quickLinks.map((link, i) => (
@@ -363,7 +361,7 @@ export default function DashboardPage() {
                 onClick={() => router.push(link.href)}
                 style={{
                   ...cardStyle,
-                  padding: "22px 14px 18px",
+                  padding: `${space[5]}px ${space[4]}px`,
                   textAlign: "center",
                   cursor: "pointer",
                   transition: "border-color 0.2s",
@@ -392,7 +390,7 @@ export default function DashboardPage() {
                   <span style={{ fontSize: 22, color: link.accent }}>{link.icon}</span>
                 </div>
                 <p style={{
-                  fontFamily: display, fontSize: 14, fontWeight: 600,
+                  ...text.secondary, fontWeight: 600,
                   margin: "0 0 3px 0", color: colors.textPrimary,
                 }}>
                   {link.label}

@@ -77,7 +77,7 @@ export default function ResetPasswordPage() {
     width: "100%",
     padding: 12,
     fontSize: 15,
-    border: `1px solid ${colors.gray200}`,
+    border: `1px solid ${colors.borderSubtle}`,
     borderRadius: 8,
     marginBottom: 16,
     boxSizing: "border-box",
@@ -96,7 +96,7 @@ export default function ResetPasswordPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: colors.gray50,
+          backgroundColor: colors.bgDeep,
           fontFamily: fonts.body,
           padding: 24,
         }}
@@ -105,23 +105,23 @@ export default function ResetPasswordPage() {
           style={{
             width: "100%",
             maxWidth: 400,
-            backgroundColor: colors.white,
+            backgroundColor: colors.bgSurface,
             borderRadius: 16,
             padding: "40px 32px",
             boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-            border: `1px solid ${colors.gray100}`,
+            border: `1px solid ${colors.bgRecessed}`,
             textAlign: "center",
           }}
         >
           {expired ? (
             <>
-              <p style={{ color: colors.gray500, fontSize: 14, marginBottom: 16 }}>
+              <p style={{ color: colors.textMuted, fontSize: 14, marginBottom: 16 }}>
                 This reset link may have expired or already been used.
               </p>
               <a
                 href="/forgot-password"
                 style={{
-                  color: colors.primary,
+                  color: colors.coral,
                   fontWeight: 600,
                   fontSize: 14,
                   textDecoration: "none",
@@ -131,7 +131,7 @@ export default function ResetPasswordPage() {
               </a>
             </>
           ) : (
-            <p style={{ color: colors.gray500, fontSize: 14 }}>
+            <p style={{ color: colors.textMuted, fontSize: 14 }}>
               Verifying your reset link...
             </p>
           )}
@@ -147,7 +147,7 @@ export default function ResetPasswordPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: colors.gray50,
+        backgroundColor: colors.bgDeep,
         fontFamily: fonts.body,
         padding: 24,
       }}
@@ -156,11 +156,11 @@ export default function ResetPasswordPage() {
         style={{
           width: "100%",
           maxWidth: 400,
-          backgroundColor: colors.white,
+          backgroundColor: colors.bgSurface,
           borderRadius: 16,
           padding: "40px 32px",
           boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          border: `1px solid ${colors.gray100}`,
+          border: `1px solid ${colors.bgRecessed}`,
         }}
       >
         {/* Logo */}
@@ -173,13 +173,13 @@ export default function ResetPasswordPage() {
               fontSize: 24,
               fontWeight: 700,
               margin: "0 0 4px 0",
-              color: colors.black,
+              color: colors.textPrimary,
               fontFamily: fonts.display,
             }}
           >
             Set a new password
           </h1>
-          <p style={{ fontSize: 14, color: colors.gray500, margin: 0 }}>
+          <p style={{ fontSize: 14, color: colors.textMuted, margin: 0 }}>
             Choose a new password for your account.
           </p>
         </div>
@@ -191,7 +191,7 @@ export default function ResetPasswordPage() {
               marginBottom: 4,
               fontSize: 13,
               fontWeight: 500,
-              color: colors.gray600,
+              color: colors.textSecondary,
             }}
           >
             New password
@@ -210,7 +210,7 @@ export default function ResetPasswordPage() {
               marginBottom: 4,
               fontSize: 13,
               fontWeight: 500,
-              color: colors.gray600,
+              color: colors.textSecondary,
             }}
           >
             Confirm new password
@@ -227,7 +227,7 @@ export default function ResetPasswordPage() {
             <div
               style={{
                 padding: 12,
-                backgroundColor: colors.errorLight,
+                backgroundColor: colors.errorWash,
                 border: "1px solid #fecaca",
                 borderRadius: 8,
                 color: colors.error,
@@ -247,8 +247,8 @@ export default function ResetPasswordPage() {
               padding: 13,
               fontSize: 15,
               fontWeight: 600,
-              color: colors.white,
-              backgroundColor: loading ? colors.gray400 : colors.primary,
+              color: colors.bgDeep,
+              backgroundColor: loading ? colors.textMuted : colors.coral,
               border: "none",
               borderRadius: 8,
               cursor: loading ? "not-allowed" : "pointer",
@@ -264,13 +264,13 @@ export default function ResetPasswordPage() {
             marginTop: 20,
             textAlign: "center",
             fontSize: 14,
-            color: colors.gray500,
+            color: colors.textMuted,
           }}
         >
           <a
             href="/login"
             style={{
-              color: colors.primary,
+              color: colors.coral,
               fontWeight: 500,
               textDecoration: "none",
             }}

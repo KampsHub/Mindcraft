@@ -118,7 +118,7 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
                         color: isCurrent ? colors.coral : isDone ? "#ffffff" : "rgba(255,255,255,0.3)",
                         margin: 0,
                       }}>
-                        {wt.name}
+                        {wt.name.charAt(0) + wt.name.slice(1).toLowerCase()}
                       </p>
                     </div>
                   );

@@ -468,7 +468,7 @@ export default function ExerciseCard({
               {instructions && (
                 <div id={`instructions-${name}`} style={{ marginBottom: space[4] }}>
                   <p style={{
-                    ...textScale.body, color: "rgba(255,255,255,0.88)", margin: 0,
+                    ...textScale.body, color: "#ffffff", margin: 0,
                     lineHeight: 1.8, whiteSpace: "pre-wrap",
                   }}>
                     {instructions}

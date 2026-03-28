@@ -529,7 +529,7 @@ function GoalsPage() {
                       margin: 0, fontFamily: display, textTransform: "uppercase",
                       letterSpacing: "0.04em", lineHeight: 1.2,
                     }}>
-                      {wt.name}
+                      {wt.name.charAt(0) + wt.name.slice(1).toLowerCase()}
                     </p>
                     <p style={{
                       fontSize: 11, color: colors.textMuted, margin: 0,

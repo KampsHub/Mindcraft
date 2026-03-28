@@ -58,7 +58,7 @@ const modalityColors: Record<string, { bg: string; text: string; label: string }
 
 const typeLabels: Record<string, { label: string; color: string }> = {
   coaching_plan: { label: "Coaching Plan", color: colors.coral },
-  overflow: { label: "Overflow", color: "#6366f1" },
+  overflow: { label: "Matched to Journal", color: "#6366f1" },
   framework_analysis: { label: "Framework", color: "#3b82f6" },
 };
 
@@ -80,6 +80,8 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
   const [savingParked, setSavingParked] = useState(false);
   const [sessionMap, setSessionMap] = useState<Map<number, string>>(new Map());
   const [collapsed, setCollapsed] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  const MAX_VISIBLE = 5;
   const supabase = createClient();
 
   const loadData = useCallback(async () => {
@@ -289,6 +291,10 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{ overflow: "hidden" }}
           >
+            <p style={{ ...text.secondary, color: colors.textMuted, margin: "4px 0 16px 0" }}>
+              Your responses are captured in your weekly insights and can be shared.
+            </p>
+
             {/* Tabs */}
             <div style={{ display: "flex", gap: 4, marginBottom: 16 }}>
               {tabs.map((tab) => (

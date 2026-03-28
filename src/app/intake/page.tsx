@@ -493,7 +493,7 @@ export default function IntakePage() {
                           marginBottom: 6, lineHeight: 1.45, fontFamily: body,
                         }}>
                           <span style={{ fontWeight: 600, color: colors.textPrimary }}>
-                            Week {wt.week}: {wt.name}
+                            Week {wt.week}: {wt.name.charAt(0) + wt.name.slice(1).toLowerCase()}
                           </span>{" "}
                           — {wt.title}
                         </div>

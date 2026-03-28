@@ -220,7 +220,7 @@ export async function POST(request: Request) {
     // Authenticate
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Rate limit (AI bucket — 10 req/min)
@@ -236,7 +236,7 @@ export async function POST(request: Request) {
       .single();
 
     if (enrollError || !enrollment) {
-      return NextResponse.json({ error: "Enrollment not found" }, { status: 404 });
+      return NextResponse.json({ error: "Could not find your enrollment. Please refresh the page." }, { status: 404 });
     }
 
     // Fetch Days 1-3 sessions
@@ -275,7 +275,7 @@ export async function POST(request: Request) {
 
     const contextBlock = contextMsg.content.find((b) => b.type === "text");
     if (!contextBlock || contextBlock.type !== "text") {
-      return NextResponse.json({ error: "No response from Claude (context)" }, { status: 500 });
+      return NextResponse.json({ error: "Unable to generate response. Please try again in a moment." }, { status: 500 });
     }
     const clientContext = JSON.parse(stripFences(contextBlock.text));
 
@@ -292,7 +292,7 @@ export async function POST(request: Request) {
 
     const edgesBlock = edgesMsg.content.find((b) => b.type === "text");
     if (!edgesBlock || edgesBlock.type !== "text") {
-      return NextResponse.json({ error: "No response from Claude (edges)" }, { status: 500 });
+      return NextResponse.json({ error: "Unable to generate response. Please try again in a moment." }, { status: 500 });
     }
     const growthEdges = JSON.parse(stripFences(edgesBlock.text));
 
@@ -309,7 +309,7 @@ export async function POST(request: Request) {
 
     const mapBlock = mapMsg.content.find((b) => b.type === "text");
     if (!mapBlock || mapBlock.type !== "text") {
-      return NextResponse.json({ error: "No response from Claude (map)" }, { status: 500 });
+      return NextResponse.json({ error: "Unable to generate response. Please try again in a moment." }, { status: 500 });
     }
     const developmentMap = JSON.parse(stripFences(mapBlock.text));
 

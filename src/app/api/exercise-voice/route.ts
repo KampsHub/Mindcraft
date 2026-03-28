@@ -3,6 +3,17 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getAnthropicClient } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { z } from "zod";
+
+const exerciseVoiceSchema = z.object({
+  exerciseName: z.string().min(1).max(200),
+  instructions: z.string().min(1).max(5000),
+  whyNow: z.string().max(1000).optional(),
+  history: z.array(z.object({
+    role: z.string(),
+    text: z.string(),
+  })).optional(),
+});
 
 export async function POST(request: Request) {
   try {
@@ -27,7 +38,7 @@ export async function POST(request: Request) {
     // Authenticate
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Rate limit (AI bucket — 10 req/min)
@@ -37,20 +48,24 @@ export async function POST(request: Request) {
     const result = getAnthropicClient();
     if (!result.success) return result.response;
 
-    const { exerciseName, instructions, whyNow, history } = await request.json();
-
-    if (!exerciseName || !instructions) {
-      return NextResponse.json(
-        { error: "exerciseName and instructions are required" },
-        { status: 400 }
-      );
+    const body = await request.json();
+    const parsed = exerciseVoiceSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
+    const { exerciseName, instructions, whyNow, history } = parsed.data;
+
+    // Sanitize inputs to prevent prompt injection
+    const sanitize = (str: string) => str.replace(/[<>{}]/g, '').substring(0, 2000);
+    const safeExerciseName = sanitize(exerciseName);
+    const safeInstructions = sanitize(instructions);
+    const safeWhyNow = whyNow ? sanitize(whyNow) : "";
 
     const systemPrompt = `You are a coaching assistant for Mindcraft. You are guiding someone through a specific exercise via spoken conversation.
 
-Exercise: ${exerciseName}
-Instructions: ${instructions}
-${whyNow ? `Why this exercise now: ${whyNow}` : ""}
+Exercise: ${safeExerciseName}
+Instructions: ${safeInstructions}
+${safeWhyNow ? `Why this exercise now: ${safeWhyNow}` : ""}
 
 Your job:
 1. On the FIRST message (when the user says "start"), introduce the exercise warmly in 2-3 sentences. Then give the first step or prompt. Speak as if talking to someone sitting across from you.

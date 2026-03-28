@@ -72,7 +72,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json(
-        { error: "Not authenticated" },
+        { error: "Please sign in to continue." },
         { status: 401 }
       );
     }
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
 
     if (enrollError || !enrollment) {
       return NextResponse.json(
-        { error: "Enrollment not found" },
+        { error: "Could not find your enrollment. Please refresh the page." },
         { status: 404 }
       );
     }
@@ -174,7 +174,7 @@ Generate 6 personalized coaching goals for this client based on everything above
     const textBlock = message.content.find((block) => block.type === "text");
     if (!textBlock || textBlock.type !== "text") {
       return NextResponse.json(
-        { error: "No response from Claude" },
+        { error: "Unable to generate response. Please try again in a moment." },
         { status: 500 }
       );
     }

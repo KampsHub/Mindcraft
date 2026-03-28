@@ -162,6 +162,21 @@ export default function ListenRespondFlow({
     onComplete(response);
   };
 
+  const handleClose = useCallback(() => {
+    if (audioRef.current) audioRef.current.pause();
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+    onClose();
+  }, [onClose]);
+
+  // ESC to close
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [handleClose]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -177,11 +192,7 @@ export default function ListenRespondFlow({
     >
       {/* Close button */}
       <button
-        onClick={() => {
-          if (audioRef.current) audioRef.current.pause();
-          if (typeof window !== "undefined") window.speechSynthesis?.cancel();
-          onClose();
-        }}
+        onClick={handleClose}
         style={{
           position: "absolute", top: 20, right: 20,
           background: "none", border: "none", cursor: "pointer",

@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     // Auth check
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Fetch recent AI outputs to evaluate

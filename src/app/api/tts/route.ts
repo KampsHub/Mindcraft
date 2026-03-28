@@ -2,6 +2,11 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { z } from "zod";
+
+const ttsSchema = z.object({
+  text: z.string().min(1).max(5000),
+});
 
 export async function POST(request: Request) {
   try {
@@ -26,7 +31,7 @@ export async function POST(request: Request) {
     // Authenticate
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Rate limit (AI bucket — 10 req/min)
@@ -41,13 +46,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const { text } = await request.json();
-    if (!text) {
-      return NextResponse.json(
-        { error: "text is required" },
-        { status: 400 }
-      );
+    const body = await request.json();
+    const parsed = ttsSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "text is required" }, { status: 400 });
     }
+    const { text } = parsed.data;
 
     // Use the custom voice selected for Mindcraft coaching
     const voiceId = process.env.ELEVENLABS_VOICE_ID || "l4Coq6695JDX9xtLqXDE";

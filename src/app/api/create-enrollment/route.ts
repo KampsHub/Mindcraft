@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user?.email) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Use admin client to bypass RLS

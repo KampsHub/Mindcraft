@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (authError || !coach?.email) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Check coach/admin role — first try profiles table, fall back to hardcoded list

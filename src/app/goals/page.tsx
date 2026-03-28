@@ -373,14 +373,11 @@ function GoalsPage() {
           )}
           <AnimatePresence>
             {generating && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+              <p
                 style={{ color: "#ffffff", fontSize: 13, marginTop: 14, fontFamily: body }}
               >
                 Within the program arc, including your intake and journal entries to create goal suggestions. This takes ca. 15 seconds.
-              </motion.p>
+              </p>
             )}
             {errorMsg && !generating && (
               <motion.p

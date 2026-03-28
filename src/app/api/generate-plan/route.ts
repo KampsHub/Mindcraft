@@ -77,7 +77,7 @@ export async function POST() {
     // Get the authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Rate limit (AI bucket — 10 req/min)
@@ -128,7 +128,7 @@ Generate a personalised 4-week coaching plan for this client.`;
 
     const textBlock = message.content.find((block) => block.type === "text");
     if (!textBlock || textBlock.type !== "text") {
-      return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
+      return NextResponse.json({ error: "Unable to generate response. Please try again in a moment." }, { status: 500 });
     }
 
     let plan;

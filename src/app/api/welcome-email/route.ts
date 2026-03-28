@@ -32,7 +32,7 @@ export async function POST() {
     } = await supabase.auth.getUser();
 
     if (!user?.email) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Check if welcome email was already sent

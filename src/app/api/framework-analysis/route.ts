@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     // Authenticate
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Rate limit (AI bucket — 10 req/min)
@@ -167,7 +167,7 @@ Select the best framework to apply to this client's multi-day pattern.`;
 
     const textBlock = message.content.find((b) => b.type === "text");
     if (!textBlock || textBlock.type !== "text") {
-      return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
+      return NextResponse.json({ error: "Unable to generate response. Please try again in a moment." }, { status: 500 });
     }
 
     // Strip markdown code fences if Claude wraps the JSON in ```json ... ```

@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (authError || !user?.email) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Fetch enrollment + program
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
 
     if (!enrollment) {
       return NextResponse.json(
-        { error: "Enrollment not found" },
+        { error: "Could not find your enrollment. Please refresh the page." },
         { status: 404 }
       );
     }

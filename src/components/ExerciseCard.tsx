@@ -97,6 +97,7 @@ export default function ExerciseCard({
   const [showListen, setShowListen] = useState(false);
   const [parked, setParked] = useState(false);
   const [showParkInfo, setShowParkInfo] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
   const recognitionRef = useRef<any>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
@@ -173,6 +174,8 @@ export default function ExerciseCard({
   function handleMultiPartComplete(partResponses: Record<string, string>) {
     setSubmitted(true);
     onComplete(partResponses, rating);
+    setShowSaved(true);
+    setTimeout(() => setShowSaved(false), 2000);
   }
 
   // Determine if the form has enough data to submit
@@ -212,10 +215,30 @@ export default function ExerciseCard({
     }
 
     onComplete(responses, rating);
+    setShowSaved(true);
+    setTimeout(() => setShowSaved(false), 2000);
   }
 
   return (
     <>
+    <AnimatePresence>
+      {showSaved && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          style={{
+            position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
+            padding: "10px 20px", borderRadius: 100, zIndex: 300,
+            backgroundColor: "#6AB282", color: "#18181C",
+            fontSize: 13, fontWeight: 600, fontFamily: "'Sora', sans-serif",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+          }}
+        >
+          Exercise saved ✓
+        </motion.div>
+      )}
+    </AnimatePresence>
     <motion.div
       whileHover={!submitted ? { y: -2, boxShadow: "0 8px 28px rgba(0,0,0,0.15)" } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}

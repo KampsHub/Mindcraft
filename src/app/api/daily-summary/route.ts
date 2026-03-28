@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     // Authenticate
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Rate limit (AI bucket — 10 req/min)
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       .single();
 
     if (!session) {
-      return NextResponse.json({ error: "Session not found" }, { status: 404 });
+      return NextResponse.json({ error: "Could not find your session. Please refresh the page." }, { status: 404 });
     }
 
     // Fetch today's exercise completions
@@ -201,7 +201,7 @@ Generate today's summary for Day ${dayNumber}.`;
 
     const textBlock = message.content.find((b) => b.type === "text");
     if (!textBlock || textBlock.type !== "text") {
-      return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
+      return NextResponse.json({ error: "Unable to generate response. Please try again in a moment." }, { status: 500 });
     }
 
     let result;

@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (authError || !user?.email) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     // Fetch day session data
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       .single();
 
     if (!enrollment) {
-      return NextResponse.json({ error: "Enrollment not found" }, { status: 404 });
+      return NextResponse.json({ error: "Could not find your enrollment. Please refresh the page." }, { status: 404 });
     }
 
     const programName =

@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: "Please sign in to continue." }, { status: 401 });
     }
 
     const body = await request.json();
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       .single();
 
     if (!session) {
-      return NextResponse.json({ error: "Session not found" }, { status: 404 });
+      return NextResponse.json({ error: "Could not find your session. Please refresh the page." }, { status: 404 });
     }
 
     // Verify ownership through enrollment

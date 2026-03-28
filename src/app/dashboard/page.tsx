@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -109,7 +109,34 @@ const defaultGreetings = [
   "Progress isn't always visible. Keep going.",
 ];
 
-function getGreeting(programSlug?: string): string {
+function getGreeting(programSlug?: string, currentDay?: number): string {
+  // Stage-appropriate greetings based on program day
+  if (currentDay !== undefined) {
+    if (currentDay <= 3) {
+      const early = [
+        "You showed up. That's the hardest part.",
+        "Day by day. That's how this works.",
+        "Let's start where you are.",
+      ];
+      return early[currentDay % early.length];
+    }
+    if (currentDay <= 14) {
+      const mid = [
+        "You're still here. That counts.",
+        "Clear eyes first. Then decisions.",
+        "Progress isn't always visible. Keep going.",
+        "Rebuilding is not starting over.",
+      ];
+      return mid[currentDay % mid.length];
+    }
+    const late = [
+      "You know more than you think you do.",
+      "Almost there. Stay with it.",
+      "The ground under your feet is solid now.",
+      "You've done the hardest part already.",
+    ];
+    return late[currentDay % late.length];
+  }
   const list = (programSlug && greetings[programSlug]) || defaultGreetings;
   // Use today's date as seed for daily rotation
   const today = new Date();
@@ -123,6 +150,49 @@ const quickLinks = [
   { href: "/goals", label: "Plan & Progress", desc: "Goals & milestones", icon: "◎", accent: colors.coral },
   { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻", accent: colors.coral },
 ];
+
+class DashboardErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: Error) {
+    console.error("Dashboard error:", error);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: "100vh", display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center",
+          backgroundColor: "#18181C", color: "#ffffff", gap: 16,
+          fontFamily: "'DM Sans', sans-serif", padding: 24,
+        }}>
+          <p style={{ fontSize: 18, fontWeight: 600 }}>Something went wrong</p>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>
+            Try refreshing the page. If it keeps happening, contact support.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "10px 24px", borderRadius: 100, fontSize: 14, fontWeight: 600,
+              backgroundColor: "#C4943A", color: "#18181C", border: "none", cursor: "pointer",
+            }}
+          >
+            Refresh
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -227,15 +297,25 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: colors.bgDeep }}>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: colors.textMuted, fontFamily: body }}>
-          Loading...
-        </motion.p>
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: "#18181C", gap: 16 }}>
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+          style={{
+            width: 32, height: 32, borderRadius: "50%",
+            border: "3px solid rgba(255,255,255,0.1)",
+            borderTopColor: "#C4943A",
+          }}
+        />
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Sans', sans-serif" }}>
+          Loading your session...
+        </p>
       </div>
     );
   }
 
   return (
+    <DashboardErrorBoundary>
     <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative", overflow: "hidden" }}>
       {/* Background image — program-aware */}
       <DashboardBgImage programSlug={enrollments[0]?.enrollment?.programs?.slug} />
@@ -261,7 +341,7 @@ export default function DashboardPage() {
               ...text.heading, color: colors.textPrimary, margin: 0,
               textAlign: "center",
             }}>
-              {getGreeting(enrollments[0]?.enrollment?.programs?.slug)}
+              {getGreeting(enrollments[0]?.enrollment?.programs?.slug, enrollments[0]?.enrollment?.current_day)}
             </p>
           </div>
         </FadeIn>
@@ -349,7 +429,7 @@ export default function DashboardPage() {
         <FadeIn preset="fade" delay={0.15} triggerOnMount>
           <div className="responsive-grid" style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
             gap: space[3],
             marginBottom: 28,
           }}>
@@ -437,6 +517,7 @@ export default function DashboardPage() {
       </footer>
 
     </div>
+    </DashboardErrorBoundary>
   );
 }
 

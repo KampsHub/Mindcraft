@@ -84,7 +84,7 @@ export async function POST(request: Request) {
       .single();
 
     if (!enrollment) {
-      return NextResponse.json({ error: "Enrollment not found" }, { status: 404 });
+      return NextResponse.json({ error: "Could not find your enrollment. Please refresh the page." }, { status: 404 });
     }
 
     // Calculate period (default: last 7 days)

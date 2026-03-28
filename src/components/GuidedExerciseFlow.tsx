@@ -264,6 +264,15 @@ export default function GuidedExerciseFlow({
     onClose();
   }, [stopListening, onClose]);
 
+  // ESC to close
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [handleClose]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}

@@ -67,7 +67,7 @@ export const content = {
       {
         number: "03",
         label: "Exercises",
-        title: "4 exercises from 250+ frameworks, matched to today.",
+        title: "4 exercises from 350+ frameworks, matched to today.",
         desc: "Not a static library you scroll through. Each exercise is selected from real coaching frameworks \u2014 IFS, ACT, Gottman, polyvagal, performance psychology \u2014 based on what showed up in your journal that morning. Cognitive, somatic, relational. Cited and explained in plain language.",
       },
       {
@@ -209,7 +209,7 @@ export const content = {
       {
         topic: "The program",
         q: "How is this different from ChatGPT or using AI on my own?",
-        a: "AI can analyze anything \u2014 but you have to know what to ask, and analysis alone won\u2019t shift behavior. Mindcraft wraps AI inside a coaching structure: sequenced exercises, pattern detection across days, and 250+ professional frameworks. You don\u2019t need to be your own coach.",
+        a: "AI can analyze anything \u2014 but you have to know what to ask, and analysis alone won\u2019t shift behavior. Mindcraft wraps AI inside a coaching structure: sequenced exercises, pattern detection across days, and 350+ professional frameworks. You don\u2019t need to be your own coach.",
       },
       {
         topic: "The program",
@@ -229,7 +229,7 @@ export const content = {
       {
         topic: "The program",
         q: "Where do the exercises come from?",
-        a: "A curated library of 250+ frameworks from Positive Intelligence, IFS parts work, NVC, Gottman, polyvagal theory, cognitive distortion work, and more. Every exercise is cited, explained in plain language, and matched to what showed up in your journal that day.",
+        a: "A curated library of 350+ frameworks from Positive Intelligence, IFS parts work, NVC, Gottman, polyvagal theory, cognitive distortion work, and more. Every exercise is cited, explained in plain language, and matched to what showed up in your journal that day.",
       },
       {
         topic: "The program",
@@ -249,7 +249,7 @@ export const content = {
       {
         topic: "Pricing",
         q: "What\u2019s included in the first month?",
-        a: "Full access to your program. A personalized coaching plan built from your intake, daily journal with pattern detection, 4 matched exercises per day from 250+ frameworks, weekly reviews, and monthly summaries. No credit card required.",
+        a: "Full access to your program. A personalized coaching plan built from your intake, daily journal with pattern detection, 4 matched exercises per day from 350+ frameworks, weekly reviews, and monthly summaries. No credit card required.",
       },
       {
         topic: "Pricing",
@@ -284,7 +284,7 @@ export const content = {
       {
         topic: "About",
         q: "How is this different from BetterUp or other coaching platforms?",
-        a: "Those platforms connect you with a coach for scheduled sessions. This is a daily practice \u2014 a system that reads what you write, selects exercises from 250+ sourced tools, tracks your patterns, and adapts every day. Different model, different price point, different depth.",
+        a: "Those platforms connect you with a coach for scheduled sessions. This is a daily practice \u2014 a system that reads what you write, selects exercises from 350+ sourced tools, tracks your patterns, and adapts every day. Different model, different price point, different depth.",
       },
     ],
   },
@@ -298,7 +298,7 @@ export const content = {
   statsBar: {
     items: [
       { number: "15", unit: "min/day", label: "Structured daily practice" },
-      { number: "250+", unit: "", label: "Evidence-based frameworks" },
+      { number: "350+", unit: "", label: "Evidence-based frameworks" },
       { number: "30", unit: "days", label: "One structured program" },
     ],
   },
@@ -509,7 +509,7 @@ export const content = {
       // ── Group: Backed by real tools ──
       { group: "Backed by real tools" },
       {
-        feature: "250+ curated frameworks \u2014 sequenced, not just available",
+        feature: "350+ curated frameworks \u2014 sequenced, not just available",
         values: ["partial", "partial", true] as (boolean | "partial" | string)[],
       },
       {

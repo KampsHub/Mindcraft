@@ -10,7 +10,7 @@ import { STANDARD_VOICE } from "@/lib/coaching-voice";
 
 const PROCESS_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive:
 1. Today's free-flow journal entry
-2. The full frameworks library (250+ exercises across 5 modalities)
+2. The full frameworks library (350+ exercises across 5 modalities)
 3. Recent exercise history (to avoid repeats)
 4. The client's active goals
 5. Today's program day context (territory, coaching exercises already assigned)

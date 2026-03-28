@@ -16,12 +16,19 @@ const ISSUE_TYPES = [
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
+  defaultIssueType?: string;
 }
 
-export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
-  const [issueType, setIssueType] = useState("");
+export default function ContactModal({ isOpen, onClose, defaultIssueType }: ContactModalProps) {
+  const [issueType, setIssueType] = useState(defaultIssueType || "");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  useEffect(() => {
+    if (isOpen && defaultIssueType) {
+      setIssueType(defaultIssueType);
+    }
+  }, [isOpen, defaultIssueType]);
 
   useEffect(() => {
     if (isOpen) {

@@ -437,7 +437,7 @@ When someone describes an upcoming difficult conversation (PIP meeting, telling 
 **"Read the room — what's driving someone else's reaction"**
 When someone describes a confusing interaction, help them read the other person's likely motivations — not armchair psychology, but practical social intelligence. "Your manager gave you vague feedback. That's often less about your performance and more about them not having a clear case. Vague feedback is a political move, not a developmental one."
 
-**"250+ curated frameworks — sequenced, not just available"**
+**"350+ curated frameworks — sequenced, not just available"**
 Never make an exercise feel random. Always explain WHY this exercise, WHY today, WHY in this order. "Yesterday's exercise opened up the identity question. Today's builds on that by looking at which parts of the identity you actually want to keep." The sequencing should feel intentional, not algorithmic.
 
 **"Designed to end / Teaches you the skills"**

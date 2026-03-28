@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     template: "%s | Mindcraft",
   },
   description:
-    "AI-powered coaching programs for career crises. Daily journaling, 250+ proven frameworks, pattern recognition. For layoffs, PIPs, and new roles.",
+    "AI-powered coaching programs for career crises. Daily journaling, 350+ proven frameworks, pattern recognition. For layoffs, PIPs, and new roles.",
   keywords: [
     "coaching",
     "career coaching",

@@ -102,17 +102,7 @@ export default function Nav() {
           >
             My Account
           </button>
-          <button
-            onClick={() => setContactOpen(true)}
-            style={{
-              padding: "6px 14px", fontSize: 13, fontWeight: 600,
-              color: colors.coral, backgroundColor: "transparent",
-              border: "none", cursor: "pointer",
-              transition: "opacity 0.15s",
-            }}
-          >
-            Contact
-          </button>
+          {/* Contact moved to FloatingActions (bottom-right) */}
         </div>
 
         {/* Mobile hamburger */}
@@ -158,12 +148,7 @@ export default function Nav() {
           >
             My Account
           </button>
-          <button
-            onClick={() => { setContactOpen(true); setMenuOpen(false); }}
-            style={{ padding: "10px 12px", fontSize: 14, fontWeight: 600, color: colors.coral, backgroundColor: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
-          >
-            Contact
-          </button>
+          {/* Contact moved to FloatingActions */}
         </div>
       )}
 

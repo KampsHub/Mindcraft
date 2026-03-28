@@ -517,7 +517,7 @@ function ProofBar() {
   const stats = [
     { ref: counter30.ref, display: counter30.count.toString(), label: "days of structured, personalized coaching" },
     { ref: counter6.ref, display: counter6.count.toString(), label: "goals generated from your specific situation" },
-    { ref: counter180.ref, display: `${counter180.count}+`, label: "personalized exercises, drawn from a 250+ tool library" },
+    { ref: counter180.ref, display: `${counter180.count}+`, label: "personalized exercises, drawn from a 350+ tool library" },
   ];
 
   return (
@@ -1533,7 +1533,7 @@ function HowItWorks() {
                       </p>
                       <p style={{ marginBottom: 12 }}>
                         <strong style={{ color: "#ffffff" }}>Journal-matched exercises</strong>{" "}
-                        — 2 exercises selected from 250+ sourced tools, responding to what you actually wrote today. Each one includes context, a framework explanation, and step-by-step instructions.
+                        — 2 exercises selected from 350+ sourced tools, responding to what you actually wrote today. Each one includes context, a framework explanation, and step-by-step instructions.
                       </p>
                       <p style={{ marginBottom: 12 }}>
                         <strong style={{ color: "#ffffff" }}>Goal-matched exercise</strong> — one exercise connected to your active coaching goals, so your daily work stays aligned with where you're headed.
@@ -1924,7 +1924,7 @@ function Pricing() {
     "30 days of structured, personalized coaching",
     "A plan that adapts to how you actually react",
     "6 coaching goals built from your specific situation",
-    "180+ exercises selected from a 250+ tool library",
+    "180+ exercises selected from a 350+ tool library",
     "A published framework applied to your patterns — daily",
     "Journal analysis that spots what you might miss",
     "Access continues until your goals are done",
@@ -2697,7 +2697,7 @@ function FAQ() {
     {
       topic: "The program",
       q: "Where do the exercises come from?",
-      a: "From a curated library of 250+ tools sourced from established frameworks: IFS (Richard Schwartz), ACT (Steven Hayes), DBT (Marsha Linehan), NVC (Marshall Rosenberg), Co-Active Coaching (CTI), Positive Intelligence (Shirzad Chamine), CBT (Aaron Beck, David Burns), MBSR (Jon Kabat-Zinn), EMDR-derived self-use tools, and more. Over 30 days you will work through 180+ exercises personalized to your situation. Every exercise cites its source.",
+      a: "From a curated library of 350+ tools sourced from established frameworks: IFS (Richard Schwartz), ACT (Steven Hayes), DBT (Marsha Linehan), NVC (Marshall Rosenberg), Co-Active Coaching (CTI), Positive Intelligence (Shirzad Chamine), CBT (Aaron Beck, David Burns), MBSR (Jon Kabat-Zinn), EMDR-derived self-use tools, and more. Over 30 days you will work through 180+ exercises personalized to your situation. Every exercise cites its source.",
     },
     {
       topic: "The program",
@@ -2767,7 +2767,7 @@ function FAQ() {
     {
       topic: "About",
       q: "How is this different from BetterUp or other coaching platforms?",
-      a: "Those platforms connect you with a coach for scheduled sessions. This is a daily practice — coach-designed AI that reads what you write, selects exercises from a library of 250+ sourced tools, tracks your patterns, and adapts every day. You also have email access to a certified coach when you need it. Different model, different price point, different depth.",
+      a: "Those platforms connect you with a coach for scheduled sessions. This is a daily practice — coach-designed AI that reads what you write, selects exercises from a library of 350+ sourced tools, tracks your patterns, and adapts every day. You also have email access to a certified coach when you need it. Different model, different price point, different depth.",
     },
     {
       topic: "The program",

@@ -28,12 +28,12 @@ export const colors = {
   coralOnDark: "#6B5020",
   coralWash: "rgba(196, 148, 58, 0.12)",
 
-  // Accent: Plum (depth + reflection)
-  plumLight: "#B08DAD",
-  plum: "#7B5278",
-  plumPressed: "#5C3D5A",
-  plumDeep: "#3D2840",
-  plumWash: "rgba(123, 82, 120, 0.15)",
+  // Accent: Navy (depth + reflection)
+  plumLight: "#7B9AAD",
+  plum: "#3D6278",
+  plumPressed: "#2E4D62",
+  plumDeep: "#1B3345",
+  plumWash: "rgba(61, 98, 120, 0.15)",
 
   // Borders
   borderSubtle: "#2C2C30",  // Nav dividers, section separators

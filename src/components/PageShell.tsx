@@ -7,6 +7,7 @@ import Logo from "@/components/Logo";
 import { colors, fonts, space, radii } from "@/lib/theme";
 import { content as c } from "@/content/site";
 import BottomNav from "@/components/BottomNav";
+import FloatingActions from "@/components/FloatingActions";
 
 const body = fonts.bodyAlt;
 
@@ -159,6 +160,7 @@ export default function PageShell({
       </div>
 
       <BottomNav />
+      <FloatingActions />
 
       {/* Footer */}
       <footer style={{ padding: `${space[7]}px ${space[5]}px`, borderTop: showBgImage ? "none" : `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>

@@ -52,7 +52,23 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
         setInterim(interimText);
       };
 
+      recognition.onerror = (event: any) => {
+        // Don't restart on abort (user stopped) or no-speech
+        if (event.error === "aborted" || event.error === "no-speech") return;
+        console.warn("Speech recognition error:", event.error);
+      };
+
       recognition.onend = () => {
+        // Auto-restart if we're still supposed to be listening
+        // Chrome fires onend after pauses even with continuous=true
+        if (recognitionRef.current && continuous) {
+          try {
+            recognition.start();
+            return;
+          } catch {
+            // Failed to restart — fall through to cleanup
+          }
+        }
         setListening(false);
         setInterim("");
         recognitionRef.current = null;
@@ -68,9 +84,10 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
   }, [continuous, interimResults, lang, onResult, isSupported]);
 
   const stop = useCallback(() => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      recognitionRef.current = null;
+    const ref = recognitionRef.current;
+    recognitionRef.current = null; // Clear ref FIRST so onend doesn't auto-restart
+    if (ref) {
+      try { ref.stop(); } catch { /* already stopped */ }
     }
     setListening(false);
     setInterim("");

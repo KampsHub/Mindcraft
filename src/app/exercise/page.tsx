@@ -175,7 +175,7 @@ export default function ExercisePage() {
               transition={{ type: "spring", stiffness: 400, damping: 20, delay: i * 0.06 }}
               style={{
                 padding: "4px 12px", fontSize: 12, fontWeight: 600,
-                backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
+                backgroundColor: colors.coralWash, color: colors.coral,
                 borderRadius: 100, fontFamily: display,
               }}
             >
@@ -188,7 +188,7 @@ export default function ExercisePage() {
       {/* Introduction */}
       <FadeIn preset="slide-up" delay={0.12} triggerOnMount>
         <motion.div
-          whileHover={{ y: -2, borderColor: "rgba(224, 149, 133, 0.2)" }}
+          whileHover={{ y: -2, borderColor: colors.coralWash }}
           transition={{ type: "spring", stiffness: 300, damping: 22 }}
           style={{
             backgroundColor: colors.bgSurface,
@@ -236,7 +236,7 @@ export default function ExercisePage() {
               style={{
                 padding: 18,
                 backgroundColor: colors.coralWash,
-                border: `1px solid rgba(224, 149, 133, 0.25)`,
+                border: `1px solid ${colors.coralWash}`,
                 borderRadius: 14, textAlign: "center",
                 color: colors.coral, fontFamily: body, fontSize: 14, fontWeight: 600,
               }}

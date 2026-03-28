@@ -311,16 +311,16 @@ export default function MindfulJournalPage() {
                         position: "absolute", right: 12, bottom: 12,
                         width: 36, height: 36, borderRadius: "50%",
                         border: "none",
-                        backgroundColor: micListening ? "#ef4444" : colors.bgElevated,
-                        color: micListening ? "#ffffff" : "rgba(255,255,255,0.6)",
+                        backgroundColor: micListening ? colors.error : colors.bgElevated,
+                        color: micListening ? colors.textPrimary : colors.textMuted,
                         cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center",
-                        boxShadow: micListening ? "0 0 16px rgba(239, 68, 68, 0.5)" : "none",
+                        boxShadow: micListening ? `0 0 16px ${colors.errorWash}` : "none",
                         transition: "all 0.2s",
                       }}
                     >
                       {micListening ? (
-                        <svg width={14} height={14} viewBox="0 0 24 24" fill="#ffffff">
+                        <svg width={14} height={14} viewBox="0 0 24 24" fill={colors.textPrimary}>
                           <rect x="6" y="6" width="12" height="12" rx="2" />
                         </svg>
                       ) : (
@@ -342,7 +342,7 @@ export default function MindfulJournalPage() {
                     checkedItems={checkedSatisfied}
                     onToggle={(item) => setCheckedSatisfied((s) => toggleSet(s, item))}
                     accentColor={colors.coral}
-                    accentWash={"rgba(224, 149, 133, 0.12)"}
+                    accentWash={colors.coralWash}
                     isOpen={openSection === "satisfied"}
                     onToggleOpen={() => setOpenSection(openSection === "satisfied" ? null : "satisfied")}
                   />
@@ -362,7 +362,7 @@ export default function MindfulJournalPage() {
                     checkedItems={checkedNeeds}
                     onToggle={(item) => setCheckedNeeds((s) => toggleSet(s, item))}
                     accentColor={colors.coral}
-                    accentWash={"rgba(224, 149, 133, 0.12)"}
+                    accentWash={colors.coralWash}
                     isOpen={openSection === "needs"}
                     onToggleOpen={() => setOpenSection(openSection === "needs" ? null : "needs")}
                   />

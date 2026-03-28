@@ -46,13 +46,13 @@ function ThemesAutoLoader({ loading, error, isActive, onLoad, onSkip }: {
               border: `2px solid ${colors.borderDefault}`, borderTopColor: colors.coral,
             }}
           />
-          <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
+          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
             Loading yesterday&apos;s themes...
           </p>
         </div>
       ) : error ? (
         <div>
-          <p style={{ ...textPreset.secondary, color: "#f87171", margin: "0 0 12px 0" }}>
+          <p style={{ ...textPreset.secondary, color: colors.error, margin: "0 0 12px 0" }}>
             {error}
           </p>
           <div style={{ display: "flex", gap: 10 }}>
@@ -75,7 +75,7 @@ function ThemesAutoLoader({ loading, error, isActive, onLoad, onSkip }: {
               onClick={onSkip}
               style={{
                 padding: "10px 20px", fontSize: 14, fontWeight: 600,
-                color: "#ffffff", backgroundColor: "transparent",
+                color: colors.textPrimary, backgroundColor: "transparent",
                 border: `1px solid ${colors.borderDefault}`, borderRadius: 100,
                 cursor: "pointer", fontFamily: display,
               }}
@@ -85,7 +85,7 @@ function ThemesAutoLoader({ loading, error, isActive, onLoad, onSkip }: {
           </div>
         </div>
       ) : (
-        <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
+        <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
           Loading...
         </p>
       )}
@@ -234,7 +234,7 @@ export default function TellTab({
     <div>
       {dayNumber === 1 ? (
         completedSteps.includes(1) ? (
-          <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
+          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
             Day 1 — no prior themes.
           </p>
         ) : (
@@ -244,7 +244,7 @@ export default function TellTab({
           border: `1px solid ${colors.borderDefault}`,
           padding: space[5],
         }}>
-          <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 18px 0" }}>
+          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 18px 0" }}>
             Welcome to Day 1 of your program. There are no themes to review yet — today is where it begins.
           </p>
           <motion.button
@@ -305,7 +305,7 @@ export default function TellTab({
             <div style={{ marginBottom: 18 }}>
               {themes.thread.split("\n\n").map((para, i) => (
                 <p key={i} style={{
-                  ...textPreset.body, color: "#ffffff",
+                  ...textPreset.body, color: colors.textPrimary,
                   margin: i === 0 ? "0 0 12px 0" : "12px 0",
                 }}>
                   {para}
@@ -313,7 +313,7 @@ export default function TellTab({
               ))}
             </div>
           ) : (
-            <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 14px 0" }}>
+            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 14px 0" }}>
               {themes.summary}
             </p>
           )}
@@ -322,7 +322,7 @@ export default function TellTab({
           {themes.yesterday_committed_actions && themes.yesterday_committed_actions.length > 0 && (
             <div style={{
               padding: "16px 18px",
-              backgroundColor: "rgba(224, 149, 133, 0.06)",
+              backgroundColor: "rgba(196, 148, 58, 0.06)",
               borderRadius: radii.md,
               borderLeft: `3px solid ${colors.coral}`,
               marginBottom: space[6],
@@ -330,12 +330,12 @@ export default function TellTab({
               <p style={{ ...textPreset.caption, color: colors.coral, margin: "0 0 10px 0" }}>
                 Yesterday&apos;s mini-actions
               </p>
-              <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 10px 0" }}>
+              <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: "0 0 10px 0" }}>
                 You committed to these. How did they go?
               </p>
               {(themes.yesterday_committed_actions || []).map((action, i) => (
                 <div key={i} style={{ marginBottom: 8 }}>
-                  <p style={{ ...textPreset.secondary, fontWeight: 600, color: "#ffffff", margin: "0 0 4px 0" }}>
+                  <p style={{ ...textPreset.secondary, fontWeight: 600, color: colors.textPrimary, margin: "0 0 4px 0" }}>
                     {action}
                   </p>
                 </div>
@@ -356,10 +356,10 @@ export default function TellTab({
                   borderLeft: `3px solid ${colors.coral}`,
                   marginBottom: 8,
                 }}>
-                  <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
+                  <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
                     {p.observation}
                   </p>
-                  <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "4px 0 0 0" }}>
+                  <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: "4px 0 0 0" }}>
                     Seen across {p.days_observed} days • {p.connection}
                   </p>
                 </div>
@@ -368,7 +368,7 @@ export default function TellTab({
           )}
 
           {themes.carry_forward && (
-            <p style={{ ...textPreset.body, color: "#ffffff", margin: 0, fontStyle: "italic" }}>
+            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0, fontStyle: "italic" }}>
               {themes.carry_forward}
             </p>
           )}
@@ -384,9 +384,9 @@ export default function TellTab({
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         style={{
           padding: "16px 18px",
-          backgroundColor: "rgba(224, 149, 133, 0.08)",
+          backgroundColor: "rgba(196, 148, 58, 0.08)",
           borderRadius: 14,
-          border: "1px solid rgba(224, 149, 133, 0.15)",
+          border: `1px solid rgba(196, 148, 58, 0.15)`,
           marginBottom: space[6],
         }}
       >
@@ -406,7 +406,7 @@ export default function TellTab({
                   Questions to sit with:
                 </p>
                 {yesterdaySummaryTakeaways.questions_to_sit_with.map((q, i) => (
-                  <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", fontStyle: "italic", paddingLeft: 12 }}>
+                  <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "4px 0", fontStyle: "italic", paddingLeft: 12 }}>
                     {q}
                   </p>
                 ))}
@@ -418,7 +418,7 @@ export default function TellTab({
                   Challenges you took on:
                 </p>
                 {yesterdaySummaryTakeaways.challenges.map((c, i) => (
-                  <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", paddingLeft: 12 }}>
+                  <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "4px 0", paddingLeft: 12 }}>
                     &bull; {c}
                   </p>
                 ))}
@@ -430,7 +430,7 @@ export default function TellTab({
                   You committed to:
                 </p>
                 {yesterdaySummaryTakeaways.committed_actions.map((a, i) => (
-                  <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", paddingLeft: 12 }}>
+                  <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "4px 0", paddingLeft: 12 }}>
                     &bull; {a}
                   </p>
                 ))}
@@ -438,12 +438,12 @@ export default function TellTab({
             )}
           </div>
         ) : yesterdayExercise ? (
-          <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 6px 0", fontWeight: 600 }}>
+          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 6px 0", fontWeight: 600 }}>
             {yesterdayExercise.name}
           </p>
         ) : null}
 
-        <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 10px 0" }}>
+        <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: "0 0 10px 0" }}>
           What came up from these?
         </p>
         <div style={{ position: "relative" }}>
@@ -455,7 +455,7 @@ export default function TellTab({
               width: "100%", minHeight: 60, padding: "12px 48px 12px 12px",
               ...textPreset.body,
               borderRadius: radii.md, border: `1px solid ${colors.borderDefault}`,
-              backgroundColor: colors.bgInput, color: "#ffffff",
+              backgroundColor: colors.bgInput, color: colors.textPrimary,
               resize: "none", outline: "none",
               boxSizing: "border-box",
             }}
@@ -493,16 +493,16 @@ export default function TellTab({
             style={{
               position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
               width: 32, height: 32, borderRadius: "50%",
-              backgroundColor: followThroughListening ? "#ef4444" : "transparent",
+              backgroundColor: followThroughListening ? colors.error : "transparent",
               border: "none",
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: followThroughListening ? "0 0 16px rgba(239, 68, 68, 0.5)" : "none",
+              boxShadow: followThroughListening ? "0 0 16px rgba(210, 88, 88, 0.5)" : "none",
               transition: "background-color 0.2s, box-shadow 0.2s",
             }}
             title={followThroughListening ? "Stop recording" : "Speak your response"}
           >
             {followThroughListening ? (
-              <svg width={14} height={14} viewBox="0 0 24 24" fill="#ffffff">
+              <svg width={14} height={14} viewBox="0 0 24 24" fill={colors.textPrimary}>
                 <rect x="6" y="6" width="12" height="12" rx="2" />
               </svg>
             ) : (
@@ -546,7 +546,7 @@ export default function TellTab({
                   backgroundColor: colors.bgElevated,
                   borderRadius: radii.md,
                 }}>
-                  <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
+                  <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
                     {sp.expanded || sp.prompt}
                   </p>
                 </div>
@@ -590,7 +590,7 @@ export default function TellTab({
               backgroundColor: colors.bgInput,
               border: `1px solid ${colors.borderDefault}`,
               borderRadius: radii.md,
-              color: "#ffffff", resize: "none", outline: "none",
+              color: colors.textPrimary, resize: "none", outline: "none",
               boxSizing: "border-box",
             }}
           />
@@ -616,7 +616,7 @@ export default function TellTab({
               outline: "none",
               boxSizing: "border-box",
               color: colors.textPrimary,
-              backgroundColor: journalSaved ? "rgba(224, 149, 133, 0.08)" : colors.bgInput,
+              backgroundColor: journalSaved ? "rgba(196, 148, 58, 0.08)" : colors.bgInput,
               transition: "border-color 0.2s, background-color 0.2s",
             }}
             onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
@@ -656,7 +656,7 @@ export default function TellTab({
         )}
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
-          <span style={{ ...textPreset.caption, color: "#ffffff" }}>
+          <span style={{ ...textPreset.caption, color: colors.textPrimary }}>
             {journalContent.length > 0 ? `${journalContent.split(/\s+/).filter(Boolean).length} words` : ""}
           </span>
 
@@ -668,7 +668,7 @@ export default function TellTab({
               disabled={!journalContent.trim() || savingJournal}
               style={{
                 padding: "12px 28px", fontSize: 14, fontWeight: 600,
-                color: !journalContent.trim() || savingJournal ? "#ffffff" : colors.bgDeep,
+                color: !journalContent.trim() || savingJournal ? colors.textPrimary : colors.bgDeep,
                 backgroundColor: !journalContent.trim() || savingJournal ? colors.bgElevated : colors.coral,
                 border: "none", borderRadius: 100,
                 cursor: !journalContent.trim() || savingJournal ? "not-allowed" : "pointer",

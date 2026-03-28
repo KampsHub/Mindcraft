@@ -227,7 +227,7 @@ export default function FreeFlowCapture({
                 )}
 
                 <motion.button
-                  whileHover={content.trim() && !saving ? { scale: 1.04, boxShadow: "0 6px 20px rgba(224, 149, 133, 0.35)" } : {}}
+                  whileHover={content.trim() && !saving ? { scale: 1.04, boxShadow: `0 6px 20px ${colors.coralWash}` } : {}}
                   whileTap={content.trim() && !saving ? { scale: 0.96 } : {}}
                   onClick={handleSave}
                   disabled={!content.trim() || saving}

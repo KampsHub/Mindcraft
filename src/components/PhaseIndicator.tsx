@@ -93,7 +93,7 @@ export default function PhaseIndicator({ activePhase, completedPhases, onPhaseCl
                 color: isActive
                   ? colors.coral
                   : isCompleted
-                    ? "#ffffff"
+                    ? colors.textPrimary
                     : isDisabled
                       ? "rgba(255,255,255,0.15)"
                       : "rgba(255,255,255,0.4)",

@@ -14,7 +14,7 @@ function CenterBar({ label, value, color }: { label: string; value: number; colo
   return (
     <div style={{ marginBottom: 10 }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-        <span style={{ fontFamily: body, fontSize: 13, color: "#ffffff" }}>{label}</span>
+        <span style={{ fontFamily: body, fontSize: 13, color: colors.textPrimary }}>{label}</span>
         <span style={{ fontFamily: display, fontSize: 13, fontWeight: 600, color }}>{value}%</span>
       </div>
       <div style={{
@@ -88,7 +88,7 @@ export default function EnneagramInsights({ data }: Props) {
         <span style={{
           fontFamily: display, fontSize: 14, fontWeight: 600,
           color: colors.coral, padding: "8px 14px", borderRadius: 10,
-          backgroundColor: "rgba(224, 149, 133, 0.12)",
+          backgroundColor: colors.coralWash,
         }}>
           Tritype {data.tritype}
         </span>
@@ -129,7 +129,7 @@ export default function EnneagramInsights({ data }: Props) {
             }}>
               {i + 1}
             </span>
-            <span style={{ fontFamily: body, fontSize: 14, color: "#ffffff", lineHeight: 1.5 }}>
+            <span style={{ fontFamily: body, fontSize: 14, color: colors.textPrimary, lineHeight: 1.5 }}>
               {area}
             </span>
           </div>
@@ -147,7 +147,7 @@ export default function EnneagramInsights({ data }: Props) {
             Integration Plan
           </p>
           <div style={{
-            fontFamily: body, fontSize: 14, color: "#ffffff", lineHeight: 1.6,
+            fontFamily: body, fontSize: 14, color: colors.textPrimary, lineHeight: 1.6,
             padding: 16, borderRadius: 10, backgroundColor: colors.bgElevated,
             whiteSpace: "pre-wrap",
           }}>
@@ -162,7 +162,7 @@ export default function EnneagramInsights({ data }: Props) {
         style={{
           fontFamily: display, fontSize: 13, fontWeight: 600,
           padding: "8px 20px", borderRadius: 100,
-          backgroundColor: colors.bgElevated, color: "#ffffff",
+          backgroundColor: colors.bgElevated, color: colors.textPrimary,
           border: `1px solid ${colors.borderDefault}`, cursor: "pointer",
         }}
       >

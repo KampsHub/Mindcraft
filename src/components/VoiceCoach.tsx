@@ -128,7 +128,7 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
           >
             <p style={{
               fontFamily: display, fontSize: 14, fontWeight: 600,
-              color: "#ffffff", margin: "0 0 6px 0",
+              color: colors.textPrimary, margin: "0 0 6px 0",
             }}>
               Voice Session
             </p>
@@ -148,7 +148,7 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
                 backgroundColor: colors.coral,
                 border: "none", cursor: "pointer",
                 display: "inline-flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 4px 24px rgba(224, 149, 133, 0.3)",
+                boxShadow: `0 4px 24px ${colors.coralWash}`,
               }}
             >
               <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke={colors.bgDeep} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -160,7 +160,7 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
 
             {error && (
               <p style={{
-                fontFamily: body, fontSize: 13, color: "#f87171",
+                fontFamily: body, fontSize: 13, color: colors.error,
                 marginTop: 14,
               }}>
                 {error}
@@ -177,7 +177,7 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <p style={{ fontFamily: body, fontSize: 14, color: "#ffffff" }}>
+            <p style={{ fontFamily: body, fontSize: 14, color: colors.textPrimary }}>
               Connecting microphone...
             </p>
           </motion.div>
@@ -198,14 +198,14 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
                 transition={{ duration: 1.5, repeat: Infinity }}
                 style={{
                   width: 16, height: 16, borderRadius: "50%",
-                  backgroundColor: "#f87171",
+                  backgroundColor: colors.error,
                 }}
               />
             </div>
 
             <p style={{
               fontFamily: display, fontSize: 28, fontWeight: 700,
-              color: "#ffffff", margin: "0 0 4px 0",
+              color: colors.textPrimary, margin: "0 0 4px 0",
               letterSpacing: "0.05em",
             }}>
               {formatTime(duration)}
@@ -223,15 +223,15 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
               onClick={stopSession}
               style={{
                 width: 72, height: 72, borderRadius: "50%",
-                backgroundColor: "rgba(248, 113, 113, 0.15)",
-                border: "2px solid #f87171",
+                backgroundColor: colors.errorWash,
+                border: `2px solid ${colors.error}`,
                 cursor: "pointer",
                 display: "inline-flex", alignItems: "center", justifyContent: "center",
               }}
             >
               <div style={{
                 width: 22, height: 22, borderRadius: 4,
-                backgroundColor: "#f87171",
+                backgroundColor: colors.error,
               }} />
             </motion.button>
           </motion.div>
@@ -255,7 +255,7 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
                 margin: "0 auto 16px",
               }}
             />
-            <p style={{ fontFamily: body, fontSize: 14, color: "#ffffff" }}>
+            <p style={{ fontFamily: body, fontSize: 14, color: colors.textPrimary }}>
               Transcribing your voice session...
             </p>
           </motion.div>
@@ -282,7 +282,7 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
             </div>
             <p style={{
               fontFamily: display, fontSize: 14, fontWeight: 600,
-              color: "#ffffff", margin: "0 0 8px 0",
+              color: colors.textPrimary, margin: "0 0 8px 0",
             }}>
               Voice session saved
             </p>
@@ -307,7 +307,7 @@ export default function VoiceCoach({ onTranscript, context }: VoiceCoachProps) {
                 fontFamily: display, fontSize: 12, fontWeight: 600,
                 padding: "8px 16px", borderRadius: 100, marginTop: 16,
                 backgroundColor: "transparent",
-                color: colors.coral, border: `1px solid rgba(224, 149, 133, 0.3)`,
+                color: colors.coral, border: `1px solid ${colors.coralWash}`,
                 cursor: "pointer",
               }}
             >

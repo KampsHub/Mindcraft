@@ -36,19 +36,19 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
             display: "flex", alignItems: "center", gap: 10,
             padding: "14px 18px", borderRadius: 12,
             backgroundColor: colors.bgSurface,
-            border: `1px solid rgba(224, 149, 133, 0.25)`,
+            border: `1px solid ${colors.coralWash}`,
             marginBottom: 20,
           }}>
             <div style={{
               width: 28, height: 28, borderRadius: "50%",
-              backgroundColor: "rgba(224, 149, 133, 0.12)",
+              backgroundColor: colors.coralWash,
               display: "flex", alignItems: "center", justifyContent: "center",
               flexShrink: 0,
             }}>
               <span style={{ color: colors.coral, fontSize: 14, fontWeight: 700 }}>✓</span>
             </div>
             <p style={{
-              fontFamily: body, fontSize: 13, color: "#ffffff", margin: 0, lineHeight: 1.4,
+              fontFamily: body, fontSize: 13, color: colors.textPrimary, margin: 0, lineHeight: 1.4,
             }}>
               Enneagram results available in{" "}
               <span
@@ -62,7 +62,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
 
           <p style={{
             fontFamily: display, fontSize: 12, fontWeight: 600,
-            color: "#ffffff", marginBottom: 14, letterSpacing: "0.04em",
+            color: colors.textPrimary, marginBottom: 14, letterSpacing: "0.04em",
             textTransform: "uppercase",
           }}>
             Go deeper
@@ -79,7 +79,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
         <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 24 }} />
         <p style={{
           fontFamily: display, fontSize: 12, fontWeight: 600,
-          color: "#ffffff", marginBottom: 14, letterSpacing: "0.04em",
+          color: colors.textPrimary, marginBottom: 14, letterSpacing: "0.04em",
           textTransform: "uppercase",
         }}>
           Go deeper
@@ -133,7 +133,7 @@ function EnneagramCard() {
       <div style={{
         position: "absolute", top: -30, right: -30,
         width: 120, height: 120, borderRadius: "50%",
-        background: `radial-gradient(circle, rgba(224, 149, 133, 0.15) 0%, transparent 70%)`,
+        background: `radial-gradient(circle, ${colors.coralWash} 0%, transparent 70%)`,
         pointerEvents: "none",
       }} />
       <span style={{
@@ -141,7 +141,7 @@ function EnneagramCard() {
         fontFamily: body, fontSize: 9, fontWeight: 700,
         letterSpacing: 1.5, textTransform: "uppercase",
         padding: "5px 12px", borderRadius: 6,
-        backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
+        backgroundColor: colors.coralWash, color: colors.coral,
         marginBottom: 14,
       }}>
         Deep Insight
@@ -154,7 +154,7 @@ function EnneagramCard() {
         Add Enneagram
       </p>
       <p style={{
-        fontFamily: body, fontSize: 13, color: "#ffffff",
+        fontFamily: body, fontSize: 13, color: colors.textPrimary,
         lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
       }}>
         The IEQ9 Enneagram — the assessment professional coaches actually use. It shows you why you react the way you do under pressure and what patterns keep repeating. Includes a 1-hour live debrief. Your results shape every exercise.
@@ -204,7 +204,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
       <div style={{
         position: "absolute", top: -30, right: -30,
         width: 120, height: 120, borderRadius: "50%",
-        background: `radial-gradient(circle, rgba(224, 149, 133, 0.1) 0%, transparent 70%)`,
+        background: `radial-gradient(circle, ${colors.coralWash} 0%, transparent 70%)`,
         pointerEvents: "none",
       }} />
       <span style={{
@@ -225,7 +225,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
         1:1 Coaching
       </p>
       <p style={{
-        fontFamily: body, fontSize: 13, color: "#ffffff",
+        fontFamily: body, fontSize: 13, color: colors.textPrimary,
         lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
       }}>
         The program builds the foundation. A coach can further accelerate it — catching blind spots in real time, pushing back when you're stuck in a loop, and helping you rehearse the conversations you're avoiding. Includes a personal Enneagram assessment to sharpen the work.

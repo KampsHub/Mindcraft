@@ -210,7 +210,7 @@ export default function ExerciseCard({
             <p
               style={{
                 ...textScale.heading,
-                color: "#ffffff",
+                color: colors.textPrimary,
                 margin: 0,
               }}
             >
@@ -321,13 +321,13 @@ export default function ExerciseCard({
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 5,
                       padding: `6px ${space[3]}px`, borderRadius: radii.full,
-                      backgroundColor: "rgba(196, 148, 58, 0.1)",
+                      backgroundColor: colors.coralWash,
                       border: "none", cursor: "pointer",
                       ...textScale.caption, fontSize: 12, color: colors.coral,
                       transition: "background-color 0.15s",
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.18)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.1)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = colors.coralWash; }}
                   >
                     <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
@@ -388,7 +388,7 @@ export default function ExerciseCard({
               {instructions && (
                 <div id={`instructions-${name}`} style={{ marginBottom: space[4] }}>
                   <p style={{
-                    ...textScale.body, color: "#ffffff", margin: 0,
+                    ...textScale.body, color: colors.textPrimary, margin: 0,
                     lineHeight: 1.8, whiteSpace: "pre-wrap",
                   }}>
                     {instructions}
@@ -489,7 +489,7 @@ export default function ExerciseCard({
                                 padding: `${space[2]}px ${space[5]}px`, borderRadius: radii.full, fontSize: 13,
                                 fontWeight: 600, fontFamily: display,
                                 backgroundColor: rating === 5 ? "rgba(74, 222, 128, 0.15)" : colors.bgElevated,
-                                color: rating === 5 ? "#4ade80" : "#ffffff",
+                                color: rating === 5 ? "#4ade80" : colors.textPrimary,
                                 border: rating === 5 ? "1px solid rgba(74, 222, 128, 0.3)" : `1px solid ${colors.borderDefault}`,
                                 cursor: "pointer",
                               }}

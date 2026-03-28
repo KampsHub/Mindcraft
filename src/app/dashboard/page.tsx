@@ -171,7 +171,7 @@ class DashboardErrorBoundary extends React.Component<
         <div style={{
           minHeight: "100vh", display: "flex", flexDirection: "column",
           alignItems: "center", justifyContent: "center",
-          backgroundColor: "#18181C", color: "#ffffff", gap: 16,
+          backgroundColor: colors.bgDeep, color: colors.textPrimary, gap: 16,
           fontFamily: "'DM Sans', sans-serif", padding: 24,
         }}>
           <p style={{ fontSize: 18, fontWeight: 600 }}>Something went wrong</p>
@@ -297,7 +297,7 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: "#18181C", gap: 16 }}>
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: colors.bgDeep, gap: 16 }}>
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
@@ -307,7 +307,7 @@ export default function DashboardPage() {
             borderTopColor: "#C4943A",
           }}
         />
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Sans', sans-serif" }}>
+        <p style={{ fontSize: 14, color: colors.textMuted, fontFamily: "'DM Sans', sans-serif" }}>
           Loading your session...
         </p>
       </div>
@@ -376,7 +376,7 @@ export default function DashboardPage() {
                   fontSize: 14,
                   fontWeight: 600,
                   cursor: "pointer",
-                  color: "#ffffff",
+                  color: colors.textPrimary,
                   backgroundColor: colors.coral,
                   borderRadius: radii.sm,
                   textDecoration: "none",
@@ -475,7 +475,7 @@ export default function DashboardPage() {
                 }}>
                   {link.label}
                 </p>
-                <p style={{ fontSize: 12, color: "#ffffff", margin: 0, fontFamily: body }}>
+                <p style={{ fontSize: 12, color: colors.textPrimary, margin: 0, fontFamily: body }}>
                   {link.desc}
                 </p>
               </motion.button>
@@ -501,17 +501,17 @@ export default function DashboardPage() {
           display: "flex", alignItems: "center", justifyContent: "center",
           flexWrap: "wrap", gap: 16,
         }}>
-          <div style={{ display: "flex", gap: 24, fontSize: 13, color: "#ffffff", alignItems: "center", fontFamily: body }}>
+          <div style={{ display: "flex", gap: 24, fontSize: 13, color: colors.textPrimary, alignItems: "center", fontFamily: body }}>
             <span>
               &copy; 2026 All Minds on Deck &middot; Made with{" "}
               <span style={{ color: colors.coral, fontSize: 18 }}>&#9829;</span> by{" "}
               <a href="https://allmindsondeck.com" target="_blank" rel="noopener noreferrer"
-                style={{ color: "#ffffff", textDecoration: "underline" }}>
+                style={{ color: colors.textPrimary, textDecoration: "underline" }}>
                 All Minds On Deck
               </a>
             </span>
-            <a href="/privacy" style={{ color: "#ffffff", textDecoration: "none" }}>Privacy</a>
-            <a href="/contact" style={{ color: "#ffffff", textDecoration: "none" }}>Contact</a>
+            <a href="/privacy" style={{ color: colors.textPrimary, textDecoration: "none" }}>Privacy</a>
+            <a href="/contact" style={{ color: colors.textPrimary, textDecoration: "none" }}>Contact</a>
           </div>
         </div>
       </footer>

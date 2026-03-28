@@ -144,7 +144,7 @@ export default function EnneagramUpload({ clientId, onAnalysisComplete, existing
         Enneagram Documents
       </p>
       <p style={{
-        fontFamily: body, fontSize: 14, color: "#ffffff",
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
         lineHeight: 1.5, margin: "0 0 16px 0",
       }}>
         Upload your IEQ9 Enneagram report (and optional coaching companion) to unlock personalized development areas. Accepts PDF or images.
@@ -159,7 +159,7 @@ export default function EnneagramUpload({ clientId, onAnalysisComplete, existing
           marginBottom: 8,
         }}>
           <span style={{ fontSize: 16 }}>📄</span>
-          <span style={{ fontFamily: body, fontSize: 13, color: "#ffffff", flex: 1 }}>
+          <span style={{ fontFamily: body, fontSize: 13, color: colors.textPrimary, flex: 1 }}>
             {doc.filename}
           </span>
           <a
@@ -182,7 +182,7 @@ export default function EnneagramUpload({ clientId, onAnalysisComplete, existing
           marginBottom: 8,
         }}>
           <span style={{ fontSize: 16 }}>📎</span>
-          <span style={{ fontFamily: body, fontSize: 13, color: "#ffffff", flex: 1 }}>
+          <span style={{ fontFamily: body, fontSize: 13, color: colors.textPrimary, flex: 1 }}>
             {f.name} ({(f.size / 1024 / 1024).toFixed(1)} MB)
           </span>
           {!isWorking && (
@@ -234,7 +234,7 @@ export default function EnneagramUpload({ clientId, onAnalysisComplete, existing
 
       {/* Error */}
       {error && (
-        <p style={{ fontFamily: body, fontSize: 13, color: "#f87171", margin: "0 0 12px 0" }}>
+        <p style={{ fontFamily: body, fontSize: 13, color: colors.error, margin: "0 0 12px 0" }}>
           {error}
         </p>
       )}

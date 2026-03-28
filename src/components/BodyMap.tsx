@@ -29,7 +29,7 @@ const COMMON_LABELS = [
 ];
 
 const LABEL_COLORS: Record<string, string> = {
-  tension: "#E09585",
+  tension: colors.coral,
   warmth: "#F4B5A9",
   heaviness: "#7B5278",
   tingling: "#B08DAD",

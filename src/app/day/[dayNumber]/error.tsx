@@ -25,7 +25,7 @@ export default function DayError({
     }}>
       <p style={{
         fontFamily: display, fontSize: 20, fontWeight: 700,
-        color: "#ffffff", marginBottom: 10,
+        color: colors.textPrimary, marginBottom: 10,
       }}>
         Session hit a snag
       </p>
@@ -56,7 +56,7 @@ export default function DayError({
           onClick={() => window.location.href = "/dashboard"}
           style={{
             padding: "10px 24px", borderRadius: 100, fontSize: 14, fontWeight: 600,
-            backgroundColor: "transparent", color: "#ffffff",
+            backgroundColor: "transparent", color: colors.textPrimary,
             border: `1px solid ${colors.borderDefault}`, cursor: "pointer", fontFamily: display,
           }}
         >

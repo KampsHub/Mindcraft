@@ -295,7 +295,7 @@ function GoalsPage() {
   if (loading) {
     return (
       <PageShell blobVariant="goals" showBgImage programSlug={enrollment?.programs?.slug}>
-        <p style={{ color: "#ffffff", fontFamily: body }}>Loading goals...</p>
+        <p style={{ color: colors.textPrimary, fontFamily: body }}>Loading goals...</p>
       </PageShell>
     );
   }
@@ -311,7 +311,7 @@ function GoalsPage() {
           }}>
             No active program
           </h1>
-          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
+          <p style={{ fontSize: 15, color: colors.textPrimary, lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
             You need to start a program first. Your goals are generated after completing Days 1-3.
           </p>
           <PillButton onClick={() => router.push("/#programs")} size="lg">
@@ -352,7 +352,7 @@ function GoalsPage() {
           }}>
             {enrollment.current_day < 4 ? "Goals unlock after Day 3" : "Generate your goals"}
           </h1>
-          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 32, fontFamily: body }}>
+          <p style={{ fontSize: 15, color: colors.textPrimary, lineHeight: 1.6, marginBottom: 32, fontFamily: body }}>
             {enrollment.current_day < 4
               ? `You're on Day ${enrollment.current_day}. Complete your first three days — the exercises double as intake — and your coaching intelligence will generate 6 personalized goals.`
               : "Based on your intake and what surfaced in Days 1-3, your coaching intelligence will generate 6 personalized goals. You choose which 2-3 to work on first."}
@@ -376,7 +376,7 @@ function GoalsPage() {
           <AnimatePresence>
             {generating && (
               <p
-                style={{ color: "#ffffff", fontSize: 13, marginTop: 14, fontFamily: body }}
+                style={{ color: colors.textPrimary, fontSize: 13, marginTop: 14, fontFamily: body }}
               >
                 Processing your entries, goals, and position in the program arc to move further. This takes about 15 seconds.
               </p>
@@ -386,7 +386,7 @@ function GoalsPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                style={{ color: "#f87171", fontSize: 13, marginTop: 14, fontFamily: body }}
+                style={{ color: colors.error, fontSize: 13, marginTop: 14, fontFamily: body }}
               >
                 {errorMsg}
               </motion.p>
@@ -434,12 +434,12 @@ function GoalsPage() {
           {alreadyApproved ? "Your goals" : "Choose your goals"}
         </h1>
         {!alreadyApproved && (
-          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6, marginBottom: 28, fontFamily: body }}>
+          <p style={{ fontSize: 15, color: colors.textPrimary, lineHeight: 1.6, marginBottom: 28, fontFamily: body }}>
             Select 2-3 goals to work on first. The rest can be activated at any weekly check-in.
           </p>
         )}
         {alreadyApproved && (
-          <p style={{ fontSize: 14, color: "#ffffff", marginBottom: 28, fontFamily: body }}>
+          <p style={{ fontSize: 14, color: colors.textPrimary, marginBottom: 28, fontFamily: body }}>
             {displayGoals.length} active goal{displayGoals.length !== 1 ? "s" : ""}. Adjustments happen at weekly review.
           </p>
         )}
@@ -501,7 +501,7 @@ function GoalsPage() {
                       backgroundColor: colors.bgSurface,
                       borderRadius: 12,
                       border: isViewWeek
-                        ? `1.5px solid rgba(224, 149, 133, 0.4)`
+                        ? `1.5px solid ${colors.coralWash}`
                         : `1px solid ${colors.borderDefault}`,
                       padding: "14px 10px",
                       display: "flex", flexDirection: "column", alignItems: "center",
@@ -623,9 +623,9 @@ function GoalsPage() {
                   border: `1px solid ${colors.borderDefault}`,
                   padding: 22,
                   cursor: alreadyApproved ? "default" : "pointer",
-                  borderColor: isActive ? "rgba(224, 149, 133, 0.35)" : colors.borderDefault,
+                  borderColor: isActive ? colors.coralWash : colors.borderDefault,
                   background: isActive
-                    ? `linear-gradient(135deg, ${colors.bgSurface} 0%, rgba(224, 149, 133, 0.08) 100%)`
+                    ? `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.coralWash} 100%)`
                     : colors.bgSurface,
                   transition: "border-color 0.2s, background 0.2s",
                 }}
@@ -668,7 +668,7 @@ function GoalsPage() {
                           const ratingColor = hasRating
                             ? rating >= 8 ? colors.coral
                             : rating >= 5 ? colors.coral
-                            : "#fbbf24"
+                            : colors.warning
                             : colors.bgElevated;
                           return (
                             <div key={wk} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
@@ -734,7 +734,7 @@ function GoalsPage() {
               style={{
                 fontFamily: display, fontSize: 13, fontWeight: 600,
                 padding: "10px 24px", borderRadius: 100,
-                backgroundColor: colors.bgElevated, color: "#ffffff",
+                backgroundColor: colors.bgElevated, color: colors.textPrimary,
                 border: `1px solid ${colors.borderDefault}`, cursor: "pointer",
               }}
             >

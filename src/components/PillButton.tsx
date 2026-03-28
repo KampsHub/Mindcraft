@@ -9,7 +9,7 @@ const variants = {
   coral: {
     bg: colors.coral,
     color: colors.bgDeep,
-    shadow: "0 8px 30px rgba(224, 149, 133, 0.4)",
+    shadow: `0 8px 30px ${colors.coralWash}`,
   },
   plum: {
     bg: colors.coral,
@@ -24,7 +24,7 @@ const variants = {
   success: {
     bg: colors.coral,
     color: colors.bgDeep,
-    shadow: "0 8px 30px rgba(224, 149, 133, 0.4)",
+    shadow: `0 8px 30px ${colors.coralWash}`,
   },
 };
 

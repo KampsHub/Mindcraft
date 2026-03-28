@@ -49,10 +49,10 @@ type TabFilter = "completed" | "parked";
 type ModalityFilter = "all" | "cognitive" | "somatic" | "relational" | "integrative" | "systems";
 
 const modalityColors: Record<string, { bg: string; text: string; label: string }> = {
-  cognitive: { bg: "rgba(224, 149, 133, 0.12)", text: colors.coral, label: "Cognitive" },
+  cognitive: { bg: colors.coralWash, text: colors.coral, label: "Cognitive" },
   somatic: { bg: colors.coralWash, text: colors.coralLight, label: "Somatic" },
   relational: { bg: "rgba(61, 40, 64, 0.5)", text: colors.coral, label: "Relational" },
-  integrative: { bg: "rgba(224, 149, 133, 0.12)", text: colors.coral, label: "Integrative" },
+  integrative: { bg: colors.coralWash, text: colors.coral, label: "Integrative" },
   systems: { bg: colors.bgElevated, text: colors.textSecondary, label: "Systems" },
 };
 
@@ -223,7 +223,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
         border: "1px solid rgba(255, 255, 255, 0.08)",
         padding: space[5],
       }}>
-        <p style={{ ...text.heading, color: "#ffffff", margin: 0 }}>Exercises</p>
+        <p style={{ ...text.heading, color: colors.textPrimary, margin: 0 }}>Exercises</p>
         <p style={{ ...text.secondary, color: colors.textMuted, margin: "8px 0 0 0" }}>
           Exercises from your coaching plan will appear here as you progress.
         </p>
@@ -269,13 +269,13 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <h3 style={{
-            ...text.heading, color: "#ffffff", margin: 0,
+            ...text.heading, color: colors.textPrimary, margin: 0,
           }}>
             Exercises
           </h3>
           <span style={{
             ...text.caption, padding: "2px 8px", borderRadius: radii.full,
-            backgroundColor: colors.bgElevated, color: "#ffffff",
+            backgroundColor: colors.bgElevated, color: colors.textPrimary,
           }}>
             {completedExercises.length} completed • {parkedExercises.length} parked
           </span>
@@ -299,7 +299,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{ overflow: "hidden" }}
           >
-            <p style={{ ...text.secondary, color: "#ffffff", margin: "4px 0 16px 0" }}>
+            <p style={{ ...text.secondary, color: colors.textPrimary, margin: "4px 0 16px 0" }}>
               Your responses are captured in your weekly insights and can be shared.
             </p>
 
@@ -378,7 +378,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                       border: `1px solid ${colors.borderDefault}`,
                       padding: space[4], textAlign: "center",
                     }}>
-                      <p style={{ ...text.secondary, color: "#ffffff", margin: 0 }}>
+                      <p style={{ ...text.secondary, color: colors.textPrimary, margin: 0 }}>
                         {modalityFilter !== "all"
                           ? `No ${modalityFilter} exercises completed yet.`
                           : "No exercises completed yet."}
@@ -399,7 +399,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                       return (
                         <motion.div
                           key={ex.id}
-                          whileHover={{ y: -3, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: "rgba(224, 149, 133, 0.2)" }}
+                          whileHover={{ y: -3, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: colors.coralWash }}
                           transition={{ type: "spring", stiffness: 400, damping: 25 }}
                           style={{
                             backgroundColor: colors.bgSurface,
@@ -442,7 +442,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                   {tStyle.label}
                                 </span>
                                 {ex.day_number && (
-                                  <span style={{ fontSize: 10, color: "#ffffff", fontFamily: body }}>
+                                  <span style={{ fontSize: 10, color: colors.textPrimary, fontFamily: body }}>
                                     Day {ex.day_number}
                                   </span>
                                 )}
@@ -477,7 +477,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                         return (
                                           <p key={li} style={{
                                             ...text.body,
-                                            color: isQuestion ? "#ffffff" : "rgba(255,255,255,0.65)",
+                                            color: isQuestion ? colors.textPrimary : "rgba(255,255,255,0.65)",
                                             fontWeight: isQuestion ? 500 : 400,
                                             margin: 0,
                                           }}>
@@ -547,7 +547,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                       border: `1px solid ${colors.borderDefault}`,
                       padding: space[4], textAlign: "center",
                     }}>
-                      <p style={{ ...text.secondary, color: "#ffffff", margin: "0 0 4px 0" }}>
+                      <p style={{ ...text.secondary, color: colors.textPrimary, margin: "0 0 4px 0" }}>
                         No parked exercises.
                       </p>
                       <p style={{ fontSize: 12, color: colors.borderDefault, margin: 0, fontFamily: body }}>
@@ -556,7 +556,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                     </div>
                   ) : (
                     <>
-                      <p style={{ fontSize: 12, color: "#ffffff", margin: "0 0 4px 0", fontFamily: body }}>
+                      <p style={{ fontSize: 12, color: colors.textPrimary, margin: "0 0 4px 0", fontFamily: body }}>
                         Coaching plan exercises from past days that weren&apos;t completed.
                       </p>
                       {parkedExercises.map((ex) => {
@@ -565,7 +565,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                         return (
                           <motion.div
                             key={parkedKey}
-                            whileHover={!isExpParked ? { y: -3, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: "rgba(224, 149, 133, 0.2)" } : {}}
+                            whileHover={!isExpParked ? { y: -3, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: colors.coralWash } : {}}
                             transition={{ type: "spring", stiffness: 400, damping: 25 }}
                             style={{
                               backgroundColor: colors.bgSurface,
@@ -610,14 +610,14 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                   }}>
                                     Parked
                                   </span>
-                                  <span style={{ fontSize: 10, color: "#ffffff", fontFamily: body }}>
+                                  <span style={{ fontSize: 10, color: colors.textPrimary, fontFamily: body }}>
                                     Day {ex.day_number}: {ex.day_title}
                                   </span>
                                 </div>
                               </div>
                               <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
                                 {ex.duration_min && (
-                                  <span style={{ fontSize: 10, color: "#ffffff", fontFamily: display, fontWeight: 500 }}>
+                                  <span style={{ fontSize: 10, color: colors.textPrimary, fontFamily: display, fontWeight: 500 }}>
                                     ~{ex.duration_min}min
                                   </span>
                                 )}

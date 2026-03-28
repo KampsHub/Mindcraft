@@ -39,7 +39,7 @@ export default function WeekProgressTracker({
           style={{
             fontSize: 11,
             fontWeight: 700,
-            color: "#ffffff",
+            color: colors.textPrimary,
             textTransform: "uppercase",
             letterSpacing: "0.08em",
             fontFamily: display,
@@ -50,7 +50,7 @@ export default function WeekProgressTracker({
         <span
           style={{
             fontSize: 11,
-            color: "#ffffff",
+            color: colors.textPrimary,
             fontFamily: display,
             fontWeight: 500,
             opacity: 0.7,

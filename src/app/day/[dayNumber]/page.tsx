@@ -29,7 +29,7 @@ function DailyFlowPage() {
   if (s.loading) {
     return (
       <PageShell>
-        <p style={{ color: "#ffffff", fontFamily: body }}>Loading your session...</p>
+        <p style={{ color: colors.textPrimary, fontFamily: body }}>Loading your session...</p>
       </PageShell>
     );
   }
@@ -44,7 +44,7 @@ function DailyFlowPage() {
           }}>
             Day not available
           </h1>
-          <p style={{ fontSize: 16, color: "#ffffff", lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
+          <p style={{ fontSize: 16, color: colors.textPrimary, lineHeight: 1.6, marginBottom: 24, fontFamily: body }}>
             This day isn&apos;t available yet. Make sure you have an active program enrollment.
           </p>
           <motion.button
@@ -263,7 +263,7 @@ function DailyFlowPage() {
                 {s.dayNumber === 30 ? "Program Complete!" : `Week ${Math.ceil(s.dayNumber / 7)} Complete`}
               </h2>
               <p style={{
-                fontSize: 16, color: "#ffffff", margin: "0 0 24px 0",
+                fontSize: 16, color: colors.textPrimary, margin: "0 0 24px 0",
                 fontFamily: body, lineHeight: 1.6,
               }}>
                 {s.dayNumber === 30
@@ -272,7 +272,7 @@ function DailyFlowPage() {
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <motion.button
-                  whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(224, 149, 133, 0.4)" }}
+                  whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(196, 148, 58, 0.4)" }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => s.router.push("/weekly-review")}
                   style={{
@@ -290,7 +290,7 @@ function DailyFlowPage() {
                   onClick={() => s.router.push("/dashboard")}
                   style={{
                     width: "100%", padding: "12px 24px", fontSize: 14, fontWeight: 600,
-                    color: "#ffffff", backgroundColor: "transparent",
+                    color: colors.textPrimary, backgroundColor: "transparent",
                     border: `1px solid ${colors.borderDefault}`,
                     borderRadius: 100, cursor: "pointer", fontFamily: display,
                   }}

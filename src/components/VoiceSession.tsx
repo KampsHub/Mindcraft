@@ -135,7 +135,7 @@ export default function VoiceSession({ enrollmentId, onTranscript }: VoiceSessio
           backgroundColor: colors.coral,
           animation: "pulse 1.5s ease-in-out infinite",
         }} />
-        <span style={{ fontFamily: body, fontSize: 14, color: "#ffffff" }}>
+        <span style={{ fontFamily: body, fontSize: 14, color: colors.textPrimary }}>
           Connecting to voice session...
         </span>
       </div>
@@ -147,9 +147,9 @@ export default function VoiceSession({ enrollmentId, onTranscript }: VoiceSessio
       <div style={{
         padding: "14px 20px", borderRadius: 14,
         backgroundColor: colors.bgSurface,
-        border: `1px solid rgba(248, 113, 113, 0.3)`,
+        border: `1px solid ${colors.errorWash}`,
       }}>
-        <p style={{ fontFamily: body, fontSize: 14, color: "#f87171", margin: "0 0 8px 0" }}>
+        <p style={{ fontFamily: body, fontSize: 14, color: colors.error, margin: "0 0 8px 0" }}>
           Voice connection failed. Check your microphone permissions.
         </p>
         <button
@@ -157,7 +157,7 @@ export default function VoiceSession({ enrollmentId, onTranscript }: VoiceSessio
           style={{
             fontFamily: display, fontSize: 13, fontWeight: 600,
             padding: "8px 16px", borderRadius: 100,
-            backgroundColor: colors.bgElevated, color: "#ffffff",
+            backgroundColor: colors.bgElevated, color: colors.textPrimary,
             border: `1px solid ${colors.borderDefault}`, cursor: "pointer",
           }}
         >
@@ -172,8 +172,8 @@ export default function VoiceSession({ enrollmentId, onTranscript }: VoiceSessio
     <div style={{
       padding: "20px", borderRadius: 14,
       backgroundColor: colors.bgSurface,
-      border: `1.5px solid rgba(224, 149, 133, 0.4)`,
-      background: `linear-gradient(135deg, ${colors.bgSurface} 0%, rgba(224, 149, 133, 0.08) 100%)`,
+      border: `1.5px solid ${colors.coral}66`,
+      background: `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.coralWash} 100%)`,
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -182,7 +182,7 @@ export default function VoiceSession({ enrollmentId, onTranscript }: VoiceSessio
             backgroundColor: "#4ade80",
             boxShadow: "0 0 8px rgba(74, 222, 128, 0.5)",
           }} />
-          <span style={{ fontFamily: display, fontSize: 13, fontWeight: 600, color: "#ffffff", letterSpacing: "0.02em" }}>
+          <span style={{ fontFamily: display, fontSize: 13, fontWeight: 600, color: colors.textPrimary, letterSpacing: "0.02em" }}>
             LIVE — {formatTime(elapsed)}
           </span>
         </div>
@@ -227,9 +227,9 @@ export default function VoiceSession({ enrollmentId, onTranscript }: VoiceSessio
             flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
             fontFamily: display, fontSize: 13, fontWeight: 600,
             padding: "10px 16px", borderRadius: 100,
-            backgroundColor: muted ? "rgba(248, 113, 113, 0.15)" : colors.bgElevated,
-            color: muted ? "#f87171" : "#ffffff",
-            border: `1px solid ${muted ? "rgba(248, 113, 113, 0.3)" : colors.borderDefault}`,
+            backgroundColor: muted ? colors.errorWash : colors.bgElevated,
+            color: muted ? colors.error : colors.textPrimary,
+            border: `1px solid ${muted ? colors.errorWash : colors.borderDefault}`,
             cursor: "pointer",
           }}
         >

@@ -109,7 +109,7 @@ function EnneagramWelcome() {
             style={{
               fontFamily: display, fontSize: 14, fontWeight: 600,
               padding: "12px 28px", borderRadius: 8,
-              backgroundColor: colors.coral, color: "#ffffff",
+              backgroundColor: colors.coral, color: colors.textPrimary,
               border: "none", cursor: "pointer",
             }}
           >
@@ -141,7 +141,7 @@ function EnneagramWelcome() {
             fontFamily: body, fontSize: 10, fontWeight: 700,
             letterSpacing: 1.5, textTransform: "uppercase" as const,
             padding: "6px 16px", borderRadius: 6,
-            backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
+            backgroundColor: colors.coralWash, color: colors.coral,
             marginBottom: 20,
           }}>
             ✓ Enneagram Assessment
@@ -176,7 +176,7 @@ function EnneagramWelcome() {
             style={{
               fontFamily: display, fontSize: 15, fontWeight: 600,
               padding: "14px 36px", borderRadius: 8,
-              backgroundColor: colors.coral, color: "#ffffff",
+              backgroundColor: colors.coral, color: colors.textPrimary,
               border: "none", cursor: "pointer",
               transition: "all 0.2s",
             }}

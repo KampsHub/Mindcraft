@@ -117,7 +117,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   margin: "0 auto 20px",
                 }}>
-                  <span style={{ color: "#fff", fontSize: 26 }}>✓</span>
+                  <span style={{ color: colors.textPrimary, fontSize: 26 }}>✓</span>
                 </div>
                 <h3 style={{
                   fontFamily: display, fontSize: 20, fontWeight: 700,
@@ -225,7 +225,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <div style={{ marginTop: 20, display: "flex", justifyContent: "flex-end" }}>
                   <motion.button
                     whileHover={issueType && message.trim() && status !== "submitting"
-                      ? { scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }
+                      ? { scale: 1.04, boxShadow: `0 8px 30px ${colors.coralWash}` }
                       : {}}
                     whileTap={issueType && message.trim() && status !== "submitting"
                       ? { scale: 0.97 }

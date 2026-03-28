@@ -102,7 +102,7 @@ export default function ContactPage() {
                 fontFamily: display,
                 fontSize: 14,
                 fontWeight: 600,
-                color: "#ffffff",
+                color: colors.textPrimary,
                 backgroundColor: colors.coral,
                 padding: "12px 28px",
                 borderRadius: 8,
@@ -208,7 +208,7 @@ export default function ContactPage() {
               </div>
 
               {error && (
-                <p style={{ fontSize: 14, color: "#ef4444", margin: 0, fontFamily: body }}>
+                <p style={{ fontSize: 14, color: colors.error, margin: 0, fontFamily: body }}>
                   {error}
                 </p>
               )}
@@ -220,7 +220,7 @@ export default function ContactPage() {
                   fontFamily: display,
                   fontSize: 15,
                   fontWeight: 700,
-                  color: "#ffffff",
+                  color: colors.textPrimary,
                   backgroundColor: colors.coral,
                   border: "none",
                   borderRadius: 8,

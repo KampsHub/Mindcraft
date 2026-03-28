@@ -176,7 +176,7 @@ export default function ApplyPage() {
               Meet the team
             </a>
           </p>
-          <a href="/" style={{ fontFamily: display, fontSize: 15, fontWeight: 600, padding: "14px 36px", borderRadius: 8, backgroundColor: colors.coral, color: "#ffffff", textDecoration: "none" }}>
+          <a href="/" style={{ fontFamily: display, fontSize: 15, fontWeight: 600, padding: "14px 36px", borderRadius: 8, backgroundColor: colors.coral, color: colors.textPrimary, textDecoration: "none" }}>
             Back to Mindcraft
           </a>
         </motion.div>
@@ -262,7 +262,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
         style={{
           fontFamily: display, fontSize: 16, fontWeight: 600,
           padding: "16px 48px", borderRadius: 8,
-          backgroundColor: colors.coral, color: "#ffffff",
+          backgroundColor: colors.coral, color: colors.textPrimary,
           border: "none", cursor: "pointer",
         }}
       >
@@ -314,7 +314,7 @@ function AboutYou({ form, set, onNext }: { form: FormData; set: <K extends keyof
           fontFamily: display, fontSize: 15, fontWeight: 600,
           padding: "14px 36px", borderRadius: 8,
           backgroundColor: canSubmit ? colors.coral : colors.bgElevated,
-          color: canSubmit ? "#ffffff" : colors.textMuted,
+          color: canSubmit ? colors.textPrimary : colors.textMuted,
           border: "none", cursor: canSubmit ? "pointer" : "default",
           transition: "all 0.2s",
         }}
@@ -384,7 +384,7 @@ function SelectScreen({ question, subtext, options, value, onSelect, allowOtherT
                         fontFamily: display, fontSize: 14, fontWeight: 600,
                         padding: "14px 24px", borderRadius: 10,
                         backgroundColor: otherText.trim() ? colors.coral : colors.bgElevated,
-                        color: otherText.trim() ? "#ffffff" : colors.textMuted,
+                        color: otherText.trim() ? colors.textPrimary : colors.textMuted,
                         border: "none", cursor: otherText.trim() ? "pointer" : "default",
                       }}
                     >
@@ -458,7 +458,7 @@ function TextareaScreen({ question, subtext, value, onChange, onNext, required, 
             fontFamily: display, fontSize: 15, fontWeight: 600,
             padding: "14px 36px", borderRadius: 8,
             backgroundColor: canSubmit && !disabled ? colors.coral : colors.bgElevated,
-            color: canSubmit && !disabled ? "#ffffff" : colors.textMuted,
+            color: canSubmit && !disabled ? colors.textPrimary : colors.textMuted,
             border: "none", cursor: canSubmit && !disabled ? "pointer" : "default",
             transition: "all 0.2s",
           }}
@@ -466,7 +466,7 @@ function TextareaScreen({ question, subtext, value, onChange, onNext, required, 
           {nextLabel || "Continue"}
         </button>
         {error && (
-          <p style={{ fontFamily: body, fontSize: 14, color: "#e25c5c", marginTop: 12, lineHeight: 1.5 }}>
+          <p style={{ fontFamily: body, fontSize: 14, color: colors.error, marginTop: 12, lineHeight: 1.5 }}>
             {error}
           </p>
         )}

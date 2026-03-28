@@ -265,7 +265,7 @@ export default function MyAccountPage() {
                   onboarding: { label: "Onboarding", bg: colors.coralWash, color: colors.coral },
                   awaiting_goals: { label: "Awaiting goals", bg: colors.warningWash, color: colors.warning },
                   pre_start: { label: "Not started", bg: colors.bgElevated, color: colors.textMuted },
-                  completed: { label: "Completed", bg: "rgba(224, 149, 133, 0.12)", color: colors.coral },
+                  completed: { label: "Completed", bg: colors.coralWash, color: colors.coral },
                   paused: { label: "Paused", bg: colors.bgElevated, color: colors.textMuted },
                 };
                 const s = statusMap[enr.status] || { label: enr.status, bg: colors.bgElevated, color: colors.textMuted };
@@ -324,7 +324,7 @@ export default function MyAccountPage() {
                   {c.privacy.toggles.aiProcessing.title}
                   <span style={{
                     fontSize: 11, padding: "3px 10px", marginLeft: 8,
-                    backgroundColor: "rgba(245,158,11,0.12)", color: "#fbbf24",
+                    backgroundColor: colors.warningWash, color: colors.warning,
                     borderRadius: 100, verticalAlign: "middle", fontWeight: 600,
                   }}>
                     {c.privacy.toggles.aiProcessing.badge}
@@ -347,7 +347,7 @@ export default function MyAccountPage() {
                   {c.privacy.toggles.aggregateAnalytics.title}
                   <span style={{
                     fontSize: 11, padding: "3px 10px", marginLeft: 8,
-                    backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
+                    backgroundColor: colors.coralWash, color: colors.coral,
                     borderRadius: 100, verticalAlign: "middle", fontWeight: 600,
                   }}>
                     {c.privacy.toggles.aggregateAnalytics.badge}

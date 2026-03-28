@@ -950,7 +950,7 @@ export default function IntakePage() {
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               style={{
                 width: 72, height: 72, borderRadius: "50%",
-                background: `linear-gradient(135deg, ${colors.coralWash} 0%, ${"rgba(224, 149, 133, 0.12)"} 100%)`,
+                background: `linear-gradient(135deg, ${colors.coralWash} 0%, ${colors.coralWash} 100%)`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 margin: "0 auto 28px", fontSize: 30, color: colors.coral,
               }}

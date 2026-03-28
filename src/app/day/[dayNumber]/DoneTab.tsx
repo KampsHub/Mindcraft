@@ -87,7 +87,7 @@ export default function DoneTab({
               margin: "0 auto 18px auto",
             }}
           />
-          <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
+          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
             Generating your daily summary...
           </p>
         </div>
@@ -117,7 +117,7 @@ export default function DoneTab({
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 4 }}>
               <FlagButton outputType="summary" dailySessionId={session?.id} />
             </div>
-            <p style={{ ...textPreset.body, color: "#ffffff", margin: `0 0 ${space[6]}px 0` }}>
+            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: `0 0 ${space[6]}px 0` }}>
               {summaryResult.summary}
             </p>
 
@@ -128,7 +128,7 @@ export default function DoneTab({
                 borderRadius: radii.md,
                 borderLeft: `3px solid ${colors.coral}`,
               }}>
-                <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
+                <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
                   <span style={{ fontWeight: 700 }}>Pattern forming:</span> {summaryResult.pattern_note}
                 </p>
               </div>
@@ -149,13 +149,13 @@ export default function DoneTab({
               }}
             >
               <p style={{
-                ...textPreset.caption, color: "#ffffff",
+                ...textPreset.caption, color: colors.textPrimary,
                 margin: "0 0 12px 0",
               }}>
                 Exercise Insights
               </p>
               {(summaryResult.exercise_insights || []).map((ei, i) => (
-                <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 10px 0" }}>
+                <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 10px 0" }}>
                   <span style={{ fontWeight: 600, color: colors.textPrimary }}>{ei.exercise_name}:</span> {ei.insight}
                 </p>
               ))}
@@ -176,7 +176,7 @@ export default function DoneTab({
               }}
             >
               <p style={{
-                ...textPreset.caption, color: "#ffffff",
+                ...textPreset.caption, color: colors.textPrimary,
                 margin: "0 0 12px 0",
               }}>
                 Goal Progress
@@ -186,7 +186,7 @@ export default function DoneTab({
                   <p style={{ ...textPreset.secondary, fontWeight: 600, color: colors.textPrimary, margin: 0 }}>
                     {gp.goal_text}
                   </p>
-                  <p style={{ ...textPreset.body, color: "#ffffff", margin: "3px 0 0 0" }}>
+                  <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "3px 0 0 0" }}>
                     {gp.observation}
                   </p>
                 </div>
@@ -218,10 +218,10 @@ export default function DoneTab({
             <p style={{ ...textPreset.heading, color: colors.textPrimary, margin: "0 0 4px 0" }}>
               Day {dayNumber + 1}: {summaryResult.tomorrow_preview.title}
             </p>
-            <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 8px 0" }}>
+            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 8px 0" }}>
               {summaryResult.tomorrow_preview.territory}
             </p>
-            <p style={{ ...textPreset.body, color: "#ffffff", margin: 0, fontStyle: "italic" }}>
+            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0, fontStyle: "italic" }}>
               {summaryResult.tomorrow_preview.connection}
             </p>
           </motion.div>
@@ -252,7 +252,7 @@ export default function DoneTab({
               <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
                 {summaryResult.questions_to_sit_with.map((q, i) => (
                   <p key={i} style={{
-                    ...textPreset.body, color: "#ffffff", margin: 0,
+                    ...textPreset.body, color: colors.textPrimary, margin: 0,
                     fontStyle: "italic",
                   }}>
                     {q}
@@ -314,7 +314,7 @@ export default function DoneTab({
                       }}>
                         {isSelected ? "\u2713" : ""}
                       </div>
-                      <span style={{ ...textPreset.secondary, color: "#ffffff" }}>
+                      <span style={{ ...textPreset.secondary, color: colors.textPrimary }}>
                         {action}
                       </span>
                     </button>
@@ -369,7 +369,7 @@ export default function DoneTab({
                     Committed
                   </p>
                   {summaryResult.committed_actions.map((a, i) => (
-                    <p key={i} style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 4px 0" }}>
+                    <p key={i} style={{ ...textPreset.secondary, color: colors.textPrimary, margin: "0 0 4px 0" }}>
                       {"\u2713"} {a}
                     </p>
                   ))}

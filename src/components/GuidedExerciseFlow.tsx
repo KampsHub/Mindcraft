@@ -524,7 +524,7 @@ export default function GuidedExerciseFlow({
           }}
         >
           <p style={{
-            fontSize: 15, color: "#f87171", fontFamily: body, margin: 0,
+            fontSize: 15, color: colors.error, fontFamily: body, margin: 0,
           }}>
             {errorMsg || "Something went wrong."}
           </p>
@@ -534,7 +534,7 @@ export default function GuidedExerciseFlow({
               padding: "10px 24px", borderRadius: 100,
               backgroundColor: "transparent",
               border: `1px solid ${colors.borderDefault}`,
-              color: "#ffffff", fontSize: 14,
+              color: colors.textPrimary, fontSize: 14,
               fontFamily: display, fontWeight: 600,
               cursor: "pointer", marginTop: 8,
             }}
@@ -572,7 +572,7 @@ export default function GuidedExerciseFlow({
             </svg>
           </motion.div>
           <p style={{
-            fontSize: 16, color: "#ffffff",
+            fontSize: 16, color: colors.textPrimary,
             fontFamily: display, fontWeight: 600,
           }}>
             Session saved
@@ -583,7 +583,7 @@ export default function GuidedExerciseFlow({
               padding: "10px 24px", borderRadius: 100,
               backgroundColor: "transparent",
               border: `1px solid ${colors.borderDefault}`,
-              color: "#ffffff", fontSize: 14,
+              color: colors.textPrimary, fontSize: 14,
               fontFamily: display, cursor: "pointer",
               marginTop: 8,
             }}

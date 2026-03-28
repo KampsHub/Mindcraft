@@ -86,12 +86,12 @@ export default function VoiceToText({ onTranscript }: VoiceToTextProps) {
       padding: "20px",
       borderRadius: 14,
       backgroundColor: colors.bgSurface,
-      border: `1px solid ${listening ? "rgba(224, 149, 133, 0.4)" : colors.borderDefault}`,
+      border: `1px solid ${listening ? colors.coralWash : colors.borderDefault}`,
       textAlign: "center",
     }}>
       <p style={{
         fontFamily: display, fontSize: 15, fontWeight: 600,
-        color: "#ffffff", margin: "0 0 6px 0",
+        color: colors.textPrimary, margin: "0 0 6px 0",
       }}>
         {listening ? "Listening..." : "Speak your entry"}
       </p>
@@ -106,10 +106,10 @@ export default function VoiceToText({ onTranscript }: VoiceToTextProps) {
         onClick={listening ? stopListening : startListening}
         style={{
           width: 64, height: 64, borderRadius: "50%",
-          backgroundColor: listening ? "#f87171" : colors.coral,
+          backgroundColor: listening ? colors.error : colors.coral,
           border: "none", cursor: "pointer",
           display: "inline-flex", alignItems: "center", justifyContent: "center",
-          boxShadow: listening ? "0 0 20px rgba(248, 113, 113, 0.4)" : "0 4px 16px rgba(224, 149, 133, 0.3)",
+          boxShadow: listening ? `0 0 20px ${colors.errorWash}` : `0 4px 16px ${colors.coralWash}`,
           transition: "all 0.2s",
         }}
       >
@@ -137,7 +137,7 @@ export default function VoiceToText({ onTranscript }: VoiceToTextProps) {
 
       {error && (
         <p style={{
-          fontFamily: body, fontSize: 13, color: "#f87171",
+          fontFamily: body, fontSize: 13, color: colors.error,
           marginTop: 12,
         }}>
           {error}

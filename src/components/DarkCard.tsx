@@ -13,9 +13,9 @@ interface DarkCardProps {
 }
 
 const hoverMap = {
-  subtle: { y: -2, borderColor: "rgba(224, 149, 133, 0.2)" },
-  medium: { y: -4, borderColor: "rgba(224, 149, 133, 0.25)", boxShadow: "0 8px 30px rgba(0,0,0,0.12)" },
-  lift: { y: -6, borderColor: "rgba(224, 149, 133, 0.25)", boxShadow: "0 12px 40px rgba(0,0,0,0.15)" },
+  subtle: { y: -2, borderColor: colors.coralWash },
+  medium: { y: -4, borderColor: colors.coralWash, boxShadow: "0 8px 30px rgba(0,0,0,0.12)" },
+  lift: { y: -6, borderColor: colors.coralWash, boxShadow: "0 12px 40px rgba(0,0,0,0.15)" },
 };
 
 export default function DarkCard({

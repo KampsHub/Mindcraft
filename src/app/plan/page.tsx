@@ -190,7 +190,7 @@ export default function PlanPage() {
       {/* Summary */}
       <FadeIn preset="slide-up" delay={0.08} triggerOnMount>
         <motion.div
-          whileHover={{ y: -2, borderColor: "rgba(224, 149, 133, 0.2)" }}
+          whileHover={{ y: -2, borderColor: colors.coralWash }}
           transition={{ type: "spring", stiffness: 300, damping: 22 }}
           style={{
             backgroundColor: colors.bgSurface, borderRadius: 14,
@@ -221,7 +221,7 @@ export default function PlanPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.14 + i * 0.06, type: "spring", stiffness: 300, damping: 25 }}
-              whileHover={{ y: -2, borderColor: "rgba(224, 149, 133, 0.2)" }}
+              whileHover={{ y: -2, borderColor: colors.coralWash }}
               style={{
                 backgroundColor: colors.bgSurface, borderRadius: 14,
                 border: `1px solid ${colors.borderDefault}`, padding: 20,
@@ -257,7 +257,7 @@ export default function PlanPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + i * 0.06, type: "spring", stiffness: 300, damping: 25 }}
-              whileHover={{ y: -2, borderColor: "rgba(224, 149, 133, 0.2)" }}
+              whileHover={{ y: -2, borderColor: colors.coralWash }}
               style={{
                 backgroundColor: colors.bgSurface, borderRadius: 14,
                 border: `1px solid ${colors.borderDefault}`, padding: 20,
@@ -299,7 +299,7 @@ export default function PlanPage() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.26 + i * 0.08, type: "spring", stiffness: 300, damping: 25 }}
-              whileHover={{ y: -2, borderColor: "rgba(224, 149, 133, 0.25)" }}
+              whileHover={{ y: -2, borderColor: colors.coralWash }}
               style={{
                 backgroundColor: colors.bgSurface, borderRadius: 14,
                 border: `1px solid ${colors.borderDefault}`, padding: 20,

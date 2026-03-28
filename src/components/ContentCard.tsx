@@ -31,7 +31,7 @@ const variantStyles = {
     borderRadius: 0,
   },
   highlight: {
-    backgroundColor: "rgba(224, 149, 133, 0.06)",
+    backgroundColor: colors.coralWash,
     border: "none",
     borderLeft: `3px solid ${colors.coral}`,
     padding: "20px 24px",

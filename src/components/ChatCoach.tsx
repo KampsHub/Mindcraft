@@ -131,10 +131,10 @@ export default function ChatCoach({
                 padding: "12px 16px",
                 borderRadius: msg.role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                 backgroundColor: msg.role === "user"
-                  ? "rgba(224, 149, 133, 0.15)"
+                  ? colors.coralWash
                   : "rgba(255, 255, 255, 0.06)",
                 border: msg.role === "user"
-                  ? `1px solid rgba(224, 149, 133, 0.25)`
+                  ? `1px solid ${colors.coralWash}`
                   : `1px solid rgba(255, 255, 255, 0.08)`,
               }}>
                 {msg.role === "coach" && (
@@ -147,7 +147,7 @@ export default function ChatCoach({
                   </p>
                 )}
                 <p style={{
-                  fontFamily: body, fontSize: 15, color: "#ffffff",
+                  fontFamily: body, fontSize: 15, color: colors.textPrimary,
                   margin: 0, lineHeight: 1.6, whiteSpace: "pre-wrap",
                 }}>
                   {msg.content}
@@ -206,7 +206,7 @@ export default function ChatCoach({
             padding: "10px 14px", borderRadius: 12,
             backgroundColor: "rgba(255, 255, 255, 0.06)",
             border: `1px solid ${colors.borderDefault}`,
-            color: "#ffffff", resize: "none",
+            color: colors.textPrimary, resize: "none",
             outline: "none", minHeight: 44,
           }}
         />
@@ -243,17 +243,17 @@ export default function ChatCoach({
               backgroundColor: colors.coral,
               color: colors.bgDeep, border: "none",
               cursor: "pointer", letterSpacing: "0.01em",
-              boxShadow: "0 2px 12px rgba(196, 148, 58, 0.25)",
+              boxShadow: `0 2px 12px ${colors.coralWash}`,
               transition: "transform 0.15s, box-shadow 0.15s",
               width: "100%", maxWidth: 320,
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-1px)";
-              e.currentTarget.style.boxShadow = "0 4px 16px rgba(196, 148, 58, 0.35)";
+              e.currentTarget.style.boxShadow = `0 4px 16px ${colors.coralWash}`;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 2px 12px rgba(196, 148, 58, 0.25)";
+              e.currentTarget.style.boxShadow = `0 2px 12px ${colors.coralWash}`;
             }}
           >
             {completeLabel}

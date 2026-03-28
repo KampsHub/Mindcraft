@@ -73,7 +73,7 @@ export default function LoginPage() {
         {successMessage && (
           <div style={{
             padding: 12, backgroundColor: colors.coralWash,
-            border: `1px solid rgba(224, 149, 133, 0.25)`, borderRadius: 8,
+            border: `1px solid ${colors.coralWash}`, borderRadius: 8,
             color: colors.coral, fontSize: 13, marginBottom: 16, textAlign: "center",
           }}>
             {successMessage}
@@ -141,7 +141,7 @@ export default function LoginPage() {
           {error && (
             <div style={{
               padding: 12, backgroundColor: colors.errorWash,
-              border: "1px solid #fecaca", borderRadius: 8,
+              border: `1px solid ${colors.errorWash}`, borderRadius: 8,
               color: colors.error, fontSize: 13, marginBottom: 16,
             }}>
               {error}

@@ -9,9 +9,9 @@ const display = fonts.display;
 const body = fonts.bodyAlt;
 
 const PROGRAM_ACCENTS: Record<string, { border: string; wash: string; color: string }> = {
-  jetstream: { border: "rgba(224, 149, 133, 0.2)", wash: colors.coralWash, color: colors.coral },
-  parachute: { border: "rgba(224, 149, 133, 0.2)", wash: colors.coralWash, color: colors.coral },
-  basecamp: { border: "rgba(224, 149, 133, 0.2)", wash: colors.coralWash, color: colors.coralLight },
+  jetstream: { border: colors.coralWash, wash: colors.coralWash, color: colors.coral },
+  parachute: { border: colors.coralWash, wash: colors.coralWash, color: colors.coral },
+  basecamp: { border: colors.coralWash, wash: colors.coralWash, color: colors.coralLight },
 };
 
 function getAccent(slug: string) {
@@ -110,12 +110,12 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
                     <div key={wt.week} style={{ flex: 1 }}>
                       <div style={{
                         height: 3, borderRadius: 2,
-                        backgroundColor: isDone ? colors.coral : isCurrent ? `${colors.coral}88` : "rgba(255,255,255,0.1)",
+                        backgroundColor: isDone ? colors.coral : isCurrent ? `${colors.coral}88` : colors.bgElevated,
                         marginBottom: 6,
                       }} />
                       <p style={{
                         ...text.caption,
-                        color: isCurrent ? colors.coral : isDone ? "#ffffff" : "rgba(255,255,255,0.3)",
+                        color: isCurrent ? colors.coral : isDone ? colors.textPrimary : colors.textMuted,
                         margin: 0,
                       }}>
                         {wt.name.charAt(0) + wt.name.slice(1).toLowerCase()}
@@ -132,11 +132,11 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
           }}>
             Day {enrollment.current_day}
           </h2>
-          <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
+          <p style={{ ...text.body, color: colors.textPrimary, margin: "0 0 18px 0" }}>
             {todaySessionDone ? "Session complete — nice work." : todaySessionStarted ? "You have an open session." : "Your daily session is ready."}
           </p>
           <motion.button
-            whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }}
+            whileHover={{ scale: 1.04, boxShadow: `0 8px 30px ${colors.coralWash}` }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             onClick={() => onNavigate(`/day/${enrollment.current_day}?enrollment=${enrollment.id}`)}
@@ -159,7 +159,7 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
               <p style={{ ...text.secondary, color: colors.warning, margin: "0 0 4px 0", fontWeight: 600 }}>
                 Goals ready for setup
               </p>
-              <p style={{ ...text.secondary, color: "rgba(255,255,255,0.5)", margin: "0 0 8px 0" }}>
+              <p style={{ ...text.secondary, color: colors.textMuted, margin: "0 0 8px 0" }}>
                 Your coaching goals will shape your exercises and thought prompts.
               </p>
               <motion.button
@@ -247,11 +247,11 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
         }}>
           Ready to begin
         </h2>
-        <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
+        <p style={{ ...text.body, color: colors.textPrimary, margin: "0 0 18px 0" }}>
           Your first three days are onboarding — the exercises double as intake.
         </p>
         <motion.button
-          whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }}
+          whileHover={{ scale: 1.04, boxShadow: `0 8px 30px ${colors.coralWash}` }}
           whileTap={{ scale: 0.97 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           onClick={() => onNavigate(`/day/1?enrollment=${enrollment.id}`)}
@@ -281,11 +281,11 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
           <h2 style={{ ...text.title, color: colors.textPrimary, margin: "0 0 4px 0" }}>
             Program Complete
           </h2>
-          <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
+          <p style={{ ...text.body, color: colors.textPrimary, margin: "0 0 18px 0" }}>
             You finished all 30 days. Your insights and exercises are still here.
           </p>
           <motion.button
-            whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }}
+            whileHover={{ scale: 1.04, boxShadow: `0 8px 30px ${colors.coralWash}` }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             onClick={() => onNavigate("/weekly-review")}
@@ -319,11 +319,11 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
           <h2 style={{ ...text.title, color: colors.textPrimary, margin: "0 0 4px 0" }}>
             Program Paused
           </h2>
-          <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
+          <p style={{ ...text.body, color: colors.textPrimary, margin: "0 0 18px 0" }}>
             You paused on Day {enrollment.current_day}. Ready to pick back up?
           </p>
           <motion.button
-            whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }}
+            whileHover={{ scale: 1.04, boxShadow: `0 8px 30px ${colors.coralWash}` }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             onClick={() => onNavigate(`/day/${enrollment.current_day}?enrollment=${enrollment.id}`)}
@@ -367,13 +367,13 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
       }}>
         {isAwaiting ? "Goals ready for review" : "Continue onboarding"}
       </h2>
-      <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
+      <p style={{ ...text.body, color: colors.textPrimary, margin: "0 0 18px 0" }}>
         {isAwaiting
           ? "Your goals have been generated from your first three days. Review and approve them."
           : "Pick up where you left off in your onboarding sessions."}
       </p>
       <motion.button
-        whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }}
+        whileHover={{ scale: 1.04, boxShadow: `0 8px 30px ${colors.coralWash}` }}
         whileTap={{ scale: 0.97 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
         onClick={() => onNavigate(isAwaiting ? `/goals?enrollment=${enrollment.id}` : `/day/${enrollment.current_day}?enrollment=${enrollment.id}`)}

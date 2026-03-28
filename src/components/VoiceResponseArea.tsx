@@ -188,13 +188,13 @@ export default function VoiceResponseArea({
                   display: "flex", alignItems: "center", justifyContent: "center", gap: space[2],
                   padding: `${space[3]}px ${space[3]}px`,
                   borderRadius: radii.md,
-                  backgroundColor: "rgba(196, 148, 58, 0.08)",
+                  backgroundColor: colors.coralWash,
                   border: "none",
                   cursor: "pointer",
                   transition: "background-color 0.15s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.15)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.08)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.coralWash; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = colors.coralWash; }}
               >
                 <svg width={15} height={15} viewBox="0 0 24 24" fill="none"
                   stroke={colors.coral} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
@@ -254,8 +254,8 @@ export default function VoiceResponseArea({
               display: "flex", alignItems: "center", gap: space[3],
               padding: `${space[3]}px ${space[3]}px`,
               borderRadius: radii.md,
-              backgroundColor: listening ? "rgba(196, 148, 58, 0.06)" : colors.bgInput,
-              border: `1px solid ${listening ? "rgba(196, 148, 58, 0.3)" : colors.borderDefault}`,
+              backgroundColor: listening ? colors.coralWash : colors.bgInput,
+              border: `1px solid ${listening ? colors.coralWash : colors.borderDefault}`,
               transition: "border-color 0.3s, background-color 0.3s",
             }}
           >
@@ -264,9 +264,9 @@ export default function VoiceResponseArea({
               whileTap={{ scale: 0.92 }}
               animate={listening ? {
                 boxShadow: [
-                  "0 0 12px rgba(239, 68, 68, 0.3)",
-                  "0 0 24px rgba(239, 68, 68, 0.6)",
-                  "0 0 12px rgba(239, 68, 68, 0.3)",
+                  `0 0 12px ${colors.errorWash}`,
+                  `0 0 24px ${colors.errorWash}`,
+                  `0 0 12px ${colors.errorWash}`,
                 ],
               } : {}}
               transition={listening ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : {}}
@@ -274,18 +274,18 @@ export default function VoiceResponseArea({
               aria-label={listening ? "Stop recording" : "Start voice recording"}
               style={{
                 width: 44, height: 44, borderRadius: "50%",
-                backgroundColor: listening ? "#ef4444" : colors.coral,
+                backgroundColor: listening ? colors.error : colors.coral,
                 border: "none", cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 flexShrink: 0,
                 boxShadow: listening
-                  ? "0 0 20px rgba(239, 68, 68, 0.5)"
-                  : "0 2px 8px rgba(196, 148, 58, 0.2)",
+                  ? `0 0 20px ${colors.errorWash}`
+                  : `0 2px 8px ${colors.coralWash}`,
                 transition: "background-color 0.2s",
               }}
             >
               {listening ? (
-                <svg width={18} height={18} viewBox="0 0 24 24" fill="#ffffff">
+                <svg width={18} height={18} viewBox="0 0 24 24" fill={colors.textPrimary}>
                   <rect x="6" y="6" width="12" height="12" rx="2" />
                 </svg>
               ) : (
@@ -319,14 +319,14 @@ export default function VoiceResponseArea({
                         }}
                         style={{
                           width: 2.5, borderRadius: 2,
-                          backgroundColor: "#ef4444",
+                          backgroundColor: colors.error,
                           opacity: 1.0,
                         }}
                       />
                     ))}
                   </div>
                   <span style={{
-                    ...textScale.secondary, color: "#ef4444", fontWeight: 600,
+                    ...textScale.secondary, color: colors.error, fontWeight: 600,
                   }}>
                     Recording... tap to stop
                   </span>
@@ -394,7 +394,7 @@ export default function VoiceResponseArea({
                   fontSize: textScale.body.fontSize, lineHeight: 1.65,
                   backgroundColor: "transparent",
                   border: "none",
-                  color: "#ffffff",
+                  color: colors.textPrimary,
                   resize: "none", outline: "none",
                   fontFamily: body, boxSizing: "border-box",
                   minHeight: 80,
@@ -413,7 +413,7 @@ export default function VoiceResponseArea({
                     display: "flex", alignItems: "center", justifyContent: "center",
                     transition: "background-color 0.2s",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(196, 148, 58, 0.2)"; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.coralWash; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = colors.coralWash; }}
                   title="Switch to voice"
                 >

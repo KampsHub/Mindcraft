@@ -641,7 +641,7 @@ function WeeklyReviewPage() {
     return (
       <PageShell showBgImage programSlug={enrollment?.programs?.slug}>
         <div style={{ textAlign: "center", paddingTop: 80 }}>
-          <p style={{ color: "#ffffff" }}>Loading review...</p>
+          <p style={{ color: colors.textPrimary }}>Loading review...</p>
         </div>
       </PageShell>
     );
@@ -655,7 +655,7 @@ function WeeklyReviewPage() {
           <h1 style={{ fontFamily: display, fontSize: 28, fontWeight: 700, color: colors.textPrimary, marginBottom: 12 }}>
             No active program
           </h1>
-          <p style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: colors.textPrimary, lineHeight: 1.6 }}>
             Start a program to access your weekly review.
           </p>
           <PillButton onClick={() => router.push("/#programs")} style={{ marginTop: 20 }}>
@@ -839,7 +839,7 @@ function WeeklyReviewPage() {
                       What you came in with
                     </p>
                     {(enrollment.pre_start_data as Record<string, string>)?.goal && (
-                      <p style={{ fontSize: 14, color: "#ffffff", margin: "0 0 8px 0", fontFamily: body, lineHeight: 1.5, fontStyle: "italic" }}>
+                      <p style={{ fontSize: 14, color: colors.textPrimary, margin: "0 0 8px 0", fontFamily: body, lineHeight: 1.5, fontStyle: "italic" }}>
                         &ldquo;{(enrollment.pre_start_data as Record<string, string>).goal}&rdquo;
                       </p>
                     )}
@@ -855,7 +855,7 @@ function WeeklyReviewPage() {
                     {activeGoals.map((g) => (
                       <div key={g.id} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 6 }}>
                         <span style={{ color: colors.coral, fontSize: 14, marginTop: 2 }}>&#x25CF;</span>
-                        <p style={{ fontSize: 14, color: "#ffffff", margin: 0, fontFamily: body, lineHeight: 1.45 }}>
+                        <p style={{ fontSize: 14, color: colors.textPrimary, margin: 0, fontFamily: body, lineHeight: 1.45 }}>
                           {g.goal_text}
                         </p>
                       </div>
@@ -1414,7 +1414,7 @@ function WeeklyReviewPage() {
                                 fontSize: 10, fontFamily: display, fontWeight: 600,
                                 textTransform: "uppercase", letterSpacing: "0.06em",
                                 padding: "2px 8px", borderRadius: 100,
-                                backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
+                                backgroundColor: colors.coralWash, color: colors.coral,
                               }}>
                                 {ex.modality}
                               </span>
@@ -1738,7 +1738,7 @@ function WeeklyReviewPage() {
               fontFamily: body, fontSize: 9, fontWeight: 700,
               letterSpacing: 1.5, textTransform: "uppercase",
               padding: "5px 12px", borderRadius: 6,
-              backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
+              backgroundColor: colors.coralWash, color: colors.coral,
               marginBottom: 14,
             }}>
               IEQ9 Enneagram
@@ -1753,7 +1753,7 @@ function WeeklyReviewPage() {
                 </h3>
                 {enneagramData.notes && (
                   <p style={{
-                    fontFamily: body, fontSize: 14, color: "#ffffff",
+                    fontFamily: body, fontSize: 14, color: colors.textPrimary,
                     lineHeight: 1.6, margin: "0 0 18px 0",
                   }}>
                     {enneagramData.notes}
@@ -1774,7 +1774,7 @@ function WeeklyReviewPage() {
                   Your Enneagram
                 </h3>
                 <p style={{
-                  fontFamily: body, fontSize: 14, color: "#ffffff",
+                  fontFamily: body, fontSize: 14, color: colors.textPrimary,
                   lineHeight: 1.6, margin: 0,
                 }}>
                   Your results are being prepared. You&apos;ll see them here once your IEQ9 debrief is complete.

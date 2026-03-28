@@ -419,7 +419,7 @@ export default function TellTab({
           <textarea
             value={followThrough}
             onChange={(e) => setFollowThrough(e.target.value)}
-            placeholder="Type or tap the mic to speak... (optional)"
+            placeholder="Type or tap the mic to speak..."
             style={{
               width: "100%", minHeight: 60, padding: "12px 48px 12px 12px",
               ...textPreset.body,
@@ -485,17 +485,21 @@ export default function TellTab({
             }}>
               Thought Inspiration
             </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
               {programDay.seed_prompts.map((sp, i) => (
                 <div key={i} style={{
-                  padding: "8px 14px",
+                  padding: `${space[3]}px ${space[4]}px`,
                   backgroundColor: colors.bgElevated,
-                  borderRadius: radii.full,
-                  cursor: "default",
+                  borderRadius: radii.md,
                 }}>
-                  <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.8)", margin: 0 }}>
+                  <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
                     {sp.prompt}
                   </p>
+                  {sp.context && (
+                    <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.45)", margin: `${space[1]}px 0 0 0` }}>
+                      {sp.context}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

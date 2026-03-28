@@ -299,7 +299,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{ overflow: "hidden" }}
           >
-            <p style={{ ...text.secondary, color: colors.textMuted, margin: "4px 0 16px 0" }}>
+            <p style={{ ...text.secondary, color: "#ffffff", margin: "4px 0 16px 0" }}>
               Your responses are captured in your weekly insights and can be shared.
             </p>
 

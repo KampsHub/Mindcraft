@@ -216,7 +216,7 @@ export default function DoTab({
               onSend={async (message, history) => {
                 const conversationContext = history
                   .slice(-6)
-                  .map((m) => `${m.role === "user" ? "User" : "Coach"}: ${m.content}`)
+                  .map((m) => `${m.role === "user" ? "User" : "Coach Assistant"}: ${m.content}`)
                   .join("\n\n");
                 const fullEntry = `## Conversation so far\n${conversationContext}\n\n## Latest message\n${message}`;
 
@@ -449,12 +449,14 @@ export default function DoTab({
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => {
-                setStateAnalysis(null);
-                setOverflowExercises([]);
-                setCoachingQuestions([]);
-                setReframe(null);
-                setPatternChallenge(null);
-                processJournal();
+                if (window.confirm("This will clear your current analysis and regenerate exercises. Continue?")) {
+                  setStateAnalysis(null);
+                  setOverflowExercises([]);
+                  setCoachingQuestions([]);
+                  setReframe(null);
+                  setPatternChallenge(null);
+                  processJournal();
+                }
               }}
               style={{
                 padding: "10px 20px", fontSize: 14, fontWeight: 600,
@@ -659,7 +661,7 @@ export default function DoTab({
           padding: space[5], textAlign: "center",
         }}>
           <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 18px 0" }}>
-            Your journal is ready to be processed. Your coaching AI will read what you wrote and select exercises matched to what surfaced.
+            Your journal is ready to be processed. Your coaching assistant will read what you wrote and select exercises matched to what surfaced.
           </p>
           <motion.button
             whileHover={{ scale: 1.04 }}

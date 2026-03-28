@@ -2,7 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, processJournalSchema, getAnthropicClient, buildCachedSystem } from "@/lib/api-validation";
+import { validateBody, processJournalSchema, getAnthropicClient, buildCachedSystem, getModelForTier } from "@/lib/api-validation";
+import { parseAIResponse } from "@/lib/parse-ai-response";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { extractMemories, getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
@@ -215,7 +216,7 @@ Analyze the journal content and select the best overflow exercises for this clie
     const memoryContext = formatMemoriesForPrompt(memories);
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: getModelForTier("standard"),
       max_tokens: 800,
       system: buildCachedSystem(STANDARD_VOICE, systemPrompt),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
@@ -226,15 +227,19 @@ Analyze the journal content and select the best overflow exercises for this clie
       return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
     }
 
-    // Strip code fences if Claude wraps JSON
-    let raw = textBlock.text.trim();
-    if (raw.startsWith("```")) {
-      raw = raw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    let result;
+    try {
+      result = parseAIResponse<Record<string, any>>(textBlock.text);
+    } catch (parseErr) {
+      console.error("Failed to parse AI response:", textBlock.text.substring(0, 200));
+      return NextResponse.json(
+        { error: "Unable to process response. Please try again." },
+        { status: 500 }
+      );
     }
-    const result = JSON.parse(raw);
 
     // Extract memories from this session (non-blocking, uses Haiku)
-    extractMemories(user.id, enrollmentId, dayNumber, journalContent, raw).catch(() => {});
+    extractMemories(user.id, enrollmentId, dayNumber, journalContent, textBlock.text).catch((err) => console.warn("Memory extraction failed:", err));
 
     return NextResponse.json({
       ...result,

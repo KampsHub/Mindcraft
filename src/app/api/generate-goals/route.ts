@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { validateBody, generateGoalsSchema, getAnthropicClient, getModelForTier, buildCachedSystem } from "@/lib/api-validation";
+import { parseAIResponse } from "@/lib/parse-ai-response";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { MINIMAL_VOICE } from "@/lib/coaching-voice";
 
@@ -178,12 +179,16 @@ Generate 6 personalized coaching goals for this client based on everything above
       );
     }
 
-    // Strip code fences if Claude wraps JSON
-    let raw = textBlock.text.trim();
-    if (raw.startsWith("```")) {
-      raw = raw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    let result;
+    try {
+      result = parseAIResponse<{ goals: { goal_text: string; why_generated: string }[] }>(textBlock.text);
+    } catch (parseErr) {
+      console.error("Failed to parse AI response:", textBlock.text.substring(0, 200));
+      return NextResponse.json(
+        { error: "Unable to process response. Please try again." },
+        { status: 500 }
+      );
     }
-    const result = JSON.parse(raw);
 
     // Save goals to client_goals table
     const goalsToInsert = result.goals.map(

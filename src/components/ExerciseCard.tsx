@@ -355,6 +355,7 @@ export default function ExerciseCard({
                 }}>
                   <button
                     onClick={() => setShowGuided(true)}
+                    aria-label="Start guided conversation"
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 5,
                       padding: `6px ${space[3]}px`, borderRadius: radii.full,
@@ -373,6 +374,7 @@ export default function ExerciseCard({
                   </button>
                   <button
                     onClick={() => setShowListen(true)}
+                    aria-label="Listen to instructions"
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 5,
                       padding: `6px ${space[3]}px`, borderRadius: radii.full,
@@ -393,6 +395,7 @@ export default function ExerciseCard({
                     <div style={{ position: "relative", display: "inline-flex", marginLeft: "auto" }}>
                       <button
                         onClick={() => { setParked(true); onPark(); }}
+                        aria-label="Park exercise for later"
                         style={{
                           display: "inline-flex", alignItems: "center", gap: space[1],
                           padding: `6px ${space[3]}px`, borderRadius: radii.full,

@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { logApiCall } from "@/lib/api-logger";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { getAnthropicClient, buildCachedSystem } from "@/lib/api-validation";
+import { getAnthropicClient, buildCachedSystem, getModelForTier } from "@/lib/api-validation";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
@@ -192,7 +192,7 @@ Select the best framework and deliver a personalised exercise for today.`;
     const memoryContext = formatMemoriesForPrompt(memories);
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: getModelForTier("standard"),
       max_tokens: 1500,
       system: buildCachedSystem(STANDARD_VOICE, EXERCISE_SYSTEM_PROMPT),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],

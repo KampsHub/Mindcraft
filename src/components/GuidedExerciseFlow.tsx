@@ -417,22 +417,24 @@ export default function GuidedExerciseFlow({
             ))}
 
             {/* Live transcript while listening */}
-            {state === "listening" && liveTranscript && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                style={{ textAlign: "right", marginBottom: 16 }}
-              >
-                <p style={{
-                  fontSize: 15, lineHeight: 1.75,
-                  color: "rgba(176, 141, 173, 0.5)",
-                  fontFamily: body, fontStyle: "italic",
-                  margin: 0,
-                }}>
-                  {liveTranscript}
-                </p>
-              </motion.div>
-            )}
+            <div aria-live="polite" aria-atomic="false">
+              {state === "listening" && liveTranscript && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  style={{ textAlign: "right", marginBottom: 16 }}
+                >
+                  <p style={{
+                    fontSize: 15, lineHeight: 1.75,
+                    color: "rgba(176, 141, 173, 0.5)",
+                    fontFamily: body, fontStyle: "italic",
+                    margin: 0,
+                  }}>
+                    {liveTranscript}
+                  </p>
+                </motion.div>
+              )}
+            </div>
           </div>
         </div>
       )}

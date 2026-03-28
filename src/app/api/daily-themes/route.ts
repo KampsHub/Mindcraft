@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
 import { validateBody, dailyThemesSchema, getAnthropicClient, getModelForTier, buildCachedSystem } from "@/lib/api-validation";
+import { parseAIResponse } from "@/lib/parse-ai-response";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
 
@@ -263,12 +264,16 @@ Generate the Thread and today's themes for Day ${dayNumber}.`;
       return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
     }
 
-    // Strip markdown code fences if Claude wraps the JSON in ```json ... ```
-    let raw = textBlock.text.trim();
-    if (raw.startsWith("```")) {
-      raw = raw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    let result;
+    try {
+      result = parseAIResponse<Record<string, any>>(textBlock.text);
+    } catch (parseErr) {
+      console.error("Failed to parse AI response:", textBlock.text.substring(0, 200));
+      return NextResponse.json(
+        { error: "Unable to process response. Please try again." },
+        { status: 500 }
+      );
     }
-    const result = JSON.parse(raw);
 
     // ── Extract commitment tracking data from recent sessions ──
     // Yesterday's commitments (from step_5_summary.extracted_commitments)

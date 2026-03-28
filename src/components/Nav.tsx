@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
@@ -34,6 +34,19 @@ export default function Nav() {
   const pathname = usePathname();
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      const menu = document.querySelector('.nav-mobile-menu');
+      const toggle = document.querySelector('.nav-mobile-toggle');
+      if (menu && !menu.contains(e.target as Node) && toggle && !toggle.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, [menuOpen]);
 
   return (
     <>
@@ -106,6 +119,7 @@ export default function Nav() {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="nav-mobile-toggle"
+          aria-label="Menu"
           style={{
             display: "none", background: "none", border: "none",
             cursor: "pointer", padding: 4, fontSize: 22, color: colors.textPrimary,

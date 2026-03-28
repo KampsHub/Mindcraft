@@ -240,6 +240,79 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
     );
   }
 
+  // Completed
+  if (status === "completed") {
+    return (
+      <motion.div
+        whileHover={{ y: -4, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: accent.color }}
+        transition={{ type: "spring", stiffness: 300, damping: 22 }}
+        style={cardStyle}
+      >
+        <div style={{ position: "relative" }}>
+          <ProgramBadge name={enrollment.programs?.name} accent={accent} weekNumber={4} />
+          <h2 style={{ ...text.title, color: colors.textPrimary, margin: "0 0 4px 0" }}>
+            Program Complete
+          </h2>
+          <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
+            You finished all 30 days. Your insights and exercises are still here.
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            onClick={() => onNavigate("/weekly-review")}
+            style={{
+              padding: "12px 28px", fontSize: 14, fontWeight: 600,
+              color: colors.bgDeep, backgroundColor: colors.coral,
+              border: "none", borderRadius: radii.full, cursor: "pointer",
+              fontFamily: display, letterSpacing: "0.01em",
+            }}
+          >
+            Review Your Journey
+          </motion.button>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Paused
+  if (status === "paused") {
+    return (
+      <motion.div
+        whileHover={{ y: -4, boxShadow: "0 10px 32px rgba(0,0,0,0.12)", borderColor: accent.color }}
+        transition={{ type: "spring", stiffness: 300, damping: 22 }}
+        style={{
+          ...cardStyle,
+          border: `1px solid rgba(214, 182, 93, 0.2)`,
+        }}
+      >
+        <div style={{ position: "relative" }}>
+          <ProgramBadge name={enrollment.programs?.name} accent={accent} weekNumber={Math.ceil(enrollment.current_day / 7)} />
+          <h2 style={{ ...text.title, color: colors.textPrimary, margin: "0 0 4px 0" }}>
+            Program Paused
+          </h2>
+          <p style={{ ...text.body, color: "#ffffff", margin: "0 0 18px 0" }}>
+            You paused on Day {enrollment.current_day}. Ready to pick back up?
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(224, 149, 133, 0.4)" }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            onClick={() => onNavigate(`/day/${enrollment.current_day}?enrollment=${enrollment.id}`)}
+            style={{
+              padding: "12px 28px", fontSize: 14, fontWeight: 600,
+              color: colors.bgDeep, backgroundColor: colors.coral,
+              border: "none", borderRadius: radii.full, cursor: "pointer",
+              fontFamily: display, letterSpacing: "0.01em",
+            }}
+          >
+            Resume Day {enrollment.current_day}
+          </motion.button>
+        </div>
+      </motion.div>
+    );
+  }
+
   // awaiting_goals or onboarding
   const isAwaiting = status === "awaiting_goals";
   return (

@@ -242,9 +242,12 @@ export default function DoneTab({
             >
               <p style={{
                 ...textPreset.caption, color: colors.plumLight,
-                margin: "0 0 14px 0",
+                margin: "0 0 4px 0",
               }}>
                 Questions to sit with
+              </p>
+              <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.4)", margin: "0 0 14px 0" }}>
+                Take a moment with these before moving on.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
                 {summaryResult.questions_to_sit_with.map((q, i) => (

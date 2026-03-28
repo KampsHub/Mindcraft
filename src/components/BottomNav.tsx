@@ -46,6 +46,7 @@ export default function BottomNav() {
           <Link
             key={item.href}
             href={item.href}
+            aria-label={item.label}
             className={`bottom-nav-item ${isActive ? "active" : ""}`}
           >
             <span className="bottom-nav-icon">{item.icon}</span>

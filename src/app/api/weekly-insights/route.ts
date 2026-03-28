@@ -3,7 +3,9 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getClientProfile, formatProfileForPrompt } from "@/lib/client-profile";
-import { validateBody, weeklyInsightsSchema, getAnthropicClient } from "@/lib/api-validation";
+import { validateBody, weeklyInsightsSchema, getAnthropicClient, getModelForTier, buildCachedSystem } from "@/lib/api-validation";
+import { STANDARD_VOICE } from "@/lib/coaching-voice";
+import { parseAIResponse } from "@/lib/parse-ai-response";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 
@@ -191,9 +193,9 @@ Generate the key insights for Week ${weekNumber}.`;
     const memoryContext = formatMemoriesForPrompt(memories);
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: getModelForTier("standard"),
       max_tokens: 1200,
-      system: INSIGHTS_SYSTEM_PROMPT,
+      system: buildCachedSystem(STANDARD_VOICE, INSIGHTS_SYSTEM_PROMPT),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });
 
@@ -202,18 +204,22 @@ Generate the key insights for Week ${weekNumber}.`;
       return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
     }
 
-    // Strip markdown code fences if Claude wraps the JSON
-    let rawText = textBlock.text.trim();
-    if (rawText.startsWith("```")) {
-      rawText = rawText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+    let result;
+    try {
+      result = parseAIResponse<Record<string, any>>(textBlock.text);
+    } catch (parseErr) {
+      console.error("Failed to parse AI response:", textBlock.text.substring(0, 200));
+      return NextResponse.json(
+        { error: "Unable to process response. Please try again." },
+        { status: 500 }
+      );
     }
-    const result = JSON.parse(rawText);
 
     // Generate a narrative summary paragraph from insights
     let summary = "";
     try {
       const summaryMessage = await anthropic.messages.create({
-        model: "claude-sonnet-4-20250514",
+        model: getModelForTier("standard"),
         max_tokens: 600,
         system: `You write concise weekly summaries for someone reviewing their own week. Write a 3-5 sentence narrative paragraph in second person ("you"). Quote their actual words where possible. Name what moved, what stayed stuck, and what's emerging. Make connections across days they might not see. Be warm and direct — no praise, no motivational language. Talk to them like a smart colleague who knows their patterns well.`,
         messages: [{ role: "user", content: `Week ${weekNumber}: ${weekTheme.name} — "${weekTheme.title}"\nTerritory: ${weekTheme.territory}\n\nInsights:\n${(result.insights || []).map((i: { type: string; insight: string; source: string }) => `- [${i.type}] ${i.insight} (${i.source})`).join("\n")}\n\nWrite a narrative summary paragraph.` }],
@@ -232,7 +238,7 @@ Generate the key insights for Week ${weekNumber}.`;
     if (profile && weekNumber <= 3) {
       try {
         const refinementMsg = await anthropic.messages.create({
-          model: "claude-sonnet-4-20250514",
+          model: getModelForTier("standard"),
           max_tokens: 3000,
           system: `You are refining a client's personalization profile after a week of coaching work. You receive:
 1. Their current profile (client context, growth edges, development map)
@@ -290,11 +296,7 @@ Refine the profile based on what this week revealed.`,
 
         const refBlock = refinementMsg.content.find((b) => b.type === "text");
         if (refBlock && refBlock.type === "text") {
-          let refRaw = refBlock.text.trim();
-          if (refRaw.startsWith("```")) {
-            refRaw = refRaw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
-          }
-          const refined = JSON.parse(refRaw);
+          const refined = parseAIResponse<Record<string, any>>(refBlock.text);
 
           // Update the profile via admin client
           const admin = getAdminSupabase();

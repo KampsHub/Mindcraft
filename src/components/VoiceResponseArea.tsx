@@ -146,23 +146,25 @@ export default function VoiceResponseArea({
       )}
 
       {/* Interim voice text */}
-      {listening && interim && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          style={{
-            padding: `${space[3]}px ${space[4]}px`, borderRadius: radii.md,
-            marginBottom: space[3],
-          }}
-        >
-          <p style={{
-            ...textScale.body, color: "rgba(255,255,255,0.35)",
-            margin: 0, lineHeight: 1.6, fontStyle: "italic",
-          }}>
-            {interim}
-          </p>
-        </motion.div>
-      )}
+      <div aria-live="polite" aria-atomic="false">
+        {listening && interim && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            style={{
+              padding: `${space[3]}px ${space[4]}px`, borderRadius: radii.md,
+              marginBottom: space[3],
+            }}
+          >
+            <p style={{
+              ...textScale.body, color: "rgba(255,255,255,0.35)",
+              margin: 0, lineHeight: 1.6, fontStyle: "italic",
+            }}>
+              {interim}
+            </p>
+          </motion.div>
+        )}
+      </div>
 
       <AnimatePresence mode="wait">
         {/* ── IDLE: Compact inline pills ── */}
@@ -180,6 +182,7 @@ export default function VoiceResponseArea({
             {hasSpeechSupport && (
               <button
                 onClick={switchToVoice}
+                aria-label="Start voice recording"
                 style={{
                   flex: 1,
                   display: "flex", alignItems: "center", justifyContent: "center", gap: space[2],
@@ -210,6 +213,7 @@ export default function VoiceResponseArea({
 
             <button
               onClick={switchToText}
+              aria-label="Type your response"
               style={{
                 flex: 1,
                 display: "flex", alignItems: "center", justifyContent: "center", gap: space[2],
@@ -259,6 +263,7 @@ export default function VoiceResponseArea({
             <motion.button
               whileTap={{ scale: 0.92 }}
               onClick={listening ? stopListening : startListening}
+              aria-label={listening ? "Stop recording" : "Start voice recording"}
               style={{
                 width: 44, height: 44, borderRadius: "50%",
                 backgroundColor: listening ? "#ef4444" : colors.coral,
@@ -330,6 +335,7 @@ export default function VoiceResponseArea({
             {/* Switch to text button */}
             <button
               onClick={switchToText}
+              aria-label="Switch to typing"
               style={{
                 width: 36, height: 36, borderRadius: radii.sm,
                 backgroundColor: "rgba(255,255,255,0.06)",
@@ -390,6 +396,7 @@ export default function VoiceResponseArea({
               {hasSpeechSupport && (
                 <button
                   onClick={switchToVoice}
+                  aria-label="Switch to voice"
                   style={{
                     position: "absolute", right: 10, bottom: 10,
                     width: 34, height: 34, borderRadius: radii.sm,

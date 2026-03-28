@@ -1,7 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { getAnthropicClient, getModelForTier } from "@/lib/api-validation";
+import { getAnthropicClient, getModelForTier, buildCachedSystem } from "@/lib/api-validation";
+import { STANDARD_VOICE } from "@/lib/coaching-voice";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { parseAIResponse } from "@/lib/parse-ai-response";
 
 const PLAN_SYSTEM_PROMPT = `You are a coaching plan architect for All Minds on Deck. You receive a client's intake responses — their values, family patterns, identity, relationship style, saboteurs, work context, goals, and package-specific answers.
 
@@ -77,6 +80,10 @@ export async function POST() {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // Rate limit (AI bucket — 10 req/min)
+    const rateLimitResponse = checkRateLimit(user.id, "ai");
+    if (rateLimitResponse) return rateLimitResponse;
+
     // Fetch the user's intake responses
     const { data: intake, error: intakeError } = await supabase
       .from("intake_responses")
@@ -115,7 +122,7 @@ Generate a personalised 4-week coaching plan for this client.`;
     const message = await anthropic.messages.create({
       model: getModelForTier("deep"),
       max_tokens: 2048,
-      system: PLAN_SYSTEM_PROMPT,
+      system: buildCachedSystem(STANDARD_VOICE, PLAN_SYSTEM_PROMPT),
       messages: [{ role: "user", content: intakePrompt }],
     });
 
@@ -124,7 +131,16 @@ Generate a personalised 4-week coaching plan for this client.`;
       return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
     }
 
-    const plan = JSON.parse(textBlock.text);
+    let plan;
+    try {
+      plan = parseAIResponse<Record<string, any>>(textBlock.text);
+    } catch (parseErr) {
+      console.error("Failed to parse AI response:", textBlock.text.substring(0, 200));
+      return NextResponse.json(
+        { error: "Unable to process response. Please try again." },
+        { status: 500 }
+      );
+    }
 
     // Save to coaching_plans table
     const { data: savedPlan, error: saveError } = await supabase

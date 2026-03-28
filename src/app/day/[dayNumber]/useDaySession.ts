@@ -539,7 +539,7 @@ export function useDaySession(): UseDaySessionReturn {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId: session.id, content: fullJournalContent }),
-      }).catch(() => {});
+      }).catch((err) => console.warn("Non-blocking API call failed:", err));
     }
 
     // Auto-trigger Step 3 processing
@@ -601,7 +601,7 @@ export function useDaySession(): UseDaySessionReturn {
             source: "process-journal",
             action: "detected",
           }),
-        }).catch(() => {});
+        }).catch((err) => console.warn("Non-blocking API call failed:", err));
       }
 
       await supabase
@@ -736,7 +736,7 @@ export function useDaySession(): UseDaySessionReturn {
               source: "daily-summary",
               action: "detected",
             }),
-          }).catch(() => {});
+          }).catch((err) => console.warn("Non-blocking API call failed:", err));
         }
 
         await supabase

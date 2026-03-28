@@ -51,7 +51,7 @@ export default function ChatCoach({
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages.length]);
 
   async function handleSend() {
     const text = input.trim();
@@ -143,7 +143,7 @@ export default function ChatCoach({
                     color: colors.coral, margin: "0 0 6px 0",
                     textTransform: "uppercase", letterSpacing: "0.08em",
                   }}>
-                    Coach
+                    Coach Assistant
                   </p>
                 )}
                 <p style={{
@@ -181,7 +181,7 @@ export default function ChatCoach({
               ))}
             </div>
             <span style={{ fontFamily: body, fontSize: 12, color: colors.textMuted }}>
-              Your coach is thinking...
+              Your coaching assistant is thinking...
             </span>
           </motion.div>
         )}

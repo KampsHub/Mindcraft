@@ -94,11 +94,9 @@ export default function CrisisBanner({
               fontSize: 14,
               flexShrink: 0,
             }}>
-              {/* Warning icon */}
+              {/* Heart icon */}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                <line x1="12" y1="9" x2="12" y2="13" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </span>
             <h3 style={{
@@ -109,7 +107,7 @@ export default function CrisisBanner({
               margin: 0,
               letterSpacing: "-0.01em",
             }}>
-              We noticed something important
+              It sounds like you&rsquo;re dealing with something heavy
             </h3>
           </div>
 
@@ -121,8 +119,7 @@ export default function CrisisBanner({
             margin: "0 0 20px 0",
             fontFamily: body,
           }}>
-            What you wrote carries real weight, and it deserves more than exercises can hold right now.
-            Please reach out to someone who can be fully present with you.
+            What you shared matters. You don&rsquo;t have to sit with it alone &mdash; here are some people who are ready to listen whenever you are.
           </p>
 
           {/* Resources */}
@@ -296,7 +293,7 @@ export default function CrisisBanner({
                 transition: "background-color 0.15s",
               }}
             >
-              I&rsquo;m okay &mdash; continue
+              Continue with my session
             </motion.button>
 
             <motion.button
@@ -316,7 +313,7 @@ export default function CrisisBanner({
                 letterSpacing: "0.01em",
               }}
             >
-              Get help now
+              Reach out to someone
             </motion.button>
           </div>
         </motion.div>

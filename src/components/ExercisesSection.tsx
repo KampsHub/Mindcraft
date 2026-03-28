@@ -183,7 +183,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
       return;
     }
 
-    await supabase.from("exercise_completions").insert({
+    const { error: insertError } = await supabase.from("exercise_completions").insert({
       daily_session_id: sessionId,
       enrollment_id: enrollment.id,
       framework_name: ex.name,
@@ -194,6 +194,12 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
       responses: { main: parkedResponse.trim() },
       star_rating: parkedRating,
     });
+    if (insertError) {
+      console.error("Failed to save exercise:", insertError);
+      alert("Could not save exercise. Please try again.");
+      setSavingParked(false);
+      return;
+    }
 
     setParkedResponse("");
     setParkedRating(null);
@@ -205,7 +211,24 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
   if (!enrollment || loading) return null;
   // Don't show exercises section before the user has completed their first day
   if (enrollment.current_day < 1) return null;
-  if (completedExercises.length === 0 && parkedExercises.length === 0) return null;
+  if (completedExercises.length === 0 && parkedExercises.length === 0) {
+    return (
+      <div style={{
+        marginBottom: 28,
+        backgroundColor: "rgba(51, 51, 57, 0.5)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderRadius: radii.lg,
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        padding: space[5],
+      }}>
+        <p style={{ ...text.heading, color: "#ffffff", margin: 0 }}>Exercises</p>
+        <p style={{ ...text.secondary, color: colors.textMuted, margin: "8px 0 0 0" }}>
+          Exercises from your coaching plan will appear here as you progress.
+        </p>
+      </div>
+    );
+  }
 
   const filteredCompleted = modalityFilter === "all"
     ? completedExercises

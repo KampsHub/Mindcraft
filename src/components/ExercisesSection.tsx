@@ -438,15 +438,24 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                   paddingTop: 14,
                                 }}>
                                   {ex.custom_framing && (
-                                    <p style={{
-                                      ...text.body, color: "rgba(255,255,255,0.88)",
-                                      margin: 0, whiteSpace: "pre-wrap",
-                                    }}>
-                                      {ex.custom_framing}
-                                    </p>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
+                                      {ex.custom_framing.split("\n").filter((l: string) => l.trim()).map((line: string, li: number) => {
+                                        const isQuestion = line.trim().endsWith("?");
+                                        return (
+                                          <p key={li} style={{
+                                            ...text.body,
+                                            color: isQuestion ? "#ffffff" : "rgba(255,255,255,0.65)",
+                                            fontWeight: isQuestion ? 500 : 400,
+                                            margin: 0,
+                                          }}>
+                                            {line.trim()}
+                                          </p>
+                                        );
+                                      })}
+                                    </div>
                                   )}
                                   {ex.completed_at && (
-                                    <p style={{ ...text.caption, color: colors.textMuted, margin: `${space[3]}px 0 0 0` }}>
+                                    <p style={{ ...text.caption, color: colors.textMuted, margin: `${space[4]}px 0 0 0` }}>
                                       Completed {new Date(ex.completed_at).toLocaleDateString("en-US", {
                                         month: "short", day: "numeric", year: "numeric",
                                       })}

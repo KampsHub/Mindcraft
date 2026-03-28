@@ -247,7 +247,13 @@ export default function BodyMap({ markers, onChange, title, sensationCategories 
 
         {/* Edit panel — all sensations visible */}
         {editingZone && (
-          <div style={{ flex: 1, minWidth: 220, maxHeight: 420, overflowY: "auto" }}>
+          <div style={{
+            flex: 1, minWidth: 220, maxHeight: 400, overflowY: "auto",
+            paddingRight: 4,
+            // Scroll fade hint
+            maskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+          }}>
             {/* Zone name */}
             <div style={{
               fontFamily: fonts.display, fontSize: 16, fontWeight: 700,

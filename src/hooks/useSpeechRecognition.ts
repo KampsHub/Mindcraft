@@ -21,12 +21,14 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
   const [transcript, setTranscript] = useState("");
   const [interim, setInterim] = useState("");
   const recognitionRef = useRef<any>(null);
+  const intentRef = useRef(false); // User's intent to record
 
   const isSupported = typeof window !== "undefined" &&
     ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
 
   const start = useCallback(() => {
     if (!isSupported) return false;
+    if (recognitionRef.current) return true; // Already running
 
     try {
       const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -53,39 +55,44 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
       };
 
       recognition.onerror = (event: any) => {
-        // Don't restart on abort (user stopped) or no-speech
-        if (event.error === "aborted" || event.error === "no-speech") return;
+        if (event.error === "aborted") return;
+        if (event.error === "no-speech") {
+          // Silence detected — restart if user still wants to record
+          return;
+        }
         console.warn("Speech recognition error:", event.error);
       };
 
       recognition.onend = () => {
-        // Auto-restart if we're still supposed to be listening
-        // Chrome fires onend after pauses even with continuous=true
-        if (recognitionRef.current && continuous) {
+        setInterim("");
+        // Only restart if user hasn't explicitly stopped
+        if (intentRef.current) {
           try {
             recognition.start();
             return;
           } catch {
-            // Failed to restart — fall through to cleanup
+            // Fall through to cleanup
           }
         }
         setListening(false);
-        setInterim("");
         recognitionRef.current = null;
       };
 
+      intentRef.current = true;
       recognitionRef.current = recognition;
       recognition.start();
       setListening(true);
       return true;
     } catch {
+      intentRef.current = false;
       return false;
     }
   }, [continuous, interimResults, lang, onResult, isSupported]);
 
   const stop = useCallback(() => {
+    intentRef.current = false; // Signal intent to stop FIRST
     const ref = recognitionRef.current;
-    recognitionRef.current = null; // Clear ref FIRST so onend doesn't auto-restart
+    recognitionRef.current = null;
     if (ref) {
       try { ref.stop(); } catch { /* already stopped */ }
     }

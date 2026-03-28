@@ -97,7 +97,7 @@ function getSomaticSuggestions(emotions: { emotion: string }[]): string[] {
 /* ── Step slide animation variants ── */
 const slideVariants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 200 : -200,
+    x: direction > 0 ? 120 : -120,
     opacity: 0,
   }),
   center: {
@@ -474,6 +474,7 @@ export default function MindfulJournalPage() {
   /* Voice recording state */
   const [micListening, setMicListening] = useState(false);
   const micRecognitionRef = useRef<any>(null);
+  const micIntentRef = useRef(false);
 
   /* AI Mirror (Improvement #2) */
   const [mirrorText, setMirrorText] = useState<string | null>(null);
@@ -725,7 +726,7 @@ export default function MindfulJournalPage() {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10, position: "relative", zIndex: 100 }}>
                       <h2 style={{
@@ -786,8 +787,10 @@ export default function MindfulJournalPage() {
                           type="button"
                           onClick={() => {
                             if (micListening) {
+                              // User explicitly stops — clear intent
+                              micIntentRef.current = false;
                               if (micRecognitionRef.current) {
-                                micRecognitionRef.current.stop();
+                                try { micRecognitionRef.current.stop(); } catch { /* */ }
                                 micRecognitionRef.current = null;
                               }
                               setMicListening(false);
@@ -797,22 +800,31 @@ export default function MindfulJournalPage() {
                               const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
                               if (!SpeechRecognition) { alert("Voice not supported in this browser"); return; }
                               const recognition = new SpeechRecognition();
-                              recognition.continuous = false;
-                              recognition.interimResults = false;
+                              recognition.continuous = true;
+                              recognition.interimResults = true;
                               recognition.lang = "en-US";
                               recognition.onresult = (event: any) => {
-                                const transcript = event.results[0][0].transcript;
-                                setEntry((prev) => prev ? prev + " " + transcript : transcript);
-                                /* Improvement #7: auto-detect feelings */
-                                const detected = autoSelectFromText(transcript);
-                                if (detected > 0) {
-                                  showToast(`Auto-detected ${detected} feeling${detected !== 1 ? "s" : ""} from your voice entry.`);
+                                for (let i = event.resultIndex; i < event.results.length; i++) {
+                                  if (event.results[i].isFinal) {
+                                    const transcript = event.results[i][0].transcript;
+                                    setEntry((prev) => prev ? prev + " " + transcript : transcript);
+                                    const detected = autoSelectFromText(transcript);
+                                    if (detected > 0) {
+                                      showToast(`Auto-detected ${detected} feeling${detected !== 1 ? "s" : ""} from your voice entry.`);
+                                    }
+                                  }
                                 }
                               };
+                              recognition.onerror = () => { /* handled by onend */ };
                               recognition.onend = () => {
+                                // Auto-restart if user hasn't explicitly stopped
+                                if (micIntentRef.current && micRecognitionRef.current) {
+                                  try { recognition.start(); return; } catch { /* fall through */ }
+                                }
                                 setMicListening(false);
                                 micRecognitionRef.current = null;
                               };
+                              micIntentRef.current = true;
                               micRecognitionRef.current = recognition;
                               recognition.start();
                               setMicListening(true);
@@ -863,7 +875,7 @@ export default function MindfulJournalPage() {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <div style={{ marginBottom: 14 }}>
                       <p style={{ fontFamily: display, fontSize: 20, fontWeight: 600, color: colors.textPrimary, margin: 0 }}>
@@ -889,7 +901,7 @@ export default function MindfulJournalPage() {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <div style={{ marginBottom: 14 }}>
                       <p style={{ fontFamily: display, fontSize: 20, fontWeight: 600, color: colors.textPrimary, margin: 0 }}>
@@ -917,7 +929,7 @@ export default function MindfulJournalPage() {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <div style={{ marginBottom: 14 }}>
                       <p style={{ fontFamily: display, fontSize: 20, fontWeight: 600, color: colors.textPrimary, margin: 0 }}>
@@ -989,7 +1001,7 @@ export default function MindfulJournalPage() {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <div style={{ marginBottom: 14 }}>
                       <p style={{ fontFamily: display, fontSize: 20, fontWeight: 600, color: colors.textPrimary, margin: 0 }}>
@@ -1263,7 +1275,7 @@ export default function MindfulJournalPage() {
             fontSize: 12, color: colors.textMuted, fontFamily: body,
             lineHeight: 1.6, margin: 0,
           }}>
-            Feelings and Needs inventories adapted from the work of Marshall B. Rosenberg and the Center for Nonviolent Communication (CNVC), as compiled by Nati Beltran and colleagues. Somatic sensations list developed collaboratively by NVC practitioners. Used with gratitude.
+            Feelings and Needs inventories adapted from the work of Marshall B. Rosenberg and practitioners at the Center for Nonviolent Communication (CNVC). Used with gratitude.
           </p>
         </div>
       </FadeIn>

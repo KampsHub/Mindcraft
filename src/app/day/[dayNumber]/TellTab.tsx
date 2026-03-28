@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import FlagButton from "@/components/FlagButton";
 import VoiceToText from "@/components/VoiceToText";
+import GuidedExerciseFlow from "@/components/GuidedExerciseFlow";
 import { colors, fonts, space, text as textPreset, radii } from "@/lib/theme";
 import { useProgressiveReveal } from "@/hooks/useProgressiveReveal";
 import type { createClient } from "@/lib/supabase";
@@ -165,6 +166,8 @@ export default function TellTab({
   setFreeFlowText,
   activeTab,
 }: TellTabProps) {
+  const [showThoughtConversation, setShowThoughtConversation] = useState(false);
+
   // Progressive reveal: auto-reveal based on existing data
   const initialRevealed = useMemo(() => {
     const keys: string[] = [];
@@ -496,6 +499,22 @@ export default function TellTab({
                 </div>
               ))}
             </div>
+            <button
+              onClick={() => setShowThoughtConversation(true)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 5,
+                padding: "6px 14px", borderRadius: 100,
+                backgroundColor: "rgba(196, 148, 58, 0.1)",
+                border: "none", cursor: "pointer",
+                ...textPreset.secondary, fontWeight: 600, color: colors.coral,
+                marginTop: 8,
+              }}
+            >
+              <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+              ><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+              Discuss these with your coach assistant
+            </button>
           </div>
         )}
 
@@ -624,6 +643,21 @@ export default function TellTab({
         </div>
       </motion.div>
     )}
+
+    <AnimatePresence>
+      {showThoughtConversation && (
+        <GuidedExerciseFlow
+          exerciseName="Thought Exploration"
+          instructions={programDay.seed_prompts.map(sp => sp.prompt).join("\n\n")}
+          whyNow="Exploring today's thought prompts in conversation"
+          onComplete={(text) => {
+            setJournalContent(prev => prev ? prev + "\n\n---\nFrom thought conversation:\n" + text : text);
+            setShowThoughtConversation(false);
+          }}
+          onClose={() => setShowThoughtConversation(false)}
+        />
+      )}
+    </AnimatePresence>
 
     </div>
     </FadeIn>

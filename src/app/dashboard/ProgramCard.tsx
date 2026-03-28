@@ -149,6 +149,34 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
           >
             {todaySessionDone ? "Review Day" : todaySessionStarted ? "Continue Session" : "Start Session"}
           </motion.button>
+
+          {enrollment.current_day >= 4 && !enrollment.goals_approved && (
+            <div style={{
+              marginTop: 12, padding: "12px 16px",
+              backgroundColor: "rgba(214, 182, 93, 0.08)",
+              borderRadius: 12, borderLeft: `3px solid ${colors.warning}`,
+            }}>
+              <p style={{ ...text.secondary, color: colors.warning, margin: "0 0 4px 0", fontWeight: 600 }}>
+                Goals ready for setup
+              </p>
+              <p style={{ ...text.secondary, color: "rgba(255,255,255,0.5)", margin: "0 0 8px 0" }}>
+                Your coaching goals will shape your exercises and thought prompts.
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => onNavigate("/goals")}
+                style={{
+                  padding: "8px 20px", borderRadius: 100,
+                  backgroundColor: colors.warning, color: colors.bgDeep,
+                  border: "none", cursor: "pointer",
+                  ...text.secondary, fontWeight: 600,
+                }}
+              >
+                Set Up Goals
+              </motion.button>
+            </div>
+          )}
         </div>
 
         {/* Week progress tracker */}

@@ -395,25 +395,6 @@ export default function ExerciseCard({
                     ><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
                     Talk through it
                   </button>
-                  <button
-                    onClick={() => setShowListen(true)}
-                    aria-label="Listen to instructions"
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: 5,
-                      padding: `6px ${space[3]}px`, borderRadius: radii.full,
-                      backgroundColor: "rgba(176, 141, 173, 0.1)",
-                      border: "none", cursor: "pointer",
-                      ...textScale.caption, fontSize: 12, color: colors.plumLight,
-                      transition: "background-color 0.15s",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.18)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(176, 141, 173, 0.1)"; }}
-                  >
-                    <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-                    ><path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" /></svg>
-                    Listen
-                  </button>
                   {onPark && !parked && !isParked && (
                     <div style={{ position: "relative", display: "inline-flex", marginLeft: "auto" }}>
                       <button
@@ -650,14 +631,26 @@ export default function ExerciseCard({
             {existingResponses.main}
           </p>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: space[2] }}>
-            {existingRating ? (
-              <span style={{
-                ...textScale.caption, fontSize: 12,
-                color: existingRating >= 4 ? "#4ade80" : "rgba(255, 255, 255, 0.5)",
-              }}>
-                {existingRating >= 4 ? "Landed" : "Didn\u2019t land"}
-              </span>
-            ) : <div />}
+            <div style={{ display: "flex", alignItems: "center", gap: space[2] }}>
+              {existingRating ? (
+                <span style={{
+                  ...textScale.caption, fontSize: 12,
+                  color: existingRating >= 4 ? "#4ade80" : "rgba(255, 255, 255, 0.5)",
+                }}>
+                  {existingRating >= 4 ? "Landed" : "Didn\u2019t land"}
+                </span>
+              ) : null}
+              <button
+                onClick={() => { setSubmitted(false); setExpanded(true); }}
+                style={{
+                  background: "none", border: "none", cursor: "pointer",
+                  ...textScale.caption, fontSize: 12, color: colors.textMuted,
+                  padding: 0, textDecoration: "underline",
+                }}
+              >
+                Edit
+              </button>
+            </div>
             <FlagButton
               outputType="exercise"
               frameworkName={name}

@@ -42,12 +42,16 @@ Return valid JSON (no markdown, no code fences):
 }
 
 ## Selection Rules
-1. Select exactly 1 exercise. The single most relevant one for today. Quality over quantity.
-2. The exercise must respond to something specific in today's journal.
+1. Select exactly 2 overflow_exercises matched to what the person wrote today. Each must respond to something specific in their journal.
+2. If the person has active goals, also select 1 exercise connected to their goals (include in overflow_exercises with why_now referencing the goal).
 3. If the person is in high distress, prioritize somatic (grounding) over everything else.
 4. Never repeat an exercise they did in the last 3 days.
-5. Instructions must be action-first. No background. No theory. Just steps.
-6. IMPORTANT: Your total output should be SHORT. If the user wrote 50 words, your reading should be 2 sentences and the exercise instruction should be 3-5 steps. Match their energy.
+5. Instructions must be action-first but MUST be preceded by context. For every exercise:
+   - Start with WHY this exercise was selected (connection to their writing)
+   - Explain the concept behind it in plain language (e.g., "A saboteur is an inner voice that criticizes or shames you — like a harsh internal boss. Everyone has 2-3 dominant ones.")
+   - Explain WHY it works (the neuroscience/psychology in one sentence)
+   - THEN give the steps
+6. IMPORTANT: Your total output should be SHORT. If the user wrote 50 words, keep readings brief. But exercises always need full context + steps regardless of journal length.
 9. **Framework attribution**: When selecting a framework, use its exact official name and originator as listed in the library. Specifically: "The Seven Levels of Personal, Group and Organizational Effectiveness" must always use the full name and be attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate or paraphrase copyrighted framework names.
 10. SAFETY — urgency_level guide:
   - "low": Normal emotional processing. Sadness, frustration, grief, anger about job loss, self-doubt, feeling stuck — these are ALL normal and expected in a coaching context. Keep urgency "low" for these.

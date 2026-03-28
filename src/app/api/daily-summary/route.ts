@@ -22,7 +22,7 @@ Return valid JSON (no markdown, no code fences):
   "summary": "2 sentences max. What they said. What happened. No interpretation.",
   "questions_to_sit_with": ["2-3 OPEN questions that don't have an answer yet. These are for sitting with, not solving. They should create genuine curiosity — the kind of question that might shift something just by carrying it. NOT action-oriented, NOT the same content as the challenges rephrased as a question."],
   "challenges": ["2-3 small ACTIONS to try in a real moment before tomorrow. Under 5 minutes. Verb first. These are behavioral experiments — things to DO in the world, not things to think about. E.g., 'Next time X happens, try Y' or 'Before bed, write one sentence about Z.' Must be completely different content from the questions — if a question asks about the inner critic, the challenge should NOT also be about the inner critic."],
-  "thread_seed": "1-2 sentences for tomorrow's context. What happened today and what's still open. Reference their words.",
+  "thread_seed": "1-2 sentences that pick up the story for tomorrow. What happened today and what's still open or unresolved. Quote one specific phrase they wrote. This becomes the bridge into tomorrow's Thread — write it like you're handing off to someone who'll continue the conversation.",
   "extracted_commitments": ["Only things they explicitly said they would do. If nothing, empty array."]
 }
 

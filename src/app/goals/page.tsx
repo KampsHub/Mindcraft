@@ -379,7 +379,7 @@ function GoalsPage() {
                 exit={{ opacity: 0 }}
                 style={{ color: "#ffffff", fontSize: 13, marginTop: 14, fontFamily: body }}
               >
-                Reading your intake and journal entries. This takes about 15 seconds.
+                Within the program arc, including your intake and journal entries to create goal suggestions. This takes ca. 15 seconds.
               </motion.p>
             )}
             {errorMsg && !generating && (

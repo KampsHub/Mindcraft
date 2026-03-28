@@ -389,7 +389,7 @@ export default function TellTab({
           ...textPreset.caption, color: colors.coral,
           margin: "0 0 8px 0",
         }}>
-          Yesterday&apos;s exercise
+          Yesterday&apos;s takeaways
         </p>
         <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 6px 0", fontWeight: 600 }}>
           {yesterdayExercise.name}

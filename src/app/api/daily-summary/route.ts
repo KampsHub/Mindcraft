@@ -18,20 +18,22 @@ IMPORTANT: Match their energy. Short input = short summary. Deep input = you can
 Return valid JSON (no markdown, no code fences):
 
 {
-  "today_themes": ["theme1", "theme2"],
   "summary": "2 sentences max. What they said. What happened. No interpretation.",
-  "one_action": "One specific thing to try before tomorrow. Under 2 minutes. Verb first. Connected to what they wrote today. Not an exercise — a real-world action.",
+  "questions_to_sit_with": ["2-3 questions to carry until tomorrow. Drawn from what they wrote. Not therapy questions — honest, specific questions about their situation."],
+  "challenges": ["2-3 small real-world actions/experiments to try before tomorrow. Under 5 minutes each. Verb first. Connected to what they wrote today. Not exercises — things they do in a real moment."],
   "thread_seed": "1-2 sentences for tomorrow's context. What happened today and what's still open. Reference their words.",
   "extracted_commitments": ["Only things they explicitly said they would do. If nothing, empty array."]
 }
 
 ## Guidelines
-1. Keep it SHORT. 2 sentences for the summary. 1 sentence for the action. That's it.
+1. Keep it SHORT. 2 sentences for the summary. 1 sentence per question/challenge. That's it.
 2. Quote one thing they actually wrote. No paraphrasing.
 3. No motivational language. No "great work." No "you explored."
-4. The one_action should be something they can do in a real moment — not an exercise. Verb first.
-5. Match their energy. If they wrote 20 words today, your entire output should be under 50 words.
-6. SAFETY: If today's journal contains signals of crisis, include: "What you wrote carries real weight. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or crew@allmindsondeck.com."`;
+4. Questions should be specific to what they wrote — not generic coaching questions.
+5. Challenges should be things they can do in a real moment — verb first, under 5 minutes.
+6. Match their energy. If they wrote 20 words today, your entire output should be under 50 words.
+7. No editorial theme tags like "somatic awareness breakthrough" — just reflect what happened.
+8. SAFETY: If today's journal contains signals of crisis, include: "What you wrote carries real weight. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or crew@allmindsondeck.com."`;
 
 export async function POST(request: Request) {
   try {

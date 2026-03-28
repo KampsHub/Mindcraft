@@ -98,13 +98,15 @@ export interface FrameworkAnalysis {
 }
 
 export interface SummaryResult {
-  today_themes: string[];
+  today_themes?: string[];
   summary: string;
+  questions_to_sit_with?: string[];
+  challenges?: string[];
   exercise_insights: { exercise_name: string; insight: string }[];
   goal_progress: { goal_text: string; observation: string }[];
   tomorrow_preview: { title: string; territory: string; connection: string };
   pattern_note: string | null;
-  micro_content: string;
+  micro_content?: string;
   mini_actions?: string[];
   committed_actions?: string[];
 }

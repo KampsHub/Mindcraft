@@ -121,21 +121,6 @@ export default function DoneTab({
               {summaryResult.summary}
             </p>
 
-            {summaryResult.today_themes?.length > 0 && (
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: space[6] }}>
-                {(summaryResult.today_themes || []).map((t, i) => (
-                  <span key={i} style={{
-                    ...textPreset.caption,
-                    padding: "4px 12px",
-                    backgroundColor: "rgba(224, 149, 133, 0.12)", color: colors.coral,
-                    borderRadius: radii.full,
-                  }}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-            )}
-
             {summaryResult.pattern_note && (
               <div style={{
                 padding: "12px 16px",
@@ -242,8 +227,8 @@ export default function DoneTab({
           </motion.div>
           )}
 
-          {/* Micro-content */}
-          {summaryResult.micro_content && (
+          {/* Questions to sit with */}
+          {summaryResult.questions_to_sit_with && summaryResult.questions_to_sit_with.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -256,19 +241,26 @@ export default function DoneTab({
               }}
             >
               <p style={{
-                ...textPreset.caption, color: "#ffffff",
-                margin: "0 0 10px 0",
+                ...textPreset.caption, color: colors.plumLight,
+                margin: "0 0 14px 0",
               }}>
-                Today&apos;s Insight
+                Questions to sit with
               </p>
-              <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
-                {summaryResult.micro_content}
-              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
+                {summaryResult.questions_to_sit_with.map((q, i) => (
+                  <p key={i} style={{
+                    ...textPreset.body, color: "#ffffff", margin: 0,
+                    fontStyle: "italic",
+                  }}>
+                    {q}
+                  </p>
+                ))}
+              </div>
             </motion.div>
           )}
 
-          {/* Mini-actions */}
-          {summaryResult.mini_actions && summaryResult.mini_actions.length > 0 && (
+          {/* Challenges — pick one or more */}
+          {((summaryResult.challenges && summaryResult.challenges.length > 0) || (summaryResult.mini_actions && summaryResult.mini_actions.length > 0)) && (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -284,13 +276,13 @@ export default function DoneTab({
                 ...textPreset.caption, color: colors.coral,
                 margin: "0 0 6px 0",
               }}>
-                Pick a Mini-Action for Today
+                Until tomorrow
               </p>
-              <p style={{ ...textPreset.secondary, color: "#ffffff", margin: `0 0 ${space[6]}px 0` }}>
-                Each takes under 5 minutes. Choose one (or more) to carry into the rest of your day.
+              <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.5)", margin: `0 0 ${space[4]}px 0` }}>
+                Pick one (or more) to carry into the rest of your day.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {(summaryResult.mini_actions || []).map((action, i) => {
+                {(summaryResult.challenges || summaryResult.mini_actions || []).map((action, i) => {
                   const isSelected = selectedActions.has(i);
                   return (
                     <button
@@ -303,19 +295,19 @@ export default function DoneTab({
                         });
                       }}
                       style={{
-                        display: "flex", alignItems: "center", gap: 12,
-                        padding: "12px 16px", borderRadius: 10, cursor: "pointer",
+                        display: "flex", alignItems: "center", gap: space[3],
+                        padding: `${space[3]}px ${space[4]}px`, borderRadius: radii.sm, cursor: "pointer",
                         border: `1px solid ${isSelected ? colors.coral : colors.borderDefault}`,
                         backgroundColor: isSelected ? colors.coralWash : colors.bgElevated,
                         textAlign: "left", transition: "all 0.2s",
                       }}
                     >
                       <div style={{
-                        width: 24, height: 24, borderRadius: "50%", flexShrink: 0,
+                        width: 22, height: 22, borderRadius: radii.full, flexShrink: 0,
                         border: `2px solid ${isSelected ? colors.coral : colors.borderDefault}`,
                         backgroundColor: isSelected ? colors.coral : "transparent",
                         display: "flex", alignItems: "center", justifyContent: "center",
-                        color: colors.bgDeep, fontSize: 12, fontWeight: 700,
+                        color: colors.bgDeep, fontSize: 11, fontWeight: 700,
                       }}>
                         {isSelected ? "\u2713" : ""}
                       </div>
@@ -326,14 +318,14 @@ export default function DoneTab({
                   );
                 })}
               </div>
-              <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+              <div style={{ marginTop: space[3], display: "flex", gap: space[2] }}>
                 <input
                   type="text"
                   value={customAction}
                   onChange={(e) => setCustomAction(e.target.value)}
-                  placeholder="Or write your own..."
+                  placeholder="Or add your own..."
                   style={{
-                    flex: 1, padding: "10px 14px", ...textPreset.secondary,
+                    flex: 1, padding: `${space[3]}px ${space[3]}px`, ...textPreset.secondary,
                     border: `1px solid ${colors.borderDefault}`, borderRadius: radii.sm,
                     backgroundColor: colors.bgInput, color: colors.textPrimary,
                     outline: "none",
@@ -343,9 +335,10 @@ export default function DoneTab({
               {(selectedActions.size > 0 || customAction.trim()) && (
                 <button
                   onClick={async () => {
+                    const allActions = summaryResult.challenges || summaryResult.mini_actions || [];
                     const actions: string[] = [];
                     selectedActions.forEach((i) => {
-                      if (summaryResult.mini_actions?.[i]) actions.push(summaryResult.mini_actions[i]);
+                      if (allActions[i]) actions.push(allActions[i]);
                     });
                     if (customAction.trim()) actions.push(customAction.trim());
                     if (session?.id) {
@@ -358,8 +351,8 @@ export default function DoneTab({
                     }
                   }}
                   style={{
-                    marginTop: 12, fontFamily: display, fontSize: 13, fontWeight: 600,
-                    padding: "10px 24px", borderRadius: 100,
+                    marginTop: space[3], ...textPreset.secondary, fontWeight: 600,
+                    padding: `${space[3]}px ${space[5]}px`, borderRadius: radii.full,
                     backgroundColor: colors.coral, color: colors.bgDeep,
                     border: "none", cursor: "pointer",
                   }}
@@ -368,11 +361,11 @@ export default function DoneTab({
                 </button>
               )}
               {summaryResult.committed_actions && summaryResult.committed_actions.length > 0 && (
-                <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, backgroundColor: colors.bgElevated }}>
+                <div style={{ marginTop: space[3], padding: `${space[3]}px ${space[3]}px`, borderRadius: radii.sm, backgroundColor: colors.bgElevated }}>
                   <p style={{ ...textPreset.caption, color: colors.coral, margin: "0 0 6px 0" }}>
                     Committed
                   </p>
-                  {(summaryResult.committed_actions || []).map((a, i) => (
+                  {summaryResult.committed_actions.map((a, i) => (
                     <p key={i} style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 4px 0" }}>
                       {"\u2713"} {a}
                     </p>
@@ -381,78 +374,6 @@ export default function DoneTab({
               )}
             </motion.div>
           )}
-
-          {/* Day rating + feedback */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 6 * 0.15, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              backgroundColor: colors.bgSurface,
-              borderRadius: 14,
-              border: `1px solid ${colors.borderDefault}`,
-              padding: space[5],
-            }}
-          >
-            <p style={{
-              ...textPreset.caption, color: "#ffffff",
-              margin: `0 0 ${space[6]}px 0`,
-            }}>
-              How did you show up today?
-            </p>
-
-            <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <motion.button
-                  key={star}
-                  whileHover={{ scale: 1.15 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setDayRating(dayRating === star ? null : star)}
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 10,
-                    border: dayRating && star <= dayRating
-                      ? `2px solid ${colors.coral}`
-                      : `1px solid ${colors.borderDefault}`,
-                    backgroundColor: dayRating && star <= dayRating ? colors.coralWash : colors.bgSurface,
-                    color: dayRating && star <= dayRating ? colors.coral : "#ffffff",
-                    fontSize: 22,
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: display,
-                  }}
-                >
-                  ★
-                </motion.button>
-              ))}
-            </div>
-
-            <textarea
-              value={dayFeedback}
-              onChange={(e) => setDayFeedback(e.target.value)}
-              placeholder="Any feedback on today's session? (optional)"
-              style={{
-                width: "100%",
-                minHeight: 70,
-                padding: 14,
-                ...textPreset.body,
-                border: `1px solid ${colors.borderDefault}`,
-                borderRadius: radii.md,
-                resize: "none",
-                outline: "none",
-                boxSizing: "border-box",
-                color: colors.textPrimary,
-                backgroundColor: colors.bgInput,
-                transition: "border-color 0.2s",
-              }}
-              onFocus={(e) => { e.target.style.borderColor = colors.coral; }}
-              onBlur={(e) => { e.target.style.borderColor = colors.borderDefault; }}
-            />
-          </motion.div>
 
           {/* Complete day */}
           <motion.div

@@ -167,6 +167,35 @@ export default function TellTab({
   activeTab,
 }: TellTabProps) {
   const [showThoughtConversation, setShowThoughtConversation] = useState(false);
+  const [expandedPrompts, setExpandedPrompts] = useState<Array<{ prompt: string; expanded?: string; purpose: string; context?: string }>>(
+    programDay?.seed_prompts || []
+  );
+
+  // Expand terse seed prompts on first load (cache-once via Haiku)
+  useEffect(() => {
+    if (!programDay?.seed_prompts?.length) return;
+    const prompts = programDay.seed_prompts as Array<{ prompt: string; expanded?: string; purpose: string; context?: string }>;
+    setExpandedPrompts(prompts);
+
+    // If any prompt lacks an expanded field, trigger expansion
+    const needsExpansion = prompts.some((sp) => !sp.expanded);
+    if (!needsExpansion) return;
+
+    fetch("/api/expand-prompts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        programDayId: programDay.id,
+        seedPrompts: prompts,
+        territory: programDay.territory,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.expanded) setExpandedPrompts(data.expanded);
+      })
+      .catch((err) => console.warn("Prompt expansion failed:", err));
+  }, [programDay]);
   const [followThroughListening, setFollowThroughListening] = useState(false);
   const followThroughRecognitionRef = useRef<any>(null);
 
@@ -511,20 +540,15 @@ export default function TellTab({
               Thought Inspiration
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
-              {programDay.seed_prompts.map((sp, i) => (
+              {expandedPrompts.map((sp, i) => (
                 <div key={i} style={{
                   padding: `${space[3]}px ${space[4]}px`,
                   backgroundColor: colors.bgElevated,
                   borderRadius: radii.md,
                 }}>
                   <p style={{ ...textPreset.body, color: "#ffffff", margin: 0 }}>
-                    {sp.prompt}
+                    {sp.expanded || sp.prompt}
                   </p>
-                  {sp.context && (
-                    <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.45)", margin: `${space[1]}px 0 0 0` }}>
-                      {sp.context}
-                    </p>
-                  )}
                 </div>
               ))}
             </div>

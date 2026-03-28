@@ -119,7 +119,19 @@ export async function POST(request: Request) {
       // exercise_completions table may not exist yet — that's OK
     }
 
+    // Fetch Enneagram assessment if available
+    const { data: enneagramAssessment } = await supabase
+      .from("client_assessments")
+      .select("data")
+      .eq("client_id", user.id)
+      .eq("type", "enneagram")
+      .maybeSingle();
+
     // Build the prompt
+    const enneagramContext = enneagramAssessment?.data
+      ? `\n## Enneagram Analysis\nType: ${(enneagramAssessment.data as Record<string, unknown>).type || "unknown"}\nWing: ${(enneagramAssessment.data as Record<string, unknown>).wing || "unknown"}\nTritype: ${(enneagramAssessment.data as Record<string, unknown>).tritype || "unknown"}\nKey Development Areas:\n${((enneagramAssessment.data as Record<string, unknown>).key_development_areas as string[] || []).map((a: string) => `- ${a}`).join("\n")}\nIntegration Plan:\n${(enneagramAssessment.data as Record<string, unknown>).integration_plan || "none"}\n`
+      : "";
+
     const promptData = `
 ## Program
 ${enrollment.programs?.name || "PARACHUTE"} — ${enrollment.programs?.tagline || "30-Day Coaching Program"}
@@ -132,6 +144,7 @@ ${JSON.stringify(enrollment.onboarding_data, null, 2)}
 
 ## Assessment Data
 ${JSON.stringify(enrollment.assessment_data, null, 2)}
+${enneagramContext}
 
 ## Journal Entries (Days 1-3)
 ${
@@ -188,6 +201,15 @@ Generate 6 personalized coaching goals for this client based on everything above
         { error: "Unable to process response. Please try again." },
         { status: 500 }
       );
+    }
+
+    // If regenerating, delete existing proposed goals first
+    if (body.regenerate) {
+      await supabase
+        .from("client_goals")
+        .delete()
+        .eq("enrollment_id", enrollmentId)
+        .eq("status", "proposed");
     }
 
     // Save goals to client_goals table

@@ -598,7 +598,54 @@ function GoalsPage() {
       <FadeIn preset="fade" delay={0.12} triggerOnMount>
         <div style={{ marginBottom: 24 }}>
           {enneagramData ? (
-            <EnneagramInsights data={enneagramData} />
+            <>
+              <EnneagramInsights data={enneagramData} />
+              {goals.length > 0 && !alreadyApproved && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={async () => {
+                    if (!enrollment) return;
+                    setGenerating(true);
+                    setErrorMsg(null);
+                    try {
+                      const res = await fetch("/api/generate-goals", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ enrollmentId: enrollment.id, regenerate: true }),
+                      });
+                      if (!res.ok) {
+                        const err = await res.json();
+                        setErrorMsg(err.error || "Failed to regenerate goals.");
+                      } else {
+                        const data = await res.json();
+                        setGoals(data.goals);
+                        setActiveGoalIds(new Set());
+                      }
+                    } catch {
+                      setErrorMsg("Regeneration failed. Please try again.");
+                    }
+                    setGenerating(false);
+                  }}
+                  disabled={generating}
+                  style={{
+                    marginTop: 12,
+                    padding: "10px 20px",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: colors.coral,
+                    backgroundColor: "transparent",
+                    border: `1px solid ${colors.coral}`,
+                    borderRadius: 100,
+                    cursor: generating ? "wait" : "pointer",
+                    fontFamily: display,
+                    opacity: generating ? 0.5 : 1,
+                  }}
+                >
+                  {generating ? "Regenerating..." : "Regenerate Goals with Enneagram"}
+                </motion.button>
+              )}
+            </>
           ) : user ? (
             <EnneagramUpload
               clientId={user.id}
@@ -658,9 +705,9 @@ function GoalsPage() {
                     }}>
                       {goal.why_generated}
                     </p>
-                    {/* Weekly self-ratings */}
+                    {/* Weekly self-ratings + status controls */}
                     {alreadyApproved && (
-                      <div style={{ display: "flex", gap: 8, marginTop: 12, alignItems: "center" }}>
+                      <div style={{ display: "flex", gap: 8, marginTop: 12, alignItems: "center", flexWrap: "wrap" }}>
                         {[1, 2, 3, 4].map((wk) => {
                           const review = weekRatings.find((r) => r.week_number === wk);
                           const rating = review?.goal_ratings?.[goal.id]?.rating;
@@ -690,6 +737,65 @@ function GoalsPage() {
                             </div>
                           );
                         })}
+                        {/* Goal status controls */}
+                        {goal.status === "active" && (
+                          <div style={{ marginLeft: "auto", display: "flex", gap: 6 }}>
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                await supabase.from("client_goals").update({ status: "completed" }).eq("id", goal.id);
+                                setGoals((prev) => prev.map((g) => g.id === goal.id ? { ...g, status: "completed" } : g));
+                              }}
+                              style={{
+                                padding: "4px 10px", fontSize: 11, fontWeight: 600,
+                                color: colors.success, backgroundColor: `${colors.success}15`,
+                                border: `1px solid ${colors.success}40`, borderRadius: 100,
+                                cursor: "pointer", fontFamily: display,
+                              }}
+                            >
+                              Complete
+                            </button>
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                await supabase.from("client_goals").update({ status: "paused" }).eq("id", goal.id);
+                                setGoals((prev) => prev.map((g) => g.id === goal.id ? { ...g, status: "paused" } : g));
+                              }}
+                              style={{
+                                padding: "4px 10px", fontSize: 11, fontWeight: 600,
+                                color: colors.textMuted, backgroundColor: colors.bgElevated,
+                                border: `1px solid ${colors.borderDefault}`, borderRadius: 100,
+                                cursor: "pointer", fontFamily: display,
+                              }}
+                            >
+                              Pause
+                            </button>
+                          </div>
+                        )}
+                        {goal.status === "paused" && (
+                          <div style={{ marginLeft: "auto" }}>
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                await supabase.from("client_goals").update({ status: "active" }).eq("id", goal.id);
+                                setGoals((prev) => prev.map((g) => g.id === goal.id ? { ...g, status: "active" } : g));
+                              }}
+                              style={{
+                                padding: "4px 10px", fontSize: 11, fontWeight: 600,
+                                color: colors.coral, backgroundColor: colors.coralWash,
+                                border: `1px solid ${colors.coral}40`, borderRadius: 100,
+                                cursor: "pointer", fontFamily: display,
+                              }}
+                            >
+                              Resume
+                            </button>
+                          </div>
+                        )}
+                        {goal.status === "completed" && (
+                          <span style={{ marginLeft: "auto", fontSize: 11, fontWeight: 600, color: colors.success, fontFamily: display }}>
+                            Completed
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>

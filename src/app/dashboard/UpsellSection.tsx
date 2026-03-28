@@ -175,7 +175,7 @@ function EnneagramCard() {
           style={{
             fontFamily: display, fontSize: 13, fontWeight: 600,
             padding: "10px 24px", borderRadius: 100,
-            backgroundColor: colors.coral, color: colors.textPrimary,
+            backgroundColor: colors.coral, color: colors.bgDeep,
             border: "none", cursor: loading ? "default" : "pointer",
             letterSpacing: "0.01em",
             opacity: loading ? 0.7 : 1,
@@ -215,7 +215,7 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
         backgroundColor: colors.coralWash, color: colors.coralLight,
         marginBottom: 14,
       }}>
-        Human support
+        Dedicated Expert-Coach
       </span>
       <p style={{
         fontFamily: display, fontSize: 18, fontWeight: 700,

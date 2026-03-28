@@ -81,7 +81,6 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
   const [sessionMap, setSessionMap] = useState<Map<number, string>>(new Map());
   const [collapsed, setCollapsed] = useState(false);
   const [showAll, setShowAll] = useState(false);
-  const MAX_VISIBLE = 5;
   const supabase = createClient();
 
   const loadData = useCallback(async () => {
@@ -236,6 +235,15 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
     ? completedExercises
     : completedExercises.filter((e) => e.modality === modalityFilter);
 
+  // Show only previous day's exercises by default
+  const latestDay = filteredCompleted.length > 0
+    ? Math.max(...filteredCompleted.map(e => e.day_number || 0))
+    : 0;
+  const recentDayExercises = filteredCompleted.filter(e => e.day_number === latestDay);
+  const visibleExercises = showAll
+    ? filteredCompleted
+    : (recentDayExercises.length > 0 ? recentDayExercises : filteredCompleted.slice(-3));
+
   const tabs: { key: TabFilter; label: string; count: number }[] = [
     { key: "completed", label: "Completed", count: completedExercises.length },
     { key: "parked", label: "Parked", count: parkedExercises.length },
@@ -378,12 +386,12 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                     </div>
                   ) : (
                     <>
-                    {!showAll && filteredCompleted.length > MAX_VISIBLE && (
+                    {!showAll && filteredCompleted.length > recentDayExercises.length && (
                       <p style={{ ...text.caption, color: colors.textMuted, margin: "0 0 8px 0" }}>
-                        {filteredCompleted.length} exercises completed across {Math.ceil(filteredCompleted.length / 7)} weeks
+                        {filteredCompleted.length} exercises completed across {Math.ceil(filteredCompleted.length / 7)} {Math.ceil(filteredCompleted.length / 7) === 1 ? "week" : "weeks"}
                       </p>
                     )}
-                    {(showAll ? filteredCompleted : filteredCompleted.slice(-MAX_VISIBLE)).map((ex) => {
+                    {visibleExercises.map((ex) => {
                       const isExpanded = expandedId === ex.id;
                       const modStyle = ex.modality ? modalityColors[ex.modality] : null;
                       const tStyle = typeLabels[ex.exercise_type] || { label: ex.exercise_type, color: colors.textMuted };
@@ -433,18 +441,8 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                 }}>
                                   {tStyle.label}
                                 </span>
-                                {modStyle && (
-                                  <span style={{
-                                    ...text.caption,
-                                    textTransform: "uppercase",
-                                    padding: "2px 7px", borderRadius: radii.full,
-                                    backgroundColor: modStyle.bg, color: modStyle.text,
-                                  }}>
-                                    {modStyle.label}
-                                  </span>
-                                )}
                                 {ex.day_number && (
-                                  <span style={{ fontSize: 10, color: colors.borderDefault, fontFamily: body }}>
+                                  <span style={{ fontSize: 10, color: "#ffffff", fontFamily: body }}>
                                     Day {ex.day_number}
                                   </span>
                                 )}
@@ -503,7 +501,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                         </motion.div>
                       );
                     })}
-                    {!showAll && filteredCompleted.length > MAX_VISIBLE && (
+                    {!showAll && filteredCompleted.length > recentDayExercises.length && (
                       <button
                         onClick={() => setShowAll(true)}
                         style={{
@@ -516,7 +514,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                         Show all {filteredCompleted.length} exercises
                       </button>
                     )}
-                    {showAll && filteredCompleted.length > MAX_VISIBLE && (
+                    {showAll && filteredCompleted.length > recentDayExercises.length && (
                       <button
                         onClick={() => setShowAll(false)}
                         style={{

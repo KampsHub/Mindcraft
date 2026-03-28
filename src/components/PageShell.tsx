@@ -166,6 +166,11 @@ export default function PageShell({
           maxWidth, margin: "0 auto",
           display: "flex", alignItems: "center", justifyContent: "center",
           flexWrap: "wrap", gap: space[4],
+          backgroundColor: "rgba(24, 24, 28, 0.85)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderRadius: radii.md,
+          padding: `${space[4]}px ${space[5]}px`,
         }}>
           <div style={{ display: "flex", gap: space[5], fontSize: 13, color: colors.textPrimary, alignItems: "center" }}>
             <span>

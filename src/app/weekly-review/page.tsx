@@ -836,7 +836,7 @@ function WeeklyReviewPage() {
                       margin: "0 0 10px 0", textTransform: "uppercase",
                       letterSpacing: "0.08em", fontFamily: display,
                     }}>
-                      What you came in with
+                      Your starting point
                     </p>
                     {(enrollment.pre_start_data as Record<string, string>)?.goal && (
                       <p style={{ fontSize: 14, color: colors.textPrimary, margin: "0 0 8px 0", fontFamily: body, lineHeight: 1.5, fontStyle: "italic" }}>

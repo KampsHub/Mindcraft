@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import PageShell from "@/components/PageShell";
 import PillButton from "@/components/PillButton";
-import { colors, fonts } from "@/lib/theme";
+import { colors, fonts, radii } from "@/lib/theme";
 import AnimatedStat from "@/components/AnimatedStat";
 import ProgramSwitcher from "@/components/ProgramSwitcher";
 import EnneagramUpload from "@/components/EnneagramUpload";
@@ -662,46 +662,47 @@ function GoalsPage() {
             <FadeIn key={goal.id} preset="slide-up" delay={i * 0.06} triggerOnMount>
               <motion.div
                 onClick={() => !alreadyApproved && toggleGoalActive(goal.id)}
-                whileHover={!alreadyApproved ? { y: -3, boxShadow: "0 12px 28px rgba(0,0,0,0.15)" } : {}}
+                whileHover={!alreadyApproved ? { y: -2 } : {}}
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 style={{
-                  backgroundColor: colors.bgSurface,
-                  borderRadius: 14,
-                  border: `1px solid ${colors.borderDefault}`,
-                  padding: 22,
+                  borderRadius: radii.lg,
+                  border: isActive
+                    ? `2px solid ${colors.coral}`
+                    : `1px solid ${colors.borderSubtle}`,
+                  padding: "20px 22px",
                   cursor: alreadyApproved ? "default" : "pointer",
-                  borderColor: isActive ? colors.coralWash : colors.borderDefault,
-                  background: isActive
-                    ? `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.coralWash} 100%)`
-                    : colors.bgSurface,
-                  transition: "border-color 0.2s, background 0.2s",
+                  backgroundColor: isActive ? "rgba(196, 148, 58, 0.06)" : colors.bgRecessed,
+                  transition: "all 0.2s",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                  {/* Selector circle */}
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+                  {/* Selector / status indicator */}
                   <div style={{
-                    width: 30, height: 30, borderRadius: "50%", flexShrink: 0, marginTop: 2,
+                    width: 24, height: 24, borderRadius: "50%", flexShrink: 0, marginTop: 1,
                     border: isActive
                       ? `2px solid ${colors.coral}`
-                      : `2px solid ${colors.borderDefault}`,
+                      : `1.5px solid ${colors.borderDefault}`,
                     backgroundColor: isActive ? colors.coral : "transparent",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    color: colors.bgDeep, fontSize: 14, fontWeight: 700, fontFamily: display,
                     transition: "all 0.2s",
                   }}>
-                    {isActive ? "✓" : ""}
+                    {isActive && (
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 6l3 3 5-5" stroke={colors.bgDeep} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
                   </div>
 
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{
-                      fontSize: 15, fontWeight: 600, color: colors.textPrimary,
-                      margin: "0 0 6px 0", lineHeight: 1.45, fontFamily: body,
+                      fontSize: 16, fontWeight: 600, color: colors.textPrimary,
+                      margin: "0 0 8px 0", lineHeight: 1.4, fontFamily: body,
                     }}>
                       {goal.goal_text}
                     </p>
                     <p style={{
-                      fontSize: 13, color: colors.textMuted,
-                      margin: 0, lineHeight: 1.55, fontFamily: body,
+                      fontSize: 14, color: colors.textSecondary,
+                      margin: 0, lineHeight: 1.6, fontFamily: body,
                     }}>
                       {goal.why_generated}
                     </p>

@@ -451,7 +451,7 @@ export default function MyAccountPage() {
             fontSize: 16, fontWeight: 700, margin: "0 0 6px 0",
             color: colors.error, fontFamily: display, letterSpacing: "-0.02em",
           }}>
-            Danger Zone
+            Delete Account
           </h2>
           <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 16px 0", fontFamily: body, lineHeight: 1.5 }}>
             Permanently delete your account and all associated data. This action cannot be undone.

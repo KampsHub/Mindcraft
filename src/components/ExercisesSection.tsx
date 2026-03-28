@@ -716,6 +716,29 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Download Exercise Guide */}
+      {enrollment && (
+        <button
+          onClick={() => {
+            const url = `/api/exercises/download?enrollmentId=${enrollment.id}`;
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "mindcraft-exercise-guide.md";
+            a.click();
+          }}
+          style={{
+            marginTop: space[4],
+            fontFamily: display, fontSize: 12, fontWeight: 600,
+            padding: "8px 20px", borderRadius: radii.full,
+            backgroundColor: "transparent", color: colors.textMuted,
+            border: `1px solid ${colors.borderDefault}`, cursor: "pointer",
+            transition: "color 0.2s",
+          }}
+        >
+          Download Exercise Guide
+        </button>
+      )}
     </div>
   );
 }

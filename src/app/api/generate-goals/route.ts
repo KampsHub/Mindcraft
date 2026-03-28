@@ -178,7 +178,12 @@ Generate 6 personalized coaching goals for this client based on everything above
       );
     }
 
-    const result = JSON.parse(textBlock.text);
+    // Strip code fences if Claude wraps JSON
+    let raw = textBlock.text.trim();
+    if (raw.startsWith("```")) {
+      raw = raw.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    }
+    const result = JSON.parse(raw);
 
     // Save goals to client_goals table
     const goalsToInsert = result.goals.map(

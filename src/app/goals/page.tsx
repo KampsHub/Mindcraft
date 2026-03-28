@@ -76,6 +76,7 @@ function GoalsPage() {
   const [sessions, setSessions] = useState<DailySession[]>([]);
   const [exerciseCount, setExerciseCount] = useState(0);
   const [journalEntryCount, setJournalEntryCount] = useState(0);
+  const [totalCompletedSessions, setTotalCompletedSessions] = useState(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [enneagramData, setEnneagramData] = useState<EnneagramAnalysis | null>(null);
   const [weekNumber, setWeekNumber] = useState(1);
@@ -138,34 +139,35 @@ function GoalsPage() {
         .order("day_number", { ascending: true });
       if (weekSessions) setSessions(weekSessions);
 
-      const sessionIds = weekSessions?.map((s: DailySession) => s.id) || [];
-      if (sessionIds.length > 0) {
+      // Also fetch ALL sessions for total counts
+      const { data: totalSessions } = await supabase
+        .from("daily_sessions")
+        .select("id, completed_at")
+        .eq("enrollment_id", selectedEnrollment.id);
+      setTotalCompletedSessions(totalSessions?.filter((s: { completed_at: string | null }) => s.completed_at).length || 0);
+
+      // Count ALL exercises across the entire program
+      const { data: allSessions } = await supabase
+        .from("daily_sessions")
+        .select("id")
+        .eq("enrollment_id", selectedEnrollment.id);
+      const allSessionIds = allSessions?.map((s: { id: string }) => s.id) || [];
+      if (allSessionIds.length > 0) {
         const { count: exCount } = await supabase
           .from("exercise_completions")
           .select("id", { count: "exact", head: true })
-          .in("daily_session_id", sessionIds);
+          .in("daily_session_id", allSessionIds);
         if (exCount !== null) setExerciseCount(exCount);
       }
 
-      const completedDates = weekSessions
-        ?.filter((s: DailySession) => s.completed_at)
-        .map((s: DailySession) => s.completed_at!.split("T")[0]) || [];
-      if (completedDates.length > 0) {
-        const minDate = completedDates[0];
-        const maxDate = completedDates[completedDates.length - 1];
-        const startDate = new Date(minDate);
-        startDate.setDate(startDate.getDate() - 1);
-        const endDate = new Date(maxDate);
-        endDate.setDate(endDate.getDate() + 1);
-        const { count: jCount } = await supabase
-          .from("entries")
-          .select("id", { count: "exact", head: true })
-          .eq("client_id", userId)
-          .eq("metadata->>source", "mindful_journal")
-          .gte("date", startDate.toISOString().split("T")[0])
-          .lte("date", endDate.toISOString().split("T")[0]);
-        if (jCount !== null) setJournalEntryCount(jCount);
-      }
+      // Count journal entries: daily session journals + mindful journal entries
+      const dailyJournalCount = allSessions?.length || 0;
+      const { count: mindfulCount } = await supabase
+        .from("entries")
+        .select("id", { count: "exact", head: true })
+        .eq("client_id", userId)
+        .eq("metadata->>source", "mindful_journal");
+      setJournalEntryCount(dailyJournalCount + (mindfulCount || 0));
 
       const { data: goalData } = await supabase
         .from("client_goals")
@@ -571,10 +573,10 @@ function GoalsPage() {
       <FadeIn preset="fade" delay={0.1} triggerOnMount>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 32 }}>
           <AnimatedStat
-            value={sessions.filter((s) => s.completed_at).length}
-            max={7}
+            value={totalCompletedSessions}
+            max={30}
             label="sessions"
-            format="/7"
+            format="/30"
             accentColor={colors.coral}
           />
           <AnimatedStat

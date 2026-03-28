@@ -815,28 +815,28 @@ function HowItWorks() {
   const steps = [
     {
       num: 1,
-      title: "Yesterday's themes surface",
-      desc: "Your patterns reflected back to you: recurring themes in your journal, one-liners you captured, free-flow context from throughout the day. A mirror, not a grade.",
+      title: "Yesterday's takeaways + thought inspiration",
+      desc: "What surfaced yesterday — the questions you sat with, the challenges you took on, what came up overnight. Then thought prompts drawn from where you are in the program. You can discuss them with your coaching assistant or just sit with them.",
     },
     {
       num: 2,
-      title: "Free-flow journal",
-      desc: "Write freely. Prompts drawn from where you are in the program and patterns your coach\u2019s AI picked up on. Or ignore them and write what\u2019s real.",
+      title: "Free flow + journal",
+      desc: "A space for whatever came up from the prompts — a sentence or two, no pressure. Then your journal: write freely, speak it, or both. Your entry shapes everything that follows.",
     },
     {
       num: 3,
-      title: "Your journal shapes your day",
-      desc: "Coach-designed AI reads what you wrote, picks up on emotional and cognitive patterns, and selects exercises matched to where you are right now. This is what makes each day different.",
+      title: "Your journal shapes your exercises",
+      desc: "Your coaching assistant reads what you wrote, notices patterns, and selects exercises matched to what actually surfaced today. Each exercise explains why it was chosen, the science behind it, and walks you through it step by step. Talk through it with your assistant or do it on your own.",
     },
     {
       num: 4,
-      title: "Exercises + framework analysis + goal check-in",
-      desc: null, // complex content rendered inline
+      title: "Personalized exercises + goal integration",
+      desc: null,
     },
     {
       num: 5,
-      title: "Daily summary",
-      desc: "What your coaching intelligence surfaced. Multi-day patterns. Tomorrow's territory. Rate each exercise 1-5. Give feedback. Download your summary.",
+      title: "Questions to sit with + challenges for tomorrow",
+      desc: "Open questions drawn from today's session — the kind that shift something just by carrying them. Plus small real-world experiments to try before tomorrow. You choose which ones to commit to, and they come back in tomorrow's check-in.",
     },
   ];
 
@@ -1101,20 +1101,18 @@ function HowItWorks() {
                   {step.num === 4 ? (
                     <div style={{ fontFamily: body, fontSize: 14, color: "#ffffff", lineHeight: 1.7 }}>
                       <p style={{ marginBottom: 12 }}>
-                        <strong style={{ color: "#ffffff" }}>Coaching plan exercises</strong>{" "}
-                        <span style={{ display: "inline-block", fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" as const, color: colors.coral, background: colors.coralWash, padding: "2px 7px", borderRadius: 3, marginLeft: 6 }}>Required</span>{" "}
-                        — 1-2 per day, tied to your goals and the program arc.
+                        <strong style={{ color: "#ffffff" }}>Coaching plan exercise</strong>{" "}
+                        — matched to your program arc and weekly territory. Explains why it was selected and the science behind it.
                       </p>
                       <p style={{ marginBottom: 12 }}>
-                        <strong style={{ color: "#ffffff" }}>Overflow exercises</strong>{" "}
-                        <span style={{ display: "inline-block", fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" as const, color: "#ffffff", background: "rgba(255,255,255,0.1)", padding: "2px 7px", borderRadius: 3, marginLeft: 6 }}>Optional</span>{" "}
-                        — up to 5, one per modality, selected from a library of 250+ sourced tools based on your journal.
+                        <strong style={{ color: "#ffffff" }}>Journal-matched exercises</strong>{" "}
+                        — 2 exercises selected from 250+ sourced tools, responding to what you actually wrote today. Each one includes context, a framework explanation, and step-by-step instructions.
                       </p>
                       <p style={{ marginBottom: 12 }}>
-                        <strong style={{ color: "#ffffff" }}>Framework analysis</strong> — a named psychological framework applied to a pattern in your recent entries. Every day.
+                        <strong style={{ color: "#ffffff" }}>Goal-matched exercise</strong> — one exercise connected to your active coaching goals, so your daily work stays aligned with where you're headed.
                       </p>
                       <p>
-                        <strong style={{ color: "#ffffff" }}>Goal accountability</strong> — your earlier reflections connected back to your active goals.
+                        <strong style={{ color: "#ffffff" }}>Talk through it or write</strong> — every exercise can be done as a voice conversation with your coaching assistant, or completed by writing. Park any exercise for later.
                       </p>
                     </div>
                   ) : (
@@ -2007,7 +2005,7 @@ function FAQ() {
     {
       topic: "The program",
       q: "How much time does this take each day?",
-      a: "The required coaching plan exercises take about 5 minutes. If you do all the optional overflow exercises, 25-30 minutes. Most people settle into 15-20 minutes. You decide each day based on your time and energy.",
+      a: "The required coaching plan exercises take about 5 minutes. If you do all the optional journal-matched exercises, 25-30 minutes. Most people settle into 15-20 minutes. You decide each day based on your time and energy.",
     },
     {
       topic: "The program",

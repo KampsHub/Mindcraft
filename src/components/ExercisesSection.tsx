@@ -439,33 +439,14 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                                 }}>
                                   {ex.custom_framing && (
                                     <p style={{
-                                      fontSize: 12, color: colors.textMuted, fontStyle: "italic",
-                                      margin: "0 0 10px 0", lineHeight: 1.55, fontFamily: body,
+                                      ...text.body, color: "rgba(255,255,255,0.88)",
+                                      margin: 0, whiteSpace: "pre-wrap",
                                     }}>
                                       {ex.custom_framing}
                                     </p>
                                   )}
-                                  {ex.responses?.main && (
-                                    <div style={{
-                                      padding: 14, backgroundColor: colors.bgRecessed,
-                                      borderRadius: 10, marginBottom: 10,
-                                    }}>
-                                      <p style={{
-                                        ...text.caption, color: colors.textMuted,
-                                        margin: "0 0 6px 0",
-                                      }}>
-                                        Your response
-                                      </p>
-                                      <p style={{
-                                        fontSize: 13, color: colors.textBody, margin: 0,
-                                        lineHeight: 1.65, fontFamily: body, whiteSpace: "pre-wrap",
-                                      }}>
-                                        {ex.responses.main}
-                                      </p>
-                                    </div>
-                                  )}
                                   {ex.completed_at && (
-                                    <p style={{ fontSize: 11, color: colors.borderDefault, margin: 0, fontFamily: body }}>
+                                    <p style={{ ...text.caption, color: colors.textMuted, margin: `${space[3]}px 0 0 0` }}>
                                       Completed {new Date(ex.completed_at).toLocaleDateString("en-US", {
                                         month: "short", day: "numeric", year: "numeric",
                                       })}

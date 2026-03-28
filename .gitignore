@@ -2,6 +2,10 @@
 
 # dependencies
 /node_modules
+
+# sandbox runtime (keep source, ignore build artifacts)
+/sandbox/.next
+/sandbox/node_modules
 /.pnp
 .pnp.*
 .yarn/*

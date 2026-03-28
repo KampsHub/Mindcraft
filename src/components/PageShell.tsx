@@ -141,7 +141,7 @@ export default function PageShell({
         <Nav />
         <div className="page-content-mobile page-shell-inner" style={{ maxWidth, margin: "0 auto", padding: `${space[7]}px ${space[5]}px 80px`, position: "relative" }}>
           {showBgImage ? (
-            <div style={{
+            <div className="content-panel-inner" style={{
               backgroundColor: "rgba(51, 51, 57, 0.5)",
               borderRadius: radii.lg,
               padding: `${space[6]}px ${space[5]}px`,

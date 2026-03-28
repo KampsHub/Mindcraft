@@ -283,14 +283,14 @@ export default function GuidedExerciseFlow({
         backgroundColor: colors.bgDeep,
         display: "flex", flexDirection: "column",
         alignItems: "center",
-        padding: "40px 24px 24px",
+        padding: "max(40px, env(safe-area-inset-top, 40px)) 24px max(24px, env(safe-area-inset-bottom, 24px))",
       }}
     >
       {/* Close button */}
       <button
         onClick={handleClose}
         style={{
-          position: "absolute", top: 20, right: 20,
+          position: "absolute", top: "max(20px, env(safe-area-inset-top, 20px))", right: 20,
           background: "none", border: "none", cursor: "pointer",
           color: "rgba(255,255,255,0.4)", fontSize: 24,
           zIndex: 10,

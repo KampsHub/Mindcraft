@@ -85,6 +85,11 @@
   .page-shell-inner {
     padding-left: 16px !important;
     padding-right: 16px !important;
+    padding-top: 28px !important;
+  }
+
+  .content-panel-inner {
+    padding: 20px 16px !important;
   }
 }
 

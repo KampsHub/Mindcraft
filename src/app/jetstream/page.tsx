@@ -2353,6 +2353,7 @@ function ResponsiveStyles() {
         .jetstream-arc-grid { grid-template-columns: 1fr !important; }
         .jetstream-privacy-grid { grid-template-columns: 1fr !important; }
         .jetstream-research-grid { grid-template-columns: 1fr !important; }
+        .jetstream-price-grid > div > div { padding: 20px !important; }
       }
       html { scroll-behavior: smooth; }
     `}</style>

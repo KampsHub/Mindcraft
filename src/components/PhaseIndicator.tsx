@@ -107,7 +107,7 @@ export default function PhaseIndicator({ activePhase, completedPhases, onPhaseCl
             {/* Connecting line */}
             {i < PHASES.length - 1 && (
               <div style={{
-                width: 60, height: 2, margin: "0 8px",
+                width: "clamp(32px, 10vw, 60px)", height: 2, margin: "0 6px",
                 backgroundColor: "rgba(255,255,255,0.1)",
                 borderRadius: 1,
                 position: "relative",

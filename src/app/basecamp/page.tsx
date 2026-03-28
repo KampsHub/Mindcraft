@@ -2480,6 +2480,7 @@ function ResponsiveStyles() {
         .basecamp-arc-grid { grid-template-columns: 1fr !important; }
         .basecamp-privacy-grid { grid-template-columns: 1fr !important; }
         .basecamp-research-grid { grid-template-columns: 1fr !important; }
+        .basecamp-price-grid > div > div { padding: 20px !important; }
       }
       html { scroll-behavior: smooth; }
     `}</style>

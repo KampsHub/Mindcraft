@@ -2005,6 +2005,7 @@ function Pricing() {
         {/* Self-guided program — single card with tier selector */}
         <FadeIn preset="slide-up" delay={0.1}>
           <div
+            className="parachute-pricing-card"
             style={{
               padding: 32,
               border: `2px solid ${colors.coral}`,
@@ -2046,7 +2047,7 @@ function Pricing() {
             </p>
 
             {/* Tier selector pills */}
-            <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+            <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
               {tiers.map((tier) => (
                 <button
                   key={tier.key}
@@ -2055,7 +2056,8 @@ function Pricing() {
                     trackEvent(`layoff_${tier.key}_price_click`, { tier: tier.key, price: tier.price });
                   }}
                   style={{
-                    flex: 1,
+                    flex: "1 1 auto",
+                    minWidth: 0,
                     fontFamily: body,
                     fontSize: 12,
                     fontWeight: 600,
@@ -2066,7 +2068,6 @@ function Pricing() {
                     color: selectedTier === tier.key ? "#ffffff" : colors.textSecondary,
                     border: selectedTier === tier.key ? "none" : `1px solid ${colors.borderDefault}`,
                     transition: "all 0.2s",
-                    whiteSpace: "nowrap" as const,
                   }}
                 >
                   {tier.name}
@@ -3479,6 +3480,7 @@ function ResponsiveStyles() {
         .parachute-arc-grid { grid-template-columns: 1fr !important; }
         .parachute-privacy-grid { grid-template-columns: 1fr !important; }
         .parachute-research-grid { grid-template-columns: 1fr !important; }
+        .parachute-pricing-card { padding: 20px !important; }
       }
       html { scroll-behavior: smooth; }
     `}</style>

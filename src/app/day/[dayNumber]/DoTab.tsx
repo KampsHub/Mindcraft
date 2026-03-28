@@ -510,6 +510,11 @@ export default function DoTab({
                 onComplete={(responses, rating) =>
                   handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
                 }
+                onPark={() => {
+                  // Coaching exercises appear in the dashboard "Parked" tab automatically
+                  // when they have no exercise_completion record for a completed day.
+                  // No database write needed — the visual park state is handled by ExerciseCard.
+                }}
               />
             ))}
           </div>
@@ -545,6 +550,11 @@ export default function DoTab({
                     responses, rating, ex.custom_framing, ex.framework_id
                   )
                 }
+                onPark={() => {
+                  // Overflow exercises are ephemeral (generated per-session), so parking
+                  // is purely visual — collapses the card and shows "Parked" indicator.
+                  // The user can revisit coaching-plan exercises from the dashboard Parked tab.
+                }}
               />
             ))}
           </div>

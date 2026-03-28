@@ -197,15 +197,6 @@ export const button = {
   } as React.CSSProperties,
 };
 
-// ── Typography presets (legacy — prefer `text.*` above) ──
-
-export const type = {
-  heading: { ...text.heading, fontSize: 24, letterSpacing: "-0.03em" },
-  body: { ...text.body, fontSize: 16, lineHeight: 1.8 },
-  label: { ...text.caption, fontSize: 12, letterSpacing: "0.04em" },
-  caption: { ...text.secondary, fontSize: 14, color: colors.textMuted },
-};
-
 // ── Card preset ──
 
 export const card = {

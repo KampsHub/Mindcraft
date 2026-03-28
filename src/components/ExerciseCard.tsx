@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts, space, text as textScale, radii } from "@/lib/theme";
 import MultiPartExerciseCard, { type ExercisePart } from "@/components/MultiPartExerciseCard";
@@ -10,7 +10,6 @@ import EmotionChips from "@/components/EmotionChips";
 import FlagButton from "@/components/FlagButton";
 import VoiceResponseArea from "@/components/VoiceResponseArea";
 import GuidedExerciseFlow from "@/components/GuidedExerciseFlow";
-import ListenRespondFlow from "@/components/ListenRespondFlow";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -90,83 +89,23 @@ export default function ExerciseCard({
   const [rating, setRating] = useState<number | null>(existingRating || null);
   const [submitted, setSubmitted] = useState(isCompleted);
   const [showScience, setShowScience] = useState(false);
-  const [listening, setListening] = useState(false);
-  const [speaking, setSpeaking] = useState(false);
-  const [guidedMode, setGuidedMode] = useState(false);
   const [showGuided, setShowGuided] = useState(false);
-  const [showListen, setShowListen] = useState(false);
   const [parked, setParked] = useState(false);
   const [showParkInfo, setShowParkInfo] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
-  const recognitionRef = useRef<any>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  const readAloud = (text: string, onDone?: () => void) => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1.0;
-    // Prefer a calm female voice if available
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v => v.name.includes("Samantha") || v.name.includes("Karen") || v.name.includes("Google UK English Female"));
-    if (preferred) utterance.voice = preferred;
-    utterance.onstart = () => setSpeaking(true);
-    utterance.onend = () => { setSpeaking(false); if (onDone) onDone(); };
-    utteranceRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const stopSpeaking = () => {
-    if (typeof window !== "undefined") window.speechSynthesis.cancel();
-    setSpeaking(false);
-  };
-
-  const startGuidedMode = () => {
-    setGuidedMode(true);
-    setExpanded(true);
-    // Read the exercise instructions, then auto-start listening
-    const textToRead = instructions || customFraming || "";
-    if (textToRead) {
-      readAloud(textToRead, () => {
-        // After reading, auto-start mic
-        startListeningForResponse();
-      });
-    }
-  };
-
-  const startListeningForResponse = () => {
-    try {
-      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (!SR) return;
-      const recognition = new SR();
-      recognition.continuous = true;
-      recognition.interimResults = false;
-      recognition.lang = "en-US";
-      recognition.onresult = (event: any) => {
-        let text = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) text += event.results[i][0].transcript;
-        }
-        if (text) setResponse((prev) => prev ? prev + " " + text : text);
-      };
-      recognition.onend = () => { setListening(false); recognitionRef.current = null; };
-      recognitionRef.current = recognition;
-      recognition.start();
-      setListening(true);
-    } catch { /* ignore */ }
-  };
-
   // Interactive input state
-  const [spectrumValue, setSpectrumValue] = useState<number>(
-    existingResponses?.spectrum ? JSON.parse(existingResponses.spectrum).value : 50
-  );
-  const [bodyMarkers, setBodyMarkers] = useState<BodyMarker[]>(
-    existingResponses?.body_map ? JSON.parse(existingResponses.body_map) : []
-  );
-  const [selectedEmotions, setSelectedEmotions] = useState<string[]>(
-    existingResponses?.emotions ? JSON.parse(existingResponses.emotions) : []
-  );
+  const [spectrumValue, setSpectrumValue] = useState<number>(() => {
+    try { return existingResponses?.spectrum ? JSON.parse(existingResponses.spectrum).value : 50; }
+    catch { return 50; }
+  });
+  const [bodyMarkers, setBodyMarkers] = useState<BodyMarker[]>(() => {
+    try { return existingResponses?.body_map ? JSON.parse(existingResponses.body_map) : []; }
+    catch { return []; }
+  });
+  const [selectedEmotions, setSelectedEmotions] = useState<string[]>(() => {
+    try { return existingResponses?.emotions ? JSON.parse(existingResponses.emotions) : []; }
+    catch { return []; }
+  });
 
   const mod = modality ? modalityConfig[modality] : null;
 
@@ -672,18 +611,6 @@ export default function ExerciseCard({
             setShowGuided(false);
           }}
           onClose={() => setShowGuided(false)}
-        />
-      )}
-      {showListen && instructions && (
-        <ListenRespondFlow
-          exerciseName={name}
-          instructions={instructions}
-          whyNow={whySelected}
-          onComplete={(text) => {
-            setResponse(text);
-            setShowListen(false);
-          }}
-          onClose={() => setShowListen(false)}
         />
       )}
     </AnimatePresence>

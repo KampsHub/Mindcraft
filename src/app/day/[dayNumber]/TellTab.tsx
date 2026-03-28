@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import FlagButton from "@/components/FlagButton";
@@ -167,6 +167,8 @@ export default function TellTab({
   activeTab,
 }: TellTabProps) {
   const [showThoughtConversation, setShowThoughtConversation] = useState(false);
+  const [followThroughListening, setFollowThroughListening] = useState(false);
+  const followThroughRecognitionRef = useRef<any>(null);
 
   // Progressive reveal: auto-reveal based on existing data
   const initialRevealed = useMemo(() => {
@@ -430,7 +432,15 @@ export default function TellTab({
             }}
           />
           <button
-            onClick={async () => {
+            onClick={() => {
+              if (followThroughListening) {
+                if (followThroughRecognitionRef.current) {
+                  followThroughRecognitionRef.current.stop();
+                  followThroughRecognitionRef.current = null;
+                }
+                setFollowThroughListening(false);
+                return;
+              }
               try {
                 const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
                 if (!SpeechRecognition) { alert("Voice not supported in this browser"); return; }
@@ -442,22 +452,37 @@ export default function TellTab({
                   const transcript = event.results[0][0].transcript;
                   setFollowThrough((prev) => prev ? prev + " " + transcript : transcript);
                 };
+                recognition.onend = () => {
+                  setFollowThroughListening(false);
+                  followThroughRecognitionRef.current = null;
+                };
+                followThroughRecognitionRef.current = recognition;
                 recognition.start();
+                setFollowThroughListening(true);
               } catch { /* ignore */ }
             }}
             style={{
               position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
               width: 32, height: 32, borderRadius: "50%",
-              backgroundColor: "transparent", border: "none",
+              backgroundColor: followThroughListening ? "#ef4444" : "transparent",
+              border: "none",
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: followThroughListening ? "0 0 16px rgba(239, 68, 68, 0.5)" : "none",
+              transition: "background-color 0.2s, box-shadow 0.2s",
             }}
-            title="Speak your response"
+            title={followThroughListening ? "Stop recording" : "Speak your response"}
           >
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-              <line x1="12" x2="12" y1="19" y2="22" />
-            </svg>
+            {followThroughListening ? (
+              <svg width={14} height={14} viewBox="0 0 24 24" fill="#ffffff">
+                <rect x="6" y="6" width="12" height="12" rx="2" />
+              </svg>
+            ) : (
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="22" />
+              </svg>
+            )}
           </button>
         </div>
       </motion.div>

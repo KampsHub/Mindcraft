@@ -323,14 +323,14 @@ export default function GuidedExerciseFlow({
         <PulseRing
           active={state === "listening"}
           size={72}
-          color={colors.plumLight || "rgba(176, 141, 173, 0.6)"}
+          color="#4ade80"
         />
         <motion.div
           animate={{
             scale: (state === "speaking" || state === "listening") ? [1, 1.06, 1] : 1,
             backgroundColor:
               state === "speaking" ? "rgba(196, 148, 58, 0.12)"
-              : state === "listening" ? "rgba(176, 141, 173, 0.12)"
+              : state === "listening" ? "rgba(74, 222, 128, 0.12)"
               : state === "loading" || state === "processing" ? "rgba(255,255,255,0.06)"
               : "rgba(255,255,255,0.04)",
           }}
@@ -356,7 +356,7 @@ export default function GuidedExerciseFlow({
             />
           ) : (
             <svg width={20} height={20} viewBox="0 0 24 24" fill="none"
-              stroke={state === "speaking" ? colors.coral : state === "listening" ? (colors.plumLight || "#b08dad") : "rgba(255,255,255,0.25)"}
+              stroke={state === "speaking" ? colors.coral : state === "listening" ? "#4ade80" : "rgba(255,255,255,0.25)"}
               strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
             >
               <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
@@ -377,16 +377,16 @@ export default function GuidedExerciseFlow({
           style={{
             fontSize: 12, fontFamily: display, fontWeight: 600,
             color: state === "speaking" ? colors.coral
-              : state === "listening" ? (colors.plumLight || "#b08dad")
+              : state === "listening" ? "#4ade80"
               : "rgba(255,255,255,0.3)",
             letterSpacing: "0.03em",
             marginBottom: 20,
           }}
         >
           {state === "loading" ? "Thinking..."
-            : state === "speaking" ? "Coach assistant"
-            : state === "listening" ? "Your turn"
-            : state === "processing" ? "Processing..."
+            : state === "speaking" ? "Coach assistant speaking..."
+            : state === "listening" ? "Your turn \u2014 speak now"
+            : state === "processing" ? "Thinking..."
             : ""}
         </motion.p>
       </AnimatePresence>
@@ -416,7 +416,7 @@ export default function GuidedExerciseFlow({
               >
                 <p style={{
                   fontSize: 15, lineHeight: 1.75,
-                  color: turn.role === "coach" ? "rgba(255,255,255,0.9)" : (colors.plumLight || "#b08dad"),
+                  color: turn.role === "coach" ? "rgba(255,255,255,0.9)" : "#4ade80",
                   fontFamily: body,
                   margin: 0,
                 }}>
@@ -435,7 +435,7 @@ export default function GuidedExerciseFlow({
                 >
                   <p style={{
                     fontSize: 15, lineHeight: 1.75,
-                    color: "rgba(176, 141, 173, 0.5)",
+                    color: "rgba(74, 222, 128, 0.5)",
                     fontFamily: body, fontStyle: "italic",
                     margin: 0,
                   }}>
@@ -457,14 +457,21 @@ export default function GuidedExerciseFlow({
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
+            animate={liveTranscript.trim() ? {
+              scale: [1, 1.05, 1],
+            } : {}}
+            transition={liveTranscript.trim() ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : {}}
             onClick={sendResponse}
             style={{
-              padding: "12px 28px", borderRadius: 100,
-              backgroundColor: liveTranscript.trim() ? colors.coral : colors.bgElevated,
+              padding: liveTranscript.trim() ? "14px 36px" : "12px 28px",
+              borderRadius: 100,
+              backgroundColor: liveTranscript.trim() ? "#4ade80" : colors.bgElevated,
               border: liveTranscript.trim() ? "none" : `1px solid ${colors.borderDefault}`,
               color: liveTranscript.trim() ? colors.bgDeep : "rgba(255,255,255,0.5)",
-              fontSize: 14, fontWeight: 600,
+              fontSize: liveTranscript.trim() ? 16 : 14, fontWeight: 700,
               fontFamily: display, cursor: "pointer",
+              boxShadow: liveTranscript.trim() ? "0 0 20px rgba(74, 222, 128, 0.4)" : "none",
+              transition: "padding 0.2s, font-size 0.2s, box-shadow 0.2s",
             }}
           >
             {liveTranscript.trim() ? "Send" : "Skip"}

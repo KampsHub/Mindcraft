@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -85,6 +85,10 @@ export default function MindfulJournalPage() {
 
   /* Which section is open */
   const [openSection, setOpenSection] = useState<string | null>(null);
+
+  /* Voice recording state */
+  const [micListening, setMicListening] = useState(false);
+  const micRecognitionRef = useRef<any>(null);
 
   const supabase = createClient();
   const router = useRouter();
@@ -274,6 +278,14 @@ export default function MindfulJournalPage() {
                     <button
                       type="button"
                       onClick={() => {
+                        if (micListening) {
+                          if (micRecognitionRef.current) {
+                            micRecognitionRef.current.stop();
+                            micRecognitionRef.current = null;
+                          }
+                          setMicListening(false);
+                          return;
+                        }
                         try {
                           const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
                           if (!SpeechRecognition) { alert("Voice not supported in this browser"); return; }
@@ -285,24 +297,39 @@ export default function MindfulJournalPage() {
                             const transcript = event.results[0][0].transcript;
                             setEntry((prev) => prev ? prev + " " + transcript : transcript);
                           };
+                          recognition.onend = () => {
+                            setMicListening(false);
+                            micRecognitionRef.current = null;
+                          };
+                          micRecognitionRef.current = recognition;
                           recognition.start();
+                          setMicListening(true);
                         } catch { /* ignore */ }
                       }}
-                      title="Use voice input"
+                      title={micListening ? "Stop recording" : "Use voice input"}
                       style={{
                         position: "absolute", right: 12, bottom: 12,
                         width: 36, height: 36, borderRadius: "50%",
-                        border: "none", backgroundColor: colors.bgElevated,
-                        color: "rgba(255,255,255,0.6)", cursor: "pointer",
+                        border: "none",
+                        backgroundColor: micListening ? "#ef4444" : colors.bgElevated,
+                        color: micListening ? "#ffffff" : "rgba(255,255,255,0.6)",
+                        cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center",
+                        boxShadow: micListening ? "0 0 16px rgba(239, 68, 68, 0.5)" : "none",
                         transition: "all 0.2s",
                       }}
                     >
-                      <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                        <line x1="12" x2="12" y1="19" y2="22" />
-                      </svg>
+                      {micListening ? (
+                        <svg width={14} height={14} viewBox="0 0 24 24" fill="#ffffff">
+                          <rect x="6" y="6" width="12" height="12" rx="2" />
+                        </svg>
+                      ) : (
+                        <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                          <line x1="12" x2="12" y1="19" y2="22" />
+                        </svg>
+                      )}
                     </button>
                   )}
                 </div>

@@ -262,6 +262,14 @@ export default function VoiceResponseArea({
             {/* Mic button */}
             <motion.button
               whileTap={{ scale: 0.92 }}
+              animate={listening ? {
+                boxShadow: [
+                  "0 0 12px rgba(239, 68, 68, 0.3)",
+                  "0 0 24px rgba(239, 68, 68, 0.6)",
+                  "0 0 12px rgba(239, 68, 68, 0.3)",
+                ],
+              } : {}}
+              transition={listening ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : {}}
               onClick={listening ? stopListening : startListening}
               aria-label={listening ? "Stop recording" : "Start voice recording"}
               style={{
@@ -271,9 +279,9 @@ export default function VoiceResponseArea({
                 display: "flex", alignItems: "center", justifyContent: "center",
                 flexShrink: 0,
                 boxShadow: listening
-                  ? "0 0 16px rgba(239, 68, 68, 0.3)"
+                  ? "0 0 20px rgba(239, 68, 68, 0.5)"
                   : "0 2px 8px rgba(196, 148, 58, 0.2)",
-                transition: "background-color 0.2s, box-shadow 0.2s",
+                transition: "background-color 0.2s",
               }}
             >
               {listening ? (
@@ -311,21 +319,21 @@ export default function VoiceResponseArea({
                         }}
                         style={{
                           width: 2.5, borderRadius: 2,
-                          backgroundColor: colors.coral,
-                          opacity: 0.7,
+                          backgroundColor: "#ef4444",
+                          opacity: 1.0,
                         }}
                       />
                     ))}
                   </div>
                   <span style={{
-                    ...textScale.secondary, color: "rgba(255,255,255,0.45)",
+                    ...textScale.secondary, color: "#ef4444", fontWeight: 600,
                   }}>
-                    Listening...
+                    Recording... tap to stop
                   </span>
                 </div>
               ) : (
                 <span style={{
-                  ...textScale.secondary, color: "rgba(255,255,255,0.35)",
+                  ...textScale.secondary, color: colors.coral,
                 }}>
                   {hasContent ? "Tap to add more" : "Tap to speak"}
                 </span>

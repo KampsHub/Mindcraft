@@ -35,7 +35,7 @@ Return valid JSON (no markdown, no code fences):
 6. Match their energy. If they wrote 20 words today, your entire output should be under 50 words.
 7. No editorial theme tags like "somatic awareness breakthrough" — just reflect what happened.
 8. Frame everything as observation, not diagnosis. "It seemed like..." not "You were..." Never declare what someone's behavior means — offer it as one possible reading.
-9. SAFETY: If today's journal contains signals of crisis, include: "What you wrote carries real weight. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or crew@allmindsondeck.com."`;
+9. SAFETY: Only flag for crisis if the journal contains EXPLICIT statements of suicidal intent, active self-harm plans, or being a danger to self/others. Normal grief, anger, shame, self-doubt, and career despair are expected in a coaching program — do NOT treat them as crisis. If genuine crisis, include: "What you wrote carries real weight. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or crew@allmindsondeck.com."`;
 
 export async function POST(request: Request) {
   try {

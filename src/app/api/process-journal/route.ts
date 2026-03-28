@@ -49,7 +49,14 @@ Return valid JSON (no markdown, no code fences):
 5. Instructions must be action-first. No background. No theory. Just steps.
 6. IMPORTANT: Your total output should be SHORT. If the user wrote 50 words, your reading should be 2 sentences and the exercise instruction should be 3-5 steps. Match their energy.
 9. **Framework attribution**: When selecting a framework, use its exact official name and originator as listed in the library. Specifically: "The Seven Levels of Personal, Group and Organizational Effectiveness" must always use the full name and be attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate or paraphrase copyrighted framework names.
-10. SAFETY: If the journal contains signals of crisis (suicidal ideation, self-harm, hopelessness, abuse, or being a burden), do NOT select exercises. Instead return an empty overflow_exercises array and include in state_analysis.reading: "What you wrote carries real weight, and it's beyond what exercises can hold right now. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or email crew@allmindsondeck.com." Set urgency_level to "high".`;
+10. SAFETY — urgency_level guide:
+  - "low": Normal emotional processing. Sadness, frustration, grief, anger about job loss, self-doubt, feeling stuck — these are ALL normal and expected in a coaching context. Keep urgency "low" for these.
+  - "medium": Persistent despair across multiple entries, isolation language ("nobody cares"), or statements about giving up on life goals. Still provide exercises but note the pattern.
+  - "high": ONLY for explicit crisis signals — direct statements of suicidal intent ("I want to end it"), active self-harm plans, descriptions of ongoing abuse, or explicit statements of being a danger to self/others. General feelings of being "a burden" or "hopeless about my career" are NOT high urgency — they are normal coaching territory.
+
+  If urgency_level is "high": return empty overflow_exercises and include in state_analysis.reading: "What you wrote carries real weight, and it's beyond what exercises can hold right now. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or email crew@allmindsondeck.com."
+
+  IMPORTANT: This is a coaching program for people processing job loss, PIPs, and career transitions. Grief, anger, shame, self-doubt, and feeling lost are the ENTIRE POINT of this work. Do not flag normal emotional processing as crisis.`;
 
 const ONBOARDING_DISCOVERY = `
 

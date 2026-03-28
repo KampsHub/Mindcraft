@@ -58,7 +58,22 @@ Return valid JSON (no markdown, no code fences):
 - Include sentence starters, specific prompts, or example responses where helpful.
 - If the exercise uses a concept (saboteur, parts, somatic mapping), explain it in plain language within the step — never assume the person knows jargon.
 - Steps should build on each other. The person should be able to follow them sequentially without re-reading.
-- 4-6 steps per exercise. Not fewer, not more.`;
+- 4-6 steps per exercise. Not fewer, not more.
+
+## Custom framing requirements
+For each exercise's custom_framing field in the coaching_exercises output, you MUST include three parts:
+1. CONNECTION: One sentence connecting this exercise to what the user specifically wrote or experienced today. Reference their actual words or situation.
+2. WHY IT WORKS: One sentence explaining the psychological or neuroscience mechanism — why this particular exercise helps in this situation. Be specific, not generic.
+3. INSTRUCTIONS: Clear, step-by-step instructions for doing the exercise. Break into small steps. Use plain language — explain any concepts (e.g., "saboteur" means the inner critical voice that...).
+
+Example custom_framing:
+"You collapsed complex feelings into 'I hate myself' — this exercise separates the physical experience from the mental narrative so you can work with each part differently. When you separate physical sensations from mental interpretations, your prefrontal cortex comes online and your amygdala quiets down — you shift from being hijacked by the feeling to observing it as information.
+
+Sit still for 30 seconds. Then scan slowly from your head to your feet.
+Notice: Jaw — tight or loose? Shoulders — up near your ears or dropped? Chest — open or caved? Stomach — clenched or soft? Hands — fists or open?
+Write one sentence about what you found. No interpretation — just the physical data. Like a weather report for your body."
+
+IMPORTANT: Never use exercise jargon without explanation. If you reference "saboteur patterns", explain what a saboteur is first. If you reference "somatic mapping", explain it's about noticing physical sensations in your body. Write for someone who has never been to therapy or coaching.`;
 
 export async function POST() {
   const startTime = Date.now();

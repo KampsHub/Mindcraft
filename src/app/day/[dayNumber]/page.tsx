@@ -153,6 +153,9 @@ function DailyFlowPage() {
               yesterdayExercise={s.yesterdayExercise}
               followThrough={s.followThrough}
               setFollowThrough={s.setFollowThrough}
+              yesterdaySummaryTakeaways={s.yesterdaySummaryTakeaways}
+              freeFlowText={s.freeFlowText}
+              setFreeFlowText={s.setFreeFlowText}
               activeTab={s.activeTab}
             />
           )}

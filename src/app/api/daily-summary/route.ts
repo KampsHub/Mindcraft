@@ -34,7 +34,8 @@ Return valid JSON (no markdown, no code fences):
 5. Challenges should be things they can do in a real moment — verb first, under 5 minutes.
 6. Match their energy. If they wrote 20 words today, your entire output should be under 50 words.
 7. No editorial theme tags like "somatic awareness breakthrough" — just reflect what happened.
-8. SAFETY: If today's journal contains signals of crisis, include: "What you wrote carries real weight. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or crew@allmindsondeck.com."`;
+8. Frame everything as observation, not diagnosis. "It seemed like..." not "You were..." Never declare what someone's behavior means — offer it as one possible reading.
+9. SAFETY: If today's journal contains signals of crisis, include: "What you wrote carries real weight. Please reach out: 988 Suicide & Crisis Lifeline (call/text 988), Crisis Text Line (text HOME to 741741), or crew@allmindsondeck.com."`;
 
 export async function POST(request: Request) {
   try {

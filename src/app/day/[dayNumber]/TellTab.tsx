@@ -123,6 +123,17 @@ export interface TellTabProps {
   followThrough: string;
   setFollowThrough: React.Dispatch<React.SetStateAction<string>>;
 
+  // Yesterday's summary takeaways
+  yesterdaySummaryTakeaways: {
+    questions_to_sit_with: string[];
+    challenges: string[];
+    committed_actions: string[];
+  } | null;
+
+  // Free flow
+  freeFlowText: string;
+  setFreeFlowText: React.Dispatch<React.SetStateAction<string>>;
+
   // Active tab (for ThemesAutoLoader)
   activeTab: number;
 }
@@ -149,17 +160,20 @@ export default function TellTab({
   yesterdayExercise,
   followThrough,
   setFollowThrough,
+  yesterdaySummaryTakeaways,
+  freeFlowText,
+  setFreeFlowText,
   activeTab,
 }: TellTabProps) {
   // Progressive reveal: auto-reveal based on existing data
   const initialRevealed = useMemo(() => {
     const keys: string[] = [];
     if (themes) keys.push("themes");
-    if (yesterdayExercise) keys.push("followthrough");
+    if (yesterdayExercise || yesterdaySummaryTakeaways) keys.push("followthrough");
     // Journal is always revealed as the core action
     keys.push("journal");
     return keys;
-  }, [themes, yesterdayExercise]);
+  }, [themes, yesterdayExercise, yesterdaySummaryTakeaways]);
 
   const { isRevealed, revealNext } = useProgressiveReveal(initialRevealed);
 
@@ -173,10 +187,10 @@ export default function TellTab({
 
   // When follow-through is answered or skipped, reveal journal
   useEffect(() => {
-    if (!yesterdayExercise || followThrough.trim().length > 0) {
+    if ((!yesterdayExercise && !yesterdaySummaryTakeaways) || followThrough.trim().length > 0) {
       revealNext("journal");
     }
-  }, [yesterdayExercise, followThrough, revealNext]);
+  }, [yesterdayExercise, yesterdaySummaryTakeaways, followThrough, revealNext]);
 
   return (
     <FadeIn preset="fade" triggerOnMount>
@@ -270,49 +284,6 @@ export default function TellTab({
             </p>
           )}
 
-          {/* Follow-Up — commitments, coaching questions, highlight */}
-          {themes.follow_up && (themes.follow_up.commitments?.length > 0 || themes.follow_up.coaching_questions?.length > 0 || themes.follow_up.highlight) && (
-            <div style={{
-              padding: "16px 18px",
-              backgroundColor: colors.coralWash,
-              borderRadius: radii.md,
-              borderLeft: `3px solid ${colors.coral}`,
-              marginBottom: space[6],
-            }}>
-              <p style={{ ...textPreset.caption, color: colors.coral, margin: "0 0 10px 0" }}>
-                Carrying forward
-              </p>
-
-              {themes.follow_up.commitments?.length > 0 && (
-                <div style={{ marginBottom: 10 }}>
-                  <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 6px 0" }}>You said you would:</p>
-                  {themes.follow_up.commitments.map((c, i) => (
-                    <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", paddingLeft: 12 }}>
-                      &bull; {c}
-                    </p>
-                  ))}
-                </div>
-              )}
-
-              {themes.follow_up.coaching_questions?.length > 0 && (
-                <div style={{ marginBottom: 10 }}>
-                  <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 6px 0" }}>From last time:</p>
-                  {themes.follow_up.coaching_questions.map((q, i) => (
-                    <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", fontStyle: "italic", paddingLeft: 12 }}>
-                      {q}
-                    </p>
-                  ))}
-                </div>
-              )}
-
-              {themes.follow_up.highlight && (
-                <p style={{ ...textPreset.body, color: "#ffffff", margin: "8px 0 0 0", fontStyle: "italic" }}>
-                  {themes.follow_up.highlight}
-                </p>
-              )}
-            </div>
-          )}
-
           {/* Yesterday's committed mini-actions follow-up */}
           {themes.yesterday_committed_actions && themes.yesterday_committed_actions.length > 0 && (
             <div style={{
@@ -372,7 +343,7 @@ export default function TellTab({
     </div>
 
     {/* Exercise follow-through from yesterday */}
-    {isRevealed("followthrough") && yesterdayExercise && (
+    {isRevealed("followthrough") && (yesterdayExercise || yesterdaySummaryTakeaways) && (
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -391,38 +362,55 @@ export default function TellTab({
         }}>
           Yesterday&apos;s takeaways
         </p>
-        <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 6px 0", fontWeight: 600 }}>
-          {yesterdayExercise.name}
-        </p>
-        {yesterdayExercise.instruction && (
-          <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.55)", margin: "0 0 8px 0" }}>
-            {(() => {
-              const text = yesterdayExercise.instruction;
-              if (text.length <= 200) return text;
-              const truncated = text.substring(0, 200);
-              const lastPeriod = truncated.lastIndexOf(". ");
-              const lastQuestion = truncated.lastIndexOf("? ");
-              const boundary = Math.max(lastPeriod, lastQuestion);
-              return boundary > 50 ? text.substring(0, boundary + 1) : truncated.substring(0, truncated.lastIndexOf(" ")) + "...";
-            })()}
-          </p>
-        )}
-        {yesterdayExercise.userResponse && (
-          <div style={{
-            padding: "10px 14px", borderRadius: 10,
-            backgroundColor: "rgba(255,255,255,0.04)",
-            marginBottom: 8,
-          }}>
-            <p style={{ ...textPreset.caption, color: "rgba(255,255,255,0.4)", margin: "0 0 4px 0" }}>
-              What you wrote
-            </p>
-            <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.7)", margin: 0, fontStyle: "italic" }}>
-              &ldquo;{yesterdayExercise.userResponse}&rdquo;
-            </p>
+
+        {/* Show summary takeaways from Done tab if available */}
+        {yesterdaySummaryTakeaways ? (
+          <div style={{ marginBottom: 12 }}>
+            {yesterdaySummaryTakeaways.questions_to_sit_with.length > 0 && (
+              <div style={{ marginBottom: 10 }}>
+                <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.55)", margin: "0 0 6px 0" }}>
+                  Questions to sit with:
+                </p>
+                {yesterdaySummaryTakeaways.questions_to_sit_with.map((q, i) => (
+                  <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", fontStyle: "italic", paddingLeft: 12 }}>
+                    {q}
+                  </p>
+                ))}
+              </div>
+            )}
+            {yesterdaySummaryTakeaways.challenges.length > 0 && (
+              <div style={{ marginBottom: 10 }}>
+                <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.55)", margin: "0 0 6px 0" }}>
+                  Challenges you took on:
+                </p>
+                {yesterdaySummaryTakeaways.challenges.map((c, i) => (
+                  <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", paddingLeft: 12 }}>
+                    &bull; {c}
+                  </p>
+                ))}
+              </div>
+            )}
+            {yesterdaySummaryTakeaways.committed_actions.length > 0 && (
+              <div style={{ marginBottom: 10 }}>
+                <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.55)", margin: "0 0 6px 0" }}>
+                  You committed to:
+                </p>
+                {yesterdaySummaryTakeaways.committed_actions.map((a, i) => (
+                  <p key={i} style={{ ...textPreset.body, color: "#ffffff", margin: "4px 0", paddingLeft: 12 }}>
+                    &bull; {a}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        ) : yesterdayExercise ? (
+          <p style={{ ...textPreset.body, color: "#ffffff", margin: "0 0 6px 0", fontWeight: 600 }}>
+            {yesterdayExercise.name}
+          </p>
+        ) : null}
+
         <p style={{ ...textPreset.secondary, color: "#ffffff", margin: "0 0 10px 0" }}>
-          Did anything come up since? What did you notice?
+          What came up from these?
         </p>
         <div style={{ position: "relative" }}>
           <textarea
@@ -510,6 +498,31 @@ export default function TellTab({
             </div>
           </div>
         )}
+
+        {/* Free flow — quick thoughts before journaling */}
+        <div style={{ marginBottom: space[6] }}>
+          <p style={{ ...textPreset.caption, color: colors.plumLight, margin: "0 0 8px 0" }}>
+            Anything else on your mind?
+          </p>
+          <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.4)", margin: "0 0 12px 0" }}>
+            A sentence or two — whatever came up from the questions above.
+          </p>
+          <textarea
+            value={freeFlowText}
+            onChange={(e) => setFreeFlowText(e.target.value)}
+            placeholder="What's on your mind..."
+            rows={3}
+            style={{
+              width: "100%", padding: "14px 16px",
+              ...textPreset.body,
+              backgroundColor: colors.bgInput,
+              border: `1px solid ${colors.borderDefault}`,
+              borderRadius: radii.md,
+              color: "#ffffff", resize: "none", outline: "none",
+              boxSizing: "border-box",
+            }}
+          />
+        </div>
 
         {/* Journal input — textarea with inline mic button */}
         <div style={{ position: "relative" }}>

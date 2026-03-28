@@ -377,7 +377,13 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                       </p>
                     </div>
                   ) : (
-                    filteredCompleted.map((ex) => {
+                    <>
+                    {!showAll && filteredCompleted.length > MAX_VISIBLE && (
+                      <p style={{ ...text.caption, color: colors.textMuted, margin: "0 0 8px 0" }}>
+                        {filteredCompleted.length} exercises completed across {Math.ceil(filteredCompleted.length / 7)} weeks
+                      </p>
+                    )}
+                    {(showAll ? filteredCompleted : filteredCompleted.slice(-MAX_VISIBLE)).map((ex) => {
                       const isExpanded = expandedId === ex.id;
                       const modStyle = ex.modality ? modalityColors[ex.modality] : null;
                       const tStyle = typeLabels[ex.exercise_type] || { label: ex.exercise_type, color: colors.textMuted };
@@ -496,7 +502,33 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
                           </AnimatePresence>
                         </motion.div>
                       );
-                    })
+                    })}
+                    {!showAll && filteredCompleted.length > MAX_VISIBLE && (
+                      <button
+                        onClick={() => setShowAll(true)}
+                        style={{
+                          width: "100%", padding: "10px", marginTop: 8,
+                          background: "none", border: `1px solid ${colors.borderDefault}`,
+                          borderRadius: radii.sm, cursor: "pointer",
+                          ...text.secondary, color: colors.textMuted, fontWeight: 600,
+                        }}
+                      >
+                        Show all {filteredCompleted.length} exercises
+                      </button>
+                    )}
+                    {showAll && filteredCompleted.length > MAX_VISIBLE && (
+                      <button
+                        onClick={() => setShowAll(false)}
+                        style={{
+                          width: "100%", padding: "10px", marginTop: 8,
+                          background: "none", border: "none", cursor: "pointer",
+                          ...text.secondary, color: colors.textMuted,
+                        }}
+                      >
+                        Show less
+                      </button>
+                    )}
+                    </>
                   )}
                 </motion.div>
               )}

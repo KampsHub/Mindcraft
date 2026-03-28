@@ -145,6 +145,17 @@ export interface UseDaySessionReturn {
   followThrough: string;
   setFollowThrough: React.Dispatch<React.SetStateAction<string>>;
 
+  // Yesterday's summary takeaways
+  yesterdaySummaryTakeaways: {
+    questions_to_sit_with: string[];
+    challenges: string[];
+    committed_actions: string[];
+  } | null;
+
+  // Free flow
+  freeFlowText: string;
+  setFreeFlowText: React.Dispatch<React.SetStateAction<string>>;
+
   // Step 3
   step3Mode: "form" | "chat";
   setStep3Mode: React.Dispatch<React.SetStateAction<"form" | "chat">>;
@@ -251,6 +262,16 @@ export function useDaySession(): UseDaySessionReturn {
   // Exercise follow-through from yesterday
   const [yesterdayExercise, setYesterdayExercise] = useState<{ name: string; id: string; whyNow: string; instruction: string; userResponse: string } | null>(null);
   const [followThrough, setFollowThrough] = useState("");
+
+  // Yesterday's summary takeaways (from Done tab)
+  const [yesterdaySummaryTakeaways, setYesterdaySummaryTakeaways] = useState<{
+    questions_to_sit_with: string[];
+    challenges: string[];
+    committed_actions: string[];
+  } | null>(null);
+
+  // Free flow text (quick thoughts before journaling)
+  const [freeFlowText, setFreeFlowText] = useState("");
 
   // Step 3
   const [step3Mode, setStep3Mode] = useState<"form" | "chat">("form");
@@ -402,11 +423,11 @@ export function useDaySession(): UseDaySessionReturn {
       if (newSession) setSession(newSession);
     }
 
-    // Fetch yesterday's exercise for follow-through
+    // Fetch yesterday's exercise for follow-through + summary takeaways
     if (dayNumber > 1) {
       const { data: yesterdaySession } = await supabase
         .from("daily_sessions")
-        .select("id, step_3_analysis")
+        .select("id, step_3_analysis, step_5_summary")
         .eq("enrollment_id", enr.id)
         .eq("day_number", dayNumber - 1)
         .single();
@@ -437,6 +458,21 @@ export function useDaySession(): UseDaySessionReturn {
             whyNow: ex.why_now || ex.why_selected || "",
             instruction: ex.instruction || ex.custom_framing || "",
             userResponse,
+          });
+        }
+      }
+
+      // Extract summary takeaways from yesterday's Done tab
+      if (yesterdaySession?.step_5_summary) {
+        const summary = yesterdaySession.step_5_summary as Record<string, unknown>;
+        const questions = (summary.questions_to_sit_with as string[]) || [];
+        const challenges = (summary.challenges as string[]) || [];
+        const committed = (summary.committed_actions as string[]) || [];
+        if (questions.length > 0 || challenges.length > 0 || committed.length > 0) {
+          setYesterdaySummaryTakeaways({
+            questions_to_sit_with: questions,
+            challenges,
+            committed_actions: committed,
           });
         }
       }
@@ -512,9 +548,13 @@ export function useDaySession(): UseDaySessionReturn {
     if (!session || !journalContent.trim()) return;
     setSavingJournal(true);
 
-    const fullJournalContent = followThrough
-      ? `[Follow-through on yesterday's exercise "${yesterdayExercise?.name}"]: ${followThrough}\n\n${journalContent}`
-      : journalContent;
+    let fullJournalContent = journalContent;
+    if (freeFlowText.trim()) {
+      fullJournalContent = `[Free flow]: ${freeFlowText}\n\n${fullJournalContent}`;
+    }
+    if (followThrough) {
+      fullJournalContent = `[Follow-through on yesterday's exercise "${yesterdayExercise?.name}"]: ${followThrough}\n\n${fullJournalContent}`;
+    }
 
     await supabase
       .from("daily_sessions")
@@ -560,9 +600,13 @@ export function useDaySession(): UseDaySessionReturn {
     setProcessError(null);
 
     try {
-      const fullContent = followThrough
-        ? `[Follow-through on yesterday's exercise "${yesterdayExercise?.name}"]: ${followThrough}\n\n${journalContent}`
-        : journalContent;
+      let fullContent = journalContent;
+      if (freeFlowText.trim()) {
+        fullContent = `[Free flow]: ${freeFlowText}\n\n${fullContent}`;
+      }
+      if (followThrough) {
+        fullContent = `[Follow-through on yesterday's exercise "${yesterdayExercise?.name}"]: ${followThrough}\n\n${fullContent}`;
+      }
 
       const res = await fetch("/api/process-journal", {
         method: "POST",
@@ -846,6 +890,11 @@ export function useDaySession(): UseDaySessionReturn {
     yesterdayExercise,
     followThrough,
     setFollowThrough,
+
+    yesterdaySummaryTakeaways,
+
+    freeFlowText,
+    setFreeFlowText,
 
     step3Mode,
     setStep3Mode,

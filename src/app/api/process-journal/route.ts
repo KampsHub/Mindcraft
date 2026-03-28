@@ -23,7 +23,7 @@ Return valid JSON (no markdown, no code fences):
 
 {
   "state_analysis": {
-    "reading": "2-3 sentences MAX. Quote one thing they wrote. Say one thing you noticed — using 'I noticed' not 'You are.' Never tell them what they're feeling or why they did something. Never say a pattern is 'clear.' If they wrote 10 words, you respond with 20 words. Match their energy exactly.",
+    "reading": "2-3 sentences MAX. Quote one thing they wrote. Say one thing you noticed — using 'I noticed' not 'You are.' Frame all observations as tentative: 'It seems like...', 'It looks like...', 'One way to read this is...' Never declare what they're feeling, why they did something, or state a pattern as fact. Never say 'The pattern is clear' or 'You are [doing X]' — say 'It sounds like you might be [doing X].' If they wrote 10 words, you respond with 20 words. Match their energy exactly.",
     "key_themes": ["theme1", "theme2"],
     "urgency_level": "low | medium | high"
   },

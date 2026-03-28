@@ -39,8 +39,8 @@ export interface Step3AnalysisReturn {
   responsesSaved: boolean;
   reframe: { old_thought: string; new_thought: string; source_quote: string } | null;
   setReframe: React.Dispatch<React.SetStateAction<{ old_thought: string; new_thought: string; source_quote: string } | null>>;
-  patternChallenge: { pattern: string; challenge: string; counter_move: string } | null;
-  setPatternChallenge: React.Dispatch<React.SetStateAction<{ pattern: string; challenge: string; counter_move: string } | null>>;
+  patternChallenge: { pattern: string; description: string; challenge: string; counter_move: string } | null;
+  setPatternChallenge: React.Dispatch<React.SetStateAction<{ pattern: string; description: string; challenge: string; counter_move: string } | null>>;
   sequenceSuggestion: string | null;
   processing: boolean;
   processError: string | null;
@@ -75,7 +75,7 @@ export function useStep3Analysis({
   const [savingResponses, setSavingResponses] = useState(false);
   const [responsesSaved, setResponsesSaved] = useState(false);
   const [reframe, setReframe] = useState<{ old_thought: string; new_thought: string; source_quote: string } | null>(null);
-  const [patternChallenge, setPatternChallenge] = useState<{ pattern: string; challenge: string; counter_move: string } | null>(null);
+  const [patternChallenge, setPatternChallenge] = useState<{ pattern: string; description: string; challenge: string; counter_move: string } | null>(null);
   const [sequenceSuggestion, setSequenceSuggestion] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   const [processError, setProcessError] = useState<string | null>(null);

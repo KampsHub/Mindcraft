@@ -40,7 +40,7 @@ export interface SessionCoreReturn {
     overflowExercises: OverflowExercise[];
     coachingQuestions: string[];
     reframe: { old_thought: string; new_thought: string; source_quote: string } | null;
-    patternChallenge: { pattern: string; challenge: string; counter_move: string } | null;
+    patternChallenge: { pattern: string; description: string; challenge: string; counter_move: string } | null;
     sequenceSuggestion: string | null;
     crisisStep3: boolean;
   } | null;
@@ -151,7 +151,7 @@ export function useSessionCore(): SessionCoreReturn {
           overflowExercises: (analysis?.overflow_exercises || []) as OverflowExercise[],
           coachingQuestions: (analysis?.coaching_questions || []) as string[],
           reframe: (analysis?.reframe || null) as { old_thought: string; new_thought: string; source_quote: string } | null,
-          patternChallenge: (analysis?.pattern_challenge || null) as { pattern: string; challenge: string; counter_move: string } | null,
+          patternChallenge: (analysis?.pattern_challenge || null) as { pattern: string; description: string; challenge: string; counter_move: string } | null,
           sequenceSuggestion: (analysis?.sequence_suggestion || null) as string | null,
           crisisStep3: restoredStateAnalysis?.urgency_level === "high",
         });

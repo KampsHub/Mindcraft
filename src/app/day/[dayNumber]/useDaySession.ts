@@ -174,8 +174,8 @@ export interface UseDaySessionReturn {
   responsesSaved: boolean;
   reframe: { old_thought: string; new_thought: string; source_quote: string } | null;
   setReframe: React.Dispatch<React.SetStateAction<{ old_thought: string; new_thought: string; source_quote: string } | null>>;
-  patternChallenge: { pattern: string; challenge: string; counter_move: string } | null;
-  setPatternChallenge: React.Dispatch<React.SetStateAction<{ pattern: string; challenge: string; counter_move: string } | null>>;
+  patternChallenge: { pattern: string; description: string; challenge: string; counter_move: string } | null;
+  setPatternChallenge: React.Dispatch<React.SetStateAction<{ pattern: string; description: string; challenge: string; counter_move: string } | null>>;
   sequenceSuggestion: string | null;
   processing: boolean;
   processError: string | null;

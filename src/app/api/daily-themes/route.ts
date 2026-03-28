@@ -293,7 +293,7 @@ Generate the Thread and today's themes for Day ${dayNumber}.`;
       })
       .map(s => {
         const analysis = s.step_3_analysis as Record<string, unknown>;
-        const challenge = analysis.pattern_challenge as { pattern: string; challenge: string; counter_move: string };
+        const challenge = analysis.pattern_challenge as { pattern: string; description: string; challenge: string; counter_move: string };
         return {
           ...challenge,
           day_number: s.day_number,

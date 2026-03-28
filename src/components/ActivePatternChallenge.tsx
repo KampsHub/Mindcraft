@@ -8,6 +8,7 @@ const body = fonts.bodyAlt;
 
 export interface PatternChallengeData {
   pattern: string;
+  description: string;
   challenge: string;
   counter_move: string;
   day_number: number;
@@ -35,7 +36,7 @@ export default function ActivePatternChallenge({
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       style={{
         padding: "14px 18px",
-        backgroundColor: "rgba(224, 149, 133, 0.12)",
+        backgroundColor: colors.coralWash,
         borderRadius: 12,
         borderLeft: `3px solid ${colors.coral}`,
         marginBottom: 16,
@@ -86,6 +87,20 @@ export default function ActivePatternChallenge({
       >
         {challenge.pattern}
       </p>
+
+      {challenge.description && (
+        <p
+          style={{
+            fontSize: 13,
+            color: colors.textBody,
+            margin: "0 0 6px 0",
+            lineHeight: 1.55,
+            fontFamily: body,
+          }}
+        >
+          {challenge.description}
+        </p>
+      )}
 
       <p
         style={{

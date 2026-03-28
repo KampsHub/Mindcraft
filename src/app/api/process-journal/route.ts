@@ -39,6 +39,19 @@ Return valid JSON (no markdown, no code fences):
       "originator": "Framework originator name"
     }
   ],
+  "pattern_challenge": {
+    "pattern": "Name of the pattern you noticed (e.g., 'The Preemptive Exit')",
+    "description": "1-2 sentences explaining what this pattern is and how it shows up for them specifically, grounded in what they wrote",
+    "challenge": "What this pattern costs them or blocks",
+    "counter_move": "One concrete thing they could try differently this week"
+  },
+  "coaching_questions": ["1-2 questions that invite deeper reflection on what they wrote"],
+  "reframe": {
+    "old_thought": "A limiting belief surfaced in their writing",
+    "new_thought": "A reframe that holds the same truth without the self-punishment",
+    "source_quote": "The exact words from their journal that this reframe responds to"
+  },
+  "sequence_suggestion": "Optional — one sentence suggesting what to do first if they feel overwhelmed by the exercises"
 }
 
 ## Selection Rules

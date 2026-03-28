@@ -376,7 +376,7 @@ function GoalsPage() {
               <p
                 style={{ color: "#ffffff", fontSize: 13, marginTop: 14, fontFamily: body }}
               >
-                Reading your intake and journal entries to suggest goals that fit your program arc. This takes about 15 seconds.
+                Processing your entries, goals, and position in the program arc to move further. This takes about 15 seconds.
               </p>
             )}
             {errorMsg && !generating && (

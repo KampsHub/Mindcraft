@@ -70,7 +70,7 @@ export default function LoginPage() {
           }}>
             {c.login.headline}
           </h1>
-          <p style={{ fontSize: 15, color: colors.textSecondary, margin: 0 }}>
+          <p style={{ fontSize: 15, color: colors.textPrimary, margin: 0 }}>
             {c.login.subheadline}
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function LoginPage() {
         <div style={{ marginBottom: 20 }}>
           <label style={{
             display: "block", marginBottom: 6, fontSize: 13,
-            fontWeight: 600, color: colors.textSecondary,
+            fontWeight: 600, color: colors.textPrimary,
             fontFamily: fonts.display, letterSpacing: "0.01em",
           }}>
             {c.login.emailLabel}
@@ -110,7 +110,7 @@ export default function LoginPage() {
               <p style={{ fontSize: 16, fontWeight: 700, color: colors.success, margin: "0 0 6px 0", fontFamily: fonts.display }}>
                 Check your email
               </p>
-              <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, lineHeight: 1.5 }}>
+              <p style={{ fontSize: 14, color: colors.textPrimary, margin: 0, lineHeight: 1.5 }}>
                 We sent a sign-in link to <strong style={{ color: colors.textPrimary }}>{email}</strong>
               </p>
             </div>
@@ -133,7 +133,7 @@ export default function LoginPage() {
               style={{
                 width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
                 fontFamily: fonts.display, letterSpacing: "-0.01em",
-                color: (!email || magicLinkLoading) ? colors.textMuted : colors.bgDeep,
+                color: (!email || magicLinkLoading) ? colors.textPrimary : colors.bgDeep,
                 backgroundColor: (!email || magicLinkLoading) ? colors.bgElevated : colors.coral,
                 border: "none", borderRadius: 10,
                 cursor: (!email || magicLinkLoading) ? "not-allowed" : "pointer",
@@ -151,7 +151,7 @@ export default function LoginPage() {
           gap: 14,
         }}>
           <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
-          <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: fonts.display, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>or</span>
+          <span style={{ fontSize: 12, color: colors.textPrimary, fontFamily: fonts.display, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>or</span>
           <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
         </div>
 
@@ -183,8 +183,8 @@ export default function LoginPage() {
           </svg>
           Continue with Google
         </button>
-        <p style={{ fontSize: 11, color: colors.textMuted, textAlign: "center", margin: "8px 0 0 0" }}>
-          Securely hosted by <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>Supabase</a>
+        <p style={{ fontSize: 11, color: colors.textPrimary, textAlign: "center", margin: "8px 0 0 0" }}>
+          Securely hosted by <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textPrimary, textDecoration: "underline" }}>Supabase</a>
         </p>
 
         {/* Password option — collapsible */}
@@ -194,7 +194,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => setShowPasswordForm(!showPasswordForm)}
               style={{
-                background: "none", border: "none", color: colors.textMuted,
+                background: "none", border: "none", color: colors.textPrimary,
                 fontSize: 13, cursor: "pointer", width: "100%", textAlign: "center",
                 padding: "12px 0 4px", fontFamily: fonts.bodyAlt,
               }}
@@ -206,7 +206,7 @@ export default function LoginPage() {
               <form onSubmit={handleLogin} style={{ marginTop: 12 }}>
                 <label style={{
                   display: "block", marginBottom: 6, fontSize: 13,
-                  fontWeight: 600, color: colors.textSecondary,
+                  fontWeight: 600, color: colors.textPrimary,
                   fontFamily: fonts.display, letterSpacing: "0.01em",
                 }}>
                   {c.login.passwordLabel}
@@ -220,7 +220,7 @@ export default function LoginPage() {
                 <button type="submit" disabled={loading} style={{
                   width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
                   fontFamily: fonts.display,
-                  color: loading ? colors.textMuted : colors.textPrimary,
+                  color: loading ? colors.textPrimary : colors.textPrimary,
                   backgroundColor: loading ? colors.bgElevated : colors.bgRecessed,
                   border: `1px solid ${colors.borderDefault}`,
                   borderRadius: 10,
@@ -230,8 +230,8 @@ export default function LoginPage() {
                   {loading ? c.login.submitLoading : c.login.submitButton}
                 </button>
 
-                <p style={{ marginTop: 10, textAlign: "center", fontSize: 13, color: colors.textMuted }}>
-                  <a href="/forgot-password" style={{ color: colors.textSecondary, textDecoration: "none" }}>
+                <p style={{ marginTop: 10, textAlign: "center", fontSize: 13, color: colors.textPrimary }}>
+                  <a href="/forgot-password" style={{ color: colors.textPrimary, textDecoration: "none" }}>
                     Forgot password?
                   </a>
                 </p>
@@ -255,7 +255,7 @@ export default function LoginPage() {
           borderTop: `1px solid ${colors.borderDefault}`,
           textAlign: "center",
         }}>
-          <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0 }}>
+          <p style={{ fontSize: 14, color: colors.textPrimary, margin: 0 }}>
             {c.login.newHere}{" "}
             <a href="/#programs" style={{ color: colors.coral, fontWeight: 600, textDecoration: "none" }}>
               {c.login.newHereLink}

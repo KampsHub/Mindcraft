@@ -58,7 +58,7 @@ export default function SignupPage() {
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 10px 0", color: colors.textPrimary, fontFamily: fonts.display }}>
             {c.signup.success.headline}
           </h1>
-          <p style={{ color: colors.textSecondary, lineHeight: 1.6, fontSize: 15, margin: "0 0 24px 0" }}>
+          <p style={{ color: colors.textPrimary, lineHeight: 1.6, fontSize: 15, margin: "0 0 24px 0" }}>
             Confirmation link sent to <strong style={{ color: colors.textPrimary }}>{email}</strong>{c.signup.success.messageAfter}
           </p>
           <a href="/login" style={{
@@ -96,7 +96,7 @@ export default function SignupPage() {
           }}>
             {c.signup.headline}
           </h1>
-          <p style={{ fontSize: 15, color: colors.textSecondary, margin: 0 }}>
+          <p style={{ fontSize: 15, color: colors.textPrimary, margin: 0 }}>
             {c.signup.subheadline}
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function SignupPage() {
         <div style={{ marginBottom: 20 }}>
           <label style={{
             display: "block", marginBottom: 6, fontSize: 13,
-            fontWeight: 600, color: colors.textSecondary,
+            fontWeight: 600, color: colors.textPrimary,
             fontFamily: fonts.display, letterSpacing: "0.01em",
           }}>
             {c.signup.emailLabel}
@@ -126,7 +126,7 @@ export default function SignupPage() {
               <p style={{ fontSize: 16, fontWeight: 700, color: colors.success, margin: "0 0 6px 0", fontFamily: fonts.display }}>
                 Check your email
               </p>
-              <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, lineHeight: 1.5 }}>
+              <p style={{ fontSize: 14, color: colors.textPrimary, margin: 0, lineHeight: 1.5 }}>
                 We sent a sign-up link to <strong style={{ color: colors.textPrimary }}>{email}</strong>
               </p>
             </div>
@@ -149,7 +149,7 @@ export default function SignupPage() {
               style={{
                 width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
                 fontFamily: fonts.display, letterSpacing: "-0.01em",
-                color: (!email || magicLinkLoading) ? colors.textMuted : colors.bgDeep,
+                color: (!email || magicLinkLoading) ? colors.textPrimary : colors.bgDeep,
                 backgroundColor: (!email || magicLinkLoading) ? colors.bgElevated : colors.coral,
                 border: "none", borderRadius: 10,
                 cursor: (!email || magicLinkLoading) ? "not-allowed" : "pointer",
@@ -167,7 +167,7 @@ export default function SignupPage() {
           gap: 14,
         }}>
           <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
-          <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: fonts.display, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>or</span>
+          <span style={{ fontSize: 12, color: colors.textPrimary, fontFamily: fonts.display, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>or</span>
           <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
         </div>
 
@@ -199,8 +199,8 @@ export default function SignupPage() {
           </svg>
           Sign up with Google
         </button>
-        <p style={{ fontSize: 11, color: colors.textMuted, textAlign: "center", margin: "8px 0 0 0" }}>
-          Securely hosted by <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>Supabase</a>
+        <p style={{ fontSize: 11, color: colors.textPrimary, textAlign: "center", margin: "8px 0 0 0" }}>
+          Securely hosted by <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textPrimary, textDecoration: "underline" }}>Supabase</a>
         </p>
 
         {/* Password option — collapsible */}
@@ -210,7 +210,7 @@ export default function SignupPage() {
               type="button"
               onClick={() => setShowPasswordForm(!showPasswordForm)}
               style={{
-                background: "none", border: "none", color: colors.textMuted,
+                background: "none", border: "none", color: colors.textPrimary,
                 fontSize: 13, cursor: "pointer", width: "100%", textAlign: "center",
                 padding: "12px 0 4px", fontFamily: fonts.bodyAlt,
               }}
@@ -222,7 +222,7 @@ export default function SignupPage() {
               <form onSubmit={handleSignup} style={{ marginTop: 12 }}>
                 <label style={{
                   display: "block", marginBottom: 6, fontSize: 13,
-                  fontWeight: 600, color: colors.textSecondary,
+                  fontWeight: 600, color: colors.textPrimary,
                   fontFamily: fonts.display, letterSpacing: "0.01em",
                 }}>
                   {c.signup.passwordLabel}
@@ -236,7 +236,7 @@ export default function SignupPage() {
                 <button type="submit" disabled={loading} style={{
                   width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
                   fontFamily: fonts.display,
-                  color: loading ? colors.textMuted : colors.textPrimary,
+                  color: loading ? colors.textPrimary : colors.textPrimary,
                   backgroundColor: loading ? colors.bgElevated : colors.bgRecessed,
                   border: `1px solid ${colors.borderDefault}`,
                   borderRadius: 10,
@@ -265,7 +265,7 @@ export default function SignupPage() {
           borderTop: `1px solid ${colors.borderDefault}`,
           textAlign: "center",
         }}>
-          <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0 }}>
+          <p style={{ fontSize: 14, color: colors.textPrimary, margin: 0 }}>
             {c.signup.haveAccount}{" "}
             <a href="/login" style={{ color: colors.coral, fontWeight: 600, textDecoration: "none" }}>
               {c.signup.haveAccountLink}

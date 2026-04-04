@@ -33,9 +33,16 @@ export default function GoogleAnalytics() {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
+
+          // Respect cookie consent — only enable analytics if user accepted
+          var consent = localStorage.getItem('cookie-consent');
+          if (consent === 'declined') {
+            window['ga-disable-${GA_ID}'] = true;
+          }
+
           gtag('config', '${GA_ID}', {
             page_path: window.location.pathname,
-            send_page_view: true,
+            send_page_view: consent !== 'declined',
           });
           window.gtag = gtag;
         `}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Sora, DM_Sans, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
 import "@/styles/responsive.css";
 
@@ -108,6 +109,7 @@ export default function RootLayout({
         style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}
       >
         {children}
+        <CookieConsent />
         <Analytics />
         <script
           dangerouslySetInnerHTML={{

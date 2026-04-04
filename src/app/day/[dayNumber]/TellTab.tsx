@@ -402,7 +402,7 @@ export default function TellTab({
           <div style={{ marginBottom: 12 }}>
             {yesterdaySummaryTakeaways.questions_to_sit_with.length > 0 && (
               <div style={{ marginBottom: 10 }}>
-                <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.55)", margin: "0 0 6px 0" }}>
+                <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 6px 0" }}>
                   Questions to sit with:
                 </p>
                 {yesterdaySummaryTakeaways.questions_to_sit_with.map((q, i) => (
@@ -414,7 +414,7 @@ export default function TellTab({
             )}
             {yesterdaySummaryTakeaways.challenges.length > 0 && (
               <div style={{ marginBottom: 10 }}>
-                <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.55)", margin: "0 0 6px 0" }}>
+                <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 6px 0" }}>
                   Challenges you took on:
                 </p>
                 {yesterdaySummaryTakeaways.challenges.map((c, i) => (
@@ -426,7 +426,7 @@ export default function TellTab({
             )}
             {yesterdaySummaryTakeaways.committed_actions.length > 0 && (
               <div style={{ marginBottom: 10 }}>
-                <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.55)", margin: "0 0 6px 0" }}>
+                <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 6px 0" }}>
                   You committed to:
                 </p>
                 {yesterdaySummaryTakeaways.committed_actions.map((a, i) => (
@@ -491,8 +491,8 @@ export default function TellTab({
               } catch { /* ignore */ }
             }}
             style={{
-              position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)",
-              width: 32, height: 32, borderRadius: "50%",
+              position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
+              width: 44, height: 44, borderRadius: "50%",
               backgroundColor: followThroughListening ? colors.error : "transparent",
               border: "none",
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
@@ -506,7 +506,7 @@ export default function TellTab({
                 <rect x="6" y="6" width="12" height="12" rx="2" />
               </svg>
             ) : (
-              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                 <line x1="12" x2="12" y1="19" y2="22" />

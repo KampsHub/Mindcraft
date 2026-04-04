@@ -48,7 +48,7 @@ export default function CookieConsent() {
             border: `1px solid ${colors.borderDefault}`,
             borderRadius: radii.lg,
             padding: `${space[4]}px ${space[5]}px`,
-            zIndex: 9999,
+            zIndex: 99999,
             fontFamily: fonts.bodyAlt,
             boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
           }}

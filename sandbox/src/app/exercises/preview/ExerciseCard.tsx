@@ -1,9 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { colors, fonts, space, radii } from "@/lib/theme";
-
-const display = fonts.display;
-const body = fonts.bodyAlt;
 
 interface ExerciseCardProps {
   name: string;
@@ -11,14 +9,15 @@ interface ExerciseCardProps {
   originator: string;
   primitive: string;
   scenario?: string;
-  whyNow: string;
-  science: string;
-  instruction: string;
+  whyThis?: string;
+  whyNow?: string;
+  science?: string;
+  instruction?: string;
   tags?: string[];
   dayNumber?: number;
   isActive: boolean;
   onClick: () => void;
-  children?: React.ReactNode; // The actual primitive component
+  children?: React.ReactNode;
 }
 
 const TAG_STYLES: Record<string, { label: string; bg: string; color: string }> = {
@@ -37,23 +36,26 @@ const MODALITY_COLORS: Record<string, string> = {
 };
 
 export default function ExerciseCard({
-  name, modality, originator, primitive, scenario, whyNow, science, instruction,
+  name, modality, originator, primitive, scenario, whyThis, whyNow, science, instruction,
   tags, dayNumber, isActive, onClick, children,
 }: ExerciseCardProps) {
+  const displayWhyThis = whyThis || [whyNow, science].filter(Boolean).join(" ");
+
   return (
     <div style={{ marginBottom: space[6] }}>
-      {/* Collapsed card */}
-      <button
+      {/* Collapsed header */}
+      <motion.button
         onClick={onClick}
+        whileHover={{ backgroundColor: colors.bgSurface }}
+        transition={{ duration: 0.15 }}
         style={{
           width: "100%",
-          textAlign: "left",
+          textAlign: "left" as const,
           padding: `${space[4]}px ${space[5]}px`,
           backgroundColor: isActive ? colors.bgSurface : colors.bgRecessed,
           border: isActive ? `1px solid ${colors.borderDefault}` : `1px solid ${colors.borderSubtle}`,
           borderRadius: isActive ? `${radii.md}px ${radii.md}px 0 0` : `${radii.md}px`,
           cursor: "pointer",
-          transition: "all 0.2s",
           display: "flex",
           alignItems: "center",
           gap: space[3],
@@ -68,156 +70,114 @@ export default function ExerciseCard({
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{
-            fontFamily: display, fontSize: 15, fontWeight: 600,
+            fontFamily: fonts.display, fontSize: 16, fontWeight: 600,
             color: colors.textPrimary, margin: 0,
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            letterSpacing: "-0.01em",
           }}>
             {name}
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 3, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4, flexWrap: "wrap" }}>
             <p style={{
-              fontFamily: body, fontSize: 12, color: colors.textMuted, margin: 0,
+              fontFamily: fonts.bodyAlt, fontSize: 13, color: colors.textSecondary, margin: 0,
             }}>
               {originator} · {modality}{dayNumber ? ` · Day ${dayNumber}` : ""}
             </p>
             {tags?.map((tag) => {
-              const style = TAG_STYLES[tag];
-              if (!style) return null;
+              const s = TAG_STYLES[tag];
+              if (!s) return null;
               return (
                 <span key={tag} style={{
-                  fontSize: 10, fontWeight: 600, fontFamily: display,
+                  fontSize: 10, fontWeight: 600, fontFamily: fonts.display,
                   padding: "2px 8px", borderRadius: radii.full,
-                  backgroundColor: style.bg, color: style.color,
+                  backgroundColor: s.bg, color: s.color,
                   letterSpacing: "0.02em",
                 }}>
-                  {style.label}
+                  {s.label}
                 </span>
               );
             })}
           </div>
         </div>
 
-        {/* Expand indicator */}
-        <span style={{
-          color: colors.textMuted, fontSize: 14,
-          transform: isActive ? "rotate(180deg)" : "rotate(0deg)",
-          transition: "transform 0.2s",
-        }}>
+        {/* Chevron */}
+        <motion.span
+          animate={{ rotate: isActive ? 180 : 0 }}
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+          style={{ color: colors.textMuted, fontSize: 13, display: "inline-block" }}
+        >
           ▼
-        </span>
-      </button>
+        </motion.span>
+      </motion.button>
 
       {/* Expanded content */}
       {isActive && (
-        <div style={{
-          backgroundColor: colors.bgSurface,
-          border: `1px solid ${colors.borderDefault}`,
-          borderTop: "none",
-          borderRadius: `0 0 ${radii.md}px ${radii.md}px`,
-          padding: `${space[5]}px`,
-        }}>
-          {/* Scenario */}
-          {scenario && (
-            <div style={{
-              marginBottom: space[5],
-              padding: `${space[4]}px ${space[5]}px`,
-              backgroundColor: colors.bgDeep,
-              borderRadius: radii.sm,
-              border: `1px solid ${colors.borderSubtle}`,
-            }}>
-              <p style={{
-                fontFamily: display, fontSize: 11, fontWeight: 600,
-                color: colors.textMuted, letterSpacing: "0.04em",
-                margin: "0 0 8px 0",
+          <div>
+            <div
+              style={{
+                backgroundColor: colors.bgSurface,
+                border: `1px solid ${colors.borderDefault}`,
+                borderTop: "none",
+                borderRadius: `0 0 ${radii.md}px ${radii.md}px`,
+                padding: `${space[5]}px`,
+              }}
+            >
+              {/* Why this exercise */}
+              <div style={{
+                marginBottom: space[5],
+                padding: `${space[3]}px ${space[4]}px`,
+                backgroundColor: colors.bgRecessed,
+                borderRadius: radii.sm,
+                borderLeft: `3px solid ${colors.coral}`,
               }}>
-                FROM YOUR JOURNAL
-              </p>
-              <p style={{
-                fontFamily: fonts.serif, fontSize: 15, color: colors.textPrimary,
-                margin: 0, lineHeight: 1.7, fontStyle: "italic",
+                <p style={{
+                  fontFamily: fonts.display, fontSize: 10, fontWeight: 700,
+                  color: colors.coral, letterSpacing: "0.08em",
+                  margin: "0 0 6px 0",
+                  textTransform: "uppercase",
+                }}>
+                  Why this exercise
+                </p>
+                <p style={{
+                  fontFamily: fonts.bodyAlt, fontSize: 15, color: colors.textPrimary,
+                  margin: 0, lineHeight: 1.7,
+                }}>
+                  {displayWhyThis}
+                </p>
+              </div>
+
+              {/* What to do */}
+              <div style={{
+                marginBottom: children ? space[5] : 0,
+                padding: `${space[3]}px ${space[4]}px`,
+                backgroundColor: colors.bgRecessed,
+                borderRadius: radii.sm,
+                borderLeft: `3px solid ${colors.plumLight}`,
               }}>
-                &ldquo;{scenario}&rdquo;
-              </p>
+                <p style={{
+                  fontFamily: fonts.display, fontSize: 10, fontWeight: 700,
+                  color: colors.plumLight, letterSpacing: "0.08em",
+                  margin: "0 0 6px 0",
+                  textTransform: "uppercase",
+                }}>
+                  What to do
+                </p>
+                <p style={{
+                  fontFamily: fonts.bodyAlt, fontSize: 15, color: colors.textSecondary,
+                  margin: 0, lineHeight: 1.7,
+                }}>
+                  {instruction}
+                </p>
+              </div>
+
+              {/* Interactive primitive */}
+              {children && (
+                <div style={{ marginTop: space[4] }}>
+                  {children}
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Why now */}
-          <div style={{
-            marginBottom: space[5],
-            padding: `${space[3]}px ${space[4]}px`,
-            backgroundColor: colors.bgRecessed,
-            borderRadius: radii.sm,
-            borderLeft: `3px solid ${colors.coral}`,
-          }}>
-            <p style={{
-              fontFamily: display, fontSize: 11, fontWeight: 600,
-              color: colors.coral, letterSpacing: "0.04em",
-              margin: "0 0 4px 0",
-            }}>
-              WHY THIS MATTERS NOW
-            </p>
-            <p style={{
-              fontFamily: body, fontSize: 14, color: colors.textPrimary,
-              margin: 0, lineHeight: 1.6, fontStyle: "italic",
-            }}>
-              {whyNow}
-            </p>
           </div>
-
-          {/* What it does */}
-          <div style={{
-            marginBottom: space[5],
-            padding: `${space[3]}px ${space[4]}px`,
-            backgroundColor: colors.bgRecessed,
-            borderRadius: radii.sm,
-            borderLeft: `3px solid ${MODALITY_COLORS[modality] || colors.textMuted}`,
-          }}>
-            <p style={{
-              fontFamily: display, fontSize: 11, fontWeight: 600,
-              color: MODALITY_COLORS[modality] || colors.textMuted,
-              letterSpacing: "0.04em",
-              margin: "0 0 4px 0",
-            }}>
-              WHAT IT DOES FOR YOU
-            </p>
-            <p style={{
-              fontFamily: body, fontSize: 14, color: colors.textSecondary,
-              margin: 0, lineHeight: 1.6,
-            }}>
-              {science}
-            </p>
-          </div>
-
-          {/* How to use it */}
-          <div style={{
-            marginBottom: children ? space[5] : 0,
-            padding: `${space[3]}px ${space[4]}px`,
-            backgroundColor: colors.bgRecessed,
-            borderRadius: radii.sm,
-            borderLeft: `3px solid ${colors.plumLight}`,
-          }}>
-            <p style={{
-              fontFamily: display, fontSize: 11, fontWeight: 600,
-              color: colors.plumLight, letterSpacing: "0.04em",
-              margin: "0 0 4px 0",
-            }}>
-              HOW TO USE THIS
-            </p>
-            <p style={{
-              fontFamily: body, fontSize: 14, color: colors.textSecondary,
-              margin: 0, lineHeight: 1.6,
-            }}>
-              {instruction}
-            </p>
-          </div>
-
-          {/* Interactive primitive */}
-          {children && (
-            <div style={{ marginTop: space[4] }}>
-              {children}
-            </div>
-          )}
-        </div>
       )}
     </div>
   );

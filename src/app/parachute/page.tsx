@@ -551,7 +551,7 @@ function ProofBar() {
                 gap: 10,
                 fontFamily: body,
                 fontSize: 13,
-                color: colors.textMuted,
+                color: colors.textSecondary,
               }}
             >
               <span

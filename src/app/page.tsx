@@ -1325,7 +1325,7 @@ export default function Home() {
               delay={0.3}
               stagger={0.04}
               duration={0.7}
-              style={{ color: colors.textSecondary, textAlign: "center", fontFamily: display, fontWeight: 700 }}
+              style={{ color: "#FFFFFF", textAlign: "center", fontFamily: display, fontWeight: 700 }}
             />
             <motion.span
               animate={{
@@ -1442,7 +1442,7 @@ export default function Home() {
                 fontFamily: display,
                 fontSize: "clamp(36px, 5vw, 56px)",
                 fontWeight: 800,
-                color: colors.coral,
+                color: colors.bgDeep,
                 lineHeight: 1.1,
                 letterSpacing: "-0.03em",
                 margin: 0,

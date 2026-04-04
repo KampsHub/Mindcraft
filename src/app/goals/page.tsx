@@ -671,7 +671,7 @@ function GoalsPage() {
                     : `1px solid ${colors.borderSubtle}`,
                   padding: "20px 22px",
                   cursor: alreadyApproved ? "default" : "pointer",
-                  backgroundColor: isActive ? "rgba(196, 148, 58, 0.06)" : colors.bgRecessed,
+                  backgroundColor: isActive ? colors.bgSurface : colors.bgRecessed,
                   transition: "all 0.2s",
                 }}
               >

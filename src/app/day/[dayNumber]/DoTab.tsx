@@ -191,9 +191,17 @@ export default function DoTab({
               margin: "0 auto 18px auto",
             }}
           />
-          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
+          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 12px 0" }}>
             Processing your entry and selecting exercises that match what came up and where you are in the program.
           </p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 30, duration: 0.5 }}
+            style={{ ...textPreset.secondary, color: colors.textSecondary, margin: 0 }}
+          >
+            This is taking longer than usual. Still working — please wait or try refreshing.
+          </motion.p>
         </div>
       ) : stateAnalysis ? (
         <div>

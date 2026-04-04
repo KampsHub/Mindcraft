@@ -288,13 +288,32 @@ export default function MyAccountPage() {
                         {enr.status === "active" && ` \u2022 Day ${enr.current_day}`}
                       </p>
                     </div>
-                    <span style={{
-                      fontSize: 11, fontWeight: 600, padding: "4px 12px", borderRadius: 100,
-                      backgroundColor: s.bg, color: s.color, fontFamily: display,
-                      flexShrink: 0,
-                    }}>
-                      {s.label}
-                    </span>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
+                      <span style={{
+                        fontSize: 11, fontWeight: 600, padding: "4px 12px", borderRadius: 100,
+                        backgroundColor: s.bg, color: s.color, fontFamily: display,
+                      }}>
+                        {s.label}
+                      </span>
+                      {(enr.status === "active" || enr.status === "paused") && (
+                        <button
+                          onClick={async () => {
+                            const newStatus = enr.status === "paused" ? "active" : "paused";
+                            await supabase.from("program_enrollments").update({ status: newStatus }).eq("id", enr.id);
+                            setEnrollments((prev) => prev.map((e) => e.id === enr.id ? { ...e, status: newStatus } : e));
+                          }}
+                          style={{
+                            fontSize: 11, fontWeight: 600, padding: "4px 12px", borderRadius: 100,
+                            backgroundColor: "transparent",
+                            border: `1px solid ${colors.borderDefault}`,
+                            color: colors.textMuted, fontFamily: display,
+                            cursor: "pointer",
+                          }}
+                        >
+                          {enr.status === "paused" ? "Resume" : "Pause"}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -474,6 +493,15 @@ export default function MyAccountPage() {
                 exit={{ opacity: 0, height: 0 }}
                 style={{ overflow: "hidden" }}
               >
+                <div style={{
+                  padding: 12, backgroundColor: colors.warningWash,
+                  border: `1px solid ${colors.warning}44`, borderRadius: 8,
+                  marginBottom: 12,
+                }}>
+                  <p style={{ fontSize: 13, color: colors.textPrimary, margin: 0, fontFamily: body, lineHeight: 1.5 }}>
+                    Before deleting, consider <strong>downloading your data</strong> above. Once deleted, your journal entries, exercises, and insights cannot be recovered.
+                  </p>
+                </div>
                 <p style={{ fontSize: 13, color: colors.error, margin: "0 0 12px 0", fontFamily: body, fontWeight: 600 }}>
                   Type DELETE to confirm:
                 </p>

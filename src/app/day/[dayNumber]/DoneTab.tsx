@@ -93,6 +93,14 @@ export default function DoneTab({
           <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
             Generating your daily summary...
           </p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 30, duration: 0.5 }}
+            style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "12px 0 0 0" }}
+          >
+            This is taking longer than usual. Still working — please wait or try refreshing.
+          </motion.p>
         </div>
       ) : summaryResult ? (
         <StaggerContainer staggerInterval={0.15} style={{ display: "flex", flexDirection: "column", gap: space[6] }}>

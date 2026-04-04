@@ -98,6 +98,9 @@ export default function ExerciseCard({
   // Insight state
   const [insight, setInsight] = useState("");
   const [insightLoading, setInsightLoading] = useState(false);
+  const [starRating, setStarRating] = useState<number | null>(existingRating || null);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackSaved, setFeedbackSaved] = useState(false);
   const [insightSaved, setInsightSaved] = useState(false);
   const [insightEditing, setInsightEditing] = useState(false);
   const [completionId, setCompletionId] = useState<string | null>(null);
@@ -732,6 +735,92 @@ export default function ExerciseCard({
             )}
           </div>
         </motion.div>
+      )}
+      {/* ── Star Rating + Feedback ── */}
+      {submitted && !starRating && (
+        <div style={{
+          padding: `${space[3]}px ${space[5]}px ${space[4]}px`,
+          borderTop: `1px solid ${colors.borderSubtle}`,
+        }}>
+          <p style={{ ...textScale.caption, color: colors.textMuted, margin: `0 0 ${space[2]}px 0` }}>
+            How was this exercise?
+          </p>
+          <div style={{ display: "flex", gap: 4 }}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                onClick={async () => {
+                  setStarRating(star);
+                  // Save rating to exercise completion
+                  if (completionId) {
+                    try {
+                      const supabase = (await import("@/lib/supabase")).createClient();
+                      await supabase.from("exercise_completions").update({ star_rating: star }).eq("id", completionId);
+                    } catch { /* non-blocking */ }
+                  }
+                }}
+                style={{
+                  background: "none", border: "none", cursor: "pointer",
+                  fontSize: 22, padding: "2px 4px",
+                  color: colors.coral, opacity: 0.3,
+                  transition: "opacity 0.15s, transform 0.15s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.2)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.3"; e.currentTarget.style.transform = "scale(1)"; }}
+              >
+                ★
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {submitted && starRating !== null && starRating <= 3 && !feedbackSaved && (
+        <div style={{
+          padding: `0 ${space[5]}px ${space[4]}px`,
+        }}>
+          <p style={{ ...textScale.secondary, color: colors.textSecondary, margin: `0 0 ${space[2]}px 0` }}>
+            What would make this exercise better?
+          </p>
+          <div style={{ display: "flex", gap: space[2] }}>
+            <input
+              type="text"
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              placeholder="Your feedback..."
+              style={{
+                flex: 1, padding: `${space[2]}px ${space[3]}px`,
+                ...textScale.secondary,
+                backgroundColor: colors.bgInput, color: colors.textPrimary,
+                border: `1px solid ${colors.borderDefault}`, borderRadius: radii.sm,
+                outline: "none",
+              }}
+            />
+            <button
+              onClick={async () => {
+                setFeedbackSaved(true);
+                if (completionId && feedbackText.trim()) {
+                  try {
+                    const supabase = (await import("@/lib/supabase")).createClient();
+                    await supabase.from("exercise_completions").update({ feedback: feedbackText.trim() }).eq("id", completionId);
+                  } catch { /* non-blocking */ }
+                }
+              }}
+              style={{
+                padding: `${space[2]}px ${space[3]}px`,
+                ...textScale.caption, fontWeight: 600,
+                backgroundColor: colors.coral, color: colors.bgDeep,
+                border: "none", borderRadius: radii.sm, cursor: "pointer",
+              }}
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      )}
+      {feedbackSaved && (
+        <p style={{ ...textScale.caption, color: colors.success, padding: `0 ${space[5]}px ${space[3]}px`, margin: 0 }}>
+          Thank you for your feedback ✓
+        </p>
       )}
     </motion.div>
 

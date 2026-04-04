@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
 import Logo from "@/components/Logo";
 import { content as c } from "@/content/site";
 
@@ -32,7 +33,7 @@ export default function LoginPage() {
     setError("");
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) { setError(error.message); setLoading(false); }
-    else { window.location.href = "/dashboard"; }
+    else { trackEvent("login_success", { method: "password" }); window.location.href = "/dashboard"; }
   }
 
   const inputStyle: React.CSSProperties = {

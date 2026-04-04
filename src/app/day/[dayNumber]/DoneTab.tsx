@@ -6,6 +6,7 @@ import StaggerContainer, { staggerChildVariants } from "@/components/StaggerCont
 import FlagButton from "@/components/FlagButton";
 import CrisisBanner from "@/components/CrisisBanner";
 import { fireDayCompleteConfetti } from "@/lib/confetti";
+import { trackEvent } from "@/components/GoogleAnalytics";
 import { colors, fonts, space, text as textPreset, radii } from "@/lib/theme";
 import type { createClient } from "@/lib/supabase";
 import type {
@@ -375,6 +376,7 @@ export default function DoneTab({
               whileTap={{ scale: 0.97 }}
               onClick={async () => {
                 fireDayCompleteConfetti();
+                trackEvent("day_completed", { day_number: dayNumber, program: "parachute" });
                 await completeDay();
               }}
               style={{

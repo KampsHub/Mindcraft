@@ -802,12 +802,12 @@ function WeeklyReviewPage() {
               fontSize: 15, fontWeight: 600, color: colors.textPrimary,
               margin: "0 0 6px 0", fontFamily: display,
             }}>
-              Complete all 7 days to unlock your review
+              Complete all 7 days to unlock your weekly review
             </p>
             <p style={{
-              fontSize: 13, color: colors.textMuted, margin: 0, fontFamily: body, lineHeight: 1.5,
+              fontSize: 13, color: colors.textSecondary, margin: 0, fontFamily: body, lineHeight: 1.5,
             }}>
-              {completedSessions.length}/7 days finished. Each day&apos;s exercises must be done or parked before the review sections become available.
+              {completedSessions.length} of 7 days completed this week. Finish the remaining days to unlock your weekly insights and reflection.
             </p>
           </div>
         </FadeIn>

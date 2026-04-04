@@ -260,12 +260,19 @@ export default function ExerciseCard({
             {estimatedMinutes && (
               <span
                 style={{
-                  ...textScale.secondary,
+                  ...textScale.caption,
                   color: colors.textMuted,
-                  fontWeight: 500,
+                  fontWeight: 600,
+                  backgroundColor: colors.bgElevated,
+                  padding: "2px 8px",
+                  borderRadius: radii.full,
+                  whiteSpace: "nowrap",
+                  position: "absolute" as const,
+                  top: space[4],
+                  right: space[5],
                 }}
               >
-                &middot; {estimatedMinutes}m
+                ~{estimatedMinutes}m
               </span>
             )}
           </div>

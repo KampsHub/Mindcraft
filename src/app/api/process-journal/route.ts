@@ -130,13 +130,14 @@ export async function POST(request: Request) {
       .eq("active", true)
       .eq("exercise_scope", "common");
 
-    // Fetch recent exercise completions (last 3 days to avoid repeats)
+    // Fetch recent exercise completions (last 7 days to avoid repeats)
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
     const { data: recentCompletions } = await supabase
       .from("exercise_completions")
       .select("framework_name, framework_id, modality, completed_at")
       .eq("enrollment_id", enrollmentId)
-      .order("completed_at", { ascending: false })
-      .limit(15);
+      .gte("completed_at", sevenDaysAgo)
+      .order("completed_at", { ascending: false });
 
     const recentFrameworkNames = new Set(
       (recentCompletions || []).map((c) => c.framework_name)

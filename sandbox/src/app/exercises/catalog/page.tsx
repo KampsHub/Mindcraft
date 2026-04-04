@@ -333,8 +333,8 @@ export default function ExerciseCatalogPage() {
                 primitive={ex.primitive}
                 scenario={ex.scenario}
                 whyThis={ex.whyThis}
-                whyNow={ex.whyNow}
-                science={ex.science}
+                whyNow={ex.whyNow || ""}
+                science={ex.science || ""}
                 instruction={ex.instruction}
                 tags={ex.tags}
                 dayNumber={ex.dayNumber}

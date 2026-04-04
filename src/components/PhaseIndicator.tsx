@@ -81,7 +81,7 @@ export default function PhaseIndicator({ activePhase, completedPhases, onPhaseCl
                 ) : (
                   <span style={{
                     fontSize: isActive ? 14 : 12, fontWeight: 700,
-                    color: isActive ? colors.bgDeep : isDisabled ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.4)",
+                    color: isActive ? colors.bgDeep : isDisabled ? "rgba(255,255,255,0.15)" : colors.textMuted,
                     fontFamily: display,
                   }}>
                     {phase.key}
@@ -96,7 +96,7 @@ export default function PhaseIndicator({ activePhase, completedPhases, onPhaseCl
                     ? colors.textPrimary
                     : isDisabled
                       ? "rgba(255,255,255,0.15)"
-                      : "rgba(255,255,255,0.4)",
+                      : colors.textMuted,
                 fontFamily: display,
                 letterSpacing: "0.03em",
               }}>

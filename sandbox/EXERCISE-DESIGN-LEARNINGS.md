@@ -194,7 +194,71 @@ Current primitives use framer-motion for basic transitions. Motion.dev adds capa
 
 ---
 
-## Part 5: Primitive-Specific Notes
+## Part 5: Exercise Gaps Identified by Multi-Lens Review
+
+### From the Learning Facilitator
+These need to be built INTO the exercises, not just noted:
+
+11. **Spaced retrieval must be woven into program arcs**
+- Day 4 teaches saboteurs → Day 7 should include a 2-question retrieval check ("Name your top saboteur. What does it say?")
+- Day 10 teaches NVC → Day 13 should test recall ("What are the four NVC steps?")
+- **Implementation:** Add RetrievalCheck exercises at Day +3 intervals for every major concept taught
+
+12. **Commitments need follow-through**
+- Day 6 commits to daily anchors → Day 14 should pull those anchors back and ask "How's that going?"
+- Day 19 sets boundaries → Day 25 should check "Did you hold the boundary? What happened?"
+- **Implementation:** Exercises that reference previous commitments need prePopulated data pulled from earlier exercise_completions
+
+13. **Every assessment needs a "now what?"**
+- WheelChart exercises (Seven Disruptions, BRAVING, SCARF, 8 C's) produce ratings but no action plan
+- **Implementation:** Add a follow-up section after every wheel/rating: "Your lowest area is X. One thing you could do this week to strengthen it:"
+
+14. **Skill progression must be explicit**
+- Days 1-7 should label exercises as "Awareness level" → Days 8-14 as "Practice level" → Days 15-21 as "Application level" → Days 22-30 as "Integration level"
+- **Implementation:** Add a `difficultyLevel` or `arcPosition` field to exercise metadata and display it
+
+### From the UX Designer
+
+15. **Exercises need time estimates visible before starting**
+- Show "~5 min" or "~15 min" on the exercise card header
+- Users in crisis need to know if they can fit this in
+- **Implementation:** Add `estimatedMinutes` badge to ExerciseCard
+
+16. **whyThis needs progressive disclosure**
+- 200-word whyThis blocks are walls of text. Show first 2 sentences, "Read more" expander
+- The exercise primitive should be visible without scrolling past the explanation
+- **Implementation:** Collapsible whyThis with Radix accordion
+
+17. **Exercise completion needs a reward moment**
+- Current: checkmark appears, toast says "Exercise saved ✓", disappears in 2s
+- Needed: confetti burst, insight preview, progress counter ("2 of 3 done"), verbal acknowledgment
+- **Implementation:** Use existing confetti.ts + AnimatedCheckmark + progress counter
+
+18. **Clear exercise-to-exercise navigation**
+- After finishing Exercise 1, the user should see "Next: Exercise 2 →"
+- Progress dots: ● ○ ○ (1 of 3 complete)
+- **Implementation:** Add navigation buttons and progress indicator to ExerciseCard wrapper
+
+### From the UX Researcher
+
+19. **Pre/post measurement per exercise**
+- Before: "How clear is your thinking about this right now?" (1-5)
+- After: same question. Delta = exercise impact.
+- **Implementation:** Add optional pre/post slider to ExerciseCard
+
+20. **Completion quality signal**
+- Track not just "completed" but how deeply: word count of responses, time spent, rating given
+- Low-engagement completions (3 words, 10 seconds) should trigger different follow-up than deep completions
+- **Implementation:** Store time_spent and response_length in exercise_completions
+
+21. **Outcome tracking across program arc**
+- Day 1 vs Day 24 disruption ratings already exist but aren't surfaced as growth
+- Build an automatic "Your Progress" section that shows the delta
+- **Implementation:** Pull Day 1 exercise_completions data into Day 24 exercise for comparison
+
+---
+
+## Part 6: Primitive-Specific Notes
 
 ### WheelChart
 - Margin: 100px+ for long category labels

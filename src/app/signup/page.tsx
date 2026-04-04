@@ -23,26 +23,19 @@ export default function SignupPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      setSuccess(true);
-      setLoading(false);
-    }
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) { setError(error.message); setLoading(false); }
+    else { setSuccess(true); setLoading(false); }
   }
 
   const inputStyle: React.CSSProperties = {
-    width: "100%", padding: 12, fontSize: 15,
-    border: `1px solid ${colors.borderSubtle}`, borderRadius: 8,
-    marginBottom: 16, boxSizing: "border-box",
+    width: "100%", padding: "14px 16px", fontSize: 15,
+    backgroundColor: colors.bgInput,
+    color: colors.textPrimary,
+    border: `1px solid ${colors.borderDefault}`, borderRadius: 10,
+    marginBottom: 12, boxSizing: "border-box",
     outline: "none", transition: "border-color 0.15s",
+    fontFamily: fonts.bodyAlt,
   };
 
   if (success) {
@@ -50,33 +43,28 @@ export default function SignupPage() {
       <div style={{
         minHeight: "100vh", display: "flex", alignItems: "center",
         justifyContent: "center", backgroundColor: colors.bgDeep,
-        fontFamily: fonts.body, padding: 24,
+        fontFamily: fonts.bodyAlt, padding: 24,
       }}>
         <div style={{
-          width: "100%", maxWidth: 400, backgroundColor: colors.bgSurface,
-          borderRadius: 16, padding: "40px 32px",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          border: `1px solid ${colors.bgRecessed}`, textAlign: "center",
+          width: "100%", maxWidth: 420, backgroundColor: colors.bgSurface,
+          borderRadius: 20, padding: "48px 36px",
+          border: `1px solid ${colors.borderDefault}`, textAlign: "center",
         }}>
           <div style={{
-            width: 44, height: 44, borderRadius: "50%", backgroundColor: colors.coral,
+            width: 52, height: 52, borderRadius: "50%", backgroundColor: colors.coral,
             display: "inline-flex", alignItems: "center", justifyContent: "center",
-            fontSize: 20, color: colors.bgDeep, marginBottom: 16,
+            fontSize: 24, color: colors.bgDeep, marginBottom: 20,
           }}>✓</div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 8px 0", color: colors.textPrimary }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 10px 0", color: colors.textPrimary, fontFamily: fonts.display }}>
             {c.signup.success.headline}
           </h1>
-          <p style={{ color: colors.textMuted, lineHeight: 1.6, fontSize: 14 }}>
-            Confirmation link sent to <strong>{email}</strong>{c.signup.success.messageAfter}
+          <p style={{ color: colors.textSecondary, lineHeight: 1.6, fontSize: 15, margin: "0 0 24px 0" }}>
+            Confirmation link sent to <strong style={{ color: colors.textPrimary }}>{email}</strong>{c.signup.success.messageAfter}
           </p>
-          <a
-            href="/login"
-            style={{
-              display: "inline-block", marginTop: 24,
-              color: colors.coral, fontWeight: 500,
-              textDecoration: "none", fontSize: 15,
-            }}
-          >
+          <a href="/login" style={{
+            display: "inline-block", color: colors.coral, fontWeight: 600,
+            textDecoration: "none", fontSize: 15, fontFamily: fonts.display,
+          }}>
             {c.signup.success.backLink}
           </a>
         </div>
@@ -88,25 +76,99 @@ export default function SignupPage() {
     <div style={{
       minHeight: "100vh", display: "flex", alignItems: "center",
       justifyContent: "center", backgroundColor: colors.bgDeep,
-      fontFamily: fonts.body, padding: 24,
+      fontFamily: fonts.bodyAlt, padding: 24,
     }}>
       <div style={{
-        width: "100%", maxWidth: 400, backgroundColor: colors.bgSurface,
-        borderRadius: 16, padding: "40px 32px",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-        border: `1px solid ${colors.bgRecessed}`,
+        width: "100%", maxWidth: 420,
+        backgroundColor: colors.bgSurface,
+        borderRadius: 20, padding: "48px 36px 36px",
+        border: `1px solid ${colors.borderDefault}`,
       }}>
         {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{ display: "inline-block", marginBottom: 16 }}>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={{ display: "inline-block", marginBottom: 12 }}>
             <Logo size={20} />
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px 0", color: colors.textPrimary }}>
+          <h1 style={{
+            fontSize: 26, fontWeight: 700, margin: "0 0 6px 0",
+            color: colors.textPrimary, fontFamily: fonts.display,
+            letterSpacing: "-0.02em",
+          }}>
             {c.signup.headline}
           </h1>
-          <p style={{ fontSize: 14, color: colors.textMuted, margin: 0 }}>
+          <p style={{ fontSize: 15, color: colors.textSecondary, margin: 0 }}>
             {c.signup.subheadline}
           </p>
+        </div>
+
+        {/* Email + Magic Link — primary */}
+        <div style={{ marginBottom: 20 }}>
+          <label style={{
+            display: "block", marginBottom: 6, fontSize: 13,
+            fontWeight: 600, color: colors.textSecondary,
+            fontFamily: fonts.display, letterSpacing: "0.01em",
+          }}>
+            {c.signup.emailLabel}
+          </label>
+          <input
+            type="email" value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={c.signup.emailPlaceholder}
+            style={inputStyle}
+          />
+
+          {magicLinkSent ? (
+            <div style={{
+              padding: 20, backgroundColor: colors.successWash,
+              border: `1px solid ${colors.success}44`, borderRadius: 12,
+              textAlign: "center",
+            }}>
+              <p style={{ fontSize: 16, fontWeight: 700, color: colors.success, margin: "0 0 6px 0", fontFamily: fonts.display }}>
+                Check your email
+              </p>
+              <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0, lineHeight: 1.5 }}>
+                We sent a sign-up link to <strong style={{ color: colors.textPrimary }}>{email}</strong>
+              </p>
+            </div>
+          ) : (
+            <button
+              type="button"
+              disabled={!email || magicLinkLoading}
+              onClick={async () => {
+                if (!email) return;
+                setMagicLinkLoading(true);
+                setError("");
+                const { error } = await supabase.auth.signInWithOtp({
+                  email,
+                  options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+                });
+                setMagicLinkLoading(false);
+                if (error) setError(error.message);
+                else setMagicLinkSent(true);
+              }}
+              style={{
+                width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
+                fontFamily: fonts.display, letterSpacing: "-0.01em",
+                color: (!email || magicLinkLoading) ? colors.textMuted : colors.bgDeep,
+                backgroundColor: (!email || magicLinkLoading) ? colors.bgElevated : colors.coral,
+                border: "none", borderRadius: 10,
+                cursor: (!email || magicLinkLoading) ? "not-allowed" : "pointer",
+                transition: "all 0.2s",
+              }}
+            >
+              {magicLinkLoading ? "Sending..." : "Create account"}
+            </button>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div style={{
+          display: "flex", alignItems: "center", margin: "4px 0 20px",
+          gap: 14,
+        }}>
+          <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
+          <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: fonts.display, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>or</span>
+          <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
         </div>
 
         {/* Google OAuth */}
@@ -115,17 +177,15 @@ export default function SignupPage() {
           onClick={async () => {
             const { error } = await supabase.auth.signInWithOAuth({
               provider: "google",
-              options: {
-                redirectTo: `${window.location.origin}/auth/callback`,
-              },
+              options: { redirectTo: `${window.location.origin}/auth/callback` },
             });
             if (error) console.error("Google login error:", error);
           }}
           style={{
-            width: "100%", padding: 13, fontSize: 15, fontWeight: 500,
-            color: colors.textPrimary,
-            backgroundColor: colors.bgSurface,
-            border: `1px solid ${colors.borderSubtle}`, borderRadius: 8,
+            width: "100%", padding: 14, fontSize: 15, fontWeight: 500,
+            color: colors.textPrimary, fontFamily: fonts.bodyAlt,
+            backgroundColor: colors.bgRecessed,
+            border: `1px solid ${colors.borderDefault}`, borderRadius: 10,
             cursor: "pointer", display: "flex", alignItems: "center",
             justifyContent: "center", gap: 10,
             transition: "background-color 0.15s",
@@ -139,77 +199,9 @@ export default function SignupPage() {
           </svg>
           Sign up with Google
         </button>
-        <p style={{ fontSize: 11, color: colors.textMuted, textAlign: "center", margin: "6px 0 0 0" }}>
-          Sign-in securely hosted by <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>Supabase</a>
+        <p style={{ fontSize: 11, color: colors.textMuted, textAlign: "center", margin: "8px 0 0 0" }}>
+          Securely hosted by <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>Supabase</a>
         </p>
-
-        {/* Divider */}
-        <div style={{
-          display: "flex", alignItems: "center", margin: "20px 0",
-          gap: 12,
-        }}>
-          <div style={{ flex: 1, height: 1, backgroundColor: colors.borderSubtle }} />
-          <span style={{ fontSize: 13, color: colors.textMuted }}>or</span>
-          <div style={{ flex: 1, height: 1, backgroundColor: colors.borderSubtle }} />
-        </div>
-
-        {/* Magic Link — primary email option */}
-        <div style={{ marginBottom: 16 }}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.textSecondary }}>
-            {c.signup.emailLabel}
-          </label>
-          <input
-            type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            placeholder={c.signup.emailPlaceholder} style={inputStyle}
-          />
-
-          {magicLinkSent ? (
-            <div style={{
-              padding: 16, backgroundColor: colors.successWash,
-              border: `1px solid ${colors.success}44`, borderRadius: 8,
-              textAlign: "center",
-            }}>
-              <p style={{ fontSize: 15, fontWeight: 600, color: colors.success, margin: "0 0 4px 0" }}>
-                Check your email
-              </p>
-              <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0 }}>
-                We sent a sign-up link to <strong>{email}</strong>. Click it to create your account — no password needed.
-              </p>
-            </div>
-          ) : (
-            <button
-              type="button"
-              disabled={!email || magicLinkLoading}
-              onClick={async () => {
-                if (!email) return;
-                setMagicLinkLoading(true);
-                setError("");
-                const { error } = await supabase.auth.signInWithOtp({
-                  email,
-                  options: {
-                    emailRedirectTo: `${window.location.origin}/auth/callback`,
-                  },
-                });
-                setMagicLinkLoading(false);
-                if (error) {
-                  setError(error.message);
-                } else {
-                  setMagicLinkSent(true);
-                }
-              }}
-              style={{
-                width: "100%", padding: 13, fontSize: 15, fontWeight: 600,
-                color: colors.bgDeep,
-                backgroundColor: (!email || magicLinkLoading) ? colors.textMuted : colors.coral,
-                border: "none", borderRadius: 8,
-                cursor: (!email || magicLinkLoading) ? "not-allowed" : "pointer",
-                transition: "background-color 0.15s",
-              }}
-            >
-              {magicLinkLoading ? "Sending..." : "Send sign-up link"}
-            </button>
-          )}
-        </div>
 
         {/* Password option — collapsible */}
         {!magicLinkSent && (
@@ -220,30 +212,36 @@ export default function SignupPage() {
               style={{
                 background: "none", border: "none", color: colors.textMuted,
                 fontSize: 13, cursor: "pointer", width: "100%", textAlign: "center",
-                padding: "8px 0",
+                padding: "12px 0 4px", fontFamily: fonts.bodyAlt,
               }}
             >
-              {showPasswordForm ? "Hide password signup" : "Use password instead"}
+              {showPasswordForm ? "Hide password signup" : "Sign up with password"}
             </button>
 
             {showPasswordForm && (
-              <form onSubmit={handleSignup} style={{ marginTop: 8 }}>
-                <label style={{ display: "block", marginBottom: 4, fontSize: 13, fontWeight: 500, color: colors.textSecondary }}>
+              <form onSubmit={handleSignup} style={{ marginTop: 12 }}>
+                <label style={{
+                  display: "block", marginBottom: 6, fontSize: 13,
+                  fontWeight: 600, color: colors.textSecondary,
+                  fontFamily: fonts.display, letterSpacing: "0.01em",
+                }}>
                   {c.signup.passwordLabel}
                 </label>
                 <input
-                  type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+                  type="password" value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required minLength={6} style={{ ...inputStyle, marginBottom: 16 }}
                 />
 
                 <button type="submit" disabled={loading} style={{
-                  width: "100%", padding: 13, fontSize: 15, fontWeight: 600,
-                  color: colors.bgDeep,
-                  backgroundColor: loading ? colors.textMuted : colors.bgElevated,
-                  border: `1px solid ${colors.borderSubtle}`,
-                  borderRadius: 8,
+                  width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
+                  fontFamily: fonts.display,
+                  color: loading ? colors.textMuted : colors.textPrimary,
+                  backgroundColor: loading ? colors.bgElevated : colors.bgRecessed,
+                  border: `1px solid ${colors.borderDefault}`,
+                  borderRadius: 10,
                   cursor: loading ? "not-allowed" : "pointer",
-                  transition: "background-color 0.15s",
+                  transition: "all 0.15s",
                 }}>
                   {loading ? c.signup.submitLoading : c.signup.submitButton}
                 </button>
@@ -255,19 +253,25 @@ export default function SignupPage() {
         {error && (
           <div style={{
             padding: 12, backgroundColor: colors.errorWash,
-            border: `1px solid ${colors.errorWash}`, borderRadius: 8,
-            color: colors.error, fontSize: 13, marginTop: 12,
+            border: `1px solid ${colors.error}44`, borderRadius: 10,
+            color: colors.error, fontSize: 13, marginTop: 16, textAlign: "center",
           }}>
             {error}
           </div>
         )}
 
-        <p style={{ marginTop: 20, textAlign: "center", fontSize: 14, color: colors.textMuted }}>
-          {c.signup.haveAccount}{" "}
-          <a href="/login" style={{ color: colors.coral, fontWeight: 500, textDecoration: "none" }}>
-            {c.signup.haveAccountLink}
-          </a>
-        </p>
+        <div style={{
+          marginTop: 24, paddingTop: 20,
+          borderTop: `1px solid ${colors.borderDefault}`,
+          textAlign: "center",
+        }}>
+          <p style={{ fontSize: 14, color: colors.textSecondary, margin: 0 }}>
+            {c.signup.haveAccount}{" "}
+            <a href="/login" style={{ color: colors.coral, fontWeight: 600, textDecoration: "none" }}>
+              {c.signup.haveAccountLink}
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

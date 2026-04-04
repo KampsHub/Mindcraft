@@ -36,7 +36,7 @@ export default function DayError({
         {error.message || "An unexpected error occurred."}
       </p>
       <p style={{
-        fontFamily: body, fontSize: 11, color: "rgba(255,255,255,0.3)",
+        fontFamily: body, fontSize: 11, color: colors.textMuted,
         marginBottom: 20,
       }}>
         {error.digest && `Error ID: ${error.digest}`}

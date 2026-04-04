@@ -442,6 +442,197 @@ After you complete payment → signup → intake, I verify every table:
 
 ---
 
+## 10. DAILY FLOW (Tell → Do → Done)
+
+### 10.1 Tell Tab — Journal Entry — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | Go to /day/1 | Tell tab active, journal textarea visible |
+| 2 | 👤 | Type 3-4 sentences about how you're feeling | Text appears, no lag |
+| 3 | 👤 | Check voice input toggle | Mic icon visible, toggles between text/voice mode |
+| 4 | 👤 | Click "Process My Journal" | Loading spinner, progress bar animates |
+| 5 | 🤖 | Check API call | POST /api/process-journal returns state_analysis + exercises |
+
+### 10.2 Do Tab — Exercise Selection + Completion — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | After processing, tab auto-switches to Do | Reading section appears with stagger animation |
+| 2 | 👤 | Scroll to exercises | Coaching plan exercises visible, overflow exercises below |
+| 3 | 👤 | Expand an exercise card | whyThis, instruction, and primitive render correctly |
+| 4 | 👤 | Complete the exercise (fill responses, rate 1-5) | AnimatedCheckmark draws, "Exercise saved ✓" toast |
+| 5 | 🤖 | Check `exercise_completions` table | Row with responses, rating, framework_name |
+| 6 | 👤 | Check if insight generates | Insight text appears below exercise (editable) |
+
+### 10.3 Done Tab — Summary — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | Click "Complete Exercises & Continue" button | Tab switches to Done, loading spinner |
+| 2 | 👤 | Wait for summary to generate | Summary sections stagger in (confetti on "Complete Day" click) |
+| 3 | 👤 | Check summary sections | Summary, exercise insights, pattern note, tomorrow preview, questions, challenges |
+| 4 | 👤 | Select 1-2 challenges, click "Commit" | Actions saved |
+| 5 | 👤 | Click "Complete Day [N]" | Confetti fires, day marked complete |
+| 6 | 🤖 | Check `daily_sessions` | `completed_at` set, `step_5_summary` populated |
+
+### 10.4 Day Navigation — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | After completing Day 1, go to /day/2 | Day 2 loads with fresh Tell tab |
+| 2 | 🤖 | Go back to /day/1 | Shows completed state, can review but not re-process |
+| 3 | 🤖 | Try /day/5 (not yet reached) | Should show error or redirect to current day |
+
+---
+
+## 11. EXERCISES
+
+### 11.1 Exercise Primitives Render — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | Open sandbox catalog at localhost:3001/exercises/catalog | 362 exercises visible |
+| 2 | 🤖 | Filter by each exercise type | All 27 primitive types have exercises |
+| 3 | 🤖 | Expand a CardSort exercise | Cards draggable, buckets accept drops, spring animation on land |
+| 4 | 🤖 | Expand a WheelChart exercise | Labels visible (white text), dots clickable, pulse on click |
+| 5 | 🤖 | Expand a DialogueSequence exercise | Turns render with prompts, thread dots animate in |
+| 6 | 🤖 | Expand a PatternTracker exercise | Grid renders, current day highlighted, sparklines visible |
+| 7 | 🤖 | Expand a RetrievalCheck exercise | Flashcard shows, textarea works, reveal flips card |
+| 8 | 🤖 | Expand an AISimulation exercise | Chat UI renders, demo responses work |
+
+### 11.2 Exercise Remove/Dismiss — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | Open a CardSort exercise | × button visible on each card |
+| 2 | 🤖 | Click × on a card | Card removed from list |
+| 3 | 🤖 | Open a SplitAnnotator exercise | × button visible on each row (when >1 row) |
+| 4 | 🤖 | Open a DialogueSequence exercise | × button visible on each turn |
+
+### 11.3 Exercise PrePopulated Data — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | Filter catalog to Jetstream Core | 30 exercises, all with scenario-specific prePopulated data |
+| 2 | 🤖 | Check Day 1 (wheelChart) | Categories: "Psychological Safety", "Sense of Competence", etc. (matches website) |
+| 3 | 🤖 | Check Day 4 (splitAnnotator) | Columns: "The Document" / "The Story", rows with PIP-specific examples |
+| 4 | 🤖 | Check Day 12 (cardSort) | Buckets with Gottman descriptions, horsemen + antidote cards |
+
+---
+
+## 12. GOALS
+
+### 12.1 Goal Generation — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | Complete Days 1-3 | Journal entries stored |
+| 2 | 👤 | Go to /goals | "Generate Goals" CTA visible |
+| 3 | 👤 | Click "Generate Goals" | Loading → 3-5 goals appear with why_generated |
+| 4 | 👤 | Review and approve goals | Goals saved, enrollment status → active |
+| 5 | 🤖 | Check `client_goals` table | 3-5 rows with goal_text, why_generated, status: active |
+
+### 12.2 Goal Rating — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | After a week, go to /goals | Goals visible with rating sliders |
+| 2 | 👤 | Rate each goal 1-5 | Ratings save |
+
+---
+
+## 13. WEEKLY REVIEW
+
+### 13.1 Weekly Review Generation — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | Complete 7 days | — |
+| 2 | 👤 | Go to /weekly-review | Week 1 data visible |
+| 3 | 👤 | Rate accountability (1-5) | Slider works |
+| 4 | 👤 | Generate weekly insights | AI produces learnings, pattern shift, growth area, challenge |
+| 5 | 👤 | Download as PDF | PDF downloads correctly |
+
+---
+
+## 14. AUTH — MAGIC LINK (New)
+
+### 14.1 Magic Link Login — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | Go to /login | Magic link section visible (primary), password collapsed |
+| 2 | 👤 | Enter email, click "Send sign-in link" | "Check your email" confirmation shown |
+| 3 | 👤 | Check inbox | Email with sign-in link from Supabase |
+| 4 | 👤 | Click link | Redirects to /auth/callback → /dashboard |
+| 5 | 🤖 | Verify session | User authenticated, dashboard loads |
+
+### 14.2 Magic Link Signup — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | Go to /signup | Magic link section visible |
+| 2 | 👤 | Enter new email, click "Send sign-up link" | "Check your email" confirmation |
+| 3 | 👤 | Click link in email | Account created, redirected to dashboard |
+
+### 14.3 Password Fallback — 👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | On /login, click "Use password instead" | Password form expands |
+| 2 | 👤 | Enter email + password, submit | Normal login works |
+
+### 14.4 Supabase Hosting Note — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | Check /login page | "Sign-in securely hosted by Supabase" text visible below Google button |
+| 2 | 🤖 | Check /signup page | Same note visible |
+
+---
+
+## 15. MOTION & ANIMATION
+
+### 15.1 StaggerContainer — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | Complete journal processing, watch Do tab | Exercises stagger in (not all at once) |
+| 2 | 🤖 | Switch to Done tab | Summary sections stagger in |
+
+### 15.2 Exercise Completion Animations — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | Complete an exercise | AnimatedCheckmark draws (SVG path) |
+| 2 | 🤖 | Click "Complete Day" | Confetti fires |
+
+### 15.3 Motion.dev Primitives — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | Drop a card in CardSort | Spring bounce animation on landing |
+| 2 | 🤖 | Click a WheelChart dot | Dot pulse animation |
+| 3 | 🤖 | View SplitAnnotator | "+ Add row" button border pulses (3 cycles) |
+
+---
+
+## 16. ACCOUNT MANAGEMENT
+
+### 16.1 Account Page — 🤖+👤
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 👤 | Go to /my-account | Profile, enrollments, consent settings visible |
+| 2 | 👤 | Toggle coach sharing off | Saves immediately |
+| 3 | 👤 | Click "Download my data" | JSON file downloads |
+| 4 | 👤 | Check "Delete account" | Confirmation dialog appears |
+
+---
+
+## 17. VISUAL STANDARDS
+
+### 17.1 Post-Login Text Colors — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | Check /dashboard | No grey text (all white/textPrimary or textSecondary) |
+| 2 | 🤖 | Check /day/1 (all tabs) | No rgba(255,255,255,0.X) text remaining |
+| 3 | 🤖 | Check /goals | Same |
+| 4 | 🤖 | Check /weekly-review | Same |
+
+### 17.2 Exercise Primitive Visuals — 🤖
+| Step | Who | Action | Expected |
+|------|-----|--------|----------|
+| 1 | 🤖 | WheelChart labels | White text, not truncated, readable on dark background |
+| 2 | 🤖 | StakeholderMap zones | "low influence / moderate influence / high influence" (not inner/middle/outer) |
+| 3 | 🤖 | HeatmapTracker columns | Headers not overlapping, word-break working |
+| 4 | 🤖 | ForceField | Shows prePopulated labels (not "Motivation" / "Fear" defaults) |
+
+---
+
 ## Test Accounts to Create
 1. **Fresh user** — new email, full flow: payment → signup → intake → dashboard
 2. **Returning user** — existing account, buys second program

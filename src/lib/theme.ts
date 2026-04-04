@@ -19,7 +19,7 @@ export const colors = {
   textPrimary: "#F0EDE6",  // Headings, primary content (warm white)
   textSecondary: "#C8CDD2", // Subtitles, labels, nav links (light silver)
   textBody: "#C8CDD2",     // Body text on cards (light silver)
-  textMuted: "#8A9199",    // Section labels, hints, metadata
+  textMuted: "#A8ADB5",    // Section labels, hints, metadata (brightened for dark bg readability)
 
   // Accent: Warm Ochre
   coralLight: "#D4A84E",

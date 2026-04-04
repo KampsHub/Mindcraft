@@ -292,7 +292,7 @@ export default function GuidedExerciseFlow({
         style={{
           position: "absolute", top: "max(20px, env(safe-area-inset-top, 20px))", right: 20,
           background: "none", border: "none", cursor: "pointer",
-          color: "rgba(255,255,255,0.4)", fontSize: 24,
+          color: colors.textMuted, fontSize: 24,
           zIndex: 10,
         }}
       >
@@ -378,7 +378,7 @@ export default function GuidedExerciseFlow({
             fontSize: 12, fontFamily: display, fontWeight: 600,
             color: state === "speaking" ? colors.coral
               : state === "listening" ? "#4ade80"
-              : "rgba(255,255,255,0.3)",
+              : colors.textMuted,
             letterSpacing: "0.03em",
             marginBottom: 20,
           }}

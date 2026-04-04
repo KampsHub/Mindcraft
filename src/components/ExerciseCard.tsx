@@ -334,7 +334,7 @@ export default function ExerciseCard({
                 }}>
                   {whySelected}
                   {whyThisWorks && (
-                    <span style={{ color: "rgba(255,255,255,0.3)" }}>
+                    <span style={{ color: colors.textMuted }}>
                       {" \u00B7 "}{whyThisWorks}
                     </span>
                   )}
@@ -382,11 +382,11 @@ export default function ExerciseCard({
                           padding: `6px ${space[3]}px`, borderRadius: radii.full,
                           backgroundColor: "transparent", border: "none",
                           cursor: "pointer", ...textScale.caption, fontSize: 12, fontWeight: 500,
-                          color: "rgba(255,255,255,0.3)",
+                          color: colors.textMuted,
                           transition: "color 0.15s",
                         }}
                         onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.5)"; setShowParkInfo(true); }}
-                        onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.3)"; setShowParkInfo(false); }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = colors.textMuted; setShowParkInfo(false); }}
                       >
                         <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"

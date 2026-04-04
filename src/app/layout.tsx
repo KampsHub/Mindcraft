@@ -93,9 +93,11 @@ export default function RootLayout({
               operatingSystem: "Web",
               url: "https://mindcraft.ing",
               offers: {
-                "@type": "Offer",
-                price: "29.95",
+                "@type": "AggregateOffer",
+                lowPrice: "29",
+                highPrice: "349",
                 priceCurrency: "USD",
+                availability: "https://schema.org/InStock",
               },
             }),
           }}

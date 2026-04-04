@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
             marginBottom: 48,
           }}
         >
-          Last updated: March 14, 2026
+          Last updated: April 4, 2026
         </p>
 
         {/* 1. Overview */}
@@ -143,7 +143,7 @@ export default function PrivacyPolicyPage() {
               <tbody>
                 <tr>
                   <td style={tdStyle}>Account</td>
-                  <td style={tdStyle}>Email address, hashed password</td>
+                  <td style={tdStyle}>Email address, hashed password (or magic link token if passwordless)</td>
                   <td style={tdStyle}>Authentication, account recovery, contact</td>
                 </tr>
                 <tr>
@@ -175,6 +175,11 @@ export default function PrivacyPolicyPage() {
                   <td style={tdStyle}>Contact messages</td>
                   <td style={tdStyle}>Issue type and message text from the support form</td>
                   <td style={tdStyle}>Customer support</td>
+                </tr>
+                <tr>
+                  <td style={tdStyle}>Voice data (optional)</td>
+                  <td style={tdStyle}>Audio recordings during voice coaching sessions</td>
+                  <td style={tdStyle}>Real-time transcription and voice coaching. Audio is processed in real time and not stored after the session ends.</td>
                 </tr>
                 <tr>
                   <td style={tdStyle}>Usage analytics</td>
@@ -281,6 +286,21 @@ export default function PrivacyPolicyPage() {
                   <td style={tdStyle}>Resend</td>
                   <td style={tdStyle}>Email address, support message</td>
                   <td style={tdStyle}>Deliver contact form emails</td>
+                </tr>
+                <tr>
+                  <td style={tdStyle}>LiveKit</td>
+                  <td style={tdStyle}>Voice audio (real-time, not stored)</td>
+                  <td style={tdStyle}>Voice coaching session infrastructure</td>
+                </tr>
+                <tr>
+                  <td style={tdStyle}>Deepgram</td>
+                  <td style={tdStyle}>Voice audio (real-time transcription)</td>
+                  <td style={tdStyle}>Convert speech to text for voice coaching sessions</td>
+                </tr>
+                <tr>
+                  <td style={tdStyle}>ElevenLabs</td>
+                  <td style={tdStyle}>Generated coaching text</td>
+                  <td style={tdStyle}>Convert coaching responses to spoken audio</td>
                 </tr>
                 <tr>
                   <td style={tdStyle}>Google Analytics</td>
@@ -415,7 +435,7 @@ export default function PrivacyPolicyPage() {
             Our services and third-party providers are based in the United States. If you are
             located outside the US, your data will be transferred to and processed in the US. By
             using Mindcraft, you consent to this transfer. We rely on the data processing agreements
-            of our service providers (Supabase, Anthropic, Stripe) to ensure your data is handled
+            of our service providers (Supabase, Anthropic, Stripe, LiveKit, Deepgram, ElevenLabs) to ensure your data is handled
             in compliance with applicable regulations.
           </p>
         </div>

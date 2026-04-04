@@ -57,7 +57,7 @@ export default function HeatmapTracker({ rows, columns, cells, onChange, onNoteC
             <tr>
               <th style={{ width: 120 }} />
               {columns.map((c) => (
-                <th key={c.id} style={{ ...capStyle, width: SZ, padding: `0 0 ${space[2]}px 0` }}>{c.label}</th>
+                <th key={c.id} style={{ ...capStyle, width: SZ + 20, minWidth: SZ + 20, padding: `0 4px ${space[2]}px 4px`, fontSize: 10, lineHeight: 1.3, wordBreak: "break-word" as const }}>{c.label}</th>
               ))}
               <th style={{ ...capStyle, width: SZ, paddingLeft: space[2] }}>Total</th>
             </tr>

@@ -30,7 +30,7 @@ export default function DayError({
         Session hit a snag
       </p>
       <p style={{
-        fontFamily: body, fontSize: 14, color: "rgba(255,255,255,0.6)",
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
         marginBottom: 8, maxWidth: 500, textAlign: "center", lineHeight: 1.5,
       }}>
         {error.message || "An unexpected error occurred."}

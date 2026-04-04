@@ -175,7 +175,7 @@ class DashboardErrorBoundary extends React.Component<
           fontFamily: "'DM Sans', sans-serif", padding: 24,
         }}>
           <p style={{ fontSize: 18, fontWeight: 600 }}>Something went wrong</p>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>
+          <p style={{ fontSize: 14, color: colors.textSecondary }}>
             Try refreshing the page. If it keeps happening, contact support.
           </p>
           <button

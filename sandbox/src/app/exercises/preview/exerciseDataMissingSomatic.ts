@@ -16,6 +16,16 @@ export const MISSING_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     whyNow: "Your journal suggested your nervous system is toggling between states without your awareness — mapping the three polyvagal states helps you read your own autonomic cues before they drive your behavior.",
     science: "Porges's polyvagal theory identifies three phylogenetically ordered autonomic states: ventral vagal (safe, social), sympathetic (mobilized, fight/flight), and dorsal vagal (immobilized, shutdown). Heart rate variability, facial expressiveness, and vocal prosody shift measurably across these states. Recognizing which state you are in is the prerequisite for intentional state-shifting.",
     instruction: "The spectrum displays three color-coded zones representing the polyvagal states: ventral vagal (green/safe), sympathetic (yellow-orange/mobilized), and dorsal vagal (blue-grey/shutdown). Tap the zone that best matches where your nervous system is right now. Use the body cues listed in each zone — heart rate, muscle tension, eye contact comfort, vocal tone — to confirm your placement. Guidance for moving toward ventral vagal will appear based on your current state.",
+    prePopulated: {
+      zones: [
+        { id: "dorsal", label: "Dorsal Vagal — Shutdown", fromPercent: 0, toPercent: 30, color: "#7B9AAD", guidance: "You may feel numb, foggy, or disconnected. Try gentle orienting: look around the room and name 5 things you see. Wiggle your toes. Place a hand on your chest and feel your heartbeat. Small sensory inputs help your system come back online." },
+        { id: "sympathetic", label: "Sympathetic — Mobilized", fromPercent: 30, toPercent: 65, color: "#D6B65D", guidance: "You may feel restless, tight, or on edge. Your heart rate is up and your muscles are braced. Try extending your exhale: breathe in for 4 counts, out for 8. Shake your hands for 10 seconds and let them drop. The mobilization energy needs a safe exit." },
+        { id: "ventral", label: "Ventral Vagal — Safe & Social", fromPercent: 65, toPercent: 100, color: "#6AB282", guidance: "You feel present, connected, and open. Your face is relaxed, your voice has melody, and eye contact feels natural. This is your regulated home base. Notice what got you here — it is worth remembering." },
+      ],
+      value: 45,
+      leftLabel: "Shutdown",
+      rightLabel: "Safe & Social",
+    },
     tags: ["journal-matched"],
   },
   {
@@ -38,6 +48,24 @@ export const MISSING_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     whyNow: "Your body is sending signals but your mind is writing stories about them — separating raw sensation from narrative interpretation can stop the amplification loop that turns tension into panic.",
     science: "The insula detects raw interoceptive signals (heartbeat, gut sensation, muscle tension) and the default mode network immediately wraps them in narrative. A racing heart becomes 'I am having a heart attack' or 'something is terribly wrong.' Somatic signal-story separation interrupts the insula-to-DMN escalation chain by keeping attention on the signal before the cortex elaborates it into threat.",
     instruction: "In the left column, write only the raw body signals you notice right now — heart rate, temperature, tension location, breathing depth. No interpretation, just sensation data. In the right column, write the stories your mind is telling about each signal. Seeing the gap between 'my chest is tight' (signal) and 'I am going to lose everything' (story) loosens the story's grip on your nervous system.",
+    prePopulated: {
+      leftColumnLabel: "Raw Signal — what you physically feel",
+      rightColumnLabel: "Story — what your mind says it means",
+      rows: [
+        { id: "1", leftText: "Chest feels tight, like a band around my ribs", rightText: "Something bad is about to happen", tags: ["chest"] },
+        { id: "2", leftText: "Jaw is clenched, teeth pressed together", rightText: "I need to hold it together or everything falls apart", tags: ["jaw"] },
+        { id: "3", leftText: "Stomach is churning, slightly nauseous", rightText: "I made the wrong decision and it is too late to fix it", tags: ["gut"] },
+        { id: "4", leftText: "", rightText: "", tags: [] },
+      ],
+      availableTags: [
+        { id: "chest", label: "Chest / Heart", color: "#D25858" },
+        { id: "gut", label: "Gut / Belly", color: "#D6B65D" },
+        { id: "jaw", label: "Jaw / Face", color: "#C4943A" },
+        { id: "throat", label: "Throat", color: "#7B9AAD" },
+        { id: "shoulders", label: "Shoulders / Neck", color: "#8A9199" },
+        { id: "limbs", label: "Hands / Legs", color: "#6AB282" },
+      ],
+    },
     tags: ["journal-matched"],
   },
   {
@@ -71,6 +99,9 @@ export const MISSING_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     whyNow: "You described disconnection between what you think and what you feel — the MBSR body scan systematically rebuilds the mind-body bridge that stress erodes.",
     science: "The MBSR body scan is the most-studied somatic awareness practice in clinical research. It increases insular cortex thickness, improves interoceptive accuracy, and reduces alexithymia (difficulty identifying emotions). Unlike a quick check-in, the MBSR version moves slowly through each body region, spending 2-3 minutes per area, which is the minimum time needed for the somatosensory cortex to recalibrate its sensitivity.",
     instruction: "On the body map, follow the guided sequence from the toes of your left foot up through the left leg, then the right side, through the torso, arms, and up to the crown of the head. For each region, bring full attention to whatever sensations are present — or the absence of sensation. Mark areas of particular intensity, numbness, or holding on the map. The completed scan gives you a detailed picture of where your body is today.",
+    prePopulated: {
+      markers: [],
+    },
     tags: ["journal-matched"],
   },
   {
@@ -137,6 +168,22 @@ export const MISSING_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     whyNow: "You may be filtering your experience through a negativity lens without realizing it — tracking pleasant and unpleasant events builds awareness of the full range of your daily experience.",
     science: "Depressive and anxious cognition narrows attention to threat and loss. The pleasant/unpleasant events calendar counteracts this attentional bias by requiring systematic noticing of positive experiences. Encoding pleasant events strengthens the hippocampal-ventral striatal memory pathway for positive experiences, while tracking unpleasant events with equanimity builds distress tolerance via the anterior insula's interoceptive monitoring.",
     instruction: "The heatmap displays your week. For each time block, log whether the dominant experience was pleasant (green), unpleasant (red), or neutral (yellow). For each entry, briefly note: What happened? What body sensations were present? What thoughts accompanied it? What mood were you in? The completed map reveals patterns — when pleasant events cluster, when unpleasant ones repeat, and how much neutral experience you were previously ignoring.",
+    prePopulated: {
+      rows: [
+        { id: "morning", label: "Morning (wake — noon)" },
+        { id: "afternoon", label: "Afternoon (noon — 5pm)" },
+        { id: "evening", label: "Evening (5pm — bed)" },
+      ],
+      columns: [
+        { id: "mon", label: "Mon" },
+        { id: "tue", label: "Tue" },
+        { id: "wed", label: "Wed" },
+        { id: "thu", label: "Thu" },
+        { id: "fri", label: "Fri" },
+        { id: "sat", label: "Sat" },
+        { id: "sun", label: "Sun" },
+      ],
+    },
     tags: ["journal-matched"],
   },
   {
@@ -214,6 +261,9 @@ export const MISSING_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     whyNow: "You described being stuck in a painful sensation — pendulation teaches your nervous system that it can move between distress and resource, which is the foundation of all regulation.",
     science: "Pendulation is Levine's core somatic technique: gently oscillating attention between a place of activation (discomfort) and a place of resource (comfort) in the body. This mimics the nervous system's natural regulatory rhythm and prevents the overwhelm that comes from staying in activation too long. Each swing between states strengthens the autonomic flexibility that trauma disrupts, gradually widening the window of tolerance.",
     instruction: "On the body map, first locate a place in your body that feels comfortable, warm, or neutral — this is your resource. Tap it. Then locate a place of tension, discomfort, or activation — tap it. Now practice pendulating: spend 10-15 seconds with attention on the resource, then shift to the activation for 5-10 seconds, then back to the resource. Notice how the activation changes with each cycle. The body map tracks the shifts in sensation across pendulation cycles.",
+    prePopulated: {
+      markers: [],
+    },
     tags: ["journal-matched"],
   },
   {
@@ -225,6 +275,15 @@ export const MISSING_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     whyNow: "You described emotions that feel dammed up or flooding — the river metaphor helps you find the natural current between suppression and overwhelm.",
     science: "Emotional regulation is best understood as flow management rather than content management. Suppression (damming) increases amygdala activation and physiological arousal despite reducing outward expression. Flooding (bursting the dam) overwhelms the prefrontal cortex's processing capacity. Healthy regulation allows emotions to flow at a rate the system can process — the anterior cingulate cortex adjusts this flow rate in real time using feedback from the insula.",
     instruction: "The emotional arc represents the river of your emotional experience. Map its current state — is it dammed up (suppressed, numb, controlled), flooding (overwhelming, out of control), or flowing (felt but manageable)? Then follow the guided exploration: if dammed, practice gently opening the gates by softening your body and letting one feeling through. If flooding, practice containment by grounding and narrowing focus. The goal is steady flow, not still water.",
+    prePopulated: {
+      phases: [
+        { id: "dammed", label: "Dammed — Numb & Controlled", prompt: "What emotion are you holding back? What would happen if you let just a small amount through right now?", content: "", intensity: 2 },
+        { id: "seeping", label: "Seeping — Leaking at the edges", prompt: "Where is emotion breaking through despite your efforts to contain it? Tears at odd moments, irritability, fatigue?", content: "", intensity: 4 },
+        { id: "flowing", label: "Flowing — Felt but manageable", prompt: "What does it feel like when emotion moves through you without overwhelming you? What helped you get here?", content: "", intensity: 6 },
+        { id: "surging", label: "Surging — Approaching overwhelm", prompt: "What signals tell you the flow is getting too strong? Where do you feel it in your body?", content: "", intensity: 8 },
+        { id: "flooding", label: "Flooding — Out of control", prompt: "When you are flooded, what do you lose access to — words, patience, perspective? What one grounding action could you reach for?", content: "", intensity: 10 },
+      ],
+    },
     tags: ["journal-matched"],
   },
   {
@@ -382,7 +441,7 @@ export const MISSING_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     tags: ["journal-matched"],
   },
   {
-    id: "co-regulation-practice",
+    id: "co-regulation-practice-somatic",
     name: "Co-regulation Practice",
     modality: "somatic",
     originator: "Stephen Porges / Polyvagal",

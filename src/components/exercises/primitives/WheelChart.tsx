@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useCallback } from "react";
 import * as d3 from "d3";
+import { animate } from "motion";
 import { colors, fonts, space, radii } from "@/lib/theme";
 
 interface WheelChartProps {
@@ -12,8 +13,8 @@ interface WheelChartProps {
   maxValue?: number;
 }
 
-const SIZE = 400;
-const MARGIN = 60;
+const SIZE = 480;
+const MARGIN = 100;
 const RADIUS = (SIZE - MARGIN * 2) / 2;
 const CENTER = SIZE / 2;
 
@@ -68,8 +69,9 @@ export default function WheelChart({
         .attr("cy", CENTER)
         .attr("r", r)
         .attr("fill", "none")
-        .attr("stroke", colors.borderSubtle)
+        .attr("stroke", "rgba(255,255,255,0.25)")
         .attr("stroke-width", 1)
+        .attr("stroke-opacity", level < levels ? 0.5 : 0.8)
         .attr("stroke-dasharray", level < levels ? "2,4" : "none");
     }
 
@@ -83,8 +85,9 @@ export default function WheelChart({
         .attr("y1", CENTER)
         .attr("x2", x)
         .attr("y2", y)
-        .attr("stroke", colors.borderSubtle)
-        .attr("stroke-width", 1);
+        .attr("stroke", "rgba(255,255,255,0.2)")
+        .attr("stroke-width", 1)
+        .attr("stroke-opacity", 0.4);
     });
 
     // Level labels (numbers on first axis)
@@ -94,8 +97,8 @@ export default function WheelChart({
       g.append("text")
         .attr("x", CENTER + 4)
         .attr("y", CENTER - r - 2)
-        .attr("fill", colors.textMuted)
-        .attr("font-size", 9)
+        .attr("fill", "rgba(255,255,255,0.6)")
+        .attr("font-size", 10)
         .attr("font-family", fonts.body)
         .text(val);
     }
@@ -122,21 +125,40 @@ export default function WheelChart({
     // Current values area (coral)
     g.append("path")
       .attr("d", buildPath(values))
-      .attr("fill", colors.coralWash)
-      .attr("stroke", colors.coral)
+      .attr("fill", "rgba(196, 148, 58, 0.2)")
+      .attr("stroke", "#F0EDE6")
       .attr("stroke-width", 2);
 
     // Current value dots
     values.forEach((v, i) => {
       const [x, y] = getPoint(i, v);
+
+      // Pulse ring (hint that dots are interactive)
+      if (onChange) {
+        g.append("circle")
+          .attr("cx", x)
+          .attr("cy", y)
+          .attr("r", 7)
+          .attr("fill", "none")
+          .attr("stroke", colors.coral)
+          .attr("stroke-width", 1.5)
+          .attr("stroke-opacity", 0.4)
+          .append("animate")
+          .attr("attributeName", "r")
+          .attr("values", "7;12;7")
+          .attr("dur", "2s")
+          .attr("repeatCount", "3");
+      }
+
       g.append("circle")
         .attr("cx", x)
         .attr("cy", y)
-        .attr("r", 5)
+        .attr("r", 6)
         .attr("fill", colors.coral)
         .attr("stroke", colors.bgSurface)
         .attr("stroke-width", 2)
-        .style("cursor", onChange ? "pointer" : "default");
+        .attr("data-dot", i)
+        .style("cursor", onChange ? "grab" : "default");
     });
 
     // Click zones per segment (invisible wedges for interaction)
@@ -162,6 +184,12 @@ export default function WheelChart({
             const dist = Math.sqrt(mx * mx + my * my);
             const newValue = Math.max(1, Math.min(maxValue, Math.round(radialScale.invert(dist))));
             onChange(i, newValue);
+            // Spring animation on the clicked dot
+            const dot = svgRef.current?.querySelector(`circle[data-dot="${i}"]`);
+            if (dot) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any)(dot, { r: [8, 5, 6] }, { duration: 0.3, easing: [0.22, 1, 0.36, 1] });
+            }
           });
       });
     }
@@ -169,7 +197,7 @@ export default function WheelChart({
     // Category labels around perimeter
     categories.forEach((cat, i) => {
       const angle = angleSlice * i - Math.PI / 2;
-      const labelR = RADIUS + 18;
+      const labelR = RADIUS + 24;
       const x = CENTER + labelR * Math.cos(angle);
       const y = CENTER + labelR * Math.sin(angle);
 
@@ -182,9 +210,10 @@ export default function WheelChart({
         .attr("y", y)
         .attr("text-anchor", anchor)
         .attr("dominant-baseline", "central")
-        .attr("fill", colors.textSecondary)
-        .attr("font-size", 12)
-        .attr("font-family", fonts.body)
+        .attr("fill", "#FFFFFF")
+        .attr("font-size", 14)
+        .attr("font-weight", 600)
+        .attr("font-family", fonts.display)
         .text(cat);
     });
   }, [categories, values, comparisonValues, maxValue, onChange, angleSlice, radialScale, getPoint, buildPath]);

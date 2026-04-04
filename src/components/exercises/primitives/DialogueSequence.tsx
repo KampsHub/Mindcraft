@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useRef, useEffect } from "react";
+import { animate } from "motion";
 import { colors, fonts, space, radii, text } from "@/lib/theme";
 
 /* ── Types ── */
@@ -138,8 +139,33 @@ export default function DialogueSequence({
 
             return (
               <div key={turn.id} style={{ position: "relative" }}>
+                {/* Remove turn button */}
+                {onChange && turns.length > 1 && (
+                  <button
+                    onClick={() => onChange(turns.filter((t) => t.id !== turn.id))}
+                    style={{
+                      position: "absolute", top: 0, right: 0, zIndex: 2,
+                      background: colors.bgElevated, border: `1px solid ${colors.borderSubtle}`,
+                      borderRadius: radii.full, width: 18, height: 18,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: colors.textMuted, fontSize: 11, cursor: "pointer",
+                      opacity: 0.4, lineHeight: 1,
+                    }}
+                    title="Remove this turn"
+                  >
+                    ×
+                  </button>
+                )}
                 {/* Thread dot */}
-                <div style={{
+                <div
+                  ref={(el) => {
+                    if (el && !el.dataset.animated) {
+                      el.dataset.animated = "1";
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      (animate as any)(el, { scale: [0, 1.3, 1], opacity: [0, 1] }, { duration: 0.4, easing: [0.22, 1, 0.36, 1] });
+                    }
+                  }}
+                  style={{
                   position: "absolute",
                   left: -16,
                   top: 14,

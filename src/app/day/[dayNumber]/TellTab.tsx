@@ -506,7 +506,7 @@ export default function TellTab({
                 <rect x="6" y="6" width="12" height="12" rx="2" />
               </svg>
             ) : (
-              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                 <line x1="12" x2="12" y1="19" y2="22" />
@@ -534,7 +534,7 @@ export default function TellTab({
         {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
           <div style={{ marginBottom: space[6] }}>
             <p style={{
-              ...textPreset.caption, color: "rgba(255,255,255,0.5)",
+              ...textPreset.caption, color: colors.textSecondary,
               margin: "0 0 8px 0",
             }}>
               Thought Inspiration
@@ -576,7 +576,7 @@ export default function TellTab({
           <p style={{ ...textPreset.caption, color: colors.plumLight, margin: "0 0 8px 0" }}>
             Anything else on your mind?
           </p>
-          <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.4)", margin: "0 0 12px 0" }}>
+          <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 12px 0" }}>
             A sentence or two — whatever came up from the questions above.
           </p>
           <textarea
@@ -635,7 +635,7 @@ export default function TellTab({
                 borderRadius: "50%",
                 border: "none",
                 backgroundColor: journalMode === "voice" ? colors.coral : colors.bgElevated,
-                color: journalMode === "voice" ? colors.bgDeep : "rgba(255,255,255,0.6)",
+                color: journalMode === "voice" ? colors.bgDeep : colors.textSecondary,
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",

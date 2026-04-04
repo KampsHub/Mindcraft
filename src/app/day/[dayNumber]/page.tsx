@@ -89,7 +89,7 @@ function DailyFlowPage() {
             </span>
           </div>
           {s.weekPurpose && (
-            <p style={{ ...text.secondary, color: "rgba(255,255,255,0.5)", margin: "0 0 12px 0" }}>
+            <p style={{ ...text.secondary, color: colors.textSecondary, margin: "0 0 12px 0" }}>
               {s.weekPurpose}
             </p>
           )}
@@ -98,7 +98,7 @@ function DailyFlowPage() {
           }}>
             Day {s.dayNumber}: {s.programDay.title}
           </h1>
-          <p style={{ ...text.body, color: "rgba(255,255,255,0.8)", margin: 0 }}>
+          <p style={{ ...text.body, color: colors.textPrimary, margin: 0 }}>
             {s.programDay.territory}
           </p>
         </div>

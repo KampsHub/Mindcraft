@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { animate } from "motion";
 import { colors, space, radii, text, fonts } from "@/lib/theme";
 
 interface Force { id: string; label: string; strength: number; notes?: string; }
@@ -42,12 +43,21 @@ function ForceBar({ force, side, onStrengthChange, onRemove }: {
   onRemove?: ForceFieldDiagramProps["onRemove"];
 }) {
   const [open, setOpen] = useState(false);
+  const barRef = useRef<HTMLDivElement>(null);
+  const prevStrength = useRef(force.strength);
   const drv = side === "driving";
   const bg = barColor(side, force.strength);
   const w = `${(force.strength / 5) * 100}%`;
+
+  // Spring bounce when strength changes
+  if (prevStrength.current !== force.strength && barRef.current) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (animate as any)(barRef.current, { scale: [1, 1.04, 0.98, 1] }, { duration: 0.3, easing: [0.22, 1, 0.36, 1] });
+    prevStrength.current = force.strength;
+  }
   return (
     <div style={{ marginBottom: space[2] }}>
-      <div onClick={() => setOpen((p) => !p)}
+      <div ref={barRef} onClick={() => setOpen((p) => !p)}
         style={{ display: "flex", flexDirection: drv ? "row-reverse" : "row", cursor: "pointer" }}>
         <div style={{
           width: w, minWidth: 40, height: 32, background: bg,

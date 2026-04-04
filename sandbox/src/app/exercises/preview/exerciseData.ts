@@ -4,9 +4,10 @@ export interface ExerciseDefinition {
   modality: "cognitive" | "somatic" | "relational" | "integrative" | "systems";
   originator: string;
   primitive: string;
-  scenario?: string;    // Journal excerpt / coaching context that triggered this exercise
-  whyNow: string;
-  science: string;
+  scenario?: string;  // Journal excerpt / coaching context that triggered this exercise
+  whyThis?: string;  // Combined: why this exercise matters + what it does for you (new format)
+  whyNow?: string;   // @deprecated — old field, will be removed after full migration
+  science?: string;  // @deprecated — old field, will be removed after full migration
   instruction: string;
   tags?: ("core-parachute" | "core-jetstream" | "core-basecamp" | "journal-matched")[];
   dayNumber?: number;
@@ -25,9 +26,24 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "splitAnnotator",
-    whyNow: "Your journal mentioned a conversation that left you frustrated — separating what happened from what you made it mean could untangle the knot.",
-    science: "OFNR (Observation, Feeling, Need, Request) reduces amygdala hijack by forcing the prefrontal cortex to disaggregate sensory data from evaluation. fMRI studies show that labeling emotions while distinguishing them from triggering events decreases limbic reactivity by up to 30%.",
-    instruction: "You will see two annotation columns side by side. On the left, paste or type what was actually said or done — raw observations only. On the right, annotate each observation with the feeling it triggered, the underlying need, and a concrete request. The split view keeps facts and interpretations visually separated so you can catch where evaluation slips into observation.",
+    whyThis: "You wrote about shutting down after your manager said 'be more proactive' — and the fury that hit you on the drive home. It sounds like what she said and what you heard may have gotten tangled together. Marshall Rosenberg's Nonviolent Communication (NVC) framework helps untangle these moments using four steps: Observation, Feeling, Need, Request. The power of OFNR is that it slows down the space between stimulus and response. Most of us skip straight from event to reaction — NVC puts three conscious steps in between. Each step is guided below so you can work through them one at a time.",
+    instruction: "Work through the four rows in order. The Observation is pre-filled — that's the raw fact. For each remaining step, the left column explains what to do and the right column is where you write. Take them one at a time. By the end, you may see where a clear request could change the conversation.",
+    prePopulated: {
+      leftColumnLabel: "Step",
+      rightColumnLabel: "Your Response",
+      rows: [
+        { id: "obs", leftText: "Observation — What actually happened, without judgment: 'In the team meeting, my manager said: be more proactive.'", rightText: "", tags: ["observation"] },
+        { id: "feel", leftText: "Feeling — What emotion did you notice? (Not 'I felt attacked' — that's an interpretation. Try: 'I felt embarrassed,' 'I felt anxious,' 'I felt angry.')", rightText: "", tags: ["feeling"] },
+        { id: "need", leftText: "Need — What need was touched? (e.g., respect, competence, autonomy, to be seen for what you already do.)", rightText: "", tags: ["need"] },
+        { id: "req", leftText: "Request — What specific, doable action could you ask for? (Not 'be nicer to me' — try: 'Could we set up a 1:1 to talk about what proactive looks like in my role?')", rightText: "", tags: ["request"] },
+      ],
+      availableTags: [
+        { id: "observation", label: "Observation — what happened, no judgment attached", color: "#7B9AAD" },
+        { id: "feeling", label: "Feeling — the emotion in your body, not an interpretation", color: "#6AB282" },
+        { id: "need", label: "Need — what you needed (respect, autonomy, to be seen)", color: "#C4943A" },
+        { id: "request", label: "Request — specific, doable action you can ask for", color: "#D6B65D" },
+      ],
+    },
   },
   {
     id: "self-connection-practice",
@@ -35,8 +51,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "emotionWheel",
-    whyNow: "You wrote about feeling 'off' today — this exercise helps you move from a vague sense of unease to a specific feeling connected to a specific need.",
-    science: "Affect labeling — putting precise words to emotions — activates ventrolateral prefrontal cortex and dampens amygdala response. Granularity matters: people who distinguish between 'disappointed' and 'frustrated' regulate emotions more effectively than those who use broad labels like 'bad.'",
+    whyThis: "You wrote about feeling 'off' today — this exercise helps you move from a vague sense of unease to a specific feeling connected to a specific need. Affect labeling — putting precise words to emotions — may activate ventrolateral prefrontal cortex and dampen amygdala response. Granularity matters: people who distinguish between 'disappointed' and 'frustrated' regulate emotions more effectively than those who use broad labels like 'bad.'",
     instruction: "Explore the emotion wheel by tapping sectors that resonate with your current state. Start from the broad center categories and drill into more specific feelings at the outer rings. Once you land on the precise emotion, you will be prompted to identify the met or unmet need underneath it.",
   },
   {
@@ -45,9 +60,15 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "forcedChoice",
-    whyNow: "Your recent entry described blaming yourself after a difficult interaction — exploring all four directions of response could open up choices you didn't see in the moment.",
-    science: "NVC identifies four responses to difficult messages: blame self, blame other, sense own feelings/needs, sense other's feelings/needs. Making these explicit engages cognitive reappraisal circuits, shifting processing from automatic defensive reactions to deliberate perspective-taking mediated by the temporoparietal junction.",
+    whyThis: "Your recent entry described blaming yourself after a difficult interaction — exploring all four directions of response could open up choices you didn't see in the moment. NVC identifies four responses to difficult messages: blame self, blame other, sense own feelings/needs, sense other's feelings/needs. Making these explicit may engage cognitive reappraisal circuits, shifting processing from automatic defensive reactions to deliberate perspective-taking mediated by the temporoparietal junction.",
     instruction: "You will be presented with a difficult statement or scenario. For each round, you must choose between four response cards — Blame Self, Blame Other, Empathize Inward, Empathize Outward. After choosing, you will reflect on what that choice feels like in your body and what it costs or offers. There are no wrong answers — the exercise builds awareness of your default pattern.",
+    prePopulated: {
+      scenarios: [
+        { id: "s1", description: "Your manager says in a team meeting: 'I expected better from you on this project.'", choiceA: "Blame Self: 'She's right, I should have worked harder. I'm not good enough.'", choiceB: "Empathize Inward: 'I feel embarrassed and small. I need to be seen for the effort I put in.'", valueAtStake: "Self-worth vs. growth" },
+        { id: "s2", description: "A colleague takes credit for your idea in a presentation.", choiceA: "Blame Other: 'They're a backstabber. I can't trust anyone here.'", choiceB: "Empathize Outward: 'Maybe they didn't realize it was my idea. They might be under pressure too.'", valueAtStake: "Fairness vs. compassion" },
+        { id: "s3", description: "Your partner says: 'You're never fully present when you come home from work.'", choiceA: "Blame Self: 'They're right. I'm failing at everything — work and home.'", choiceB: "Empathize Inward: 'I feel overwhelmed. I need space to decompress before I can be present.'", valueAtStake: "Connection vs. self-care" },
+      ],
+    },
   },
   {
     id: "enemy-image-process",
@@ -55,9 +76,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "dialogueSequence",
-    whyNow: "You mentioned someone you are struggling to see generously right now — this process can dissolve the fixed story without requiring you to condone their behavior.",
-    science: "Enemy images are cognitive schemas maintained by confirmation bias and the fundamental attribution error. The Enemy Image Process works by activating mentalizing networks (medial prefrontal cortex, temporoparietal junction) to restore theory-of-mind for the 'enemy,' which down-regulates the threat response held in the amygdala and anterior insula.",
+    whyThis: "You mentioned someone you are struggling to see generously right now — this process can dissolve the fixed story without requiring you to condone their behavior. Enemy images are cognitive schemas maintained by confirmation bias and the fundamental attribution error. The Enemy Image Process works by activating mentalizing networks (medial prefrontal cortex, temporoparietal junction) to restore theory-of-mind for the 'enemy,' which may down-regulate the threat response held in the amygdala and anterior insula.",
     instruction: "A guided dialogue will walk you through a sequence of prompts. First, you will voice the judgments you hold about this person without censoring. Then you will be guided to identify the feelings underneath those judgments, and finally the unmet needs driving those feelings. Each step builds on the previous one — respond to each prompt before moving to the next.",
+    prePopulated: {
+      voices: [
+        { id: "judgments", label: "Your Judgments", color: "#D25858" },
+        { id: "feelings", label: "Feelings Underneath", color: "#7B9AAD" },
+        { id: "needs", label: "Unmet Needs", color: "#6AB282" },
+      ],
+      turns: [
+        { id: "t1", voice: "judgments", prompt: "Say everything you think about this person — uncensored. What do you judge them for? What story do you tell about who they are?", content: "" },
+        { id: "t2", voice: "feelings", prompt: "Underneath those judgments, what are you actually feeling? Not 'they made me feel' — what emotion is alive in your body right now?", content: "" },
+        { id: "t3", voice: "needs", prompt: "What need of yours is unmet in this situation? (e.g., respect, fairness, safety, to be seen, to matter)", content: "" },
+        { id: "t4", voice: "judgments", prompt: "Now re-read your judgments. Which ones are still true? Which ones were your pain talking?", content: "" },
+        { id: "t5", voice: "needs", prompt: "If this person could meet one need of yours, what would it be? What would that look like in concrete behavior?", content: "" },
+      ],
+    },
   },
   {
     id: "mourn-celebrate-learn",
@@ -65,9 +99,15 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "emotionalArc",
-    whyNow: "Your journal reflected on a choice you regret — this process lets you grieve what was lost, honor what was beautiful, and extract the lesson without self-punishment.",
-    science: "Processing regret through structured mourning activates the brain's grief circuits (anterior cingulate, insula) in a contained way, preventing rumination loops. Following mourning with celebration engages reward circuits (ventral striatum), and the learning phase consolidates the experience into episodic memory via hippocampal encoding — transforming pain into wisdom.",
+    whyThis: "Your journal reflected on a choice you regret — this process lets you grieve what was lost, honor what was beautiful, and extract the lesson without self-punishment. Processing regret through structured mourning may activate the brain's grief circuits (anterior cingulate, insula) in a contained way, preventing rumination loops. Following mourning with celebration may engage reward circuits (ventral striatum), and the learning phase consolidates the experience into episodic memory via hippocampal encoding — transforming pain into wisdom.",
     instruction: "You will move through three emotional phases on an arc. In the Mourn phase, write about what needs went unmet and let yourself feel the loss. In the Celebrate phase, identify what needs were met or what beauty existed in the situation. In the Learn phase, name what you would do differently. The arc visualization tracks your emotional journey across these stages.",
+    prePopulated: {
+      phases: [
+        { id: "mourn", label: "Mourn — NVC Step 1: name the unmet needs and let yourself grieve", prompt: "What needs went unmet? What was lost? Let yourself feel it without fixing it.", content: "", intensity: 75 },
+        { id: "celebrate", label: "Celebrate — NVC Step 2: honor the needs that WERE met, the beauty that existed", prompt: "What needs WERE met? What beauty or growth existed in this situation, even if it ended badly?", content: "", intensity: 40 },
+        { id: "learn", label: "Learn — NVC Step 3: extract wisdom without self-punishment", prompt: "What would you do differently? Not as self-punishment — as wisdom earned.", content: "", intensity: 30 },
+      ],
+    },
   },
   {
     id: "chooser-evaluator-map",
@@ -75,9 +115,23 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "splitAnnotator",
-    whyNow: "You wrote about something you 'should' be doing — mapping the Chooser and Evaluator voices can help you find the need behind the obligation.",
-    science: "The Chooser-Evaluator distinction maps onto dual-process theory: the Evaluator voice uses moralistic judgments ('should,' 'have to') processed by default mode network rumination circuits, while the Chooser voice connects to intrinsic motivation via the autonomy circuits of self-determination theory, engaging ventromedial prefrontal cortex and increasing dopaminergic drive.",
+    whyThis: "You wrote about something you 'should' be doing — mapping the Chooser and Evaluator voices can help you find the need behind the obligation. The Chooser-Evaluator distinction maps onto dual-process theory: the Evaluator voice uses moralistic judgments ('should,' 'have to') processed by default mode network rumination circuits, while the Chooser voice connects to intrinsic motivation via the autonomy circuits of self-determination theory, engaging ventromedial prefrontal cortex and increasing dopaminergic drive.",
     instruction: "In the left column, write out your Evaluator voice — the 'shoulds,' demands, and judgments about what you must do. In the right column, translate each into Chooser language by identifying the underlying need and reframing the action as a choice you make to meet that need. Notice how your body responds differently to each column.",
+    prePopulated: {
+      leftColumnLabel: "Evaluator Voice (should / must / have to)",
+      rightColumnLabel: "Chooser Voice (I choose to... because I value...)",
+      rows: [
+        { id: "row1", leftText: "I should be networking every day or I'll never find a job.", rightText: "I choose to reach out to one person today because connection matters to me and I want to feel less isolated in this search.", tags: ["career"] },
+        { id: "row2", leftText: "I have to say yes to that freelance project even though I'm exhausted.", rightText: "", tags: ["boundaries"] },
+        { id: "row3", leftText: "I must stop feeling sorry for myself and just push through.", rightText: "", tags: ["self-compassion"] },
+      ],
+      availableTags: [
+        { id: "career", label: "Career — obligations around work and job search", color: "#7B9AAD" },
+        { id: "boundaries", label: "Boundaries — demands that conflict with your limits", color: "#C4943A" },
+        { id: "self-compassion", label: "Self-Compassion — the 'should' voice directed at your feelings", color: "#6AB282" },
+        { id: "relationships", label: "Relationships — obligations around connection and care", color: "#D6B65D" },
+      ],
+    },
   },
   {
     id: "internal-mediation-map",
@@ -85,9 +139,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "dialogueSequence",
-    whyNow: "You described feeling torn between two directions — this mediation process gives both sides a voice so you can find the strategy that honors all your needs.",
-    science: "Internal conflict creates sustained anterior cingulate cortex activation (conflict monitoring) and elevated cortisol. Giving each 'side' explicit voice reduces this conflict signal by engaging the same neural mediation processes used in interpersonal dispute resolution — mentalizing, perspective-taking, and integrative complexity — but directed inward.",
+    whyThis: "You described feeling torn between two directions — this mediation process gives both sides a voice so you can find the strategy that honors all your needs. Internal conflict may create sustained anterior cingulate cortex activation (conflict monitoring) and elevated cortisol. Giving each 'side' explicit voice may reduce this conflict signal by engaging the same neural mediation processes used in interpersonal dispute resolution — mentalizing, perspective-taking, and integrative complexity — but directed inward.",
     instruction: "You will facilitate a dialogue between two conflicting parts of yourself. First, give each side a name or role. Then, in alternating turns, let each side express its feelings and needs. The dialogue sequence guides you through empathic reflection after each turn before the other side responds. Continue until both sides feel heard and a strategy emerges that honors both sets of needs.",
+    prePopulated: {
+      voices: [
+        { id: "side-a", label: "The part that wants to fight", color: "#D25858" },
+        { id: "side-b", label: "The part that wants to let go", color: "#7B9AAD" },
+        { id: "mediator", label: "The mediator (you)", color: "#6AB282" },
+      ],
+      turns: [
+        { id: "t1", voice: "side-a", prompt: "What do you need? What are you fighting for?", content: "" },
+        { id: "t2", voice: "mediator", prompt: "Reflect back what Side A said — what need do you hear?", content: "" },
+        { id: "t3", voice: "side-b", prompt: "What do you need? What would letting go give you?", content: "" },
+        { id: "t4", voice: "mediator", prompt: "Reflect back what Side B said — what need do you hear?", content: "" },
+        { id: "t5", voice: "mediator", prompt: "Is there a strategy that honors both needs?", content: "" },
+      ],
+    },
   },
   {
     id: "need-behind-the-no",
@@ -95,9 +162,16 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "hierarchicalBranch",
-    whyNow: "Your journal mentioned someone pushing back on a request — uncovering the need behind their 'no' could transform the impasse into a creative negotiation.",
-    science: "When we hear 'no,' the brain's threat detection system (amygdala, anterior insula) activates, narrowing cognitive flexibility. Reframing 'no' as a 'yes' to something else engages perspective-taking circuits and broadens attentional scope via the broaden-and-build effect, enabling integrative solutions that satisfy multiple needs simultaneously.",
+    whyThis: "Your journal mentioned someone pushing back on a request — uncovering the need behind their 'no' could transform the impasse into a creative negotiation. When we hear 'no,' the brain's threat detection system (amygdala, anterior insula) may activate, narrowing cognitive flexibility. Reframing 'no' as a 'yes' to something else may engage perspective-taking circuits and broaden attentional scope via the broaden-and-build effect, enabling integrative solutions that satisfy multiple needs simultaneously.",
     instruction: "Start at the top of the branching tree with the 'no' you received (or gave). At each branch level, ask 'What need is this no protecting?' and add the possible needs as branches. Continue drilling down each branch — needs often nest inside other needs. The hierarchy reveals the root need driving the surface-level refusal.",
+    prePopulated: {
+      levels: [
+        { id: "surface", label: "The No", prompt: "What was refused? What did they (or you) say no to?", content: "My manager said no to adjusting the PIP timeline.", color: "#D25858" },
+        { id: "need1", label: "First Layer", prompt: "What need might this no be protecting?", content: "They need to follow the process. HR has expectations about PIP timelines.", color: "#C4943A" },
+        { id: "need2", label: "Deeper Layer", prompt: "What need is underneath that?", content: "They need to demonstrate to their manager that they're handling performance issues decisively.", color: "#C4943A" },
+        { id: "root", label: "Root Need", prompt: "What's the deepest need here?", content: "Their own job security. Flexibility on PIPs might look like they're not managing.", color: "#6AB282" },
+      ],
+    },
   },
   {
     id: "difficult-conversations-map",
@@ -105,9 +179,15 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "narrativeTriptych",
-    whyNow: "You are preparing for a conversation you have been avoiding — mapping the three layers will help you enter it with clarity instead of reactivity.",
-    science: "Difficult conversations operate on three simultaneous layers: content (what happened), feelings (emotional subtext), and identity (what this says about me). Research from the Harvard Negotiation Project shows that addressing all three layers reduces conversational breakdowns by engaging both cognitive processing (dorsolateral PFC) and emotional regulation (ventromedial PFC) simultaneously.",
+    whyThis: "You are preparing for a conversation you have been avoiding — mapping the three layers will help you enter it with clarity instead of reactivity. Difficult conversations operate on three simultaneous layers: content (what happened), feelings (emotional subtext), and identity (what this says about me). Research from the Harvard Negotiation Project shows that addressing all three layers may reduce conversational breakdowns by engaging both cognitive processing (dorsolateral PFC) and emotional regulation (ventromedial PFC) simultaneously.",
     instruction: "You will write across three narrative panels. In the first panel, describe the factual content — what happened, what was said, what each person did. In the second panel, explore the emotional layer — what feelings are present for you and what you imagine for the other person. In the third panel, examine the identity layer — what is at stake for your sense of self. Review all three panels together before planning your approach.",
+    prePopulated: {
+      panels: [
+        { id: "content", title: "The Content Layer", subtitle: "What happened — facts only", placeholder: "Describe what was said and done, without interpretation...", content: "In our last 1:1, my manager said the team has concerns about my communication style. She mentioned two specific incidents but didn't name who raised them. She asked me to 'think about it' and we'd discuss next week." },
+        { id: "feelings", title: "The Emotional Layer", subtitle: "What you feel + what you imagine they feel", placeholder: "What emotions are present?", content: "I feel blindsided and ashamed. Also angry — why bring it up without specifics? I imagine she feels uncomfortable delivering this and maybe pressured by someone above her." },
+        { id: "identity", title: "The Identity Layer", subtitle: "What's at stake for your sense of self", placeholder: "What does this threaten about who you believe you are?", content: "It threatens my identity as someone who's good with people. If my communication is a problem, what else have I been wrong about? The Hyper-Achiever is screaming." },
+      ],
+    },
   },
   {
     id: "transforming-inner-critic",
@@ -115,9 +195,19 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "saboteurCard",
-    whyNow: "Your writing carried a harsh inner voice today — meeting that critic with curiosity instead of combat can reveal the protective need it is trying to serve.",
-    science: "The inner critic activates the same neural threat circuits (amygdala, dorsal ACC) as external criticism. Personifying and dialoguing with the critic engages mentalizing networks, shifting it from a diffuse threat to a discrete entity that can be reasoned with. This reduces the cortisol stress response and allows access to the underlying need the critic is trying to protect.",
+    whyThis: "Your writing carried a harsh inner voice today — meeting that critic with curiosity instead of combat can reveal the protective need it is trying to serve. The inner critic may activate the same neural threat circuits (amygdala, dorsal ACC) as external criticism. Personifying and dialoguing with the critic may engage mentalizing networks, shifting it from a diffuse threat to a discrete entity that can be reasoned with. This may reduce the cortisol stress response and allows access to the underlying need the critic is trying to protect.",
     instruction: "A saboteur card will appear with space to name and characterize your inner critic. Give it a name, describe its voice and typical messages, and identify what it fears would happen if it stopped criticizing you. Then flip the card to reveal the hidden need — what is this critic trying to protect? Finally, write the message you wish it would deliver instead.",
+    prePopulated: {
+      saboteur: {
+        id: "inner-critic",
+        name: "The Judge",
+        archetype: "Inner Critic",
+        triggerPattern: "After any perceived mistake, failure, or moment of vulnerability — especially in professional settings where competence is expected.",
+        exactWords: "'You should have known better. Everyone else can handle this. You're falling behind and it's your own fault. If you were smarter/faster/better, this wouldn't be happening.'",
+        protectsFrom: "The vulnerability of being imperfect. If I criticize myself first, no one else's criticism can surprise me. The critic keeps me vigilant so I'm never caught off guard.",
+        activationHistory: [{ day: 1, intensity: 8 }, { day: 5, intensity: 6 }, { day: 10, intensity: 7 }, { day: 15, intensity: 4 }, { day: 20, intensity: 5 }],
+      },
+    },
   },
   {
     id: "faux-feelings-translation",
@@ -125,9 +215,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marshall Rosenberg / NVC",
     primitive: "splitAnnotator",
-    whyNow: "You used words like 'abandoned' and 'manipulated' in your journal — these are interpretations disguised as feelings. Translating them can free you from the story.",
-    science: "Faux feelings ('abandoned,' 'betrayed,' 'manipulated') embed causal attributions inside emotional labels, keeping the brain locked in blame-oriented processing. Translating them to pure feelings ('scared,' 'hurt,' 'angry') and separate observations activates distinct neural circuits — interoceptive awareness (insula) rather than social judgment (lateral PFC) — enabling cleaner emotional processing.",
+    whyThis: "You used words like 'abandoned' and 'manipulated' in your journal — these are interpretations disguised as feelings. Translating them can free you from the story. Faux feelings ('abandoned,' 'betrayed,' 'manipulated') embed causal attributions inside emotional labels, keeping the brain locked in blame-oriented processing. Translating them to pure feelings ('scared,' 'hurt,' 'angry') and separate observations may activate distinct neural circuits — interoceptive awareness (insula) rather than social judgment (lateral PFC) — enabling cleaner emotional processing.",
     instruction: "In the left column, list the 'faux feelings' — words that sound like emotions but actually contain judgments about others (e.g., 'rejected,' 'ignored,' 'used'). In the right column, translate each into a genuine feeling (what you actually feel in your body) and the observation that triggered it. Notice how the genuine feeling opens space while the faux feeling keeps you stuck.",
+    prePopulated: {
+      leftColumnLabel: "Faux Feeling (interpretation disguised as emotion)",
+      rightColumnLabel: "Genuine Feeling + Observation",
+      rows: [
+        { id: "row1", leftText: "I feel abandoned — he just stopped texting back.", rightText: "I feel scared and lonely. I noticed he hasn't replied in two days, and I'm making up a story that he's pulling away.", tags: ["interpretation"] },
+        { id: "row2", leftText: "I feel manipulated by my manager.", rightText: "", tags: ["interpretation"] },
+        { id: "row3", leftText: "I feel invisible in this friendship.", rightText: "", tags: ["interpretation"] },
+      ],
+      availableTags: [
+        { id: "interpretation", label: "Interpretation — sounds like a feeling but contains a judgment about someone else", color: "#D25858" },
+        { id: "genuine", label: "Genuine Feeling — what I actually feel in my body (scared, sad, angry, lonely)", color: "#6AB282" },
+        { id: "need-underneath", label: "Need Underneath — the unmet need driving the feeling (safety, belonging, respect)", color: "#C4943A" },
+      ],
+    },
   },
   {
     id: "five-levels-communication",
@@ -135,9 +238,12 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Stanford Interpersonal Dynamics",
     primitive: "spectrumSlider",
-    whyNow: "Your entry stayed on the surface of what happened — this exercise invites you to notice what level of depth you are communicating at and whether going deeper would serve you.",
-    science: "The five levels (ritual, extended ritual, surface, feelings about content, feelings about each other) map onto increasing activation of the social brain's mentalizing and interoceptive networks. Deeper disclosure activates oxytocin release and vagal tone regulation, strengthening relational bonds. Research shows that relationships deepen not through time spent but through reciprocal depth of disclosure.",
+    whyThis: "Your entry stayed on the surface of what happened — this exercise invites you to notice what level of depth you are communicating at and whether going deeper would serve you. The five levels (ritual, extended ritual, surface, feelings about content, feelings about each other) map onto increasing activation of the social brain's mentalizing and interoceptive networks. Deeper disclosure may activate oxytocin release and vagal tone regulation, strengthening relational bonds. Research shows that relationships deepen not through time spent but through reciprocal depth of disclosure.",
     instruction: "Use the spectrum slider to place your recent conversations on a depth continuum from Level 1 (ritual — 'How are you?' 'Fine.') to Level 5 (here-and-now feelings about each other). For each conversation you place, reflect on whether that depth matched what the relationship needed. Slide to explore what it would sound like to go one level deeper.",
+    prePopulated: {
+      labels: ["Level 1: Ritual ('Fine, thanks')", "Level 2: Extended Ritual (small talk)", "Level 3: Surface (content, facts)", "Level 4: Feelings About Content", "Level 5: Feelings About Each Other"],
+      value: 30,
+    },
   },
   {
     id: "vulnerability-loops",
@@ -145,8 +251,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Stanford Interpersonal Dynamics",
     primitive: "guided",
-    whyNow: "You mentioned wanting to be closer to someone but holding back — vulnerability loops are the mechanism through which closeness is actually built.",
-    science: "Vulnerability loops follow a neurobiological sequence: disclosure activates the discloser's stress response (cortisol), the listener's empathic response triggers mirror neuron activation and oxytocin release, and the reciprocal disclosure completes the loop, establishing mutual vagal regulation. Research by Zak (2012) shows oxytocin increases trust and generosity in a positive feedback cycle.",
+    whyThis: "You mentioned wanting to be closer to someone but holding back — vulnerability loops are the mechanism through which closeness is actually built. Vulnerability loops follow a neurobiological sequence: disclosure may activate the discloser's stress response (cortisol), the listener's empathic response may trigger mirror neuron activation and oxytocin release, and the reciprocal disclosure completes the loop, establishing mutual vagal regulation. Research by Zak (2012) shows oxytocin increases trust and generosity in a positive feedback cycle.",
     instruction: "Follow the guided prompts step by step. First, identify something you have been withholding from someone. Then articulate the risk — what you fear would happen if you shared it. Next, craft the disclosure using 'I feel... because... and what I need is...' framing. Finally, plan the specific context in which you will share it. The guide will help you calibrate the level of risk to your current trust level.",
   },
   {
@@ -155,9 +260,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Stanford Interpersonal Dynamics",
     primitive: "splitAnnotator",
-    whyNow: "Your journal made several statements about what the other person was thinking or feeling — this exercise helps you own your experience without crossing the net into their territory.",
-    science: "Attributing motives to others ('You were trying to...') activates adversarial processing in the lateral prefrontal cortex and dorsal ACC. Staying on 'your side of the net' — speaking only about your own observations, feelings, and needs — reduces the listener's defensiveness by avoiding their amygdala threat response, making productive dialogue neurologically possible.",
+    whyThis: "Your journal made several statements about what the other person was thinking or feeling — this exercise helps you own your experience without crossing the net into their territory. Attributing motives to others ('You were trying to...') may activate adversarial processing in the lateral prefrontal cortex and dorsal ACC. Staying on 'your side of the net' — speaking only about your own observations, feelings, and needs — may reduce the listener's defensiveness by avoiding their amygdala threat response, making productive dialogue neurologically possible.",
     instruction: "In the left column, write statements that cross the net — things you said or thought about the other person's intentions, feelings, or character. In the right column, translate each into a 'my side of the net' statement that speaks only to your own experience: what you observed, what you felt, and what you need. The split view makes net-crossing immediately visible.",
+    prePopulated: {
+      leftColumnLabel: "Crossing the Net (their intentions, feelings, character)",
+      rightColumnLabel: "My Side of the Net (what I observed, felt, need)",
+      rows: [
+        { id: "row1", leftText: "You were obviously trying to undermine me in that meeting.", rightText: "When you asked that question in front of the team, I felt embarrassed and small. I need to feel respected when we disagree.", tags: ["blame"] },
+        { id: "row2", leftText: "You don't care about how this affects me.", rightText: "", tags: ["mind-reading"] },
+        { id: "row3", leftText: "She's always been jealous of what I have.", rightText: "", tags: ["mind-reading"] },
+      ],
+      availableTags: [
+        { id: "blame", label: "Blame — assigning fault for how I feel ('You made me...')", color: "#D25858" },
+        { id: "mind-reading", label: "Mind-Reading — claiming to know their thoughts or motives without evidence", color: "#D6B65D" },
+        { id: "character-attack", label: "Character Attack — labeling who they ARE instead of what they DID", color: "#8A9199" },
+      ],
+    },
   },
   {
     id: "pinch-crunch-model",
@@ -165,9 +283,23 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Stanford Interpersonal Dynamics",
     primitive: "heatmap",
-    whyNow: "You described a relationship that suddenly blew up — the pinch-crunch model suggests it was not sudden at all. Mapping the pinches you ignored can prevent the next crunch.",
-    science: "Small relational violations ('pinches') accumulate as allostatic load in the stress-response system. Each unaddressed pinch lowers the threshold for amygdala activation, until a minor event triggers a disproportionate 'crunch' response. The heatmap visualization leverages pattern recognition (visual cortex + hippocampal spatial memory) to make the invisible accumulation visible.",
+    whyThis: "You described a relationship that suddenly blew up — the pinch-crunch model suggests it was not sudden at all. Mapping the pinches you ignored can prevent the next crunch. Small relational violations ('pinches') accumulate as allostatic load in the stress-response system. Each unaddressed pinch lowers the threshold for amygdala activation, until a minor event may trigger a disproportionate 'crunch' response. The heatmap visualization leverages pattern recognition (visual cortex + hippocampal spatial memory) to make the invisible accumulation visible.",
     instruction: "On the heatmap grid, the x-axis represents time and the y-axis represents different relationship areas (communication, respect, workload, etc.). Mark each 'pinch' — a small moment that bothered you but that you let go — in the appropriate cell. Use intensity to show how much it stung. The pattern of heat reveals where crunches are building before they explode.",
+    prePopulated: {
+      rows: [
+        { id: "r1", label: "Communication — things unsaid, misunderstood, or avoided" },
+        { id: "r2", label: "Respect — moments of feeling dismissed, belittled, or unseen" },
+        { id: "r3", label: "Workload / Fairness — imbalance in effort, credit, or responsibility" },
+        { id: "r4", label: "Acknowledgment — contributions ignored or taken for granted" },
+        { id: "r5", label: "Boundaries — limits crossed or requests unrespected" },
+      ],
+      columns: [
+        { id: "c1", label: "This Week" },
+        { id: "c2", label: "Last Week" },
+        { id: "c3", label: "2 Weeks Ago" },
+        { id: "c4", label: "Last Month" },
+      ],
+    },
   },
   {
     id: "fifteen-percent-risk-zone",
@@ -175,9 +307,9 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Stanford Interpersonal Dynamics",
     primitive: "spectrumSlider",
-    whyNow: "You seem to be choosing between playing it safe and going all-in — the 15% edge is where real growth happens without overwhelming your nervous system.",
-    science: "Vygotsky's zone of proximal development applies to emotional risk: growth happens at the edge of current capacity. The 15% framework maps onto the Yerkes-Dodson curve — too little risk produces no learning (understimulated prefrontal cortex), too much triggers amygdala hijack and shutdown. The optimal zone produces manageable arousal that consolidates into new relational capacity.",
+    whyThis: "You seem to be choosing between playing it safe and going all-in — the 15% edge is where real growth happens without overwhelming your nervous system. Vygotsky's zone of proximal development applies to emotional risk: growth happens at the edge of current capacity. The 15% framework maps onto the Yerkes-Dodson curve — too little risk may produce no learning (understimulated prefrontal cortex), too much may trigger amygdala hijack and shutdown. The optimal zone may produce manageable arousal that consolidates into new relational capacity.",
     instruction: "Use the spectrum slider to calibrate your risk level. The left end represents total safety (0% risk — saying nothing new), and the right end represents maximum vulnerability (100% risk — full disclosure). Position the slider where your next relational move would land. Then adjust it to the 15% zone — just enough to stretch without snapping. Write what that 15% risk would actually sound like.",
+    prePopulated: { labels: ["0% — Total Safety", "5% — Minor disclosure", "15% — Growth Edge", "50% — Significant risk", "100% — Full Exposure"], value: 15 },
   },
   {
     id: "assertiveness-spectrum",
@@ -185,9 +317,9 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Stanford Interpersonal Dynamics",
     primitive: "spectrumSlider",
-    whyNow: "Your journal oscillated between accommodating and resenting — finding your assertiveness sweet spot could end the cycle.",
-    science: "Assertiveness exists on a neurobiological spectrum: passivity correlates with dorsal vagal shutdown (freeze/submit), aggression with sympathetic dominance (fight), and healthy assertion with ventral vagal activation (social engagement). The polyvagal system predicts that assertiveness is only accessible from a state of felt safety, which this calibration exercise promotes.",
+    whyThis: "Your journal oscillated between accommodating and resenting — finding your assertiveness sweet spot could end the cycle. Assertiveness exists on a neurobiological spectrum: passivity correlates with dorsal vagal shutdown (freeze/submit), aggression with sympathetic dominance (fight), and healthy assertion with ventral vagal activation (social engagement). The polyvagal system predicts that assertiveness is only accessible from a state of felt safety, which this calibration exercise may promote.",
     instruction: "Place your recent interactions on the spectrum from Passive (left) through Assertive (center) to Aggressive (right). For each placement, notice what was happening in your body — collapsed and small, grounded and upright, or tight and forward-leaning. Then use the slider to find the assertive center for each situation and write what you would say from that position.",
+    prePopulated: { labels: ["Passive — collapsed, accommodating", "Leaning Passive", "Assertive — grounded, clear, direct", "Leaning Aggressive", "Aggressive — tight, pushing, dominating"], value: 30 },
   },
   {
     id: "four-horsemen-antidotes",
@@ -195,9 +327,27 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "John Gottman",
     primitive: "cardSort",
-    whyNow: "The conflict you described in your journal shows patterns that relationship science has mapped precisely — identifying which horseman showed up gives you the specific antidote.",
-    science: "Gottman's Four Horsemen (criticism, contempt, defensiveness, stonewalling) predict relationship dissolution with 93% accuracy. Each horseman has a distinct physiological signature: contempt elevates cortisol and suppresses immune function in the receiver, while stonewalling reflects diffuse physiological arousal (DPA) exceeding 100 bpm. The antidotes reverse these cascades by activating the ventral vagal social engagement system.",
-    instruction: "Sort the cards into four categories: Criticism, Contempt, Defensiveness, and Stonewalling. Each card contains a real statement or behavior — drag it to the horseman it represents. Once sorted, flip each card to reveal the specific antidote: gentle startup for criticism, building a culture of appreciation for contempt, taking responsibility for defensiveness, and physiological self-soothing for stonewalling.",
+    whyThis: "You snapped 'You always ask at the worst time' when your partner asked about the job search — and then you both went quiet for the rest of the night. John Gottman, who studied couples for over 40 years at the University of Washington, identified four communication patterns that can damage relationships. He calls them the Four Horsemen. The good news: each one has a specific antidote — a concrete way of saying the same thing that may lead to a different outcome. This exercise helps you recognize the patterns AND practice the replacements, so the next time a horseman shows up you might have a different move available.",
+    instruction: "Below are two types of cards: ⚡ horseman patterns and ✦ antidote replacements. Sort each card into the horseman it belongs to — matching each destructive pattern with its healthier alternative. By the end, you should be able to pair each horseman with its antidote from memory. Use 'Add a card' to write your own antidote for what happened in your conversation.",
+    prePopulated: {
+      buckets: [
+        { id: "criticism", label: "Criticism — 'You always...' 'You never...'", color: "#D25858" },
+        { id: "contempt", label: "Contempt — sarcasm, eye-rolling, mockery", color: "#D6B65D" },
+        { id: "defensiveness", label: "Defensiveness — 'It's not my fault'", color: "#7B9AAD" },
+        { id: "stonewalling", label: "Stonewalling — shutting down, going silent", color: "#8A9199" },
+      ],
+      cards: [
+        { id: "c1", label: "⚡ 'You always ask at the worst time.'" },
+        { id: "c2", label: "⚡ Rolling eyes when they bring up the job search" },
+        { id: "c3", label: "⚡ 'That's not what happened — you're twisting it'" },
+        { id: "c4", label: "⚡ Walking away mid-sentence to scroll phone" },
+        { id: "a1", label: "✦ 'When you ask about the search right when I walk in, I feel overwhelmed. Can we talk after dinner?'" },
+        { id: "a2", label: "✦ 'I appreciate that you care enough to ask. Let me share what's actually happening.'" },
+        { id: "a3", label: "✦ 'You might be right about that part. Here's what I see from my side.'" },
+        { id: "a4", label: "✦ 'I'm flooding right now. Can I take 20 minutes and come back to this?'" },
+      ],
+      allowAdd: true,
+    },
   },
   {
     id: "softened-startup",
@@ -205,9 +355,15 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "John Gottman",
     primitive: "narrativeTriptych",
-    whyNow: "You are about to raise an issue with someone — Gottman's research shows that how a conversation starts predicts how it ends 96% of the time.",
-    science: "The first three minutes of a conflict conversation predict the outcome with 96% accuracy (Gottman, 1999). Harsh startups trigger diffuse physiological arousal in the listener, flooding the prefrontal cortex and making collaborative problem-solving neurologically impossible. Softened startups keep arousal in the window of tolerance, preserving access to mentalizing and empathy circuits.",
+    whyThis: "You are about to raise an issue with someone — Gottman's research shows that how a conversation starts predicts how it ends 96% of the time. The first three minutes of a conflict conversation predict the outcome with 96% accuracy (Gottman, 1999). Harsh startups trigger diffuse physiological arousal in the listener, flooding the prefrontal cortex and making collaborative problem-solving neurologically impossible. Softened startups keep arousal in the window of tolerance, preserving access to mentalizing and empathy circuits.",
     instruction: "Write across three panels to construct a softened startup. In the first panel, describe the specific situation without blame — just facts and timing. In the second panel, express your feeling using 'I feel...' language (not 'You make me feel...'). In the third panel, state your positive need — what you want, not what you do not want. Read all three panels together as your opening statement.",
+    prePopulated: {
+      panels: [
+        { id: "situation", title: "The Situation", subtitle: "Facts only — no blame", placeholder: "What happened? When? Be specific.", content: "Last Tuesday when I got home from work, I mentioned the PIP and you changed the subject. It happened again on Thursday." },
+        { id: "feeling", title: "How I Feel", subtitle: "'I feel...' not 'You make me feel...'", placeholder: "Name the emotion in your body.", content: "I feel alone in this. Like I'm carrying something heavy and the one person I want to talk to doesn't want to hear about it." },
+        { id: "need", title: "What I Need", subtitle: "What you want — not what you don't want", placeholder: "State your positive need.", content: "I need to know that you're willing to hear about this, even when it's hard. Not to fix it — just to know you're with me." },
+      ],
+    },
   },
   {
     id: "bid-recognition-training",
@@ -215,9 +371,23 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "John Gottman",
     primitive: "heatmap",
-    whyNow: "You mentioned feeling disconnected from someone close to you — Gottman's research shows that disconnection is usually not about big betrayals but about missed bids in small moments.",
-    science: "Bids for connection are the fundamental unit of emotional communication. Gottman's research shows that masters of relationships turn toward bids 86% of the time vs. 33% for couples who divorce. Each turned-toward bid releases oxytocin and reinforces the neural pathway for future connection. Each missed bid activates the anterior insula (social pain) and weakens the bond incrementally.",
+    whyThis: "You mentioned feeling disconnected from someone close to you — Gottman's research shows that disconnection is usually not about big betrayals but about missed bids in small moments. Bids for connection are the fundamental unit of emotional communication. Gottman's research shows that masters of relationships turn toward bids 86% of the time vs. 33% for couples who divorce. Each turned-toward bid may release oxytocin and reinforce the neural pathway for future connection. Each missed bid may activate the anterior insula (social pain) and weaken the bond incrementally.",
     instruction: "On the heatmap, the x-axis represents times of day and the y-axis represents types of bids (attention, affection, humor, support, shared activity). Mark each bid you noticed — whether you turned toward, turned away, or turned against it. Build the map over several days to reveal your bid patterns: where you are responsive and where bids go unnoticed.",
+    prePopulated: {
+      rows: [
+        { id: "r1", label: "Bids for Attention — 'Look at this,' sharing a thought, making eye contact" },
+        { id: "r2", label: "Bids for Affection — reaching for a hand, saying 'I missed you,' a hug" },
+        { id: "r3", label: "Bids for Humor / Play — making a joke, being silly, inviting lightness" },
+        { id: "r4", label: "Bids for Support — 'I had a hard day,' sharing a worry, asking for help" },
+        { id: "r5", label: "Bids for Shared Activity — 'Want to watch something?' 'Let's walk together'" },
+      ],
+      columns: [
+        { id: "c1", label: "Morning" },
+        { id: "c2", label: "Afternoon" },
+        { id: "c3", label: "Evening" },
+        { id: "c4", label: "Weekend" },
+      ],
+    },
   },
   {
     id: "repair-attempts",
@@ -225,8 +395,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "John Gottman",
     primitive: "guided",
-    whyNow: "The argument you described kept escalating — Gottman found that the success of a relationship depends not on avoiding conflict but on the effectiveness of repair attempts during conflict.",
-    science: "Repair attempts are the secret weapon of emotionally intelligent relationships. They work by interrupting the diffuse physiological arousal (DPA) cascade — when heart rate exceeds 100 bpm, the prefrontal cortex goes offline and partners lose access to humor, empathy, and creativity. Successful repairs bring arousal back below the DPA threshold, restoring higher cognitive function.",
+    whyThis: "The argument you described kept escalating — Gottman found that the success of a relationship depends not on avoiding conflict but on the effectiveness of repair attempts during conflict. Repair attempts are the secret weapon of emotionally intelligent relationships. They work by interrupting the diffuse physiological arousal (DPA) cascade — when heart rate exceeds 100 bpm, the prefrontal cortex goes offline and partners lose access to humor, empathy, and creativity. Successful repairs bring arousal back below the DPA threshold, restoring higher cognitive function.",
     instruction: "Follow the guided prompts to build your repair toolkit. First, identify the moment in your recent conflict when things escalated. Then select from a menu of repair categories: humor, affection, taking responsibility, expressing appreciation, or calling a timeout. For each repair type, craft specific language you could use. The guide helps you practice delivering repairs before you need them in the heat of the moment.",
   },
   {
@@ -235,9 +404,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "John Gottman",
     primitive: "splitAnnotator",
-    whyNow: "Your journal contained a complaint that could easily land as criticism — the XYZ formula keeps it specific and actionable so the other person can actually hear it.",
-    science: "The XYZ formula ('In situation X, when you did Y, I felt Z') constrains complaints to specific, behavioral, time-bound observations. This activates the listener's dorsolateral prefrontal cortex (problem-solving) rather than amygdala (threat detection), because behavioral feedback is processed as actionable data while character criticism triggers identity-threat cascades.",
+    whyThis: "Your journal contained a complaint that could easily land as criticism — the XYZ formula keeps it specific and actionable so the other person can actually hear it. The XYZ formula ('In situation X, when you did Y, I felt Z') constrains complaints to specific, behavioral, time-bound observations. This may activate the listener's dorsolateral prefrontal cortex (problem-solving) rather than amygdala (threat detection), because behavioral feedback is processed as actionable data while character criticism may trigger identity-threat cascades.",
     instruction: "In the left column, write your complaint as you would naturally say it — unfiltered, including any 'you always' or 'you never' language. In the right column, translate it into XYZ format: 'In [specific situation], when you [specific behavior], I felt [specific feeling].' The split view shows exactly how the translation removes the sting while keeping the substance.",
+    prePopulated: {
+      leftColumnLabel: "Raw Complaint (unfiltered)",
+      rightColumnLabel: "XYZ Translation (situation → behavior → feeling)",
+      rows: [
+        { id: "row1", leftText: "You never help with anything around the house. I'm doing everything.", rightText: "Last Saturday morning, when I asked if you could handle the dishes and you said 'later' and went back to your phone, I felt unimportant and alone in the workload.", tags: ["always-never"] },
+        { id: "row2", leftText: "You always bring up money when I'm trying to talk about something else.", rightText: "", tags: ["always-never"] },
+        { id: "row3", leftText: "You don't even listen to me anymore.", rightText: "", tags: ["character"] },
+      ],
+      availableTags: [
+        { id: "always-never", label: "Always / Never — overgeneralizing ('You ALWAYS...' 'You NEVER...')", color: "#D25858" },
+        { id: "character", label: "Character Judgment — attacking who they ARE, not what they DID", color: "#D6B65D" },
+        { id: "vague", label: "Vague / Unspecific — no situation, no behavior, just a feeling dump", color: "#8A9199" },
+      ],
+    },
   },
   {
     id: "fondness-admiration-system",
@@ -245,9 +427,27 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "John Gottman",
     primitive: "heatmap",
-    whyNow: "You have been focused on what is going wrong in a relationship — Gottman's research shows that deliberately noticing what is going right rewires the scanning system toward appreciation.",
-    science: "The fondness and admiration system is the antidote to contempt, the most corrosive of the Four Horsemen. Deliberately attending to positive qualities activates the brain's reward circuitry (ventral striatum, orbitofrontal cortex) and counters the negativity bias that makes threat-related information five times more salient than positive information. This ratio must reach 5:1 positive-to-negative for relationships to thrive.",
+    whyThis: "You have been focused on what is going wrong in a relationship — Gottman's research shows that deliberately noticing what is going right rewires the scanning system toward appreciation. The fondness and admiration system is the antidote to contempt, the most corrosive of the Four Horsemen. Deliberately attending to positive qualities may activate the brain's reward circuitry (ventral striatum, orbitofrontal cortex) and counters the negativity bias that makes threat-related information five times more salient than positive information. This ratio must reach 5:1 positive-to-negative for relationships to thrive.",
     instruction: "On the heatmap, the x-axis represents days of the week and the y-axis represents qualities you appreciate in your partner or close person (kindness, humor, reliability, courage, etc.). Each day, mark moments when you noticed that quality in action. Build intensity over time. The heatmap reveals which qualities you naturally notice and which you have been blind to, training your attentional system toward appreciation.",
+    prePopulated: {
+      rows: [
+        { id: "r1", label: "Kindness — small acts of care you noticed" },
+        { id: "r2", label: "Humor — moments they made you laugh or lightened the mood" },
+        { id: "r3", label: "Reliability — times they showed up or followed through" },
+        { id: "r4", label: "Courage — moments they were brave or honest" },
+        { id: "r5", label: "Patience — times they gave you space or grace" },
+        { id: "r6", label: "Thoughtfulness — moments they remembered or anticipated what you needed" },
+      ],
+      columns: [
+        { id: "c1", label: "Mon" },
+        { id: "c2", label: "Tue" },
+        { id: "c3", label: "Wed" },
+        { id: "c4", label: "Thu" },
+        { id: "c5", label: "Fri" },
+        { id: "c6", label: "Sat" },
+        { id: "c7", label: "Sun" },
+      ],
+    },
   },
   {
     id: "dear-man",
@@ -255,9 +455,15 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marsha Linehan / DBT",
     primitive: "narrativeTriptych",
-    whyNow: "You need to ask for something important and you are worried about how it will land — DEAR MAN gives you a research-backed script for assertive requests.",
-    science: "DEAR MAN (Describe, Express, Assert, Reinforce / Mindful, Appear confident, Negotiate) is a behavioral activation protocol that systematically engages the prefrontal cortex's planning and sequencing functions. Each step reduces cognitive load during high-stakes interactions by pre-loading responses, preventing the working memory overload that leads to freezing or capitulating.",
+    whyThis: "You need to ask for something important and you are worried about how it will land — DEAR MAN gives you a research-backed script for assertive requests. DEAR MAN (Describe, Express, Assert, Reinforce / Mindful, Appear confident, Negotiate) is a behavioral activation protocol that systematically may engage the prefrontal cortex's planning and sequencing functions. Each step may reduce cognitive load during high-stakes interactions by pre-loading responses, preventing the working memory overload that leads to freezing or capitulating.",
     instruction: "Write across three panels to build your DEAR MAN script. In the first panel, write your Describe (the facts) and Express (your feelings about the facts). In the second panel, write your Assert (the specific ask) and Reinforce (why saying yes benefits them too). In the third panel, plan your MAN strategy: how you will stay Mindful of your goal, Appear confident in delivery, and Negotiate if they push back.",
+    prePopulated: {
+      panels: [
+        { id: "de", title: "D + E: Describe & Express", subtitle: "Facts + your feelings about them", placeholder: "Describe the situation factually, then express how you feel...", content: "Describe: 'For the past three weeks, I've been staying late to cover tasks that aren't in my job description.'\nExpress: 'I feel overwhelmed and resentful, and I notice it's affecting my performance on my actual priorities.'" },
+        { id: "ar", title: "A + R: Assert & Reinforce", subtitle: "Your specific ask + why saying yes helps them", placeholder: "What are you asking for? Why is it in their interest too?", content: "Assert: 'I need us to redistribute the overflow tasks or adjust my priorities.'\nReinforce: 'If we do this, I can focus on the high-impact work that matters most for the team's goals — which helps us both.'" },
+        { id: "man", title: "MAN: Mindful, Appear Confident, Negotiate", subtitle: "How you'll deliver it", placeholder: "How will you stay on track?", content: "Mindful: If they deflect, I'll bring it back to the core ask.\nAppear confident: Feet on floor, steady voice, eye contact.\nNegotiate: If they can't redistribute everything, I'll ask: 'Which two tasks should I deprioritize?'" },
+      ],
+    },
   },
   {
     id: "fast-skill",
@@ -265,9 +471,15 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marsha Linehan / DBT",
     primitive: "forcedChoice",
-    whyNow: "Your journal revealed a moment where you sacrificed your self-respect to keep the peace — FAST helps you maintain your values even when the pressure is on.",
-    science: "FAST (Fair, no Apologies, Stick to values, Truthful) targets the self-respect effectiveness dimension of interpersonal functioning. Self-betrayal activates the anterior insula and dorsal ACC (moral distress signals) and erodes self-efficacy over time. Practicing FAST strengthens the ventromedial prefrontal cortex's value-congruence monitoring, making principled action more automatic under pressure.",
+    whyThis: "Your journal revealed a moment where you sacrificed your self-respect to keep the peace — FAST helps you maintain your values even when the pressure is on. FAST (Fair, no Apologies, Stick to values, Truthful) targets the self-respect effectiveness dimension of interpersonal functioning. Self-betrayal may activate the anterior insula and dorsal ACC (moral distress signals) and erodes self-efficacy over time. Practicing FAST may strengthen the ventromedial prefrontal cortex's value-congruence monitoring, making principled action more automatic under pressure.",
     instruction: "You will be presented with interpersonal scenarios. For each, choose between responses that prioritize relationship harmony vs. self-respect. There are no trick answers — the exercise builds awareness of when you abandon fairness, over-apologize, compromise your values, or shade the truth to avoid conflict. After each choice, you will see how it maps to the FAST framework.",
+    prePopulated: {
+      scenarios: [
+        { id: "s1", description: "Your colleague takes credit for your idea in a meeting. Your manager seems impressed.", choiceA: "Stay quiet to avoid drama — you can bring it up later (or not).", choiceB: "Say: 'I'm glad that idea resonated — I'd love to walk you through the details since I developed it.'", valueAtStake: "Fairness — F in FAST" },
+        { id: "s2", description: "You made a mistake that affected a team deliverable. Your manager hasn't noticed yet.", choiceA: "Apologize profusely and take on extra work to compensate, even though it was a small error.", choiceB: "Name the error clearly, explain what you'll do differently, and move on without over-apologizing.", valueAtStake: "No Apologies — A in FAST" },
+        { id: "s3", description: "A friend asks you to lie about where they were last night to cover for them.", choiceA: "Help them out — it's a small lie and they'd do the same for you.", choiceB: "Say: 'I care about you, but I'm not comfortable lying. Can we figure out another way to handle this?'", valueAtStake: "Truthful — T in FAST" },
+      ],
+    },
   },
   {
     id: "boundary-sentence",
@@ -275,8 +487,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Interpersonal Skills",
     primitive: "guided",
-    whyNow: "You wrote about something you tolerated that you did not want to — crafting a clear boundary sentence turns resentment into a specific, speakable limit.",
-    science: "Boundary-setting activates the prefrontal cortex's inhibitory control circuits (right inferior frontal gyrus), the same region responsible for impulse control and saying 'no.' Without a pre-formed verbal script, boundary-setting relies on real-time cognitive effort, which is depleted under stress. Having a rehearsed sentence reduces the cognitive cost of boundary enforcement by 40-60% (implementation intention research by Gollwitzer).",
+    whyThis: "You wrote about something you tolerated that you did not want to — crafting a clear boundary sentence turns resentment into a specific, speakable limit. Boundary-setting may activate the prefrontal cortex's inhibitory control circuits (right inferior frontal gyrus), the same region responsible for impulse control and saying 'no.' Without a pre-formed verbal script, boundary-setting relies on real-time cognitive effort, which is depleted under stress. Having a rehearsed sentence may reduce the cognitive cost of boundary enforcement by 40-60% (implementation intention research by Gollwitzer).",
     instruction: "Follow the guided prompts to construct your boundary sentence. First, name the specific behavior that crosses your boundary. Then complete the template: 'When [behavior], I need [boundary]. If [behavior continues], I will [consequence].' The guide helps you make each element concrete and enforceable — vague boundaries are unenforceable boundaries.",
   },
   {
@@ -285,8 +496,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Nedra Glover Tawwab",
     primitive: "guided",
-    whyNow: "You described giving more than you wanted to again — Tawwab's framework helps you recognize that boundaries are not walls but the foundation of sustainable relationships.",
-    science: "Chronic boundary violation depletes the hypothalamic-pituitary-adrenal (HPA) axis, creating a state of allostatic overload that manifests as resentment, exhaustion, and eventual relational withdrawal. Mindful boundary-setting rebalances autonomic tone by pairing interoceptive awareness (noticing the body's 'no') with assertive communication, restoring the ventral vagal social engagement system.",
+    whyThis: "You described giving more than you wanted to again — Tawwab's framework helps you recognize that boundaries are not walls but the foundation of sustainable relationships. Chronic boundary violation depletes the hypothalamic-pituitary-adrenal (HPA) axis, creating a state of allostatic overload that manifests as resentment, exhaustion, and eventual relational withdrawal. Mindful boundary-setting rebalances autonomic tone by pairing interoceptive awareness (noticing the body's 'no') with assertive communication, restoring the ventral vagal social engagement system.",
     instruction: "The guided process walks you through three stages. First, a body scan to identify where you feel the boundary violation physically (tight chest, clenched jaw, heavy stomach). Second, naming what you need and what you have been tolerating. Third, crafting the boundary statement using Tawwab's framework: clear, kind, and firm. The guide checks that your boundary is specific, not punitive, and focused on your own behavior change.",
   },
   {
@@ -295,9 +505,15 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Marsha Linehan / DBT",
     primitive: "narrativeTriptych",
-    whyNow: "You are dreading an upcoming interaction — mentally rehearsing your coping plan in advance means your prefrontal cortex has a script ready when your amygdala fires.",
-    science: "Mental rehearsal activates the same premotor and prefrontal circuits used during actual behavior (Jeannerod, 2001). Cope Ahead leverages this motor simulation to pre-load adaptive responses, reducing the cognitive load at the moment of stress. Neuroimaging shows that imagined rehearsal of coping strategies strengthens the connectivity between prefrontal cortex and amygdala, improving real-time emotion regulation.",
+    whyThis: "You are dreading an upcoming interaction — mentally rehearsing your coping plan in advance means your prefrontal cortex has a script ready when your amygdala fires. Mental rehearsal may activate the same premotor and prefrontal circuits used during actual behavior (Jeannerod, 2001). Cope Ahead leverages this motor simulation to pre-load adaptive responses, reducing the cognitive load at the moment of stress. Neuroimaging shows that imagined rehearsal of coping strategies may strengthen the connectivity between prefrontal cortex and amygdala, improving real-time emotion regulation.",
     instruction: "Write across three narrative panels. In the first panel, describe the situation you are dreading in vivid sensory detail — where, when, who, what might happen. In the second panel, write the difficult moment itself and describe exactly how you will cope: what you will say, do, think, and how you will manage your body. In the third panel, write the outcome — how you will feel having navigated it skillfully. Read all three panels as a complete mental rehearsal.",
+    prePopulated: {
+      panels: [
+        { id: "scene", title: "The Situation", subtitle: "Vivid sensory detail — where, when, who", placeholder: "Describe it as if watching a movie...", content: "Thursday at 2pm, the small conference room with the glass walls. My manager, HR, and me. Fluorescent lights, coffee I won't drink. They'll open with the PIP progress review." },
+        { id: "cope", title: "The Difficult Moment + How I Cope", subtitle: "What happens + what you'll do", placeholder: "When the hard part hits, here's my plan...", content: "When they say 'we haven't seen enough improvement,' my chest will tighten and the Pleaser will want to apologize. Instead: feet on floor, one breath, then: 'I hear that. Can we look at the specific metrics together? I want to understand exactly what you're measuring.'" },
+        { id: "after", title: "After — How I Feel", subtitle: "Having navigated it skillfully", placeholder: "What does it feel like on the other side?", content: "I feel shaky but grounded. I didn't collapse or fight. I asked a real question. Even if the answer is hard, I showed up as myself, not my saboteur." },
+      ],
+    },
   },
   {
     id: "attachment-style-awareness",
@@ -305,8 +521,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Bowlby / Ainsworth / Levine & Heller",
     primitive: "stakeholderMap",
-    whyNow: "The push-pull pattern you described in your journal maps directly onto attachment theory — understanding your style in different relationships can transform confusion into clarity.",
-    science: "Attachment styles (secure, anxious-preoccupied, dismissive-avoidant, fearful-avoidant) are maintained by implicit relational schemas encoded in procedural memory and mediated by the oxytocin and vasopressin systems. Each style produces predictable activation patterns in the amygdala and prefrontal cortex during relational stress. Awareness does not change the style instantly but creates a metacognitive gap that enables conscious choice.",
+    whyThis: "The push-pull pattern you described in your journal maps directly onto attachment theory — understanding your style in different relationships can transform confusion into clarity. Attachment styles (secure, anxious-preoccupied, dismissive-avoidant, fearful-avoidant) are maintained by implicit relational schemas encoded in procedural memory and mediated by the oxytocin and vasopressin systems. Each style may produce predictable activation patterns in the amygdala and prefrontal cortex during relational stress. Awareness does not change the style instantly but may create a metacognitive gap that may enable conscious choice.",
     instruction: "Place the key people in your life on the stakeholder map. Position them by two axes: how much proximity you seek with them (closeness axis) and how much emotional safety you feel with them (security axis). For each person, note your typical attachment behavior — do you pursue, withdraw, oscillate, or feel grounded? The spatial map reveals your attachment landscape and where your patterns shift based on the relationship.",
   },
   {
@@ -315,9 +530,9 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Brene Brown",
     primitive: "wheelChart",
-    whyNow: "You wrote about trust being broken — BRAVING gives you a precise anatomy of trust so you can identify exactly which element was damaged and what repair looks like.",
-    science: "Trust is not monolithic — it operates through seven distinct neurobiological channels: Boundaries, Reliability, Accountability, Vault (confidentiality), Integrity, Non-judgment, and Generosity. Each dimension activates different aspects of the social brain: reliability engages prediction circuits (cerebellum, basal ganglia), vault activates threat-safety evaluation (amygdala), and generosity engages the mentalizing network (TPJ, mPFC).",
+    whyThis: "You wrote about trust being broken — BRAVING gives you a precise anatomy of trust so you can identify exactly which element was damaged and what repair looks like. Trust is not monolithic — it operates through seven distinct neurobiological channels: Boundaries, Reliability, Accountability, Vault (confidentiality), Integrity, Non-judgment, and Generosity. Each dimension may activate different aspects of the social brain: reliability may engage prediction circuits (cerebellum, basal ganglia), vault activates threat-safety evaluation (amygdala), and generosity engages the mentalizing network (TPJ, mPFC).",
     instruction: "Rate each of the seven BRAVING dimensions on the wheel chart, both for yourself and for the other person in this relationship. The seven sectors are: Boundaries, Reliability, Accountability, Vault, Integrity, Non-judgment, and Generosity. Drag each spoke outward to indicate strength in that dimension. The shape of the wheel reveals the trust profile — where it is strong and where it has gaps that need attention.",
+    prePopulated: { categories: ["Boundaries", "Reliability", "Accountability", "Vault", "Integrity", "Non-judgment", "Generosity"], values: [5, 7, 4, 6, 8, 3, 6] },
   },
   {
     id: "heart-at-peace-war",
@@ -325,9 +540,20 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "The Arbinger Institute",
     primitive: "vennOverlap",
-    whyNow: "You described a situation where you stopped seeing the other person as a full human — the Arbinger framework reveals how that shift happened and how to reverse it.",
-    science: "The Arbinger Institute's framework maps onto dehumanization research: 'heart at war' correlates with reduced medial prefrontal cortex activity when perceiving the other (Harris & Fiske, 2006), treating them as an object rather than a mind. 'Heart at peace' restores mentalization, activating the full social brain network and enabling empathy, cooperation, and creative problem-solving.",
+    whyThis: "You described a situation where you stopped seeing the other person as a full human — the Arbinger framework reveals how that shift happened and how to reverse it. The Arbinger Institute's framework maps onto dehumanization research: 'heart at war' correlates with reduced medial prefrontal cortex activity when perceiving the other (Harris & Fiske, 2006), treating them as an object rather than a mind. 'Heart at peace' restores mentalization, activating the full social brain network and enabling empathy, cooperation, and creative problem-solving.",
     instruction: "Explore the two overlapping circles. One circle represents 'Heart at Peace' — seeing the other person as a person with needs, fears, and hopes as real as your own. The other represents 'Heart at War' — seeing them as an obstacle, a vehicle, or irrelevant. Place your recent interactions in the appropriate zone, including the overlap where you fluctuated. For items in the 'war' zone, write what it would look like to see that person's humanity.",
+    prePopulated: {
+      leftLabel: "Heart at Peace",
+      rightLabel: "Heart at War",
+      items: [
+        { id: "i1", label: "How I see my partner when I'm grounded" },
+        { id: "i2", label: "How I see my manager during PIP check-ins" },
+        { id: "i3", label: "How I see the colleague who got the project I wanted" },
+        { id: "i4", label: "How I see myself on my worst days" },
+        { id: "i5", label: "How I see the HR person" },
+        { id: "i6", label: "How I see my closest friend right now" },
+      ],
+    },
   },
   {
     id: "global-dexterity",
@@ -335,9 +561,36 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Andy Molinsky",
     primitive: "multiSpectrum",
-    whyNow: "You mentioned navigating a cultural gap in communication style — mapping the dimensions of difference can turn awkwardness into intentional code-switching.",
-    science: "Cultural code-switching engages the cognitive control network (dorsolateral PFC, anterior cingulate) and requires sustained executive function to inhibit default cultural scripts while activating alternative ones. Molinsky's research shows that mapping specific behavioral dimensions (directness, enthusiasm, formality, assertiveness, self-promotion) reduces the cognitive load of adaptation by making implicit norms explicit.",
+    whyThis: "You mentioned navigating a cultural gap in communication style — mapping the dimensions of difference can turn awkwardness into intentional code-switching. Cultural code-switching may engage the cognitive control network (dorsolateral PFC, anterior cingulate) and requires sustained executive function to inhibit default cultural scripts while activating alternative ones. Molinsky's research shows that mapping specific behavioral dimensions (directness, enthusiasm, formality, assertiveness, self-promotion) reduces the cognitive load of adaptation by making implicit norms explicit.",
     instruction: "You will see multiple parallel spectrums, each representing a cultural communication dimension: directness, enthusiasm, formality, assertiveness, self-promotion, and personal disclosure. For each spectrum, place two markers — one for your natural style and one for the style expected in the context you are navigating. The gap between markers shows where adaptation is needed. Write a specific behavioral adjustment for each dimension where the gap is largest.",
+    prePopulated: {
+      dimensions: [
+        { id: "d1", label: "Directness", leftLabel: "Indirect / wrapped", rightLabel: "Direct / blunt" },
+        { id: "d2", label: "Enthusiasm", leftLabel: "Reserved / understated", rightLabel: "Expressive / animated" },
+        { id: "d3", label: "Formality", leftLabel: "Casual / first-name", rightLabel: "Formal / hierarchical" },
+        { id: "d4", label: "Assertiveness", leftLabel: "Deferential / consensus", rightLabel: "Commanding / decisive" },
+        { id: "d5", label: "Self-Promotion", leftLabel: "Humble / deflecting", rightLabel: "Own achievements openly" },
+        { id: "d6", label: "Personal Disclosure", leftLabel: "Private / professional only", rightLabel: "Open / shares personal life" },
+      ],
+      markers: [
+        { dimensionId: "d1", markerId: "you", label: "Your Style", value: 35, color: "#C4943A" },
+        { dimensionId: "d1", markerId: "context", label: "Expected Style", value: 70, color: "#7B9AAD" },
+        { dimensionId: "d2", markerId: "you", label: "Your Style", value: 60, color: "#C4943A" },
+        { dimensionId: "d2", markerId: "context", label: "Expected Style", value: 40, color: "#7B9AAD" },
+        { dimensionId: "d3", markerId: "you", label: "Your Style", value: 25, color: "#C4943A" },
+        { dimensionId: "d3", markerId: "context", label: "Expected Style", value: 65, color: "#7B9AAD" },
+        { dimensionId: "d4", markerId: "you", label: "Your Style", value: 45, color: "#C4943A" },
+        { dimensionId: "d4", markerId: "context", label: "Expected Style", value: 75, color: "#7B9AAD" },
+        { dimensionId: "d5", markerId: "you", label: "Your Style", value: 20, color: "#C4943A" },
+        { dimensionId: "d5", markerId: "context", label: "Expected Style", value: 60, color: "#7B9AAD" },
+        { dimensionId: "d6", markerId: "you", label: "Your Style", value: 55, color: "#C4943A" },
+        { dimensionId: "d6", markerId: "context", label: "Expected Style", value: 30, color: "#7B9AAD" },
+      ],
+      legend: [
+        { id: "you", label: "Your Style", color: "#C4943A" },
+        { id: "context", label: "Expected Style", color: "#7B9AAD" },
+      ],
+    },
   },
   {
     id: "three-levels-listening",
@@ -345,9 +598,9 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "relational",
     originator: "Co-Active Coaching (CTI)",
     primitive: "spectrumSlider",
-    whyNow: "Your journal mentioned wanting to be a better listener for someone — this exercise calibrates the three levels so you can consciously choose your depth of attention.",
-    science: "Level 1 (internal) listening activates the default mode network (self-referential processing). Level 2 (focused) listening engages the mentalizing network (mPFC, TPJ) and attenuates DMN activity. Level 3 (global) listening adds interoceptive awareness (insula) and environmental awareness (right hemisphere attention networks). Each level represents a measurably different neural configuration with distinct relational impacts.",
+    whyThis: "Your journal mentioned wanting to be a better listener for someone — this exercise calibrates the three levels so you can consciously choose your depth of attention. Level 1 (internal) listening may activate the default mode network (self-referential processing). Level 2 (focused) listening may engage the mentalizing network (mPFC, TPJ) and attenuates DMN activity. Level 3 (global) listening adds interoceptive awareness (insula) and environmental awareness (right hemisphere attention networks). Each level represents a measurably different neural configuration with distinct relational impacts.",
     instruction: "Use the spectrum slider to assess your listening in recent conversations. The left end represents Level 1 (internal — you are listening but mostly thinking about yourself), the center represents Level 2 (focused — your full attention is on the other person), and the right end represents Level 3 (global — you are sensing the energy, mood, and unspoken dynamics in the room). For each conversation you assess, note what pulled you to that level and what it would take to move one level deeper.",
+    prePopulated: { labels: ["Level 1 — Internal (thinking about myself)", "Between 1 & 2", "Level 2 — Focused (fully on the other person)", "Between 2 & 3", "Level 3 — Global (sensing the whole room)"], value: 35 },
   },
 
   // ═══════════════════════════════════════════
@@ -359,10 +612,25 @@ export const EXERCISES: ExerciseDefinition[] = [
     name: "IFS Daily Check-in",
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
-    primitive: "emotionWheel",
-    whyNow: "Your journal had multiple emotional threads running at once — checking in with your parts can help you understand who is driving the bus right now.",
-    science: "IFS posits that the mind is naturally multiple, composed of sub-personalities ('parts') organized around core Self. Neuroscience supports this: different self-states show distinct patterns of brain activation (Lanius et al., 2014). The daily check-in leverages interoceptive awareness to identify which neural networks are currently dominant, creating the metacognitive distance needed to access Self-leadership.",
-    instruction: "Explore the emotion wheel to identify which parts are active right now. Start from the broad center categories and drill into specifics. When you land on an emotion, pause and ask: 'Which part of me carries this feeling?' Name the part and notice where it lives in your body. You may find multiple parts active — that is normal. The goal is not to fix anything but to notice who is present.",
+    primitive: "dialogueSequence",
+    whyThis: "You described a part that wants to give up the job search and take the first thing available — and another part that is furious at that idea. They have been arguing all morning. Richard Schwartz, who developed Internal Family Systems (IFS) at Harvard and later at the IFS Institute, discovered that the mind is naturally made up of different 'parts' — each with its own feelings, fears, and protective role. Neither part is wrong — both are trying to help you. Underneath all parts is what Schwartz calls your core Self: the calm, curious, compassionate center that can hold both sides without choosing. The goal is not to silence either part, but to hear each one clearly enough that Self can lead.",
+    instruction: "Below are your two parts, already named from your journal. For each one, answer what it's feeling, what it's afraid of, and what it needs from you. At the end, a final prompt asks you to step back and notice what the calmer part of you sees — that's Self. Take each part seriously before you get there.",
+    prePopulated: {
+      voices: [
+        { id: "quitter", label: "The part that wants to give up", color: "#7B9AAD" },
+        { id: "fighter", label: "The part that says you're selling yourself short", color: "#D4A84E" },
+        { id: "self", label: "Self — stepping back", color: "#6AB282" },
+      ],
+      turns: [
+        { id: "t1", voice: "quitter", prompt: "What are you feeling right now?", content: "" },
+        { id: "t2", voice: "quitter", prompt: "What are you afraid of?", content: "" },
+        { id: "t3", voice: "quitter", prompt: "What do you need from me?", content: "" },
+        { id: "t4", voice: "fighter", prompt: "What are you feeling right now?", content: "" },
+        { id: "t5", voice: "fighter", prompt: "What are you afraid of?", content: "" },
+        { id: "t6", voice: "fighter", prompt: "What do you need from me?", content: "" },
+        { id: "t7", voice: "self", prompt: "Step back. What does the calm, curious part of you see when it looks at both?", content: "" },
+      ],
+    },
   },
   {
     id: "blending-check",
@@ -370,9 +638,19 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "vennOverlap",
-    whyNow: "You wrote with such intensity about one emotion that it seemed to consume everything — that is what IFS calls blending, and noticing it is the first step to unblending.",
-    science: "Blending occurs when a part's emotional state overtakes the entire system, reducing access to Self-energy. Neurologically, this corresponds to amygdala hijack dominating prefrontal function. The blending check activates the observer function (medial PFC / default mode network in its constructive role), creating the metacognitive 'witnessing' capacity that Schwartz identifies as Self.",
+    whyThis: "You wrote with such intensity about one emotion that it seemed to consume everything — that is what IFS calls blending, and noticing it is the first step to unblending. Blending occurs when a part's emotional state overtakes the entire system, reducing access to Self-energy. Neurologically, this corresponds to amygdala hijack dominating prefrontal function. The blending check may activate the observer function (medial PFC / default mode network in its constructive role), creating the metacognitive 'witnessing' capacity that Schwartz identifies as Self.",
     instruction: "The two overlapping circles represent Self and a Part. Move the circles to show how much they overlap right now — fully blended (one circle inside the other) means the part has taken over completely; fully separated means you can observe the part with curiosity. Place your current state in the overlap zone. Then identify what the blended part is feeling and what it needs you to know. Notice if naming it creates even a small separation.",
+    prePopulated: {
+      leftLabel: "Self (calm, curious, compassionate)",
+      rightLabel: "The Blended Part",
+      items: [
+        { id: "i1", label: "My anxiety about the PIP outcome" },
+        { id: "i2", label: "The anger I feel toward my manager" },
+        { id: "i3", label: "The shame about not being 'good enough'" },
+        { id: "i4", label: "The exhaustion from performing competence all day" },
+        { id: "i5", label: "The grief for the career I thought I'd have" },
+      ],
+    },
   },
   {
     id: "eight-cs-self-energy-scan",
@@ -380,9 +658,9 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "wheelChart",
-    whyNow: "You seemed disconnected from your usual groundedness today — scanning the 8 C's reveals which qualities of Self are available and which are being blocked by protective parts.",
-    science: "The 8 C's (Calm, Curiosity, Clarity, Compassion, Confidence, Courage, Creativity, Connectedness) describe the phenomenology of Self-leadership. Each maps to specific neural correlates: calm to parasympathetic dominance, curiosity to dopaminergic exploration circuits, clarity to dorsolateral PFC, compassion to anterior insula and mPFC. The scan functions as a systems diagnostic, revealing where parts are blocking Self-energy flow.",
+    whyThis: "You seemed disconnected from your usual groundedness today — scanning the 8 C's reveals which qualities of Self are available and which are being blocked by protective parts. The 8 C's (Calm, Curiosity, Clarity, Compassion, Confidence, Courage, Creativity, Connectedness) describe the phenomenology of Self-leadership. Each maps to specific neural correlates: calm to parasympathetic dominance, curiosity to dopaminergic exploration circuits, clarity to dorsolateral PFC, compassion to anterior insula and mPFC. The scan functions as a systems diagnostic, revealing where parts are blocking Self-energy flow.",
     instruction: "Rate each of the 8 C's on the wheel chart by dragging the spoke outward to indicate how present that quality feels right now. The eight sectors are: Calm, Curiosity, Clarity, Compassion, Confidence, Courage, Creativity, and Connectedness. Low scores indicate a part may be blocking that quality. For each low-scoring C, pause and ask: 'What part is making it hard to access this quality right now?'",
+    prePopulated: { categories: ["Calm", "Curiosity", "Clarity", "Compassion", "Confidence", "Courage", "Creativity", "Connectedness"], values: [4, 7, 3, 6, 2, 3, 5, 4] },
   },
   {
     id: "unblending-step-back",
@@ -390,8 +668,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "guided",
-    whyNow: "A part of you has taken the wheel and is driving hard — this guided unblending practice helps you ask it to step back just enough for Self to come forward.",
-    science: "Unblending is the IFS term for restoring metacognitive distance between Self and a part. Neurologically, it corresponds to re-engaging the prefrontal cortex's supervisory attentional system after an amygdala hijack. The 'ask' rather than 'force' approach respects the part's protective function, which paradoxically makes it more willing to step back — coercion activates further defensive circuits.",
+    whyThis: "A part of you has taken the wheel and is driving hard — this guided unblending practice helps you ask it to step back just enough for Self to come forward. Unblending is the IFS term for restoring metacognitive distance between Self and a part. Neurologically, it corresponds to re-engaging the prefrontal cortex's supervisory attentional system after an amygdala hijack. The 'ask' rather than 'force' approach respects the part's protective function, which paradoxically makes it more willing to step back — coercion may activate further defensive circuits.",
     instruction: "Follow the guided prompts step by step. First, notice the strongest emotion present and locate it in your body. Then, ask the part carrying that emotion: 'Would you be willing to step back just a little, so I can get to know you better?' Notice if any space opens. If the part steps back, notice what qualities emerge (curiosity, calm, compassion). If it refuses, ask what it is afraid would happen if it stepped back. Continue the dialogue at the part's pace.",
   },
   {
@@ -400,9 +677,18 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "hierarchicalBranch",
-    whyNow: "You identified a recurring pattern in your journal — the 6 F's protocol provides a systematic path to understand the part driving it and what it ultimately needs.",
-    science: "The 6 F's (Find, Focus, Flesh out, Feel toward, beFriend, Fear) provide a structured protocol that progressively deepens engagement with a part. Each step activates increasingly deeper neural circuits: Find uses attentional scanning, Focus engages sustained attention, Flesh out recruits interoception, Feel toward activates compassion circuits, beFriend establishes internal attachment, and Fear explores the part's protective function and exile it guards.",
+    whyThis: "You identified a recurring pattern in your journal — the 6 F's protocol provides a systematic path to understand the part driving it and what it ultimately needs. The 6 F's (Find, Focus, Flesh out, Feel toward, beFriend, Fear) provide a structured protocol that progressively deepens engagement with a part. Each step may activate increasingly deeper neural circuits: Find uses attentional scanning, Focus may engage sustained attention, Flesh out recruits interoception, Feel toward activates compassion circuits, beFriend establishes internal attachment, and Fear explores the part's protective function and exile it guards.",
     instruction: "Start at the top of the branching hierarchy with Find — locate a part you want to work with. At each branch level, follow the next F: Focus (turn your attention fully to it), Flesh out (describe its appearance, age, location in body), Feel toward (notice your attitude toward it — if anything other than curiosity, that is another part), beFriend (let it know you are interested in its experience), and Fear (ask what it fears would happen if it stopped its role). Each branch deepens the inquiry.",
+    prePopulated: {
+      levels: [
+        { id: "find", label: "Find", prompt: "Name the part. Where do you notice it?", content: "The Perfecter. I feel it as tightness in my chest and a racing mind. It shows up loudest before any evaluation moment.", color: "#7B9AAD" },
+        { id: "focus", label: "Focus", prompt: "Turn full attention to it. What do you notice?", content: "", color: "#7B9AAD" },
+        { id: "flesh", label: "Flesh Out", prompt: "What does it look like? How old? Where in your body?", content: "", color: "#C4943A" },
+        { id: "feel", label: "Feel Toward", prompt: "What's your attitude toward this part right now? (If not curious — that's another part.)", content: "", color: "#C4943A" },
+        { id: "befriend", label: "beFriend", prompt: "Let it know you're interested. What does it want to tell you?", content: "", color: "#6AB282" },
+        { id: "fear", label: "Fear", prompt: "What would happen if it stopped doing its job?", content: "", color: "#D25858" },
+      ],
+    },
   },
   {
     id: "parts-mapping",
@@ -410,9 +696,19 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "saboteurCard",
-    whyNow: "Your journal revealed several competing voices — mapping them as distinct parts with their own roles and fears creates the internal clarity needed to lead from Self.",
-    science: "Parts mapping externalizes the internal system, engaging the brain's capacity for spatial reasoning and narrative construction. Personifying sub-personalities activates the mentalizing network (mPFC, TPJ), allowing the same empathy circuits used for understanding others to be directed inward. Research on narrative therapy shows that externalization reduces shame and increases self-compassion by creating distance between the person and the pattern.",
+    whyThis: "Your journal revealed several competing voices — mapping them as distinct parts with their own roles and fears creates the internal clarity needed to lead from Self. Parts mapping externalizes the internal system, engaging the brain's capacity for spatial reasoning and narrative construction. Personifying sub-personalities may activate the mentalizing network (mPFC, TPJ), allowing the same empathy circuits used for understanding others to be directed inward. Research on narrative therapy shows that externalization may reduce shame and increase self-compassion by creating distance between the person and the pattern.",
     instruction: "Create a card for each part you can identify in your system. Give each part a name, describe its role (what it does to protect you), its typical voice (what it says), and its core fear (what it is afraid would happen if it stopped). You can add multiple cards. Arrange them to see your inner system — notice which parts work together, which are in conflict, and which operate in the shadows.",
+    prePopulated: {
+      saboteur: {
+        id: "manager-part",
+        name: "The Planner",
+        archetype: "Manager Part",
+        triggerPattern: "Uncertainty, ambiguity, or any situation where the outcome is not controllable. Activates before meetings, deadlines, and important conversations.",
+        exactWords: "'If you just plan better, you can control the outcome. Think through every scenario. Don't let anything surprise you. Preparation is the only thing between you and disaster.'",
+        protectsFrom: "The terror of being caught off guard. Underneath is a younger part that was blindsided once and swore it would never happen again.",
+        activationHistory: [{ day: 1, intensity: 7 }, { day: 5, intensity: 5 }, { day: 10, intensity: 8 }, { day: 15, intensity: 4 }, { day: 20, intensity: 6 }],
+      },
+    },
   },
   {
     id: "protective-parts-appreciation",
@@ -420,9 +716,21 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "dialogueSequence",
-    whyNow: "You have been fighting against a part of yourself that keeps showing up — what if instead of battling it, you thanked it for trying to protect you?",
-    science: "Protective parts (managers and firefighters in IFS) developed their strategies during times of genuine threat. Appreciating rather than suppressing them follows the principle of reciprocal inhibition — gratitude and compassion activate the ventral vagal system, which physiologically inhibits the defensive circuits the part was activating. This paradoxically allows the part to relax its grip, creating space for Self-leadership.",
+    whyThis: "You have been fighting against a part of yourself that keeps showing up — what if instead of battling it, you thanked it for trying to protect you?. Protective parts (managers and firefighters in IFS) developed their strategies during times of genuine threat. Appreciating rather than suppressing them follows the principle of reciprocal inhibition — gratitude and compassion activate the ventral vagal system, which physiologically may inhibit the defensive circuits the part was activating. This paradoxically allows the part to relax its grip, creating space for Self-leadership.",
     instruction: "Enter a dialogue with one of your protective parts. Start by acknowledging what it does for you and thanking it for its efforts. Then ask it how long it has been doing this job and what prompted it to take on this role. Listen for its response and reflect it back. The dialogue sequence guides you through appreciation, understanding, and finally asking the part what it would rather do if it did not have to protect you.",
+    prePopulated: {
+      voices: [
+        { id: "self", label: "Self (with appreciation)", color: "#6AB282" },
+        { id: "protector", label: "The Protective Part", color: "#C4943A" },
+      ],
+      turns: [
+        { id: "t1", voice: "self", prompt: "Acknowledge this part. Thank it for trying to protect you.", content: "" },
+        { id: "t2", voice: "protector", prompt: "How does it respond to being thanked?", content: "" },
+        { id: "t3", voice: "self", prompt: "Ask: How long have you been doing this job?", content: "" },
+        { id: "t4", voice: "protector", prompt: "What does it say about when it started and why?", content: "" },
+        { id: "t5", voice: "self", prompt: "Ask: If you didn't have to protect me, what would you rather do?", content: "" },
+      ],
+    },
   },
   {
     id: "self-vs-self-like-parts",
@@ -430,9 +738,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "vennOverlap",
-    whyNow: "You sounded very calm and 'together' in your journal, but sometimes that composure is a part performing Self rather than actual Self-energy — this exercise helps you distinguish the two.",
-    science: "Self-like parts are managers that mimic Self qualities — appearing calm, wise, or detached — while actually protecting the system from vulnerability. Distinguishing true Self (characterized by all 8 C's simultaneously) from Self-like parts (which show some C's but lack others, especially vulnerability and compassion) engages fine-grained self-monitoring in the medial prefrontal cortex and insula.",
+    whyThis: "You sounded very calm and 'together' in your journal, but sometimes that composure is a part performing Self rather than actual Self-energy — this exercise helps you distinguish the two. Self-like parts are managers that mimic Self qualities — appearing calm, wise, or detached — while actually protecting the system from vulnerability. Distinguishing true Self (characterized by all 8 C's simultaneously) from Self-like parts (which show some C's but lack others, especially vulnerability and compassion) may engage fine-grained self-monitoring in the medial prefrontal cortex and insula.",
     instruction: "The two overlapping circles represent true Self-energy and a Self-like part. Explore the qualities in each circle: Self carries all 8 C's (Calm, Curiosity, Clarity, Compassion, Confidence, Courage, Creativity, Connectedness), while a Self-like part carries some but not all. Place your current state in the overlap and identify which C's are present and which are missing. The missing C's point to which part is performing composure rather than embodying it.",
+    prePopulated: {
+      leftLabel: "True Self (all 8 C's)",
+      rightLabel: "Self-Like Part (performing calm)",
+      items: [
+        { id: "i1", label: "Calm — present or performed?" },
+        { id: "i2", label: "Curiosity — genuine or going through motions?" },
+        { id: "i3", label: "Clarity — seeing clearly or rationalizing?" },
+        { id: "i4", label: "Compassion — feeling it or performing it?" },
+        { id: "i5", label: "Confidence — grounded or bravado?" },
+        { id: "i6", label: "Courage — willing to be vulnerable or controlling the image?" },
+        { id: "i7", label: "Creativity — open or rigid?" },
+        { id: "i8", label: "Connectedness — present or detached?" },
+      ],
+    },
   },
   {
     id: "self-led-journaling",
@@ -440,9 +761,21 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "dialogueSequence",
-    whyNow: "Your journal entries have been coming from one dominant voice — Self-led journaling lets multiple parts speak and be witnessed, with Self as the compassionate listener.",
-    science: "Self-led journaling activates the brain's internal dialogue circuits (left inferior frontal gyrus for production, bilateral temporal regions for comprehension) while maintaining metacognitive oversight (dorsomedial PFC). Writing from Self to a part engages the attachment system internally, creating a secure base within the psyche. Research shows that expressive writing from a compassionate self-perspective reduces inflammatory biomarkers more than standard journaling.",
+    whyThis: "Your journal entries have been coming from one dominant voice — Self-led journaling lets multiple parts speak and be witnessed, with Self as the compassionate listener. Self-led journaling may activate the brain's internal dialogue circuits (left inferior frontal gyrus for production, bilateral temporal regions for comprehension) while maintaining metacognitive oversight (dorsomedial PFC). Writing from Self to a part may engage the attachment system internally, creating a secure base within the psyche. Research shows that expressive writing from a compassionate self-perspective reduces inflammatory biomarkers more than standard journaling.",
     instruction: "Begin a dialogue where Self writes to a part. Start with: 'I notice you are here. What do you want me to know?' Let the part respond, then write back from Self with curiosity and compassion. Alternate turns, going deeper each time. The dialogue sequence structures the exchange so that Self always responds before the part speaks again, maintaining the compassionate witnessing posture.",
+    prePopulated: {
+      voices: [
+        { id: "self", label: "Self", color: "#6AB282" },
+        { id: "part", label: "The Part", color: "#C4943A" },
+      ],
+      turns: [
+        { id: "t1", voice: "self", prompt: "'I notice you are here. What do you want me to know?'", content: "" },
+        { id: "t2", voice: "part", prompt: "Let the part respond — what does it say?", content: "" },
+        { id: "t3", voice: "self", prompt: "Reflect back with curiosity. What do you hear underneath?", content: "" },
+        { id: "t4", voice: "part", prompt: "Go deeper. What is it really carrying?", content: "" },
+        { id: "t5", voice: "self", prompt: "What does this part need from you right now?", content: "" },
+      ],
+    },
   },
   {
     id: "polarization-mapping",
@@ -450,9 +783,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "dialogueSequence",
-    whyNow: "You described feeling stuck between two extremes — in IFS, that usually means two parts are polarized against each other, each convinced the other is dangerous.",
-    science: "Polarization occurs when two parts hold opposing strategies, each escalating in response to the other — similar to arms races in game theory. Neurally, polarized parts activate competing neural networks simultaneously, creating the anterior cingulate conflict signal experienced as being 'stuck' or 'torn.' Mediation through Self de-escalates by activating the mentalizing network to hold both perspectives simultaneously.",
+    whyThis: "You described feeling stuck between two extremes — in IFS, that usually means two parts are polarized against each other, each convinced the other is dangerous. Polarization occurs when two parts hold opposing strategies, each escalating in response to the other — similar to arms races in game theory. Neurally, polarized parts activate competing neural networks simultaneously, creating the anterior cingulate conflict signal experienced as being 'stuck' or 'torn.' Mediation through Self de-escalates by activating the mentalizing network to hold both perspectives simultaneously.",
     instruction: "Facilitate a dialogue between two polarized parts. First, let Part A fully express its position, fears, and needs. Then let Part B respond. Self mediates by reflecting each part's core concern back before the other speaks. Continue the structured dialogue until each part can acknowledge the other's valid concern. The sequence ensures neither part dominates and both feel heard before any resolution is attempted.",
+    prePopulated: {
+      voices: [
+        { id: "part-a", label: "Part A — the part pulling you in one direction", color: "#D25858" },
+        { id: "part-b", label: "Part B — the part pulling you the opposite way", color: "#7B9AAD" },
+        { id: "self", label: "Self (mediator) — the calm, curious center that can hold both", color: "#6AB282" },
+      ],
+      turns: [
+        { id: "t1", voice: "part-a", prompt: "State your position. What do you want? What are you afraid of?", content: "" },
+        { id: "t2", voice: "self", prompt: "Reflect back Part A's core concern.", content: "" },
+        { id: "t3", voice: "part-b", prompt: "Respond. What do YOU want? What scares you about Part A's position?", content: "" },
+        { id: "t4", voice: "self", prompt: "Reflect back Part B's core concern.", content: "" },
+        { id: "t5", voice: "self", prompt: "Can both parts acknowledge what the other is protecting?", content: "" },
+      ],
+    },
   },
   {
     id: "manager-parts-inventory",
@@ -460,9 +806,28 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "cardSort",
-    whyNow: "Your journal revealed a lot of controlling, planning, and preventing — these are your manager parts working overtime. Naming them can help you appreciate their effort while loosening their grip.",
-    science: "Manager parts in IFS correspond to proactive protective strategies mediated by the prefrontal cortex's executive control networks. They include inner critics, planners, perfectionists, and caretakers. Sorting and categorizing them engages taxonomic thinking (lateral temporal cortex), which creates psychological distance from the manager's urgency and enables Self to see the system architecture rather than being driven by it.",
+    whyThis: "Your journal revealed a lot of controlling, planning, and preventing — these are your manager parts working overtime. Naming them can help you appreciate their effort while loosening their grip. Manager parts in IFS correspond to proactive protective strategies mediated by the prefrontal cortex's executive control networks. They include inner critics, planners, perfectionists, and caretakers. Sorting and categorizing them may engage taxonomic thinking (lateral temporal cortex), which may create psychological distance from the manager's urgency and enable Self to see the system architecture rather than being driven by it.",
     instruction: "Sort the cards into manager categories: Inner Critic, Perfectionist, Planner, People-Pleaser, Controller, Intellectual, Caretaker, and others you identify. Each card describes a managerial behavior or voice. After sorting, review each category to understand which managers are most active, which ones work together, and which exile they are protecting. Flip cards to explore what each manager fears would happen if it relaxed.",
+    prePopulated: {
+      buckets: [
+        { id: "critic", label: "Inner Critic — attacks you to prevent others from doing it first", color: "#D25858" },
+        { id: "perfectionist", label: "Perfectionist — demands flawlessness to avoid vulnerability", color: "#C4943A" },
+        { id: "planner", label: "Planner — needs to know every outcome before acting", color: "#7B9AAD" },
+        { id: "pleaser", label: "People-Pleaser — earns safety through others' approval", color: "#D6B65D" },
+        { id: "controller", label: "Controller — manages every variable to prevent surprise", color: "#8A9199" },
+      ],
+      cards: [
+        { id: "m1", label: "Rehearses conversations 10 times before having them" },
+        { id: "m2", label: "Says 'you should have known better' after every mistake" },
+        { id: "m3", label: "Rewrites emails 5 times to make them perfect" },
+        { id: "m4", label: "Says yes to everything to avoid disappointing anyone" },
+        { id: "m5", label: "Needs to know the plan for every hour of the day" },
+        { id: "m6", label: "Compares self unfavorably to every successful person" },
+        { id: "m7", label: "Won't delegate because 'no one will do it right'" },
+        { id: "m8", label: "Apologizes preemptively even when nothing is wrong" },
+      ],
+      allowAdd: true,
+    },
   },
   {
     id: "firefighter-parts-inventory",
@@ -470,9 +835,27 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "cardSort",
-    whyNow: "You described a reactive behavior that you felt out of control with — in IFS terms, that is a firefighter part trying to extinguish emotional pain as fast as possible.",
-    science: "Firefighter parts correspond to reactive protective strategies — they activate when managers fail to contain emotional pain from exiles. Neurologically, they engage impulsive circuits (ventral striatum, orbitofrontal cortex) that prioritize immediate relief over long-term consequences. Common firefighters include bingeing, numbing, rage, dissociation, and self-harm. Identifying them without shame activates the compassion circuits that allow the firefighter to stand down.",
+    whyThis: "You described a reactive behavior that you felt out of control with — in IFS terms, that is a firefighter part trying to extinguish emotional pain as fast as possible. Firefighter parts correspond to reactive protective strategies — they activate when managers fail to contain emotional pain from exiles. Neurologically, they engage impulsive circuits (ventral striatum, orbitofrontal cortex) that prioritize immediate relief over long-term consequences. Common firefighters include bingeing, numbing, rage, dissociation, and self-harm. Identifying them without shame may activate the compassion circuits that allow the firefighter to stand down.",
     instruction: "Sort the cards into firefighter categories: Numbing, Distraction, Rage, Self-criticism, Substance use, Overwork, Dissociation, and others you recognize. Each card describes a reactive behavior or impulse. After sorting, notice patterns: when do these firefighters activate? What emotion are they trying to extinguish? Flip each card to explore the exile (wounded part) the firefighter is protecting and what that exile needs to feel safe.",
+    prePopulated: {
+      buckets: [
+        { id: "numbing", label: "Numbing / Checking Out — dulls the pain so you don't feel it", color: "#7B9AAD" },
+        { id: "distraction", label: "Distraction / Avoidance — redirects attention away from the painful thing", color: "#D6B65D" },
+        { id: "overwork", label: "Overwork / Hyper-Productivity — buries pain under busyness and output", color: "#C4943A" },
+        { id: "rage", label: "Rage / Reactivity — externalizes the pain by pushing it outward", color: "#D25858" },
+      ],
+      cards: [
+        { id: "f1", label: "Scrolling social media for hours after a hard day" },
+        { id: "f2", label: "Working until midnight to 'prove' something" },
+        { id: "f3", label: "Snapping at partner over something small" },
+        { id: "f4", label: "Binge-eating or skipping meals entirely" },
+        { id: "f5", label: "Starting three new projects instead of facing the one that matters" },
+        { id: "f6", label: "Going silent and withdrawing for days" },
+        { id: "f7", label: "Drinking more than usual to 'take the edge off'" },
+        { id: "f8", label: "Excessive online shopping or spending" },
+      ],
+      allowAdd: true,
+    },
   },
   {
     id: "the-path-exercise",
@@ -480,8 +863,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "guided",
-    whyNow: "You encountered a part carrying deep pain — the Path exercise provides a structured way to safely witness an exile's story and begin to unburden it.",
-    science: "The Path exercise accesses exile parts — the wounded sub-personalities carrying pain from the past. Witnessing an exile's story from Self activates the brain's memory reconsolidation process (Ecker, Ticic, & Hulley, 2012): when old emotional memories are reactivated in the presence of a contradictory experience (compassion from Self), the memory can be reconsolidated with the new emotional tone, permanently transforming the felt sense of the experience.",
+    whyThis: "You encountered a part carrying deep pain — the Path exercise provides a structured way to safely witness an exile's story and begin to unburden it. The Path exercise accesses exile parts — the wounded sub-personalities carrying pain from the past. Witnessing an exile's story from Self may activate the brain's memory reconsolidation process (Ecker, Ticic, & Hulley, 2012): when old emotional memories are reactivated in the presence of a contradictory experience (compassion from Self), the memory can be reconsolidated with the new emotional tone, permanently transforming the felt sense of the experience.",
     instruction: "Follow the guided prompts carefully — this is deep work. First, ask your protectors for permission to approach the exile. If permission is granted, turn your attention to the exile and ask it to show you what it carries. Witness its story without trying to fix it. Then ask: 'What do you need from me right now?' Offer whatever the part needs — presence, comfort, acknowledgment. Finally, ask if it is ready to release any of what it has been carrying. Only proceed at the part's pace.",
   },
   {
@@ -490,9 +872,21 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "dialogueSequence",
-    whyNow: "You wrote about a relationship where parts keep hijacking the connection — this check-in helps you show up from Self in your most important relationships.",
-    science: "Schwartz's 'courageous love' framework extends IFS to interpersonal dynamics: when two people's parts are triggering each other, the relationship becomes a system of interacting protectors. Accessing Self in relational contexts activates the ventral vagal social engagement system, which signals safety to the other person's nervous system via facial expression, prosody, and body language — co-regulating both systems simultaneously.",
+    whyThis: "You wrote about a relationship where parts keep hijacking the connection — this check-in helps you show up from Self in your most important relationships. Schwartz's 'courageous love' framework extends IFS to interpersonal dynamics: when two people's parts are triggering each other, the relationship becomes a system of interacting protectors. Accessing Self in relational contexts may activate the ventral vagal social engagement system, which signals safety to the other person's nervous system via facial expression, prosody, and body language — co-regulating both systems simultaneously.",
     instruction: "Enter a dialogue structured around your relationship. First, identify which of your parts gets activated by this person. Then speak from Self to that part, helping it step back. Next, imagine what part the other person might be leading with, and speak to that part with compassion (in your imagination — not to the actual person). The dialogue sequence helps you practice showing up from Self before, during, and after relational interactions.",
+    prePopulated: {
+      voices: [
+        { id: "my-part", label: "My Part (activated)", color: "#D25858" },
+        { id: "self", label: "Self", color: "#6AB282" },
+        { id: "their-part", label: "Their Part (imagined)", color: "#7B9AAD" },
+      ],
+      turns: [
+        { id: "t1", voice: "my-part", prompt: "Which part gets activated by this person? What does it do?", content: "" },
+        { id: "t2", voice: "self", prompt: "Speak to your part. Help it step back.", content: "" },
+        { id: "t3", voice: "their-part", prompt: "What part might they be leading with? What might they be protecting?", content: "" },
+        { id: "t4", voice: "self", prompt: "From Self, what does this relationship actually need right now?", content: "" },
+      ],
+    },
   },
   {
     id: "parts-work-in-relationship",
@@ -500,9 +894,21 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "dialogueSequence",
-    whyNow: "A conflict in your journal revealed the classic IFS pattern — your protector activated their protector, which activated another of yours. Mapping the parts dance is the first step to changing it.",
-    science: "Relational IFS maps the mutual activation of protective parts between people. When Person A's manager criticizes, it triggers Person B's firefighter to withdraw, which triggers Person A's exile to feel abandoned, activating another protector. This cascade follows predictable neural pathways: one person's threat display (amygdala output) is detected by the other's threat detection (amygdala input), creating a limbic feedback loop. Breaking the loop requires one person to access Self.",
+    whyThis: "A conflict in your journal revealed the classic IFS pattern — your protector activated their protector, which activated another of yours. Mapping the parts dance is the first step to changing it. Relational IFS maps the mutual activation of protective parts between people. When Person A's manager criticizes, it may trigger Person B's firefighter to withdraw, which triggers Person A's exile to feel abandoned, activating another protector. This cascade follows predictable neural pathways: one person's threat display (amygdala output) is detected by the other's threat detection (amygdala input), creating a limbic feedback loop. Breaking the loop requires one person to access Self.",
     instruction: "Map the dialogue between parts in your relationship. Start by identifying the part of you that showed up in the conflict. Then identify the part of the other person that responded. Continue mapping the sequence: your part reacted to their part, which triggered another part, and so on. The dialogue sequence makes the parts dance visible. End by identifying where Self could have entered the sequence to interrupt the cascade.",
+    prePopulated: {
+      voices: [
+        { id: "my-part", label: "My Part", color: "#D25858" },
+        { id: "their-part", label: "Their Part", color: "#7B9AAD" },
+        { id: "self", label: "Self (breaking the loop)", color: "#6AB282" },
+      ],
+      turns: [
+        { id: "t1", voice: "my-part", prompt: "Which part of you showed up first in the conflict?", content: "" },
+        { id: "t2", voice: "their-part", prompt: "How did they respond? Which of their parts activated?", content: "" },
+        { id: "t3", voice: "my-part", prompt: "What did that trigger in you? Which part escalated?", content: "" },
+        { id: "t4", voice: "self", prompt: "Where could Self have entered to interrupt this cascade?", content: "" },
+      ],
+    },
   },
   {
     id: "emotional-differentiation",
@@ -510,9 +916,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Richard Schwartz / IFS",
     primitive: "vennOverlap",
-    whyNow: "You described absorbing someone else's emotions as if they were your own — differentiating your feelings from theirs is essential for empathy without fusion.",
-    science: "Emotional differentiation engages the self-other distinction circuits in the right temporoparietal junction and inferior parietal lobule. Without differentiation, empathy becomes emotional contagion — the mirror neuron system activates but the self-other boundary is not maintained, leading to personal distress rather than empathic concern. Differentiation preserves the boundary, enabling compassion without burnout.",
+    whyThis: "You described absorbing someone else's emotions as if they were your own — differentiating your feelings from theirs is essential for empathy without fusion. Emotional differentiation may engage the self-other distinction circuits in the right temporoparietal junction and inferior parietal lobule. Without differentiation, empathy becomes emotional contagion — the mirror neuron system may activate but the self-other boundary is not maintained, leading to personal distress rather than empathic concern. Differentiation preserves the boundary, enabling compassion without burnout.",
     instruction: "The two overlapping circles represent your emotions and the other person's emotions. Place specific feelings in the appropriate zone: feelings that are clearly yours in your circle, feelings that are clearly theirs in their circle, and feelings you have absorbed or cannot distinguish in the overlap. The goal is to shrink the overlap — for each shared feeling, ask: 'Is this mine, theirs, or both?' Move feelings to their rightful circle as clarity emerges.",
+    prePopulated: {
+      leftLabel: "My Emotions",
+      rightLabel: "Their Emotions",
+      items: [
+        { id: "i1", label: "Anxiety about the future" },
+        { id: "i2", label: "Frustration with the situation" },
+        { id: "i3", label: "Sadness about what's been lost" },
+        { id: "i4", label: "Anger at unfairness" },
+        { id: "i5", label: "Fear of being abandoned" },
+        { id: "i6", label: "Guilt about not doing enough" },
+        { id: "i7", label: "Exhaustion" },
+        { id: "i8", label: "Hope that things will improve" },
+      ],
+    },
   },
   {
     id: "fulfillment-values-vision",
@@ -520,9 +939,17 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Co-Active Coaching (CTI)",
     primitive: "hierarchicalBranch",
-    whyNow: "Your journal hinted at a gap between how you spend your days and what actually matters to you — this exercise builds the hierarchy from values to vision to purpose.",
-    science: "Values clarification activates the ventromedial prefrontal cortex, which integrates emotional significance with abstract concepts. When values are clearly articulated, they function as top-down priors that bias decision-making toward congruence, reducing the cognitive load of daily choices. Research by Schwartz & Bilsky shows that values form a hierarchical structure — surfacing this hierarchy improves goal-consistent behavior by 23% (Cohen et al., 2006 self-affirmation studies).",
+    whyThis: "Your journal hinted at a gap between how you spend your days and what actually matters to you — this exercise builds the hierarchy from values to vision to purpose. Values clarification may activate the ventromedial prefrontal cortex, which integrates emotional significance with abstract concepts. When values are clearly articulated, they function as top-down priors that bias decision-making toward congruence, reducing the cognitive load of daily choices. Research by Schwartz & Bilsky shows that values form a hierarchical structure — surfacing this hierarchy improves goal-consistent behavior by 23% (Cohen et al., 2006 self-affirmation studies).",
     instruction: "Build a hierarchy from the top down. At the top level, name your core values — the 3-5 things that matter most to you. At the next branch level, describe the vision each value points toward — what does a life fully expressing this value look like? At the deepest level, articulate the life purpose that integrates your values and vision. The branching structure reveals how your values connect and where they converge into a unified direction.",
+    prePopulated: {
+      levels: [
+        { id: "v1", label: "Core Value", prompt: "What matters most to you?", content: "Authenticity — being the same person in every room.", color: "#C4943A" },
+        { id: "v2", label: "Core Value", prompt: "Another core value?", content: "Growth — always learning, never stagnant.", color: "#C4943A" },
+        { id: "vis1", label: "Vision", prompt: "What does a life fully expressing this value look like?", content: "", color: "#7B9AAD" },
+        { id: "vis2", label: "Vision", prompt: "What does this value look like lived fully?", content: "", color: "#7B9AAD" },
+        { id: "purpose", label: "Life Purpose", prompt: "The thread that ties your values and vision together?", content: "", color: "#6AB282" },
+      ],
+    },
   },
   {
     id: "balance-coactive",
@@ -530,9 +957,21 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Co-Active Coaching (CTI)",
     primitive: "forceField",
-    whyNow: "You described being pulled in opposite directions — the Balance exercise does not resolve the tension but helps you stand in the center of it with both eyes open.",
-    science: "The force field diagram leverages Kurt Lewin's field theory: behavior is a function of driving and restraining forces in the life space. Mapping opposing forces externalizes the conflict, engaging spatial reasoning (posterior parietal cortex) to complement the emotional processing (limbic system). Research shows that explicitly naming restraining forces reduces their perceived power by bringing them from implicit to explicit processing.",
+    whyThis: "You described being pulled in opposite directions — the Balance exercise does not resolve the tension but helps you stand in the center of it with both eyes open. The force field diagram leverages Kurt Lewin's field theory: behavior is a function of driving and restraining forces in the life space. Mapping opposing forces externalizes the conflict, engaging spatial reasoning (posterior parietal cortex) to complement the emotional processing (limbic system). Research shows that explicitly naming restraining forces reduces their perceived power by bringing them from implicit to explicit processing.",
     instruction: "Place the issue you are trying to balance in the center. On the left, add the driving forces — everything pulling you toward one direction. On the right, add the restraining forces — everything pulling you the other way. Adjust the strength of each force by dragging the arrows longer or shorter. The diagram reveals which forces are strongest, where you have leverage, and what it would take to shift the equilibrium without forcing a premature resolution.",
+    prePopulated: {
+      centerLabel: "The Balance Point",
+      drivingForces: [
+        { id: "d1", label: "Need for stability and security", strength: 4 },
+        { id: "d2", label: "Desire for recognition and growth", strength: 3 },
+        { id: "d3", label: "Responsibility to family", strength: 5 },
+      ],
+      restrainingForces: [
+        { id: "r1", label: "Desire for freedom and autonomy", strength: 4 },
+        { id: "r2", label: "Need for creative expression", strength: 3 },
+        { id: "r3", label: "Exhaustion with the current path", strength: 4 },
+      ],
+    },
   },
   {
     id: "process-coaching",
@@ -540,9 +979,16 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Co-Active Coaching (CTI)",
     primitive: "emotionalArc",
-    whyNow: "Your journal entry carried a strong emotional charge that was begging to be fully felt rather than analyzed — process coaching meets the emotion where it lives.",
-    science: "Process coaching engages the brain's emotional processing at the somatic level, bypassing cognitive interpretation. This activates interoceptive circuits (anterior insula, somatosensory cortex) and allows emotional energy to complete its natural arc — the same principle underlying Levine's somatic experiencing. Emotions that are fully felt follow a predictable arc: activation, peak, and natural resolution. Interrupting this arc creates stuck emotional energy.",
+    whyThis: "Your journal entry carried a strong emotional charge that was begging to be fully felt rather than analyzed — process coaching meets the emotion where it lives. Process coaching may engage the brain's emotional processing at the somatic level, bypassing cognitive interpretation. This may activate interoceptive circuits (anterior insula, somatosensory cortex) and allows emotional energy to complete its natural arc — the same principle underlying Levine's somatic experiencing. Emotions that are fully felt follow a predictable arc: activation, peak, and natural resolution. Interrupting this arc may create stuck emotional energy.",
     instruction: "Track your emotional experience on the arc as it moves through phases. Start by naming the emotion and rating its intensity. As you sit with it — without analyzing or fixing — notice how it shifts. Mark each shift on the arc: rising, peaking, transforming, settling. The emotional arc visualization shows you that feelings have a natural trajectory and that staying present with them leads to resolution without requiring cognitive intervention.",
+    prePopulated: {
+      phases: [
+        { id: "rising", label: "Rising — the emotion is building, don't analyze it yet", prompt: "What emotion is surfacing? Where do you feel it in your body? Don't name it too quickly — stay with the sensation first.", content: "", intensity: 40 },
+        { id: "peak", label: "Peak — the emotion at full intensity, stay present without fixing", prompt: "Stay with it. What is the emotion at its fullest? What does it want you to know? This is the hardest part — your mind will want to escape into analysis. Stay in the body.", content: "", intensity: 85 },
+        { id: "transform", label: "Transforming — the emotion is naturally shifting, notice what it becomes", prompt: "Notice the shift. What is the emotion becoming? Emotions follow a natural arc — if you stayed present through the peak, the transformation happens on its own.", content: "", intensity: 55 },
+        { id: "settle", label: "Settling — the wave has passed, notice what wisdom remains", prompt: "What remains after the wave? What did you learn? The insight that comes after fully feeling an emotion is different from the insight that comes from analyzing it.", content: "", intensity: 20 },
+      ],
+    },
   },
   {
     id: "wheel-of-life",
@@ -550,9 +996,9 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Co-Active Coaching (CTI)",
     primitive: "wheelChart",
-    whyNow: "You have been focused intensely on one area of life and the rest has faded into the background — the Wheel of Life reveals the shape of your whole life, not just the crisis.",
-    science: "The Wheel of Life leverages the brain's capacity for holistic pattern recognition through spatial visualization. Rating multiple life domains simultaneously activates the dorsolateral PFC's comparative evaluation function, overriding the attentional tunneling that stress creates. Research shows that multi-domain self-assessment increases self-concordance (Sheldon & Elliot, 1999) and reduces the goal neglect associated with narrow focus.",
+    whyThis: "You have been focused intensely on one area of life and the rest has faded into the background — the Wheel of Life reveals the shape of your whole life, not just the crisis. The Wheel of Life leverages the brain's capacity for holistic pattern recognition through spatial visualization. Rating multiple life domains simultaneously may activate the dorsolateral PFC's comparative evaluation function, overriding the attentional tunneling that stress may create. Research shows that multi-domain self-assessment increases self-concordance (Sheldon & Elliot, 1999) and reduces the goal neglect associated with narrow focus.",
     instruction: "Rate each life domain on the wheel by dragging the spoke outward to indicate your satisfaction level. The domains are: Career, Finance, Health, Relationships, Fun & Recreation, Personal Growth, Physical Environment, and Family & Friends. The resulting shape reveals your life balance — a round wheel rolls smoothly, while a jagged one creates a bumpy ride. Identify the one domain where a small improvement would have the biggest ripple effect.",
+    prePopulated: { categories: ["Career", "Finance", "Health", "Relationships", "Fun & Recreation", "Personal Growth", "Physical Environment", "Family & Friends"], values: [3, 4, 5, 6, 2, 7, 5, 6] },
   },
   {
     id: "inner-boardroom",
@@ -560,9 +1006,22 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Co-Active Coaching (CTI)",
     primitive: "dialogueSequence",
-    whyNow: "You are facing a decision and could use multiple perspectives — your inner boardroom brings together the wisest voices within you to deliberate.",
-    science: "The inner boardroom technique leverages the brain's capacity for simulated social cognition. Imagining different advisors activates the mentalizing network (mPFC, TPJ, posterior cingulate) in distinct configurations, effectively running multiple perspective-taking simulations. Research on 'self-distancing' (Kross & Ayduk, 2011) shows that taking a third-person perspective reduces emotional reactivity and improves decision quality.",
+    whyThis: "You are facing a decision and could use multiple perspectives — your inner boardroom brings together the wisest voices within you to deliberate. The inner boardroom technique leverages the brain's capacity for simulated social cognition. Imagining different advisors may activate the mentalizing network (mPFC, TPJ, posterior cingulate) in distinct configurations, effectively running multiple perspective-taking simulations. Research on 'self-distancing' (Kross & Ayduk, 2011) shows that taking a third-person perspective reduces emotional reactivity and improves decision quality.",
     instruction: "Convene your inner boardroom by naming the advisors who sit at your table — these can be aspects of yourself (The Pragmatist, The Dreamer, The Warrior), real people you admire, or archetypal figures. Present your question or dilemma to the boardroom. Then let each advisor speak in turn through the dialogue sequence. Listen for the wisdom each offers and notice where they agree and disagree. End with a synthesis that honors the strongest counsel.",
+    prePopulated: {
+      voices: [
+        { id: "pragmatist", label: "The Pragmatist", color: "#7B9AAD" },
+        { id: "dreamer", label: "The Dreamer", color: "#C4943A" },
+        { id: "warrior", label: "The Warrior", color: "#D25858" },
+        { id: "synthesis", label: "The Synthesis", color: "#6AB282" },
+      ],
+      turns: [
+        { id: "t1", voice: "pragmatist", prompt: "What do the facts say? What's the realistic path?", content: "" },
+        { id: "t2", voice: "dreamer", prompt: "What's the ideal outcome? What would you do if nothing were impossible?", content: "" },
+        { id: "t3", voice: "warrior", prompt: "What needs fighting for? What boundary needs holding?", content: "" },
+        { id: "t4", voice: "synthesis", prompt: "What's the wisest path that honors all three?", content: "" },
+      ],
+    },
   },
   {
     id: "leader-within",
@@ -570,8 +1029,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Co-Active Coaching (CTI)",
     primitive: "guided",
-    whyNow: "You described waiting for permission or direction from outside yourself — this exercise connects you to the leader within who already knows the next step.",
-    science: "The Leader Within concept maps onto the neuroscience of intrinsic motivation and self-determination. Accessing internal leadership activates the ventromedial prefrontal cortex (value-based decision-making) and the default mode network in its constructive role (self-referential processing, future simulation). Research shows that self-determined motivation produces more sustained behavior change than externally directed motivation, mediated by greater dopaminergic engagement.",
+    whyThis: "You described waiting for permission or direction from outside yourself — this exercise connects you to the leader within who already knows the next step. The Leader Within concept maps onto the neuroscience of intrinsic motivation and self-determination. Accessing internal leadership may activate the ventromedial prefrontal cortex (value-based decision-making) and the default mode network in its constructive role (self-referential processing, future simulation). Research shows that self-determined motivation produces more sustained behavior change than externally directed motivation, mediated by greater dopaminergic engagement.",
     instruction: "Follow the guided prompts to connect with your inner leader. First, recall a moment when you led from your deepest values — not a title or role, but a moment of genuine leadership. Describe what that felt like in your body. Then bring that felt sense into your current challenge: what does this leader see? What would this leader do next? Write the specific next step that your inner leader would take. The guide helps you anchor this leadership energy so you can access it outside the exercise.",
   },
   {
@@ -580,8 +1038,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Marsha Linehan / DBT",
     primitive: "guided",
-    whyNow: "Your journal was wrestling against a reality you cannot change — radical acceptance is not approval but the decision to stop fighting what is already true.",
-    science: "Radical acceptance targets the suffering equation: Pain x Resistance = Suffering. Resistance activates the dorsal anterior cingulate cortex's conflict monitoring loop, creating perseverative rumination. Acceptance deactivates this loop by engaging the ventromedial PFC's reality-monitoring function. Neuroimaging of long-term meditators shows that acceptance practice reduces dACC reactivity and strengthens prefrontal-amygdala connectivity, enabling equanimity without numbness.",
+    whyThis: "Your journal was wrestling against a reality you cannot change — radical acceptance is not approval but the decision to stop fighting what is already true. Radical acceptance targets the suffering equation: Pain x Resistance = Suffering. Resistance may activate the dorsal anterior cingulate cortex's conflict monitoring loop, creating perseverative rumination. Acceptance deactivates this loop by engaging the ventromedial PFC's reality-monitoring function. Neuroimaging of long-term meditators shows that acceptance practice may reduce dACC reactivity and strengthen prefrontal-amygdala connectivity, enabling equanimity without numbness.",
     instruction: "Follow the guided prompts through four stages. First, state the reality you are resisting — write it as a plain fact, without editorializing. Second, notice what happens in your body when you say it out loud. Third, use the half-smile and willing hands technique: soften your face and turn your palms upward while repeating the fact. Fourth, complete the statement: 'I cannot change that [fact], AND I can [action].' Radical acceptance makes space for action by ending the war with reality.",
   },
   {
@@ -590,8 +1047,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Marsha Linehan / DBT",
     primitive: "guided",
-    whyNow: "Your journal swung between cold analysis and hot emotion — Wise Mind is the place where knowing and feeling meet, and it is where your best decisions live.",
-    science: "Wise Mind integrates the 'reasonable mind' (dorsolateral prefrontal cortex, logical processing) and 'emotion mind' (limbic system, affective processing) through the ventromedial prefrontal cortex, which bridges cognitive appraisal and emotional valuation. Linehan's concept aligns with Damasio's somatic marker hypothesis: optimal decisions require both logical analysis and emotional signals. Wise Mind is the neural state where both systems inform each other.",
+    whyThis: "Your journal swung between cold analysis and hot emotion — Wise Mind is the place where knowing and feeling meet, and it is where your best decisions live. Wise Mind integrates the 'reasonable mind' (dorsolateral prefrontal cortex, logical processing) and 'emotion mind' (limbic system, affective processing) through the ventromedial prefrontal cortex, which bridges cognitive appraisal and emotional valuation. Linehan's concept aligns with Damasio's somatic marker hypothesis: optimal decisions require both logical analysis and emotional signals. Wise Mind is the neural state where both systems inform each other.",
     instruction: "Follow the guided visualization. First, connect with your reasonable mind — what do the facts and logic say about your situation? Write that perspective. Then connect with your emotion mind — what are your feelings telling you? Write that perspective. Now settle into the overlap: take three slow breaths and ask your Wise Mind, 'What do I know to be true?' Write whatever comes up without censoring. Wise Mind often speaks in simple, quiet certainty rather than loud argument.",
   },
   {
@@ -600,9 +1056,16 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "Robert Kegan & Lisa Lahey",
     primitive: "hierarchicalBranch",
-    whyNow: "You named a change you want to make but keep not making — Kegan and Lahey's framework reveals the hidden commitment that is competing with your stated goal.",
-    science: "The Immunity to Change framework maps onto approach-avoidance conflict theory: a stated commitment activates approach motivation (nucleus accumbens, ventral striatum) while a hidden competing commitment activates avoidance circuits (amygdala, anterior insula). The big assumption underlying the competing commitment functions as a cognitive schema maintained by confirmation bias. Making it explicit engages the prefrontal cortex's hypothesis-testing capacity, breaking the automatic avoidance loop.",
-    instruction: "Build the hierarchy in four levels. At the top, state your improvement goal — the change you genuinely want to make. At the second level, list what you are doing (or not doing) that works against that goal. At the third level, identify the hidden competing commitment — the thing you are also committed to that contradicts your goal. At the deepest level, name the big assumption — the belief that makes your competing commitment feel necessary. The hierarchy reveals why willpower alone has not worked.",
+    whyThis: "You said you want to network more — you know it is the fastest path to a new role — but you prepared for two events this week and cancelled both. That is not laziness. Harvard psychologists Robert Kegan and Lisa Lahey discovered that most stuck goals have a hidden competing commitment working against them. Their Immunity to Change framework, developed over 30 years at the Harvard Graduate School of Education, shows that people unconsciously protect themselves from the very change they want. Something in you believes networking is dangerous — and until you name that belief, willpower alone will keep losing.",
+    instruction: "Build four levels: your goal at the top, then what you do that works against it, then the hidden competing commitment underneath, then the big assumption at the bottom. The hierarchy shows why willpower alone has not worked.",
+    prePopulated: {
+      levels: [
+        { id: "goal", label: "The Goal", prompt: "What do you want to change or achieve?", content: "I want to network consistently — reach out to 3 people per week.", color: "#6AB282" },
+        { id: "against", label: "What I Do Instead", prompt: "What do you actually do that works against this goal?", content: "I prepare for networking events and then cancel. I draft LinkedIn messages and delete them. I tell myself I'll do it tomorrow.", color: "#C4943A" },
+        { id: "commitment", label: "Hidden Competing Commitment", prompt: "What are you unconsciously committed to that competes with the goal?", content: "I'm committed to never being seen as needy or desperate. Reaching out feels like asking for help, which feels like admitting failure.", color: "#D6B65D" },
+        { id: "assumption", label: "The Big Assumption", prompt: "What would have to be true for the competing commitment to make sense?", content: "If I ask for help, people will see me as weak. If they see me as weak, they won't want to hire me. Asking = losing.", color: "#D25858" },
+      ],
+    },
   },
   {
     id: "designed-alliance-solo",
@@ -610,8 +1073,143 @@ export const EXERCISES: ExerciseDefinition[] = [
     modality: "integrative",
     originator: "ORSC (Organization & Relationship Systems Coaching)",
     primitive: "guided",
-    whyNow: "You are about to begin a new chapter — designing an alliance with yourself sets the terms of engagement for how you will show up, especially when it gets hard.",
-    science: "The Designed Alliance is an explicit relational contract. Neuroscience of commitment shows that verbalized intentions activate the prefrontal cortex's prospective memory system (Brodmann area 10), which monitors for future opportunities to fulfill the commitment. Making agreements explicit — rather than implicit — reduces the cognitive load of ongoing negotiation and activates the consistency principle (Cialdini), creating intrinsic motivation to honor the agreement.",
+    whyThis: "You are about to begin a new chapter — designing an alliance with yourself sets the terms of engagement for how you will show up, especially when it gets hard. The Designed Alliance is an explicit relational contract. Neuroscience of commitment shows that verbalized intentions activate the prefrontal cortex's prospective memory system (Brodmann area 10), which monitors for future opportunities to fulfill the commitment. Making agreements explicit — rather than implicit — may reduce the cognitive load of ongoing negotiation and activate the consistency principle (Cialdini), creating intrinsic motivation to honor the agreement.",
     instruction: "Follow the guided prompts to design an alliance with yourself. First, describe the context — what project, transition, or challenge is this alliance for? Then answer: How do I want to show up? What do I need from myself? What will I do when I feel like giving up? What does success look like, and what does 'good enough' look like? Write the final alliance as a compact statement you can return to. The guide ensures the alliance is specific, compassionate, and actionable.",
+  },
+
+  // ═══════════════════════════════════════════
+  // NEW EXERCISE TYPES — Concept Prototypes
+  // ═══════════════════════════════════════════
+
+  {
+    id: "new-type-scenario-simulation",
+    name: "Scenario Simulation — PIP Check-In Practice",
+    modality: "relational",
+    originator: "AI-Powered Coaching Simulation",
+    primitive: "aiSimulation",
+    tags: ["journal-matched"],
+    whyThis: "CONCEPT: AI-Powered Scenario Simulation. Unlike static dialogue exercises where you script both sides in advance, a scenario simulation has the AI play the other person — responding dynamically to what you write. You practice your centered response, the AI-manager pushes back realistically, and you have to hold your center in real time. The gap between scripted practice (Day 11) and live simulation is where real skill lives. This prototype uses dialogueSequence to approximate the concept — a full implementation would feature real-time AI responses, coaching nudges mid-conversation, and a post-simulation debrief scoring your use of NVC, boundary-setting, and saboteur management.",
+    instruction: "This simulates a PIP check-in where your manager pushes back. Turn 1: Your manager opens with a challenge. Turn 2: Respond using your full toolkit (NVC, boundaries, saboteur awareness). Turn 3: They escalate. Turn 4: Your repair and re-entry. In the full version, the AI would respond dynamically to YOUR specific words — testing whether your tools hold under pressure, not just on paper.",
+    prePopulated: {
+      scenario: "PIP check-in with your manager. They want to discuss progress — or lack of it.",
+      aiRole: "Your Manager",
+      userRole: "You (practicing centered responses)",
+      initialMessage: "I'm looking at the numbers and I'm not seeing the improvement we discussed. Help me understand what's been happening.",
+      coachingNudges: true,
+    },
+  },
+  {
+    id: "new-type-spaced-retrieval",
+    name: "Spaced Retrieval Check — Saboteur Quick-Fire",
+    modality: "cognitive",
+    originator: "Spaced Repetition / Memory Science",
+    primitive: "retrievalCheck",
+    tags: ["journal-matched"],
+    whyThis: "CONCEPT: Spaced Retrieval Check. This exercise appears 3 days after you completed the Saboteur Identification exercise. It tests whether you can recall and apply what you learned WITHOUT re-reading the framework. Research shows retrieval practice is 50-70% more effective for long-term retention than re-studying. Most coaching programs teach frameworks but never test whether the user actually internalized them. This micro-exercise (2-3 minutes) closes that gap. In the full version, it would appear as a push notification, adapt difficulty based on accuracy, and feed incorrect answers back into the learning queue for re-teaching.",
+    instruction: "Quick-fire: for each scenario, identify which saboteur is operating. No going back to your notes — trust what you remember. Your accuracy reveals what stuck and what needs reinforcement. In the full version, incorrect answers would trigger a mini re-teach of that specific saboteur.",
+    prePopulated: {
+      cards: [
+        { id: "rc1", prompt: "You stay late rewriting a report that was already good enough, telling yourself 'it needs to be perfect.' Which saboteur is this?", answer: "The Hyper-Achiever — ties your worth to output. The thought 'it's not good enough yet' is the Hyper-Achiever's signature. The Pleaser would worry about criticism; the Hyper-Achiever worries about imperfection.", hint: "This pattern is about proving competence through overwork, not about pleasing others.", category: "Saboteur ID" },
+        { id: "rc2", prompt: "Your manager asks for an extra project. You say 'Sure, no problem!' while internally screaming. Which saboteur?", answer: "The Pleaser — agrees to avoid conflict and maintain approval, even at the cost of your own capacity and honesty. The key signal: the gap between what you say ('no problem') and what you feel ('I can't handle this').", hint: "The saboteur that deletes your needs to keep the peace.", category: "Saboteur ID" },
+        { id: "rc3", prompt: "Name the four steps of NVC in order.", answer: "Observation (what happened, no judgment) → Feeling (the emotion, not a thought) → Need (what you needed, which is yours) → Request (specific, actionable, addresses the need).", hint: "O-F-N-R. The first step strips interpretation. The last step must be specific and doable.", category: "NVC" },
+        { id: "rc4", prompt: "What's the difference between a gentle start-up and criticism (Gottman)?", answer: "Criticism attacks character ('You always...' 'You never...'). A gentle start-up names a specific situation, expresses a feeling, and states a positive need: 'When X happened, I felt Y, and I need Z.'", hint: "One targets the person. The other targets the behavior.", category: "Gottman" },
+      ],
+    },
+  },
+  {
+    id: "new-type-event-capture",
+    name: "[NEW TYPE] Before/During/After — PIP Check-In Capture",
+    modality: "integrative",
+    originator: "Event-Based Learning / Experiential Coaching",
+    primitive: "narrativeTriptych",
+    tags: ["journal-matched"],
+    whyThis: "CONCEPT: Before/During/After Capture. This exercise spans a real-world event — not a simulation, but the actual PIP check-in (or difficult conversation, or boundary moment). You set an intention BEFORE, capture what happened DURING (minimal UI — quick notes or voice), and reflect AFTER. Three touchpoints for one exercise. Currently, all exercises exist in the app disconnected from the moments they matter. This type bridges the gap. In the full version: Phase 1 would include a calendar integration to set up 15 minutes before the event. Phase 2 would be a minimal mobile interface for real-time notes. Phase 3 would generate an AI debrief comparing intention vs. reality.",
+    instruction: "Use this exercise to wrap a real event. BEFORE: Write your intention, your regulation plan, and what tool you'll deploy. DURING: Capture quick notes (what happened, what you said, body signals). AFTER: Compare intention vs. reality. What worked? What ran on autopilot? What will you do differently next time?",
+    prePopulated: {
+      panels: [
+        { id: "before", title: "BEFORE — Set Intention", subtitle: "15 minutes before the event", placeholder: "What's your intention? What tool will you use? What's your regulation plan?", content: "Intention: Share three specific accomplishments, then ask one clarifying question about timeline.\nRegulation plan: 90-second grounding in the bathroom before I walk in. Feet on floor, three breaths.\nTool: NVC frame if I need to push back. Lead with observation, not defense." },
+        { id: "during", title: "DURING — Quick Capture", subtitle: "Right after (or during breaks)", placeholder: "What happened? What did you say? Body signals?", content: "[This would be a minimal mobile interface — voice memo or 3-line quick capture]\nWhat happened: Manager opened with 'I'm not seeing progress.' I felt my chest tighten.\nWhat I said: I led with data — three completions. I asked about timeline.\nBody signal: Jaw clenched during the pushback, but I caught it and took a breath." },
+        { id: "after", title: "AFTER — Debrief", subtitle: "Same evening or next morning", placeholder: "Intention vs. reality. What worked? What ran on autopilot?", content: "" },
+      ],
+    },
+  },
+  {
+    id: "new-type-pattern-tracker",
+    name: "Pattern Tracker — 7-Day Saboteur Log",
+    modality: "cognitive",
+    originator: "Longitudinal Self-Monitoring / Habit Science",
+    primitive: "patternTracker",
+    tags: ["journal-matched"],
+    whyThis: "CONCEPT: Pattern Tracker. A lightweight 30-second daily check-in that tracks one pattern over 7 days. Not a full exercise — a data point that builds into a visible trend. Single exercises produce snapshots. Patterns only emerge over time. After 7 days, the heatmap reveals: which saboteur activates most, in which situations, and at what times. This is more powerful than any single exercise because it catches the pattern the user can't see while inside it. In the full version: push notification at end of each workday, 30-second input (which saboteur, how strong, what triggered it), trend visualization with AI-generated insights at day 7.",
+    instruction: "Each day, rate how activated each saboteur was across key situations. Takes 30 seconds. After 7 days, the heatmap reveals your pattern — which saboteur shows up most, in which contexts, and whether it's getting quieter or louder over time. The trend is the insight, not any single day.",
+    prePopulated: {
+      patterns: [
+        { id: "p1", label: "The Pleaser", color: "#C4943A" },
+        { id: "p2", label: "The Hyper-Achiever", color: "#D6B65D" },
+        { id: "p3", label: "The Hyper-Vigilant", color: "#D25858" },
+        { id: "p4", label: "The Avoider", color: "#7B9AAD" },
+        { id: "p5", label: "The Controller", color: "#8A9199" },
+      ],
+      days: 7,
+      currentDay: 3,
+      entries: [
+        { day: 1, patternId: "p1", intensity: 4 },
+        { day: 1, patternId: "p2", intensity: 3 },
+        { day: 1, patternId: "p3", intensity: 2 },
+        { day: 2, patternId: "p1", intensity: 3 },
+        { day: 2, patternId: "p2", intensity: 4 },
+        { day: 2, patternId: "p4", intensity: 2 },
+      ],
+    },
+  },
+  {
+    id: "new-type-rehearsal",
+    name: "[NEW TYPE] Guided Rehearsal — Say It Out Loud",
+    modality: "relational",
+    originator: "Motor Rehearsal / Performance Psychology",
+    primitive: "dialogueSequence",
+    tags: ["journal-matched"],
+    whyThis: "CONCEPT: Guided Rehearsal with Recording. Writing a centered response and SAYING it out loud are different cognitive processes. Research on motor rehearsal shows that speaking activates different neural circuits than writing — and the gap between what you write and how you sound reveals where the saboteur still has grip. In this exercise, you write your script, then record yourself saying it, then listen back and notice: did you sound like you? Or did you sound like you were performing? In the full version: text input → audio recording → playback → self-assessment → comparison with the written version → coaching AI noting vocal patterns (pace, hedging, uptalk, apologetic tone).",
+    instruction: "Write your centered response in Turn 1. In Turn 2, note what happened when you said it out loud (the full version would record this). In Turn 3, reflect: did it sound like you? What changed between the written version and the spoken version? Where did the saboteur creep into your voice? Turn 4: rewrite the version that sounds like YOUR voice, not a script.",
+    prePopulated: {
+      voices: [
+        { id: "written", label: "Written Version", color: "#7B9AAD" },
+        { id: "spoken", label: "After Saying It Out Loud", color: "#C4943A" },
+        { id: "gap", label: "The Gap", color: "#D25858" },
+        { id: "real", label: "The Real Version (your voice)", color: "#6AB282" },
+      ],
+      turns: [
+        { id: "t1", voice: "written", prompt: "Write what you want to say — your centered, NVC-informed response.", content: "'I've completed three deliverables this week and I want to discuss the timeline for the communication goal. Given my project load, I'd like to adjust by two weeks.'" },
+        { id: "t2", voice: "spoken", prompt: "Say it out loud. What happened? [Full version would record audio]", content: "" },
+        { id: "t3", voice: "gap", prompt: "What changed? Where did the saboteur show up in your VOICE, not your words?", content: "" },
+        { id: "t4", voice: "real", prompt: "Rewrite it in your actual voice — the way you'd say it naturally, not as a script.", content: "" },
+      ],
+    },
+  },
+  {
+    id: "new-type-reflection-mirror",
+    name: "[NEW TYPE] Comparative Reflection — Then vs Now",
+    modality: "integrative",
+    originator: "Growth Awareness / Longitudinal Coaching",
+    primitive: "splitAnnotator",
+    tags: ["journal-matched"],
+    whyThis: "CONCEPT: Comparative Reflection. Progress is often invisible to the person experiencing it. This exercise pulls your own earlier responses and places them next to what you'd write today. The difference between 'then' and 'now' makes growth concrete. Not a rating — a qualitative comparison of your own words. In the full version: the system would automatically pull your Day 4 saboteur identification, Day 10 NVC practice, or Day 1 disruption inventory and display it alongside a fresh response to the same prompt. The AI would highlight the specific shifts in language, framing, and emotional tone.",
+    instruction: "The left column shows what you wrote earlier in the program (or what a typical Day 4 response looks like). The right column is for what you'd write today. Don't look at the left column first — write your current response, THEN compare. The difference is your growth. In the full version, the system would pull your actual earlier responses automatically.",
+    prePopulated: {
+      leftColumnLabel: "THEN — Earlier in the Program",
+      rightColumnLabel: "NOW — What I'd Write Today",
+      rows: [
+        { id: "r1", leftText: "Day 4: 'My top saboteur is the Pleaser. It makes me agree to everything. I can't stop it.'", rightText: "", tags: ["saboteur"] },
+        { id: "r2", leftText: "Day 1: 'I feel like I'm failing at everything. The PIP proves I'm not good enough.'", rightText: "", tags: ["self-assessment"] },
+        { id: "r3", leftText: "Day 10: 'I said Sorry, I'll do better next time. I couldn't say what I actually needed.'", rightText: "", tags: ["communication"] },
+        { id: "r4", leftText: "Day 7: 'I don't have any regulation tools. When I'm flooded, I just shut down.'", rightText: "", tags: ["regulation"] },
+      ],
+      availableTags: [
+        { id: "saboteur", label: "Saboteur Awareness", color: "#D25858" },
+        { id: "self-assessment", label: "Self-Assessment", color: "#C4943A" },
+        { id: "communication", label: "Communication", color: "#7B9AAD" },
+        { id: "regulation", label: "Regulation", color: "#6AB282" },
+      ],
+    },
   },
 ];

@@ -29,7 +29,7 @@ function tagJournalMatched(exercises: typeof RELATIONAL_INTEGRATIVE) {
 function applyScenarios(exercises: typeof RELATIONAL_INTEGRATIVE) {
   return exercises.map((e) => {
     const s = SCENARIOS[e.id];
-    if (s) return { ...e, scenario: s.scenario, prePopulated: s.prePopulated };
+    if (s) return { ...e, scenario: s.scenario, prePopulated: e.prePopulated || s.prePopulated };
     return e;
   });
 }
@@ -78,13 +78,28 @@ const PRIMITIVE_LABELS: Record<string, string> = {
   progressRiver: "Progress River",
   emotionWheel: "Emotion Wheel",
   guided: "Guided (text only)",
+  patternTracker: "Pattern Tracker",
+  retrievalCheck: "Retrieval Check",
+  aiSimulation: "AI Simulation",
 };
 
 export default function ExerciseCatalogPage() {
   const [activeModality, setActiveModality] = useState("all");
   const [activeTag, setActiveTag] = useState("all");
+  const [activePrimitive, setActivePrimitive] = useState("all");
   const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Get all unique primitive types with counts
+  const primitiveTypes = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const ex of ALL_EXERCISES) {
+      counts[ex.primitive] = (counts[ex.primitive] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([id, count]) => ({ id, label: PRIMITIVE_LABELS[id] || id, count }));
+  }, []);
 
   const filtered = useMemo(() => {
     let result = ALL_EXERCISES;
@@ -93,6 +108,9 @@ export default function ExerciseCatalogPage() {
     }
     if (activeTag !== "all") {
       result = result.filter((e) => e.tags?.includes(activeTag as "core-parachute" | "core-jetstream" | "core-basecamp" | "journal-matched"));
+    }
+    if (activePrimitive !== "all") {
+      result = result.filter((e) => e.primitive === activePrimitive);
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -103,7 +121,7 @@ export default function ExerciseCatalogPage() {
       );
     }
     return result;
-  }, [activeModality, activeTag, searchQuery]);
+  }, [activeModality, activeTag, activePrimitive, searchQuery]);
 
   const grouped = useMemo(() => {
     const groups: Record<string, typeof filtered> = {};
@@ -223,6 +241,47 @@ export default function ExerciseCatalogPage() {
           ))}
         </div>
 
+        {/* Exercise Type filters */}
+        <div style={{
+          display: "flex", gap: 6, flexWrap: "wrap", marginBottom: space[4],
+          maxHeight: activePrimitive === "all" ? 36 : undefined,
+          overflow: activePrimitive === "all" ? "hidden" : undefined,
+          position: "relative",
+        }}>
+          <button
+            onClick={() => setActivePrimitive("all")}
+            style={{
+              padding: "5px 12px", fontSize: 11, fontWeight: 600,
+              fontFamily: display, letterSpacing: "0.01em",
+              border: activePrimitive === "all" ? "none" : `1px solid ${colors.borderSubtle}`,
+              borderRadius: radii.full,
+              backgroundColor: activePrimitive === "all" ? colors.coral : "transparent",
+              color: activePrimitive === "all" ? colors.bgDeep : colors.textMuted,
+              cursor: "pointer", transition: "all 0.2s",
+            }}
+          >
+            All Types
+          </button>
+          {primitiveTypes.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setActivePrimitive(activePrimitive === p.id ? "all" : p.id)}
+              style={{
+                padding: "5px 12px", fontSize: 11, fontWeight: 600,
+                fontFamily: display, letterSpacing: "0.01em",
+                border: activePrimitive === p.id ? "none" : `1px solid ${colors.borderSubtle}`,
+                borderRadius: radii.full,
+                backgroundColor: activePrimitive === p.id ? colors.plum : "transparent",
+                color: activePrimitive === p.id ? colors.textPrimary : colors.textMuted,
+                cursor: "pointer", transition: "all 0.2s",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {p.label} ({p.count})
+            </button>
+          ))}
+        </div>
+
         {/* Count */}
         <p style={{
           fontSize: 13, color: colors.textMuted, margin: "0 0 8px 0",
@@ -273,6 +332,7 @@ export default function ExerciseCatalogPage() {
                 originator={ex.originator}
                 primitive={ex.primitive}
                 scenario={ex.scenario}
+                whyThis={ex.whyThis}
                 whyNow={ex.whyNow}
                 science={ex.science}
                 instruction={ex.instruction}

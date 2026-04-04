@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
+import StaggerContainer, { staggerChildVariants } from "@/components/StaggerContainer";
 import ExerciseCard from "@/components/ExerciseCard";
 import FlagButton from "@/components/FlagButton";
 import CrisisBanner from "@/components/CrisisBanner";
@@ -75,7 +76,8 @@ export interface DoTabProps {
     rating: number | null,
     customFraming?: string,
     frameworkId?: string,
-  ) => Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => Promise<any>;
 
   // Summary
   loadingSummary: boolean;
@@ -144,13 +146,7 @@ export default function DoTab({
     }
   }, [stateAnalysis, revealNext]);
 
-  // Exercises reveal 2 seconds after reading appears
-  useEffect(() => {
-    if (isRevealed("reading") && stateAnalysis) {
-      const timer = setTimeout(() => revealNext("exercises"), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [isRevealed, stateAnalysis, revealNext]);
+  // Exercises reveal when reading animation completes (via onAnimationComplete on the reading card)
 
   // Continue CTA reveals when at least one exercise is completed
   useEffect(() => {
@@ -272,6 +268,7 @@ export default function DoTab({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            onAnimationComplete={() => revealNext("exercises")}
             style={{
               backgroundColor: colors.bgSurface,
               borderRadius: 14, padding: space[5],
@@ -494,9 +491,10 @@ export default function DoTab({
             }}>
               {dayNumber <= 3 ? "Today's Exercise" : "From Your Coaching Plan"}
             </p>
+            <StaggerContainer staggerInterval={0.08}>
             {programDay.coaching_exercises.map((ex, i) => (
+              <motion.div key={`cp-${i}`} variants={staggerChildVariants}>
               <ExerciseCard
-                key={`cp-${i}`}
                 name={ex.name}
                 type="coaching_plan"
                 customFraming={ex.custom_framing}
@@ -507,8 +505,8 @@ export default function DoTab({
                 isRequired={true}
                 isCompleted={completedExercises.has(ex.name)}
                 dailySessionId={session?.id}
-                onComplete={(responses, rating) =>
-                  handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
+                onComplete={async (responses, rating) =>
+                  await handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
                 }
                 onPark={() => {
                   // Coaching exercises appear in the dashboard "Parked" tab automatically
@@ -516,7 +514,9 @@ export default function DoTab({
                   // No database write needed — the visual park state is handled by ExerciseCard.
                 }}
               />
+              </motion.div>
             ))}
+            </StaggerContainer>
           </div>
         )}
 
@@ -529,9 +529,10 @@ export default function DoTab({
             }}>
               {dayNumber <= 3 ? "Based on What You Wrote" : "Matched to Your Journal"}
             </p>
+            <StaggerContainer staggerInterval={0.08} delayChildren={0.2}>
             {overflowExercises.map((ex, i) => (
+              <motion.div key={`of-${i}`} variants={staggerChildVariants}>
               <ExerciseCard
-                key={`of-${i}`}
                 name={ex.framework_name}
                 type="overflow"
                 modality={ex.modality}
@@ -544,8 +545,8 @@ export default function DoTab({
                 estimatedMinutes={ex.estimated_minutes}
                 isCompleted={completedExercises.has(ex.framework_name)}
                 dailySessionId={session?.id}
-                onComplete={(responses, rating) =>
-                  handleExerciseComplete(
+                onComplete={async (responses, rating) =>
+                  await handleExerciseComplete(
                     ex.framework_name, "overflow", ex.modality,
                     responses, rating, ex.custom_framing, ex.framework_id
                   )
@@ -556,7 +557,9 @@ export default function DoTab({
                   // The user can revisit coaching-plan exercises from the dashboard Parked tab.
                 }}
               />
+              </motion.div>
             ))}
+            </StaggerContainer>
           </div>
         )}
 
@@ -622,8 +625,8 @@ export default function DoTab({
                 instructions="Write what comes up as you sit with this framework and the reflection question above."
                 isCompleted={completedExercises.has(`Reflect: ${frameworkAnalysis.framework_name}`)}
                 dailySessionId={session?.id}
-                onComplete={(responses, rating) =>
-                  handleExerciseComplete(
+                onComplete={async (responses, rating) =>
+                  await handleExerciseComplete(
                     `Reflect: ${frameworkAnalysis.framework_name}`,
                     "framework_analysis", undefined,
                     responses, rating, undefined, frameworkAnalysis.framework_id

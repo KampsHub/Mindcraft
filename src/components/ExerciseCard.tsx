@@ -7,6 +7,7 @@ import MultiPartExerciseCard, { type ExercisePart } from "@/components/MultiPart
 import SpectrumSelector from "@/components/SpectrumSelector";
 import BodyMap, { type BodyMarker } from "@/components/BodyMap";
 import EmotionChips from "@/components/EmotionChips";
+import AnimatedCheckmark from "@/components/AnimatedCheckmark";
 import FlagButton from "@/components/FlagButton";
 import VoiceResponseArea from "@/components/VoiceResponseArea";
 import GuidedExerciseFlow from "@/components/GuidedExerciseFlow";
@@ -35,7 +36,8 @@ interface ExerciseCardProps {
   whySelected?: string;
   whyThisWorks?: string;
   isRequired?: boolean;
-  onComplete: (responses: Record<string, string>, rating: number | null) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onComplete: (responses: Record<string, string>, rating: number | null) => any;
   isCompleted?: boolean;
   existingResponses?: Record<string, string>;
   existingRating?: number | null;
@@ -93,6 +95,12 @@ export default function ExerciseCard({
   const [parked, setParked] = useState(false);
   const [showParkInfo, setShowParkInfo] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
+  // Insight state
+  const [insight, setInsight] = useState("");
+  const [insightLoading, setInsightLoading] = useState(false);
+  const [insightSaved, setInsightSaved] = useState(false);
+  const [insightEditing, setInsightEditing] = useState(false);
+  const [completionId, setCompletionId] = useState<string | null>(null);
   // Interactive input state
   const [spectrumValue, setSpectrumValue] = useState<number>(() => {
     try { return existingResponses?.spectrum ? JSON.parse(existingResponses.spectrum).value : 50; }
@@ -133,7 +141,7 @@ export default function ExerciseCard({
 
   const canSubmit = response.trim() !== "" || hasInteractiveData();
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!canSubmit) return;
     setSubmitted(true);
 
@@ -153,9 +161,37 @@ export default function ExerciseCard({
       responses.emotions = JSON.stringify(selectedEmotions);
     }
 
-    onComplete(responses, rating);
+    const result = onComplete(responses, rating);
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 2000);
+
+    // Generate insight
+    const cId = result instanceof Promise ? await result : undefined;
+    if (cId) {
+      setCompletionId(cId);
+      setInsightLoading(true);
+      try {
+        const res = await fetch("/api/exercises/process-insight", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            exerciseCompletionId: cId,
+            frameworkName: name,
+            responses,
+            customFraming,
+          }),
+        });
+        const data = await res.json();
+        if (data.insight) {
+          setInsight(data.insight);
+          setInsightEditing(true);
+        }
+      } catch {
+        // Insight generation is non-blocking — exercise still saved
+      } finally {
+        setInsightLoading(false);
+      }
+    }
   }
 
   return (
@@ -215,7 +251,9 @@ export default function ExerciseCard({
               }}
             >
               {submitted && (
-                <span style={{ color: colors.success, marginRight: 8, fontSize: 16 }}>&#10003;</span>
+                <span style={{ marginRight: 8 }}>
+                  <AnimatedCheckmark size={16} animate={!isCompleted} />
+                </span>
               )}
               {name}
             </p>
@@ -597,6 +635,96 @@ export default function ExerciseCard({
             />
           </div>
         </div>
+      )}
+
+      {/* ── Process Insight ── */}
+      {submitted && (insightLoading || insight) && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          style={{ padding: `0 ${space[5]}px ${space[4]}px ${space[5]}px` }}
+        >
+          <div style={{
+            backgroundColor: colors.bgRecessed,
+            borderRadius: radii.sm,
+            borderLeft: `3px solid ${colors.success}`,
+            padding: `${space[3]}px ${space[4]}px`,
+          }}>
+            <p style={{
+              fontFamily: display, fontSize: 10, fontWeight: 700,
+              color: colors.success, letterSpacing: "0.08em",
+              margin: "0 0 6px 0", textTransform: "uppercase" as const,
+            }}>
+              {insightLoading ? "Generating insight..." : "Your insight"}
+            </p>
+
+            {insightLoading ? (
+              <div style={{ display: "flex", alignItems: "center", gap: space[2] }}>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  style={{ width: 14, height: 14, border: `2px solid ${colors.success}`, borderTopColor: "transparent", borderRadius: "50%" }}
+                />
+                <span style={{ fontFamily: body, fontSize: 13, color: colors.textMuted }}>Processing your responses...</span>
+              </div>
+            ) : insightEditing ? (
+              <div>
+                <textarea
+                  value={insight}
+                  onChange={(e) => setInsight(e.target.value)}
+                  style={{
+                    width: "100%", minHeight: 60, padding: space[3],
+                    fontSize: 14, fontFamily: body, lineHeight: 1.6,
+                    backgroundColor: colors.bgInput, color: colors.textPrimary,
+                    border: `1px solid ${colors.borderDefault}`, borderRadius: radii.sm,
+                    outline: "none", resize: "vertical", boxSizing: "border-box" as const,
+                  }}
+                />
+                <div style={{ display: "flex", justifyContent: "flex-end", gap: space[2], marginTop: space[2] }}>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={async () => {
+                      if (!completionId) return;
+                      await fetch("/api/exercises/process-insight", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ exerciseCompletionId: completionId, insight }),
+                      });
+                      setInsightEditing(false);
+                      setInsightSaved(true);
+                      setTimeout(() => setInsightSaved(false), 2000);
+                    }}
+                    style={{
+                      padding: `${space[2]}px ${space[4]}px`,
+                      fontSize: 13, fontWeight: 600, fontFamily: display,
+                      backgroundColor: colors.success, color: colors.bgDeep,
+                      border: "none", borderRadius: radii.full, cursor: "pointer",
+                    }}
+                  >
+                    {insightSaved ? "Saved ✓" : "Save insight"}
+                  </motion.button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <p style={{ fontFamily: body, fontSize: 14, color: colors.textPrimary, margin: 0, lineHeight: 1.6, flex: 1 }}>
+                  {insight}
+                </p>
+                <button
+                  onClick={() => setInsightEditing(true)}
+                  style={{
+                    background: "none", border: "none", cursor: "pointer",
+                    fontSize: 12, color: colors.textMuted, padding: 0, textDecoration: "underline",
+                    fontFamily: body, marginLeft: space[3], flexShrink: 0,
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+          </div>
+        </motion.div>
       )}
     </motion.div>
 

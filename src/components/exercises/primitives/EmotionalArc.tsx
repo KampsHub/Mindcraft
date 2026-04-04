@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { animate } from "motion";
 import { colors, fonts, space, radii, text } from "@/lib/theme";
 
 interface ArcPhase {
@@ -142,7 +143,15 @@ export default function EmotionalArc({ phases, onChange, onIntensityChange, emot
 
       {/* Active phase card */}
       {activePhase && (
-        <div style={{ background: colors.bgSurface, borderRadius: radii.md, borderLeft: `4px solid ${colors.coral}`, padding: space[4] }}>
+        <div
+          ref={(el) => {
+            if (el) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any)(el, { opacity: [0, 1], y: [8, 0] }, { duration: 0.3, easing: [0.22, 1, 0.36, 1] });
+            }
+          }}
+          key={activePhase.id}
+          style={{ background: colors.bgSurface, borderRadius: radii.md, borderLeft: `4px solid ${colors.coral}`, padding: space[4] }}>
           <div style={{ ...text.caption, color: colors.coral, textTransform: "uppercase", marginBottom: space[1] }}>
             {activePhase.label}
           </div>

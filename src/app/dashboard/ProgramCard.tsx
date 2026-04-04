@@ -159,7 +159,7 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
               <p style={{ ...text.secondary, color: colors.warning, margin: "0 0 4px 0", fontWeight: 600 }}>
                 Goals ready for setup
               </p>
-              <p style={{ ...text.secondary, color: colors.textMuted, margin: "0 0 8px 0" }}>
+              <p style={{ ...text.secondary, color: colors.textSecondary, margin: "0 0 8px 0" }}>
                 Your coaching goals will shape your exercises and thought prompts.
               </p>
               <motion.button
@@ -193,7 +193,7 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
             <button
               onClick={() => isCompact && setGoalsOpen(!goalsOpen)}
               style={{
-                ...text.caption, color: colors.textMuted,
+                ...text.caption, color: colors.textSecondary,
                 margin: "0 0 10px 0",
                 background: "none", border: "none", cursor: isCompact ? "pointer" : "default",
                 padding: 0, display: "flex", alignItems: "center", gap: 6,

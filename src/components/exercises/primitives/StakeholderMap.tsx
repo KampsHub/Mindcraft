@@ -87,8 +87,8 @@ export default function StakeholderMap({ nodes, selfLabel = "You", onChange, onA
           <circle key={i} cx={50} cy={50} r={r} fill="none" stroke={colors.borderSubtle} strokeWidth={0.3} strokeDasharray="1.5 1" />
         ))}
         {/* Ring labels */}
-        {[["outer", 35.5], ["middle", 23.5], ["inner", 12.5]].map(([label, off]) => (
-          <text key={label as string} x={50} y={50 - (off as number)} textAnchor="middle" fill={colors.textMuted} fontSize={2} opacity={0.5}>{label as string}</text>
+        {[["low influence", 35.5], ["moderate influence", 23.5], ["high influence", 12.5]].map(([label, off]) => (
+          <text key={label as string} x={50} y={50 - (off as number)} textAnchor="middle" fill="#FFFFFF" fontSize={2} opacity={0.6} fontFamily={fonts.display}>{label as string}</text>
         ))}
         {/* Connection lines */}
         {nodes.map((n) => <line key={`l-${n.id}`} x1={50} y1={50} x2={n.x} y2={n.y} stroke={colors.borderSubtle} strokeWidth={0.3} />)}

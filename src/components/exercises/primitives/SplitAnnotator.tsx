@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useRef, useEffect } from "react";
+import { animate } from "motion";
 import { colors, fonts, space, radii, text } from "@/lib/theme";
 
 /* ── Types ── */
@@ -127,7 +128,24 @@ export default function SplitAnnotator({
       {/* Rows */}
       <div style={{ display: "flex", flexDirection: "column", gap: space[4] }}>
         {rows.map((row) => (
-          <div key={row.id}>
+          <div key={row.id} style={{ position: "relative" }}>
+            {/* Remove button */}
+            {onChange && rows.length > 1 && (
+              <button
+                onClick={() => onChange(rows.filter((r) => r.id !== row.id))}
+                style={{
+                  position: "absolute", top: -4, right: -4, zIndex: 1,
+                  background: colors.bgElevated, border: `1px solid ${colors.borderSubtle}`,
+                  borderRadius: radii.full, width: 20, height: 20,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: colors.textMuted, fontSize: 12, cursor: "pointer",
+                  opacity: 0.5, lineHeight: 1,
+                }}
+                title="Remove this row"
+              >
+                ×
+              </button>
+            )}
             {/* Two-column text */}
             <div style={{ display: "flex", gap: space[3] }}>
               <div style={{
@@ -219,6 +237,13 @@ export default function SplitAnnotator({
       {/* Add row button */}
       {onAddRow && (
         <button
+          ref={(el) => {
+            if (el) {
+              // Subtle pulse on mount to signal interactivity (3 cycles then stop)
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any)(el, { borderColor: [colors.borderDefault, colors.coral, colors.borderDefault] }, { duration: 1.5, repeat: 2, easing: "ease-in-out" });
+            }
+          }}
           onClick={onAddRow}
           style={{
             ...text.secondary,

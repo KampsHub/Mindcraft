@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
+import StaggerContainer, { staggerChildVariants } from "@/components/StaggerContainer";
 import FlagButton from "@/components/FlagButton";
 import CrisisBanner from "@/components/CrisisBanner";
+import { fireDayCompleteConfetti } from "@/lib/confetti";
 import { colors, fonts, space, text as textPreset, radii } from "@/lib/theme";
 import type { createClient } from "@/lib/supabase";
 import type {
@@ -92,7 +94,7 @@ export default function DoneTab({
           </p>
         </div>
       ) : summaryResult ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: space[6] }}>
+        <StaggerContainer staggerInterval={0.15} style={{ display: "flex", flexDirection: "column", gap: space[6] }}>
           {/* Crisis Banner -- shown above summary when crisis detected */}
           {crisisDetectedStep5 && !crisisDismissedStep5 && enrollment && (
             <CrisisBanner
@@ -104,9 +106,7 @@ export default function DoneTab({
           )}
           {/* Summary */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+            variants={staggerChildVariants}
             style={{
               backgroundColor: colors.bgSurface,
               borderRadius: 14,
@@ -138,9 +138,7 @@ export default function DoneTab({
           {/* Exercise insights */}
           {summaryResult.exercise_insights?.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 1 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              variants={staggerChildVariants}
               style={{
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
@@ -165,9 +163,7 @@ export default function DoneTab({
           {/* Goal progress */}
           {summaryResult.goal_progress?.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 2 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              variants={staggerChildVariants}
               style={{
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
@@ -197,9 +193,7 @@ export default function DoneTab({
           {/* Tomorrow preview */}
           {summaryResult.tomorrow_preview && (
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 3 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+            variants={staggerChildVariants}
             style={{
               backgroundColor: colors.bgSurface,
               borderRadius: 14,
@@ -230,9 +224,7 @@ export default function DoneTab({
           {/* Questions to sit with */}
           {summaryResult.questions_to_sit_with && summaryResult.questions_to_sit_with.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 4 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              variants={staggerChildVariants}
               style={{
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
@@ -246,7 +238,7 @@ export default function DoneTab({
               }}>
                 Questions to sit with
               </p>
-              <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.4)", margin: "0 0 14px 0" }}>
+              <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 14px 0" }}>
                 Take a moment with these before moving on.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
@@ -265,9 +257,7 @@ export default function DoneTab({
           {/* Challenges — pick one or more */}
           {((summaryResult.challenges && summaryResult.challenges.length > 0) || (summaryResult.mini_actions && summaryResult.mini_actions.length > 0)) && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 5 * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              variants={staggerChildVariants}
               style={{
                 backgroundColor: colors.bgSurface,
                 borderRadius: 14,
@@ -281,7 +271,7 @@ export default function DoneTab({
               }}>
                 Until tomorrow
               </p>
-              <p style={{ ...textPreset.secondary, color: "rgba(255,255,255,0.5)", margin: `0 0 ${space[4]}px 0` }}>
+              <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: `0 0 ${space[4]}px 0` }}>
                 Pick one (or more) to carry into the rest of your day.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -379,15 +369,14 @@ export default function DoneTab({
           )}
 
           {/* Complete day */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 7 * 0.15, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <motion.div variants={staggerChildVariants}>
             <motion.button
               whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}
               whileTap={{ scale: 0.97 }}
-              onClick={completeDay}
+              onClick={async () => {
+                fireDayCompleteConfetti();
+                await completeDay();
+              }}
               style={{
                 width: "100%",
                 padding: "16px 24px",
@@ -405,7 +394,7 @@ export default function DoneTab({
               Complete Day {dayNumber}
             </motion.button>
           </motion.div>
-        </div>
+        </StaggerContainer>
       ) : null}
     </FadeIn>
   );

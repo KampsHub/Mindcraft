@@ -23,6 +23,9 @@ import SaboteurCard from "@/components/exercises/primitives/SaboteurCard";
 import SplitAnnotator from "@/components/exercises/primitives/SplitAnnotator";
 import DialogueSequence from "@/components/exercises/primitives/DialogueSequence";
 import HierarchicalBranch from "@/components/exercises/primitives/HierarchicalBranch";
+import PatternTracker from "@/components/exercises/primitives/PatternTracker";
+import RetrievalCheck from "@/components/exercises/primitives/RetrievalCheck";
+import AISimulation from "@/components/exercises/primitives/AISimulation";
 import EmotionalArc from "@/components/exercises/primitives/EmotionalArc";
 import ZonedSpectrum from "@/components/exercises/primitives/ZonedSpectrum";
 import ForceFieldDiagram from "@/components/exercises/primitives/ForceFieldDiagram";
@@ -55,39 +58,54 @@ function GuidedExercise() {
 
 // ── Wrapper for each primitive with self-contained state ──
 
-function WheelDemo() {
-  const [v, setV] = useState([5, 4, 6, 3, 7, 5, 4]);
-  return <WheelChart categories={["Area 1","Area 2","Area 3","Area 4","Area 5","Area 6","Area 7"]} values={v} onChange={(i, val) => { const n = [...v]; n[i] = val; setV(n); }} />;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function WheelDemo(props?: Record<string, any>) {
+  const categories = props?.categories || ["Area 1","Area 2","Area 3","Area 4","Area 5","Area 6","Area 7"];
+  const [v, setV] = useState(props?.values || [5, 4, 6, 3, 7, 5, 4]);
+  return <WheelChart categories={categories} values={v} onChange={(i, val) => { const n = [...v]; n[i] = val; setV(n); }} />;
 }
 
-function TimelineDemo() {
-  const [events, setEvents] = useState<{ id: string; label: string; date?: string; emotion?: string; detail?: string }[]>([
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function TimelineDemo(props?: Record<string, any>) {
+  const defaultEvents = [
     { id: "1", label: "Event 1", date: "3 months ago", emotion: "anxiety" },
     { id: "2", label: "Event 2", date: "1 month ago", emotion: "sadness" },
-  ]);
+  ];
+  const [events, setEvents] = useState<{ id: string; label: string; date?: string; emotion?: string; detail?: string }[]>(props?.events || defaultEvents);
   return <TimelineRiver events={events} onAddEvent={(e) => setEvents((p) => [...p, e])} onEditEvent={(id, u) => setEvents((p) => p.map((e) => e.id === id ? { ...e, ...u } : e))} onRemoveEvent={(id) => setEvents((p) => p.filter((e) => e.id !== id))} />;
 }
 
-function CardSortDemo() {
-  return <CardSort cards={[{ id: "1", label: "Item A" }, { id: "2", label: "Item B" }, { id: "3", label: "Item C" }, { id: "4", label: "Item D" }]} buckets={[{ id: "yes", label: "Yes", color: colors.coral }, { id: "no", label: "No", color: colors.plum }, { id: "maybe", label: "Maybe", color: colors.textMuted }]} allowAdd onSort={() => {}} />;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function CardSortDemo(props?: Record<string, any>) {
+  const cards = props?.cards || [{ id: "1", label: "Item A" }, { id: "2", label: "Item B" }, { id: "3", label: "Item C" }, { id: "4", label: "Item D" }];
+  const buckets = props?.buckets || [{ id: "yes", label: "Yes", color: colors.coral }, { id: "no", label: "No", color: colors.plum }, { id: "maybe", label: "Maybe", color: colors.textMuted }];
+  return <CardSort cards={cards} buckets={buckets} allowAdd={props?.allowAdd !== false} onSort={() => {}} />;
 }
 
-function SpectrumDemo() {
-  const [v, setV] = useState(50);
-  return <SpectrumSlider labels={["Low", "Medium-Low", "Medium", "Medium-High", "High"]} value={v} onChange={setV} />;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function SpectrumDemo(props?: Record<string, any>) {
+  const [v, setV] = useState(props?.value || 50);
+  const labels = props?.labels || ["Low", "Medium-Low", "Medium", "Medium-High", "High"];
+  return <SpectrumSlider labels={labels} value={v} onChange={setV} />;
 }
 
-function BubbleSortDemo() {
-  return <BubbleSort items={["Option A", "Option B", "Option C", "Option D"]} question="Which matters more?" onComplete={() => {}} />;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function BubbleSortDemo(props?: Record<string, any>) {
+  const items = props?.items || ["Option A", "Option B", "Option C", "Option D"];
+  const question = props?.question || "Which matters more?";
+  return <BubbleSort items={items} question={question} onComplete={() => {}} />;
 }
 
-function DotGridDemo() {
-  const [items, setItems] = useState([
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function DotGridDemo(props?: Record<string, any>) {
+  const defaultItems = [
     { id: "1", label: "Factor A", x: 30, y: 40 },
     { id: "2", label: "Factor B", x: 70, y: 60 },
     { id: "3", label: "Factor C", x: 50, y: 25 },
-  ]);
-  return <DotGrid items={items} axisLabels={{ top: "High", bottom: "Low", left: "Internal", right: "External" }} onChange={setItems} />;
+  ];
+  const axisLabels = props?.axisLabels || { top: "High", bottom: "Low", left: "Internal", right: "External" };
+  const [items, setItems] = useState(props?.items || defaultItems);
+  return <DotGrid items={items} axisLabels={axisLabels} onChange={setItems} />;
 }
 
 function WordCloudDemo() {
@@ -122,15 +140,20 @@ function ProgressRiverDemo() {
   return <ProgressRiver days={Array.from({ length: 30 }, (_, i) => ({ day: i + 1, completed: i < 8, rating: i < 8 ? [6, 5, 7, 4, 6, 5, 8, 6][i] : undefined, exerciseName: `Day ${i + 1}` }))} currentDay={8} programName="Program" weekNames={["Week 1", "Week 2", "Week 3", "Week 4"]} />;
 }
 
-function VennDemo() {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function VennDemo(props?: Record<string, any>) {
+  const defaultItems = [{ id: "1", label: "Trait A" }, { id: "2", label: "Trait B" }, { id: "3", label: "Trait C" }];
   const [placements, setPlacements] = useState<Record<string, "left" | "overlap" | "right" | "unplaced">>({});
-  const [items, setItems] = useState([{ id: "1", label: "Trait A" }, { id: "2", label: "Trait B" }, { id: "3", label: "Trait C" }]);
-  return <VennOverlap leftLabel="Before" rightLabel="After" items={items} placements={placements} onChange={(id, z) => setPlacements((p) => ({ ...p, [id]: z }))} onAddItem={(item) => setItems((p) => [...p, item])} />;
+  const [items, setItems] = useState<{id: string; label: string}[]>(props?.items || defaultItems);
+  return <VennOverlap leftLabel={props?.leftLabel || "Before"} rightLabel={props?.rightLabel || "After"} items={items} placements={placements} onChange={(id, z) => setPlacements((p) => ({ ...p, [id]: z }))} onAddItem={(item) => setItems((p: {id: string; label: string}[]) => [...p, item])} />;
 }
 
-function HeatmapDemo() {
-  const [cells, setCells] = useState([{ rowId: "r1", colId: "c1", value: 3 }, { rowId: "r2", colId: "c2", value: 4 }]);
-  return <HeatmapTracker rows={[{ id: "r1", label: "Pattern A" }, { id: "r2", label: "Pattern B" }]} columns={[{ id: "c1", label: "Mon" }, { id: "c2", label: "Tue" }, { id: "c3", label: "Wed" }, { id: "c4", label: "Thu" }, { id: "c5", label: "Fri" }]} cells={cells} onChange={(r, c, v) => setCells((p) => { const ex = p.find((x) => x.rowId === r && x.colId === c); if (ex) return p.map((x) => x.rowId === r && x.colId === c ? { ...x, value: v } : x); return [...p, { rowId: r, colId: c, value: v }]; })} />;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function HeatmapDemo(props?: Record<string, any>) {
+  const defaultRows = [{ id: "r1", label: "Pattern A" }, { id: "r2", label: "Pattern B" }];
+  const defaultCols = [{ id: "c1", label: "Mon" }, { id: "c2", label: "Tue" }, { id: "c3", label: "Wed" }, { id: "c4", label: "Thu" }, { id: "c5", label: "Fri" }];
+  const [cells, setCells] = useState(props?.cells || []);
+  return <HeatmapTracker rows={props?.rows || defaultRows} columns={props?.columns || defaultCols} cells={cells} onChange={(r, c, v) => setCells((p: {rowId: string; colId: string; value: number}[]) => { const ex = p.find((x) => x.rowId === r && x.colId === c); if (ex) return p.map((x) => x.rowId === r && x.colId === c ? { ...x, value: v } : x); return [...p, { rowId: r, colId: c, value: v }]; })} />;
 }
 
 function StakeholderDemo() {
@@ -151,8 +174,9 @@ function MultiSpectrumDemo() {
   return <MultiSpectrumCompare dimensions={[{ id: "d1", label: "Dimension 1", leftLabel: "Low", rightLabel: "High" }, { id: "d2", label: "Dimension 2", leftLabel: "Indirect", rightLabel: "Direct" }]} markers={markers} legend={[{ id: "self", label: "You", color: colors.coral }, { id: "other", label: "Other", color: colors.plum }]} onChange={(mid, did, v) => setMarkers((p) => p.map((m) => m.markerId === mid && m.dimensionId === did ? { ...m, value: v } : m))} />;
 }
 
-function BodyMapDemo() {
-  const [markers, setMarkers] = useState<{ id: string; zone: string; sensation: string; intensity: number; label?: string; note?: string }[]>([]);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function BodyMapDemo(props?: Record<string, any>) {
+  const [markers, setMarkers] = useState<{ id: string; zone: string; sensation: string; intensity: number; label?: string; note?: string }[]>(props?.markers || []);
   return <BodyMap markers={markers} onChange={setMarkers} />;
 }
 
@@ -167,26 +191,35 @@ function SaboteurCardDemo() {
   return <SaboteurCard saboteur={data} onChange={setData} expanded />;
 }
 
-function SplitAnnotatorDemo() {
-  const [rows, setRows] = useState([{ id: "1", leftText: "What actually happened", rightText: "What my mind added", tags: [] as string[] }]);
-  return <SplitAnnotator leftColumnLabel="Facts" rightColumnLabel="Interpretation" rows={rows} availableTags={[{ id: "distortion", label: "Distortion", color: colors.coral }, { id: "assumption", label: "Assumption", color: colors.plum }]} onChange={setRows} onAddRow={() => setRows((p) => [...p, { id: String(Date.now()), leftText: "", rightText: "", tags: [] }])} />;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function SplitAnnotatorDemo(props?: Record<string, any>) {
+  const defaultRows = [{ id: "1", leftText: "What actually happened", rightText: "What my mind added", tags: [] as string[] }];
+  const defaultTags = [{ id: "distortion", label: "Distortion", color: colors.coral }, { id: "assumption", label: "Assumption", color: colors.plum }];
+  const [rows, setRows] = useState<{id: string; leftText: string; rightText: string; tags: string[]}[]>(props?.rows || defaultRows);
+  return <SplitAnnotator leftColumnLabel={props?.leftColumnLabel || "Facts"} rightColumnLabel={props?.rightColumnLabel || "Interpretation"} rows={rows} availableTags={props?.availableTags || defaultTags} onChange={setRows} onAddRow={() => setRows((p: {id: string; leftText: string; rightText: string; tags: string[]}[]) => [...p, { id: String(Date.now()), leftText: "", rightText: "", tags: [] }])} />;
 }
 
-function DialogueDemo() {
-  const [turns, setTurns] = useState<{ id: string; voice: string; prompt?: string; content: string }[]>([
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function DialogueDemo(props?: Record<string, any>) {
+  const defaultVoices = [{ id: "a", label: "Voice A", color: colors.plum }, { id: "b", label: "Voice B", color: colors.coral }];
+  const defaultTurns = [
     { id: "1", voice: "a", prompt: "Speak from the first perspective.", content: "" },
     { id: "2", voice: "b", prompt: "Respond from the second perspective.", content: "" },
-  ]);
-  return <DialogueSequence voices={[{ id: "a", label: "Voice A", color: colors.plum }, { id: "b", label: "Voice B", color: colors.coral }]} turns={turns} onChange={setTurns} onAddTurn={(v) => setTurns((p) => [...p, { id: String(Date.now()), voice: v, content: "" }])} />;
+  ];
+  const voices = props?.voices || defaultVoices;
+  const [turns, setTurns] = useState<{ id: string; voice: string; prompt?: string; content: string }[]>(props?.turns || defaultTurns);
+  return <DialogueSequence voices={voices} turns={turns} onChange={setTurns} onAddTurn={(v) => setTurns((p) => [...p, { id: String(Date.now()), voice: v, content: "" }])} />;
 }
 
-function HierarchyDemo() {
-  const [levels, setLevels] = useState([
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function HierarchyDemo(props?: Record<string, any>) {
+  const defaultLevels = [
     { id: "1", label: "Surface", prompt: "What do you see?", content: "", color: colors.coral },
     { id: "2", label: "Beneath", prompt: "What's underneath that?", content: "", color: colors.coralPressed },
     { id: "3", label: "Root", prompt: "What's at the very bottom?", content: "", color: colors.plum },
-  ]);
-  return <HierarchicalBranch levels={levels} onChange={(id, c) => setLevels((p) => p.map((l) => l.id === id ? { ...l, content: c } : l))} />;
+  ];
+  const [levels, setLevels] = useState(props?.levels || defaultLevels);
+  return <HierarchicalBranch levels={levels} onChange={(id, c) => setLevels((p: {id: string; label: string; prompt: string; content: string; color: string}[]) => p.map((l) => l.id === id ? { ...l, content: c } : l))} />;
 }
 
 function EmotionalArcDemo() {
@@ -204,10 +237,45 @@ function ZonedSpectrumDemo() {
   return <ZonedSpectrum zones={[{ id: "low", label: "Low", fromPercent: 0, toPercent: 33, color: colors.plum, guidance: "You're in the lower zone. This is a place of stillness or disconnection." }, { id: "mid", label: "Balanced", fromPercent: 33, toPercent: 66, color: colors.success, guidance: "You're in the balanced zone. Clear thinking and grounded presence." }, { id: "high", label: "Activated", fromPercent: 66, toPercent: 100, color: colors.error, guidance: "You're activated. Use regulation tools to find your way back." }]} value={v} onChange={setV} leftLabel="Low" rightLabel="High" />;
 }
 
-function ForceFieldDemo() {
-  const [driving, setDriving] = useState([{ id: "d1", label: "Motivation", strength: 3 }]);
-  const [restraining, setRestraining] = useState([{ id: "r1", label: "Fear", strength: 4 }]);
-  return <ForceFieldDiagram centerLabel="Change" drivingForces={driving} restrainingForces={restraining} onAddDriving={(f) => setDriving((p) => [...p, f])} onAddRestraining={(f) => setRestraining((p) => [...p, f])} onStrengthChange={(id, side, s) => { if (side === "driving") setDriving((p) => p.map((f) => f.id === id ? { ...f, strength: s } : f)); else setRestraining((p) => p.map((f) => f.id === id ? { ...f, strength: s } : f)); }} onRemove={(id, side) => { if (side === "driving") setDriving((p) => p.filter((f) => f.id !== id)); else setRestraining((p) => p.filter((f) => f.id !== id)); }} />;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function ForceFieldDemo(props?: Record<string, any>) {
+  const defaultDriving = [{ id: "d1", label: "Motivation", strength: 3 }];
+  const defaultRestraining = [{ id: "r1", label: "Fear", strength: 4 }];
+  const [driving, setDriving] = useState(props?.drivingForces || defaultDriving);
+  const [restraining, setRestraining] = useState(props?.restrainingForces || defaultRestraining);
+  return <ForceFieldDiagram centerLabel={props?.centerLabel || "Change"} drivingForces={driving} restrainingForces={restraining} onAddDriving={(f) => setDriving((p: {id: string; label: string; strength: number}[]) => [...p, f])} onAddRestraining={(f) => setRestraining((p: {id: string; label: string; strength: number}[]) => [...p, f])} onStrengthChange={(id, side, s) => { if (side === "driving") setDriving((p: {id: string; label: string; strength: number}[]) => p.map((f) => f.id === id ? { ...f, strength: s } : f)); else setRestraining((p: {id: string; label: string; strength: number}[]) => p.map((f) => f.id === id ? { ...f, strength: s } : f)); }} onRemove={(id, side) => { if (side === "driving") setDriving((p: {id: string; label: string; strength: number}[]) => p.filter((f) => f.id !== id)); else setRestraining((p: {id: string; label: string; strength: number}[]) => p.filter((f) => f.id !== id)); }} />;
+}
+
+// ── New primitives ──
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function PatternTrackerDemo(props?: Record<string, any>) {
+  const defaultPatterns = [
+    { id: "p1", label: "Pattern A", color: colors.coral },
+    { id: "p2", label: "Pattern B", color: colors.plumLight },
+  ];
+  const [entries, setEntries] = useState<{day: number; patternId: string; intensity: number}[]>(props?.entries || []);
+  return <PatternTracker patterns={props?.patterns || defaultPatterns} days={props?.days || 7} entries={entries} onChange={setEntries} currentDay={props?.currentDay || 1} />;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function RetrievalCheckDemo(props?: Record<string, any>) {
+  const defaultCards = [
+    { id: "c1", prompt: "What is a saboteur?", answer: "An automatic pattern that was once protective but now works against you.", category: "Saboteurs" },
+    { id: "c2", prompt: "Name the four NVC steps.", answer: "Observation, Feeling, Need, Request.", category: "NVC" },
+  ];
+  return <RetrievalCheck cards={props?.cards || defaultCards} />;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function AISimulationDemo(props?: Record<string, any>) {
+  return <AISimulation
+    scenario={props?.scenario || "A difficult conversation practice"}
+    aiRole={props?.aiRole || "The other person"}
+    userRole={props?.userRole || "You (practicing)"}
+    initialMessage={props?.initialMessage || "Let's begin. I'd like to discuss something that's been on my mind."}
+    coachingNudges={props?.coachingNudges !== false}
+  />;
 }
 
 // ── Main renderer ──
@@ -238,6 +306,9 @@ const RENDERERS: Record<string, (props?: Record<string, any>) => React.JSX.Eleme
   zonedSpectrum: ZonedSpectrumDemo,
   forceField: ForceFieldDemo,
   guided: GuidedExercise,
+  patternTracker: PatternTrackerDemo,
+  retrievalCheck: RetrievalCheckDemo,
+  aiSimulation: AISimulationDemo,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

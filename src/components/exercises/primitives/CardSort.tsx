@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   DndContext, DragOverlay, PointerSensor, useSensor, useSensors,
   closestCenter, useDroppable,
   type DragStartEvent, type DragEndEvent, type UniqueIdentifier,
 } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { animate } from "motion";
 import { colors, fonts, space, radii, text, shadow } from "@/lib/theme";
 
 interface CardItem { id: string; label: string; detail?: string }
@@ -28,24 +29,51 @@ const cardDetail: React.CSSProperties = {
   color: colors.textMuted, marginTop: space[1], lineHeight: text.secondary.lineHeight,
 };
 
-function SortableCard({ card, isDragging }: { card: CardItem; isDragging?: boolean }) {
+function SortableCard({ card, isDragging, justLanded, onRemove }: { card: CardItem; isDragging?: boolean; justLanded?: boolean; onRemove?: (id: string) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: card.id });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (justLanded && cardRef.current) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (animate as any)(cardRef.current, { scale: [1.06, 0.97, 1] }, { duration: 0.35, easing: [0.22, 1, 0.36, 1] });
+    }
+  }, [justLanded]);
+
   return (
-    <div ref={setNodeRef} {...attributes} {...listeners} style={{
+    <div ref={(node) => { setNodeRef(node); (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node; }} {...attributes} {...listeners} style={{
       transform: transform ? `translate3d(${transform.x}px,${transform.y}px,0)` : undefined,
       transition, padding: `${space[3]}px ${space[4]}px`, backgroundColor: colors.bgElevated,
       borderRadius: radii.sm, border: `1px solid ${colors.borderDefault}`,
       cursor: "grab", opacity: isDragging ? 0.4 : 1, touchAction: "none",
     }}>
-      <div style={cardLabel}>{card.label}</div>
-      {card.detail && <div style={cardDetail}>{card.detail}</div>}
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+        <div style={{ flex: 1 }}>
+          <div style={cardLabel}>{card.label}</div>
+          {card.detail && <div style={cardDetail}>{card.detail}</div>}
+        </div>
+        {onRemove && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onRemove(card.id); }}
+            style={{
+              background: "none", border: "none", color: colors.textMuted,
+              fontSize: 14, cursor: "pointer", padding: "0 2px", lineHeight: 1,
+              opacity: 0.5, flexShrink: 0,
+            }}
+            title="Remove this card"
+          >
+            ×
+          </button>
+        )}
+      </div>
     </div>
   );
 }
 
-function Bucket({ id, label, color, cards, isOver, activeId }: {
+function Bucket({ id, label, color, cards, isOver, activeId, lastLanded, onRemoveCard }: {
   id: string; label: string; color?: string; cards: CardItem[];
-  isOver: boolean; activeId: UniqueIdentifier | null;
+  isOver: boolean; activeId: UniqueIdentifier | null; lastLanded?: string | null;
+  onRemoveCard?: (cardId: string) => void;
 }) {
   const { setNodeRef } = useDroppable({ id });
   return (
@@ -60,7 +88,7 @@ function Bucket({ id, label, color, cards, isOver, activeId }: {
       }}>{label}</div>
       <div style={{ padding: space[2], display: "flex", flexDirection: "column", gap: space[2], minHeight: 60 }}>
         <SortableContext items={cards.map((c) => c.id)} strategy={verticalListSortingStrategy}>
-          {cards.map((c) => <SortableCard key={c.id} card={c} isDragging={activeId === c.id} />)}
+          {cards.map((c) => <SortableCard key={c.id} card={c} isDragging={activeId === c.id} justLanded={lastLanded === c.id} onRemove={onRemoveCard} />)}
         </SortableContext>
         {cards.length === 0 && !isOver && (
           <div style={{ padding: space[3], textAlign: "center", fontFamily: fonts.bodyAlt,
@@ -85,6 +113,7 @@ export default function CardSort({ cards, buckets, onSort, allowAdd, onAddCard }
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [newLabel, setNewLabel] = useState("");
   const [overBucket, setOverBucket] = useState<string | null>(null);
+  const [lastLanded, setLastLanded] = useState<string | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   const findBucket = useCallback((cardId: UniqueIdentifier): string | null => {
@@ -110,13 +139,16 @@ export default function CardSort({ cards, buckets, onSort, allowAdd, onAddCard }
     const overId = String(over.id);
     const toBucket = bucketMap[overId] !== undefined ? overId : findBucket(over.id);
     if (!toBucket || fromBucket === toBucket) return;
+    const cardId = String(active.id);
     setBucketMap((prev) => {
       const next = { ...prev };
-      next[fromBucket] = prev[fromBucket].filter((id) => id !== String(active.id));
-      next[toBucket] = [...prev[toBucket], String(active.id)];
+      next[fromBucket] = prev[fromBucket].filter((id) => id !== cardId);
+      next[toBucket] = [...prev[toBucket], cardId];
       if (toBucket !== UNSORTED) onSort?.(toBucket, next[toBucket]);
       return next;
     });
+    setLastLanded(cardId);
+    setTimeout(() => setLastLanded(null), 400);
   };
 
   const handleAdd = () => {
@@ -129,6 +161,17 @@ export default function CardSort({ cards, buckets, onSort, allowAdd, onAddCard }
     setNewLabel("");
   };
 
+  const handleRemoveCard = (cardId: string) => {
+    setAllCards((prev) => prev.filter((c) => c.id !== cardId));
+    setBucketMap((prev) => {
+      const next = { ...prev };
+      for (const key of Object.keys(next)) {
+        next[key] = next[key].filter((id) => id !== cardId);
+      }
+      return next;
+    });
+  };
+
   const activeCard = activeId ? allCards.find((c) => c.id === String(activeId)) : null;
   const lookup = (ids: string[]) => ids.map((id) => allCards.find((c) => c.id === id)!).filter(Boolean);
 
@@ -137,8 +180,18 @@ export default function CardSort({ cards, buckets, onSort, allowAdd, onAddCard }
       <DndContext sensors={sensors} collisionDetection={closestCenter}
         onDragStart={(e: DragStartEvent) => setActiveId(e.active.id)}
         onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+
+        {/* Buckets first — so the user sees where they're sorting TO */}
+        <div style={{ display: "flex", gap: space[3], marginBottom: space[4], flexWrap: "wrap" }}>
+          {buckets.map((b) => (
+            <Bucket key={b.id} id={b.id} label={b.label} color={b.color}
+              cards={lookup(bucketMap[b.id])} isOver={overBucket === b.id} activeId={activeId} lastLanded={lastLanded} onRemoveCard={handleRemoveCard} />
+          ))}
+        </div>
+
+        {/* Unsorted cards below */}
         <Bucket id={UNSORTED} label="Unsorted" color={colors.bgElevated}
-          cards={lookup(bucketMap[UNSORTED])} isOver={overBucket === UNSORTED} activeId={activeId} />
+          cards={lookup(bucketMap[UNSORTED])} isOver={overBucket === UNSORTED} activeId={activeId} lastLanded={lastLanded} onRemoveCard={handleRemoveCard} />
 
         {allowAdd && (
           <div style={{ display: "flex", gap: space[2], marginTop: space[3] }}>
@@ -157,13 +210,6 @@ export default function CardSort({ cards, buckets, onSort, allowAdd, onAddCard }
             }}>Add</button>
           </div>
         )}
-
-        <div style={{ display: "flex", gap: space[3], marginTop: space[4], flexWrap: "wrap" }}>
-          {buckets.map((b) => (
-            <Bucket key={b.id} id={b.id} label={b.label} color={b.color}
-              cards={lookup(bucketMap[b.id])} isOver={overBucket === b.id} activeId={activeId} />
-          ))}
-        </div>
 
         <DragOverlay dropAnimation={null}>
           {activeCard && (

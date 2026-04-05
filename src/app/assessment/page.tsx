@@ -777,6 +777,8 @@ export default function AssessmentPage() {
                   { id: "layoff", label: "I was laid off or lost my job" },
                   { id: "pip", label: "I\u2019m on a PIP or under performance pressure" },
                   { id: "new-role", label: "I\u2019m in a new role and finding my footing" },
+                  { id: "relocation", label: "I relocated internationally and I\u2019m adjusting" },
+                  { id: "first-manager", label: "I\u2019m managing people for the first time" },
                   { id: "stuck", label: "I\u2019m stuck and trying to figure out my next move" },
                   { id: "other", label: "Something else" },
                 ].map((opt) => (

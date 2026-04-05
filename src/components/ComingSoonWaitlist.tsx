@@ -73,10 +73,9 @@ export default function ComingSoonWaitlist() {
         style={{
           fontSize: 17,
           color: colors.textSecondary,
-          margin: "0 auto 20px",
+          margin: "0 0 20px",
           lineHeight: 1.7,
           fontFamily: body,
-          maxWidth: 640,
           backgroundColor: "rgba(24, 24, 28, 0.80)",
           backdropFilter: "blur(6px)",
           WebkitBackdropFilter: "blur(6px)",

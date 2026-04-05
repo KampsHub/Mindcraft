@@ -37,7 +37,7 @@
 - [ ] Monitoring dashboard: admin page querying api_logs for latency, errors, tokens, active users
 - [ ] Playwright tests: 3-5 critical paths (login, journal, exercise, weekly review)
 - [ ] Blog infrastructure at `/blog`: Next.js pages, 9 topic suggestions ready
-- [ ] Free lead magnet: "7 Disruptions Self-Assessment" standalone page with email capture
+- [x] Free lead magnet: "7 Disruptions Self-Assessment" standalone page with email capture ✅ DEPLOYED (mindcraft.ing/assessment — 7-question slider assessment, instant results with disruption map, email capture for results)
 - [ ] Testimonial collection: post-Day-30 email → Typeform (2 questions + permission)
 
 ## Surveys to Create + Wire

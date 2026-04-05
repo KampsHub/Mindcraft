@@ -9,7 +9,7 @@
 - [x] GLOBAL: eliminate ALL grey text site-wide — textSecondary→#E0DDD8, textMuted→#D0CCC6 at theme level ✅ DEPLOYED
 - [x] Specific error messages: journal processing improved ✅ DEPLOYED (exercise save, payment, auth still pending)
 - [x] Re-enrollment CTA after program completion ✅ DEPLOYED
-- [ ] 7-day money-back guarantee copy in Stripe checkouts (Stefanie's exact copy provided in MULTI-LENS-REVIEW.md)
+- [x] 7-day money-back guarantee copy on all 3 program pricing sections ✅ DEPLOYED
 - [ ] Verify sandbox/production separation (test prePopulated doesn't leak)
 
 ## Medium Effort (~2-3 hrs each)

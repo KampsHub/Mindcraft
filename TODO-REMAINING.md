@@ -1,23 +1,31 @@
 # Mindcraft — Todo & Action Tracker
-**Last updated:** April 4, 2026
+**Last updated:** April 5, 2026
 
 ---
 
 ## YOUR ACTION ITEMS (Stefanie)
 
 ### Set These Env Variables in Vercel (5 min)
-| Variable      | Value                                                  | Purpose                       |
-| ------------- | ------------------------------------------------------ | ----------------------------- |
-| `CRON_SECRET` | Any random string (e.g., generate at randomkeygen.com) | Secures cron jobs + admin API |
+| Variable      | Value                                                  | Purpose                       | Status |
+| ------------- | ------------------------------------------------------ | ----------------------------- | ------ |
+| `CRON_SECRET` | Any random string (e.g., generate at randomkeygen.com) | Secures cron jobs + admin API | ❓ Check if set |
+| `NEXT_PUBLIC_SENTRY_DSN` | Your Sentry DSN from sentry.io | Error monitoring in production | ❗ Set to activate Sentry |
 
-### Run These SQL Scripts in Supabase (5 min total)
+### Run These SQL Scripts in Supabase
 Go to Supabase → SQL Editor → paste contents of each file → Run
 
-| Script | Path | What it does |
-|--------|------|-------------|
-| Retrieval exercises | `scripts/add-retrieval-exercises.sql` | Adds spaced retrieval quiz exercises on Days 7, 14, 21 for all 3 programs |
-| Scaffolding notes | `scripts/update-scaffolding-notes.sql` | Adds AI instructions to reduce scaffolding in Days 11-30 |
-| Bloom's labels | `scripts/add-bloom-labels.sql` | Adds cognitive depth labels + concept tags to all exercises |
+| Script | Path | What it does | Status |
+|--------|------|-------------|--------|
+| ~~Email events~~ | ~~`supabase/extend-email-events.sql`~~ | ~~Creates email_events table for tracking~~ | ✅ Done |
+| Retrieval exercises | `scripts/add-retrieval-exercises.sql` | Adds spaced retrieval quiz exercises on Days 7, 14, 21 | ❓ Check if run |
+| Scaffolding notes | `scripts/update-scaffolding-notes.sql` | Adds AI instructions to reduce scaffolding in Days 11-30 | ❓ Check if run |
+| Bloom's labels | `scripts/add-bloom-labels.sql` | Adds cognitive depth labels + concept tags to all exercises | ❓ Check if run |
+
+### Verify in Vercel (5 min)
+- [ ] Confirm `STRIPE_SECRET_KEY` is a live key (starts with `sk_live_`, not `sk_test_`)
+- [ ] Confirm `STRIPE_WEBHOOK_SECRET` is for the live webhook endpoint
+- [ ] Set `NEXT_PUBLIC_SENTRY_DSN` → then push an empty commit to trigger redeploy
+- [ ] Confirm `CRON_SECRET` is set (required for daily reminder + re-engage crons to work)
 
 ### Railway Fix ✅ CODE FIX PUSHED
 - The crash was `llm.LLMOptions` not existing in the installed livekit-agents version — **fixed in code** (removed type reference)
@@ -73,7 +81,7 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
 
 1. **Stripe keys** — The keys connected to the current mindcraft.ing products should be live keys. Verify in Vercel env vars that `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are live (not `sk_test_`).
 
-2. ~~**Inactive user reminder emails**~~ — ✅ Done. 2-day threshold, max 3 reminders, exit survey after 3rd + 7 days. Cron already scheduled. **Stefanie action:** Run `supabase/extend-email-events.sql` in Supabase SQL Editor.
+2. ~~**Inactive user reminder emails**~~ — ✅ Done. 2-day threshold, max 3 reminders, exit survey after 3rd + 7 days. Cron scheduled. SQL run.
 
 3. ~~**Subscription lifecycle**~~ — ✅ Not needed. Not officially a subscription.
 

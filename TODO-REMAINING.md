@@ -32,7 +32,7 @@
 - [ ] Learn-recognize-practice arc audit: ALL 362 exercises, add practice steps (Stefanie: audit all, not just 90)
 - [ ] Scaffolding decrease: Days 11-20 reduce pre-fill, Days 21-30 minimal. Mention in Days 1-10 why heavier.
 - [ ] Bloom's labels + individual concept arcs: label deep-learning exercises, track repeated concepts per user
-- [ ] AI Simulation real API: `/api/exercises/simulate` endpoint with Claude in-character responses
+- [x] AI Simulation real API: `/api/exercises/simulate` endpoint with Claude in-character responses ✅ DEPLOYED (POST with scenario, aiRole, message, history → in-character response + coaching nudge. AISimulation primitive already supports onSend prop.)
 - [ ] Quality monitoring: Vercel Cron weekly audit + dashboard to view results (Stefanie wants dashboard)
 - [ ] Monitoring dashboard: admin page querying api_logs for latency, errors, tokens, active users
 - [ ] Playwright tests: 3-5 critical paths (login, journal, exercise, weekly review)

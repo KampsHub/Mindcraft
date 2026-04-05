@@ -218,12 +218,23 @@ export default function ExerciseCard({
       )}
     </AnimatePresence>
     <motion.div
+      ref={(el) => {
+        if (el && submitted && !isCompleted && !el.dataset.glowed) {
+          el.dataset.glowed = "1";
+          import("motion").then(({ animate }) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (animate as any)(el, {
+              boxShadow: ["0 0 0 rgba(196,148,58,0)", "0 0 20px rgba(196,148,58,0.3)", "0 0 0 rgba(196,148,58,0)"],
+            }, { duration: 1, easing: "ease-in-out" });
+          });
+        }
+      }}
       whileHover={!submitted ? { y: -2, boxShadow: "0 8px 28px rgba(0,0,0,0.15)" } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{
         backgroundColor: colors.bgSurface,
         borderRadius: radii.md,
-        border: `1px solid ${colors.borderDefault}`,
+        border: `1px solid ${submitted && !isCompleted ? colors.coral : colors.borderDefault}`,
         padding: 0,
         marginBottom: space[3],
         overflow: "hidden",
@@ -254,7 +265,18 @@ export default function ExerciseCard({
               }}
             >
               {submitted && (
-                <span style={{ marginRight: 8 }}>
+                <span
+                  ref={(el) => {
+                    if (el && !isCompleted && !el.dataset.animated) {
+                      el.dataset.animated = "1";
+                      import("motion").then(({ animate }) => {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (animate as any)(el, { scale: [0.5, 1.2, 1], opacity: [0, 1] }, { duration: 0.4, easing: [0.22, 1, 0.36, 1] });
+                      });
+                    }
+                  }}
+                  style={{ marginRight: 8, display: "inline-block" }}
+                >
                   <AnimatedCheckmark size={16} animate={!isCompleted} />
                 </span>
               )}

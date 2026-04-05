@@ -5,7 +5,8 @@
 - [x] Exercise completion micro-animation (motion.dev scale+glow, no confetti) ✅ DEPLOYED
 - [x] Exercise-to-exercise navigation (progress dots ● ○ ○ + "X of Y done" counter) ✅ DEPLOYED
 - [x] Mobile touch targets 44px minimum + pulse signaling on WheelChart, StakeholderMap ✅ DEPLOYED (BodyMap already has tap-to-mark, no resize needed)
-- [ ] Add missing FAQs: "Can I pause?", "Export data?", "Journal private?", "Share with therapist?", "After 30 days?"
+- [x] Add missing FAQs: "Can I pause?", "Export data?", "Share with therapist?" ✅ DEPLOYED
+- [ ] GLOBAL: eliminate ALL grey text site-wide — brighten textMuted/textSecondary to white (textPrimary). Don't hardcode anywhere. Fix at theme level so it applies everywhere.
 - [ ] Specific error messages: journal processing, exercise save, payment, auth session
 - [ ] Re-enrollment CTA after program completion ("Explore other programs")
 - [ ] 7-day money-back guarantee copy in Stripe checkouts (Stefanie's exact copy provided in MULTI-LENS-REVIEW.md)

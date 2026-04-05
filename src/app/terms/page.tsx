@@ -199,6 +199,11 @@ export default function TermsPage() {
             Use your own judgment. If something feels off, trust yourself over the system. AI
             reflections are a starting point for self-exploration, not a final answer.
           </p>
+          <p style={textStyle}>
+            The AI models powering this platform may be updated over time as the technology
+            improves. Outputs may vary as models are refined. We do not guarantee that AI-generated
+            content will remain identical across sessions or model versions.
+          </p>
         </div>
 
         {/* 8. Your data */}
@@ -267,6 +272,8 @@ export default function TermsPage() {
             <li>Use the platform to generate content that is harmful, abusive, or violates the
               rights of others.</li>
             <li>Attempt to manipulate, bypass, or abuse the AI system.</li>
+            <li>Use the platform to provide coaching, therapy, or professional services to
+              third parties.</li>
           </ul>
         </div>
 
@@ -325,9 +332,78 @@ export default function TermsPage() {
           </p>
         </div>
 
-        {/* 15. Contact */}
+        {/* 15. Third-party services */}
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>15. Third-party services</h2>
+          <p style={textStyle}>
+            The platform relies on third-party services including Anthropic (AI), Stripe
+            (payments), Supabase (database and authentication), and others listed in our{" "}
+            <a href="/privacy-policy" style={{ color: colors.coral, textDecoration: "none" }}>
+              Privacy Policy
+            </a>
+            . We are not responsible for outages, errors, or data handling by these third-party
+            providers. Their use is governed by their respective terms and privacy policies.
+          </p>
+        </div>
+
+        {/* 16. Force majeure */}
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>16. Force majeure</h2>
+          <p style={textStyle}>
+            We are not liable for any delay or failure in performance resulting from causes beyond
+            our reasonable control, including but not limited to third-party service outages,
+            internet disruptions, natural disasters, pandemics, government actions, or changes in
+            law or regulation.
+          </p>
+        </div>
+
+        {/* 17. Survivability */}
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>17. Survivability</h2>
+          <p style={textStyle}>
+            Sections 2 (not therapy), 7 (AI content), 8 (your data and IP), 11 (limitation of
+            liability), 12 (indemnification), and 14 (governing law) survive the termination or
+            expiration of your account or these terms.
+          </p>
+        </div>
+
+        {/* 18. Severability */}
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>18. Severability</h2>
+          <p style={textStyle}>
+            If any provision of these terms is found to be unenforceable or invalid by a court of
+            competent jurisdiction, that provision will be limited or eliminated to the minimum
+            extent necessary, and the remaining provisions will continue in full force and effect.
+          </p>
+        </div>
+
+        {/* 19. Entire agreement */}
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>19. Entire agreement</h2>
+          <p style={textStyle}>
+            These Terms &amp; Conditions, together with our{" "}
+            <a href="/privacy-policy" style={{ color: colors.coral, textDecoration: "none" }}>
+              Privacy Policy
+            </a>
+            , constitute the entire agreement between you and All Minds on Deck LLC regarding
+            your use of the platform. They supersede any prior agreements, communications, or
+            understandings, whether written or oral.
+          </p>
+        </div>
+
+        {/* 20. Waiver */}
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>20. Waiver</h2>
+          <p style={textStyle}>
+            Our failure to enforce any right or provision of these terms will not be considered a
+            waiver of that right or provision. A waiver of any term will only be effective if in
+            writing and signed by an authorized representative of All Minds on Deck LLC.
+          </p>
+        </div>
+
+        {/* 21. Contact */}
         <div style={{ ...sectionStyle, marginBottom: 0 }}>
-          <h2 style={headingStyle}>15. Questions?</h2>
+          <h2 style={headingStyle}>21. Questions?</h2>
           <p style={textStyle}>
             Reach out at{" "}
             <a

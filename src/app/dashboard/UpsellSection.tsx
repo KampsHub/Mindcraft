@@ -99,9 +99,11 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
 
 function EnneagramCard() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleCheckout() {
     setLoading(true);
+    setError(null);
     trackEvent("enneagram_standalone_begin_checkout", {});
     try {
       const res = await fetch("/api/checkout/enneagram", {
@@ -110,9 +112,13 @@ function EnneagramCard() {
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-      else console.error("Checkout error:", data.error);
+      else {
+        console.error("Checkout error:", data.error);
+        setError("Payment couldn\u2019t be started. Please try again.");
+      }
     } catch (err) {
       console.error("Checkout error:", err);
+      setError("Connection issue. Check your internet and try again.");
     } finally {
       setLoading(false);
     }
@@ -183,6 +189,11 @@ function EnneagramCard() {
         >
           {loading ? "Redirecting…" : "Add now"}
         </motion.button>
+        {error && (
+          <p style={{ fontSize: 12, color: "#E08585", textAlign: "center", marginTop: 8, fontFamily: display }}>
+            {error}
+          </p>
+        )}
       </div>
     </motion.div>
   );

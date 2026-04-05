@@ -1274,6 +1274,7 @@ function Pricing() {
   const cancelled = searchParams.get("checkout") === "cancelled";
   const [dismissCancelled, setDismissCancelled] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   useEffect(() => {
     trackEvent("new_role_page_view", {});
@@ -1284,6 +1285,7 @@ function Pricing() {
 
   const handleCheckout = async (tier: string) => {
     setCheckoutLoading(tier);
+    setCheckoutError(null);
     trackEvent("new_role_price_click", { tier });
     trackEvent("new_role_begin_checkout", { tier });
     trackEvent("begin_checkout", { package: "basecamp", tier });
@@ -1295,9 +1297,13 @@ function Pricing() {
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-      else console.error("Checkout error:", data.error);
+      else {
+        console.error("Checkout error:", data.error);
+        setCheckoutError("Payment couldn\u2019t be started. Please try again or contact crew@allmindsondeck.com.");
+      }
     } catch (err) {
       console.error("Checkout error:", err);
+      setCheckoutError("Connection issue. Check your internet and try again.");
     } finally {
       setCheckoutLoading(null);
     }
@@ -1507,6 +1513,14 @@ function Pricing() {
               >
                 {checkoutLoading === "standard" ? "Redirecting..." : "Start now"}
               </button>
+              {checkoutError && (
+                <p style={{
+                  fontSize: 13, color: "#E08585", textAlign: "center",
+                  margin: "10px 0 0 0", fontFamily: body, lineHeight: 1.5,
+                }}>
+                  {checkoutError}
+                </p>
+              )}
               <p style={{
                 fontSize: 12, color: colors.textPrimary, textAlign: "center",
                 margin: "10px 0 0 0", fontFamily: body, lineHeight: 1.5, opacity: 0.7,

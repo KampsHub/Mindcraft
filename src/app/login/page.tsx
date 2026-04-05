@@ -163,7 +163,7 @@ export default function LoginPage() {
               provider: "google",
               options: { redirectTo: `${window.location.origin}/auth/callback` },
             });
-            if (error) console.error("Google login error:", error);
+            if (error) setError("Google sign-in failed. Try the magic link instead.");
           }}
           style={{
             width: "100%", padding: 14, fontSize: 15, fontWeight: 500,

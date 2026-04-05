@@ -1855,6 +1855,7 @@ function Pricing() {
   const [touchedSlider, setTouchedSlider] = useState<Record<string, boolean>>({});
   const [selectedTier, setSelectedTier] = useState("standard");
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   useEffect(() => {
     trackEvent("layoff_page_view", {});
@@ -1865,6 +1866,7 @@ function Pricing() {
 
   const handleCheckout = async (tier: string, amount?: number) => {
     setCheckoutLoading(tier);
+    setCheckoutError(null);
     const tierLabel = tier === "pay_what_you_can" ? "pay_what_you_can" : tier === "pay_it_forward" ? "pay_it_forward" : "standard";
     trackEvent(`parachute_${tierLabel}_begin_checkout`, { tier, price: amount ? `$${amount}` : tier });
     trackEvent("begin_checkout", { package: "parachute", tier, price: amount ? `$${amount}` : tier });
@@ -1876,9 +1878,13 @@ function Pricing() {
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-      else console.error("Checkout error:", data.error);
+      else {
+        console.error("Checkout error:", data.error);
+        setCheckoutError("Payment couldn\u2019t be started. Please try again or contact crew@allmindsondeck.com.");
+      }
     } catch (err) {
       console.error("Checkout error:", err);
+      setCheckoutError("Connection issue. Check your internet and try again.");
     } finally {
       setCheckoutLoading(null);
     }
@@ -2132,6 +2138,14 @@ function Pricing() {
                   ? `Start now — $${slidingAmounts[selectedTier]}`
                   : "Start now"}
             </button>
+            {checkoutError && (
+              <p style={{
+                fontSize: 13, color: "#E08585", textAlign: "center",
+                margin: "10px 0 0 0", fontFamily: body, lineHeight: 1.5,
+              }}>
+                {checkoutError}
+              </p>
+            )}
             <p style={{
               fontSize: 12, color: colors.textPrimary, textAlign: "center",
               margin: "10px 0 0 0", fontFamily: body, lineHeight: 1.5, opacity: 0.7,

@@ -7,7 +7,7 @@
 - [x] Mobile touch targets 44px minimum + pulse signaling on WheelChart, StakeholderMap ✅ DEPLOYED (BodyMap already has tap-to-mark, no resize needed)
 - [x] Add missing FAQs: "Can I pause?", "Export data?", "Share with therapist?" ✅ DEPLOYED
 - [x] GLOBAL: eliminate ALL grey text site-wide — textSecondary→#E0DDD8, textMuted→#D0CCC6 at theme level ✅ DEPLOYED
-- [x] Specific error messages: journal processing improved ✅ DEPLOYED (exercise save, payment, auth still pending)
+- [x] Specific error messages: journal processing improved ✅ DEPLOYED (exercise save, payment, auth all done) ✅ ALL DEPLOYED
 - [x] Re-enrollment CTA after program completion ✅ DEPLOYED
 - [x] 7-day money-back guarantee copy on all 3 program pricing sections ✅ DEPLOYED
 - [x] Verify sandbox/production separation ✅ CONFIRMED (no prePopulated imports in production, primitives receive data via props only)

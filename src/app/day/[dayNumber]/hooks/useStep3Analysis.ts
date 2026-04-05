@@ -231,19 +231,30 @@ export function useStep3Analysis({
     frameworkId?: string,
   ) {
     if (!session || !enrollment) return undefined;
-    const { data } = await supabase.from("exercise_completions").insert({
-      daily_session_id: session.id,
-      enrollment_id: enrollment.id,
-      framework_name: name,
-      framework_id: frameworkId || null,
-      exercise_type: type,
-      modality: modality || null,
-      custom_framing: customFraming || null,
-      responses,
-      star_rating: rating,
-    }).select("id").single();
-    setCompletedExercises((prev) => new Set(prev).add(name));
-    return data?.id;
+    try {
+      const { data, error } = await supabase.from("exercise_completions").insert({
+        daily_session_id: session.id,
+        enrollment_id: enrollment.id,
+        framework_name: name,
+        framework_id: frameworkId || null,
+        exercise_type: type,
+        modality: modality || null,
+        custom_framing: customFraming || null,
+        responses,
+        star_rating: rating,
+      }).select("id").single();
+      if (error) {
+        console.error("Exercise save error:", error);
+        setProcessError("Your exercise response couldn\u2019t be saved. Check your connection and try again.");
+        return undefined;
+      }
+      setCompletedExercises((prev) => new Set(prev).add(name));
+      return data?.id;
+    } catch (err) {
+      console.error("Exercise save error:", err);
+      setProcessError("Your exercise response couldn\u2019t be saved. Check your connection and try again.");
+      return undefined;
+    }
   }
 
   return {

@@ -26,7 +26,7 @@
 - [ ] GA4 funnel setup: build visualization in GA4 Explore (Stefanie asked for this)
 - [x] SEO audit: OG tags, Twitter cards, siteName, enhanced descriptions on all program pages ✅ DEPLOYED
 - [x] Coming Soon waitlist on homepage: "First-Time Manager" + "International Move" (no landing pages) ✅ DEPLOYED
-- [ ] Email nurture signup: "Get weekly insights" on blog + homepage, Resend audience list
+- [x] Email nurture signup: "Get weekly insights" on blog + homepage, Resend audience list ✅ DEPLOYED (homepage section before footer, reuses waitlist API)
 
 ## Larger Effort (~3-4+ hrs each)
 - [ ] Learn-recognize-practice arc audit: ALL 362 exercises, add practice steps (Stefanie: audit all, not just 90)

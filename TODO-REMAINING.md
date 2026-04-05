@@ -33,6 +33,44 @@ Go to Supabase → SQL Editor. For each script, you can check if it was already 
 Go to GA4 → Explore → Create new Exploration → Funnel.
 Steps: `page_view (/)` → `homescreen_program_click` → `begin_checkout` → `login_success` → `day_completed (day 1)` → `day_completed (day 7)`
 
+### Stefanie: Co-Creation Decisions Needed
+
+These are questions you raised that need your input before we can build:
+
+**Coach Dashboard (#5) — What should coaches see?**
+You said: logins, program progress, shared insights, coaching goals, enneagram. Before I build the UI:
+- [ ] Should coaches see ALL clients, or only clients who explicitly shared with them (via the existing coach-sharing flow)?
+- [ ] Should coaches be able to leave notes from this dashboard (currently only via a separate flow)?
+- [ ] Do you want a "flag for follow-up" button on individual clients?
+
+**User-Facing Analytics (#8) — What metrics matter to users?**
+You asked what to surface on the Insights page. My suggestion:
+- Weekly mood/rating trend (from `day_rating` — already tracked)
+- Exercise completion count + streak
+- Top patterns detected (from `step_3_analysis` themes)
+- "Shifts" — moments where the AI noticed a change in tone, language, or theme
+- [ ] Does this feel right, or do you want different metrics? Should any of these be visible to coaches too?
+
+**Notification Preferences (#9) — Which emails should be toggleable?**
+You said: build opt-in in account section. Proposed toggles:
+- Inactive reminders (the 2-day nudges)
+- Weekly insights email (doesn't exist yet — would be a new email)
+- Program updates / new features
+- [ ] Are these the right categories? Should "exit survey" also be opt-out-able, or always send?
+
+**Search (#10) — How deep should search go?**
+You asked how to make this possible. Two levels:
+- **Simple (1 day):** Search bar on the journal page. Full-text search over `free_flow_entries.content`. Returns matching entries with highlighted snippets.
+- **Deep (3 days):** Search across journals + exercises + insights. Unified search page with filters (date range, type, keyword). Could also search exercise responses.
+- [ ] Which level do you want first?
+
+**Streak Persistence (#11)**
+No decision needed — I can just build this. Will add `current_streak` and `longest_streak` to enrollments and surface on dashboard.
+
+**Token Cost Tracking (Monitoring)**
+The admin dashboard at `/admin` already shows token costs by endpoint. Want me to also build a weekly cost summary email sent to `crew@allmindsondeck.com`? Or is checking the dashboard enough?
+- [ ] Dashboard only, or also a weekly email?
+
 ### Railway Fix ✅ CODE FIX PUSHED
 - The crash was `llm.LLMOptions` not existing in the installed livekit-agents version — **fixed in code** (removed type reference)
 - Check Railway logs after next deploy to confirm it starts cleanly

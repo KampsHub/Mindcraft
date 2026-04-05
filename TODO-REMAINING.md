@@ -40,6 +40,9 @@
 - [ ] Free lead magnet: "7 Disruptions Self-Assessment" standalone page with email capture
 - [ ] Testimonial collection: post-Day-30 email → Typeform (2 questions + permission)
 
+## Legal/Compliance
+- [ ] Signup: require checkbox agreeing to Terms & Privacy Policy (links open in new tab). Block account creation if unchecked. If user paid but won't create account (no consent), flag in Stripe metadata + Supabase for manual outreach.
+
 ## Documents to Write
 - [ ] GDPR rights implementation doc: how each right (access, correction, deletion, portability, restriction, objection, withdraw consent) is executed in product, gaps, what to build
 - [ ] Review CoachBot privacy policy (https://coachbot.ai/legal/privacy-policy) for ideas to adopt

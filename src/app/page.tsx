@@ -1568,7 +1568,7 @@ export default function Home() {
             }}
           >
             {c.programs.cards.map((card: { tag: string; title: string; desc: string; href: string; modules?: string[] }, i) => (
-              <FadeIn key={card.tag} delay={0.15 + i * 0.12} preset="slide-up">
+              <FadeIn key={card.tag} delay={0.15 + i * 0.12} preset="slide-up" style={{ height: "100%" }}>
                 <a href={card.href} onClick={() => trackEvent("homescreen_program_click", { program: card.tag.toLowerCase().replace(" ", "_") })} style={{ textDecoration: "none", color: "inherit", display: "block", height: "100%" }}>
                 <motion.div
                   whileHover={{

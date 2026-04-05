@@ -58,53 +58,7 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
 | `/feedback/exit` | Exit survey (why they stopped, what would bring them back) | Live |
 | `/feedback/testimonial` | Testimonial survey (describe to a friend, what changed, permission) | Live |
 
----
-
-## COMPLETED ITEMS ✅
-
-### Quick Fixes (all deployed)
-- [x] Exercise completion micro-animation (scale+glow)
-- [x] Exercise-to-exercise navigation (progress dots + counter)
-- [x] Mobile touch targets 44px + pulse signaling
-- [x] 3 new FAQs: pause, export, share with therapist
-- [x] Grey text eliminated site-wide (theme-level fix)
-- [x] Specific error messages: exercise save, payment, auth, journal
-- [x] Re-enrollment CTA after program completion
-- [x] 7-day money-back guarantee copy on all 3 programs
-- [x] Sandbox/production separation verified
-
-### Medium Effort (all deployed)
-- [x] Spaced retrieval exercises SQL for Days 7, 14, 21 (script ready, needs running)
-- [x] "Then vs Now" progress card on weekly review
-- [x] Skill progression badges (Awareness/Practice/Application/Integration by week)
-- [x] Assessment→action: process-journal weights low-scoring disruption domains
-- [x] Exit survey email at 7+ days inactive
-- [x] AI graceful degradation (already in place)
-- [x] Async insight generation (already in place)
-- [x] Token cost tracking admin endpoint
-- [x] SEO audit: OG tags, Twitter cards on all pages
-- [x] Coming Soon waitlist: First-Time Manager, International Move, Next Move
-- [x] Email nurture signup on homepage + blog
-
-### Larger Effort (all deployed)
-- [x] AI Simulation real API (`/api/exercises/simulate`)
-- [x] Quality monitoring cron + email (already configured)
-- [x] Admin monitoring dashboard (`/admin`)
-- [x] Playwright test suite (5 suites, 12+ tests)
-- [x] Blog infrastructure (`/blog`)
-- [x] Free lead magnet (`/assessment`)
-- [x] Testimonial CTA in completion email
-
-### Legal & Compliance (all deployed)
-- [x] Terms: California → Washington State
-- [x] Terms: 6 new sections (severability, survivability, entire agreement, force majeure, waiver, third-party services)
-- [x] Terms: AI model update disclosure
-- [x] Terms: prohibition on professional use
-- [x] Terms: refund definition clarified (7 days from purchase, completed = journal entry submitted)
-- [x] Signup: Terms & Privacy consent checkbox
-- [x] Cookie consent banner
-
-### Documents Written
+### Read
 - [x] GDPR rights implementation doc (`GDPR-RIGHTS-IMPLEMENTATION.md`)
 - [x] Legal hangups analysis — 36 risks (`LEGAL-HANGUPS.md`)
 - [x] CoachBot privacy policy review
@@ -113,13 +67,103 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
 
 ---
 
-## REMAINING ITEMS (need content work or external access)
+## To Dos
 
-### Content Work (Claude can help in future sessions)
-- [x] **whyThis chunking** — shortened 6 longest exercises (Stress Responses, NVC, Older Pattern, Performance Culture, Cultural Observation, Belonging Sources). Avg reduced from ~1,150 to ~550 chars. Framework teaching stays in instruction/primitive.
-- [x] **362 exercise arc audit** — added practice steps to 113 exercises across all programs and modalities. Parachute (13), Jetstream (14), Basecamp (16), relational/integrative (23), cognitive/somatic (28), systems (13), missing (6). Remaining ~249 exercises already had practice steps.
-- [x] **Scaffolding decrease** — SQL script ready (`scripts/update-scaffolding-notes.sql`). Adds system_notes to all program_days: Days 1-10 explain why heavier, Days 11-20 instruct AI to reduce pre-fill by 50%, Days 21-30 minimal scaffolding. Run in Supabase SQL Editor.
-- [x] **Bloom's labels** — SQL script ready (`scripts/add-bloom-labels.sql`). Adds bloom_level column (remember/understand/apply/analyze/evaluate/create) + concept_tags array to frameworks_library. Auto-labels exercises by name pattern. Run in Supabase SQL Editor.
+### HIGH — Needed for Quality Launch
+
+4. **Error monitoring** — Sentry DSN is configured but needs to be set in Vercel env vars. Once live, production errors will surface in sentry.io with stack traces. PII is redacted (journal text stripped from request bodies).
+   - **Status:** Produce — set `NEXT_PUBLIC_SENTRY_DSN` in Vercel, verify errors appear in Sentry dashboard.
+
+5. **Coach dashboard UI** — API exists (`/api/coach-analytics`), page exists (`/coach`). Needs redesign to show:
+   - Individual client logins and last-active dates
+   - Where each client is in the program (current day, week)
+   - Insights the client chooses to share
+   - Coaching goals per client
+   - Enneagram results (if client uploads)
+   - **Status:** Design and build new coach dashboard UI.
+
+6. **Referral dashboard** — Coach referral codes work but coaches can't view/manage them.
+   - **Status:** Parked.
+
+7. **Admin panel** — All admin work is manual via Supabase console.
+   - **Status:** Accepted — Stefanie will use Supabase directly.
+
+### CRITICAL — Blocks Launch
+
+1. **Stripe keys** — The keys connected to the current mindcraft.ing products should be live keys. Verify in Vercel env vars that `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are live (not `sk_test_`).
+
+2. **Inactive user reminder emails** — No daily reminder emails. Instead: if a user hasn't logged in for 2 days, send a reminder. Do this up to 3 times. Implement as a cron job checking `daily_sessions.created_at` and tracking send count in `email_events`.
+
+3. **Subscription lifecycle** — Not officially a subscription. No cancellation flow, billing portal, or renewal webhooks needed.
+
+### HIGH — Needed for Quality Launch
+
+4. **Error monitoring (Sentry)** — Sentry is set up. Activate by setting `NEXT_PUBLIC_SENTRY_DSN` in Vercel env vars. Verify errors appear in Sentry dashboard after deploy.
+
+5. **Coach dashboard UI redesign** — API exists (`/api/coach-analytics`), page exists (`/coach`). Needs new UI showing:
+   - Individual client logins and last-active dates
+   - Where each client is in the program (current day, week)
+   - Insights the client chooses to share
+   - Coaching goals per client
+   - Enneagram results (if client uploads)
+
+6. **Referral dashboard** — Coach referral codes work but coaches can't view/manage them. **Parked.**
+
+7. **Admin panel** — All admin work is manual via Supabase console. **Accepted — Stefanie will use Supabase directly.**
+
+### Monitoring Features
+
+| Feature | Needs | Status |
+|---------|-------|--------|
+| Sentry | DSN env var in Vercel | Config ready — activate |
+| Quality monitoring cron | Vercel Cron job setup | Code exists at `/api/quality-audit` — schedule it |
+| Token cost tracking | Admin query on `api_logs` | Table exists — build query and send to Stefanie |
+
+### Known Technical Debt
+
+8. **In-memory rate limiting** — Current rate limiting uses in-memory counters. On Vercel, each request can hit a different serverless instance, so counters don't share state. At scale (100+ concurrent users), limits won't be enforced consistently. **Fix:** Add Redis (e.g., Upstash) as a shared counter store. ~2 hours of work.
+
+9. **API logs write synchronously** — Every AI call writes to `api_logs` before returning the response, adding ~50-100ms latency. **Fix:** Use `waitUntil()` (Vercel edge runtime) or a background queue (e.g., Inngest, QStash) to write logs after the response is sent. ~1-2 hours.
+
+10. **Memory embeddings retrieval may slow** — As the `coaching_memories` table grows, similarity search queries will slow down. **Fix:** Add a PostgreSQL vector index (pgvector `ivfflat` or `hnsw` index), or limit retrieval to recent memories (last 90 days). Monitor query times in `api_logs` latency.
+
+11. **No unit/integration tests** — Only manual `TEST-PLAN.md`. **To start:** Set up Vitest (fast, Vite-native) for unit tests + Playwright for integration tests. Start with: API route tests (process-journal, daily-exercise) and critical UI flows (login → dashboard → day 1). ~1 day for setup + first 10 tests.
+
+12. **283 exercises old format** — If `exerciseDataCore.ts` exercises have been migrated to the new whyThis/instruction format, this is done. Verify by checking if any exercises still have `whyNow` or `science` fields: `grep -c "whyNow\|science" src/lib/exerciseDataCore.ts`.
+
+13. **Email templates hardcoded** — All email HTML is inline in route handlers. **Fix:** Use React Email (`@react-email/components`) to build reusable templates as React components. Resend supports React Email natively. Create a `src/emails/` directory with shared layout + per-email templates. ~1 day to migrate existing emails.
+
+### Data Storage Map — New Features (April 4, 2026)
+
+All of these are tracked automatically — no action needed from Stefanie. To retrieve data:
+- **Supabase tables** (`exercise_completions`, `weekly_reviews`, `program_enrollments`): Go to Supabase → Table Editor → select table → filter/export
+- **Google Analytics events**: GA4 → Reports → Events → filter by event name
+- **Sentry**: sentry.io dashboard (after activation)
+
+| Feature | Where Stored | Column/Field | Type |
+|---------|-------------|--------------|------|
+| Star rating per exercise | `exercise_completions` | `star_rating` | integer 1-5 |
+| Exercise feedback (≤3 stars) | `exercise_completions` | `feedback` | text |
+| NPS score | `weekly_reviews` | `nps_score` | integer 0-10 |
+| NPS score (backup) | Google Analytics | event `nps_submitted` | GA event |
+| Day completed event | Google Analytics | event `day_completed` | GA event |
+| Login success event | Google Analytics | event `login_success` | GA event |
+| Cookie consent | `localStorage` | key `cookie-consent` | client-side |
+| Pause/resume status | `program_enrollments` | `status` | enum |
+| Exercise dedup window | `exercise_completions` | `completed_at >= 7 days ago` | query filter |
+| Sentry errors | Sentry.io | requires `NEXT_PUBLIC_SENTRY_DSN` | external |
+| Staging deploys | Vercel | `develop` branch → preview URLs | infra |
+
+### Quick Fixes
+
+
+### Medium Effort
+
+
+### Larger Effort
+
+
+---
 
 ### Infrastructure (needs separate resources)
 - [ ] **Staging environment** — develop branch exists with Vercel preview URLs. Needs separate Supabase project for full data isolation.

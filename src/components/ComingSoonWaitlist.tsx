@@ -21,8 +21,8 @@ const PROGRAMS = [
     desc: "New language, new rules, no safety net. The culture shock hits months in, not days. This program helps you rebuild routine, belonging, and identity when everything familiar is gone.",
   },
   {
-    id: "career-leap",
-    tag: "Career Leap",
+    id: "next-move",
+    tag: "Next Move",
     title: "You\u2019ve outgrown your role. But nobody handed you a map for what\u2019s next.",
     desc: "Promotion, pivot, or a bigger seat at the table. This program helps you build a plan that\u2019s strategic, not desperate \u2014 and navigate the politics, the self-doubt, and the conversations nobody prepares you for.",
   },

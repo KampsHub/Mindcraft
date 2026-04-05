@@ -1951,7 +1951,7 @@ export default function Home() {
                 textAlign: "center",
               }}
             >
-              Your data. Your rules.
+              Built different. Built honest.
             </h2>
           </FadeIn>
 
@@ -1964,8 +1964,8 @@ export default function Home() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 ),
-                title: "Your journal is yours. Period.",
-                desc: "Your entries are processed by AI to coach you \u2014 then they stay in your account. They never train any model, are never sold, and are never read by a human unless you choose to share with a coach. Export everything or delete your account at any time.",
+                title: "What you write here stays here.",
+                desc: "No model training. No third-party access. No data sales. Export or delete at any time.",
               },
               {
                 icon: (
@@ -1974,20 +1974,34 @@ export default function Home() {
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                   </svg>
                 ),
-                title: "Nothing is made up.",
-                desc: "Every exercise comes from a published coaching or psychology framework \u2014 Gottman, IFS, ACT, Positive Intelligence, and others. You\u2019ll see who created it, why it works, and why it was matched to what you wrote today.",
+                title: "Every exercise is cited and explained.",
+                desc: "350+ exercises from published coaching and psychology frameworks. Each one tells you where it comes from and why it was chosen for you.",
               },
               {
                 icon: (
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="m9 12 2 2 4-4" />
                   </svg>
                 ),
-                title: "Built by someone who\u2019s been through it.",
-                desc: "Designed by a certified executive coach who\u2019s navigated layoffs, relocations, and career reinventions firsthand. Not theory \u2014 frameworks tested in real coaching rooms with real people in real crises.",
+                title: "Developed with practitioners, not just engineers.",
+                desc: "Built with professional coaches trained in neuroscience, mindfulness, positive psychology, change management, NVC, and psychometric assessment.",
+              },
+              {
+                icon: (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2v4" />
+                    <path d="m6.34 6.34 2.83 2.83" />
+                    <path d="M2 12h4" />
+                    <path d="m6.34 17.66 2.83-2.83" />
+                    <path d="M12 18v4" />
+                    <path d="m17.66 17.66-2.83-2.83" />
+                    <path d="M18 12h4" />
+                    <path d="m17.66 6.34-2.83 2.83" />
+                  </svg>
+                ),
+                title: "Smarter than a chatbot. More available than a coach.",
+                desc: "Reads your journal daily, matches exercises to what\u2019s actually showing up, and adapts as you move \u2014 with rigor no chatbot has and consistency no human schedule can match.",
               },
             ].map((item, i) => (
               <FadeIn key={i} delay={0.1 + i * 0.12} preset="fade">

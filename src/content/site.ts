@@ -180,23 +180,23 @@ export const content = {
   // ── Takeaways ──
   takeaways: {
     headline: "What\u2019s different in 30 days.",
-    subheadline: "Not a fix. Just a different mindset and new skills.",
+    subheadline: "30 days of structure when you can\u2019t even finish your morning coffee.",
     items: [
       {
-        title: "Pattern clarity",
-        desc: "You\u2019re not reacting to the PIP or the layoff. You\u2019re reacting to something older. By Day 30, you\u2019ll see the patterns underneath - what triggers you, what you avoid, what keeps looping. Named and mapped so you can work with them instead of being run by them.",
+        title: "See clearly",
+        desc: "Name the patterns underneath the panic \u2014 what triggers you, what you avoid, what keeps looping.",
       },
       {
-        title: "Visible progress",
-        desc: "In a crisis, progress is invisible. The program tracks it for you - your own words, your shifts, what\u2019s changing week over week. When your brain says \u2018nothing\u2019s working,\u2019 you have data that says otherwise.",
+        title: "Handle the anxiety",
+        desc: "Exercises that change how you actually respond under pressure \u2014 the 1:1, the spiral, the interview.",
       },
       {
-        title: "Better responses under pressure",
-        desc: "The 1:1 with your manager. The 2 a.m. spiral. The interview where your voice shakes. The exercises are built to change how you actually respond in those moments - not in theory, but in practice. Weekly reviews show you what\u2019s landing.",
+        title: "Pick up real insight",
+        desc: "Track your own shifts week over week. When your brain says \u2018nothing\u2019s working,\u2019 you have data.",
       },
       {
-        title: "Tools you keep",
-        desc: "Every framework is cited and explained in plain language. By the end, you know which tools work for you and why. Parts work for the inner critic. Defusion for the spiraling thoughts. Somatic grounding for when your body won\u2019t settle. They\u2019re yours to keep.",
+        title: "Keep the tools",
+        desc: "Evidence-based frameworks explained in plain language. By Day 30, you know which ones work for you.",
       },
     ],
   },

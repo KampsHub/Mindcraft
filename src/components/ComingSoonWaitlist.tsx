@@ -23,8 +23,8 @@ const PROGRAMS = [
   {
     id: "next-move",
     tag: "Next Move",
-    title: "You know you\u2019re ready for more. So why does asking for it feel this hard?",
-    desc: "Promotion, pivot, or a bigger seat at the table. This program helps you build a plan that\u2019s strategic, not desperate \u2014 and navigate the politics, the self-doubt, and the conversations nobody prepares you for.",
+    title: "You\u2019ve outgrown where you are. But should you push for more here or leave?",
+    desc: "Stay and grow, or go and start fresh. This program helps you get clarity on the move that\u2019s right \u2014 not the one that\u2019s just available. Navigate the politics, the self-doubt, and the conversations nobody prepares you for.",
   },
 ];
 

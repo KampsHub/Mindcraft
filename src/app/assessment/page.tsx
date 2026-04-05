@@ -170,7 +170,7 @@ export default function AssessmentPage() {
                   const SHORT_LABELS = [
                     "Identity", "Confidence", "Pressure",
                     "Connection", "Money", "Body & Brain",
-                    "Clarity", "Trust", "Direction",
+                    "Clarity", "Trust", "Personal Direction",
                   ];
                   const total = 9;
                   const viewSize = 460;

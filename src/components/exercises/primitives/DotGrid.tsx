@@ -28,10 +28,10 @@ const toPctX = (px: number) => Math.max(0, Math.min(100, ((px - PAD) / GRID) * 1
 const toPctY = (px: number) => Math.max(0, Math.min(100, 100 - ((px - PAD) / GRID) * 100));
 
 const QUADS = [
-  { x: PAD, y: PAD, fill: colors.plumDeep },
-  { x: PAD + GRID / 2, y: PAD, fill: colors.plumWash },
-  { x: PAD, y: PAD + GRID / 2, fill: colors.plumWash },
-  { x: PAD + GRID / 2, y: PAD + GRID / 2, fill: colors.plumPressed },
+  { x: PAD, y: PAD, fill: "rgba(106, 178, 130, 0.15)" },        // upper-left: evidence + urgent (action zone — green tint)
+  { x: PAD + GRID / 2, y: PAD, fill: "rgba(210, 88, 88, 0.12)" }, // upper-right: fear + urgent (examine zone — red tint)
+  { x: PAD, y: PAD + GRID / 2, fill: "rgba(200, 205, 210, 0.06)" }, // lower-left: evidence + not urgent (monitor)
+  { x: PAD + GRID / 2, y: PAD + GRID / 2, fill: "rgba(200, 205, 210, 0.04)" }, // lower-right: fear + not urgent (let go)
 ];
 
 export default function DotGrid({ items, axisLabels, onChange, title }: DotGridProps) {

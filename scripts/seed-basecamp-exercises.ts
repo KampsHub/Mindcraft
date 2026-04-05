@@ -431,23 +431,25 @@ Strategic patience (Greene's Law 3): Lead with one change, not twenty. Your Hype
     isOnboarding: false,
     description:
       "Applies LCP creative-reactive framework to early contributions. Maps reactive contributions (complying, protecting, controlling) and creative contributions (relating, self-awareness, authenticity, systems awareness, achieving). Includes Schein's 'temporary incompetence' concept.",
-    instructions: `Are your early contributions creative or reactive?
+    instructions: `Are your early contributions creative or reactive? Review your first two weeks through the Leadership Circle lens.
+
+List 3-5 specific contributions you've made so far. For each, tag it:
 
 Reactive contributions (driven by pattern):
-- Complying: delivering what people want to hear, avoiding disagreement
-- Protecting: withholding ideas until they're perfect, staying invisible
-- Controlling: pushing your agenda too fast, not reading the room
+- Complying: delivering what people want to hear, avoiding disagreement. Example: "I agreed with the team's approach even though I saw a better way, because I didn't want to rock the boat."
+- Protecting: withholding ideas until they're perfect, staying invisible. Example: "I had an insight in the meeting but waited too long to share it."
+- Controlling: pushing your agenda too fast, not reading the room. Example: "I presented my solution before understanding the context of why they do it their way."
 
 Creative contributions (driven by awareness):
-- Relating: building genuine connections
-- Self-awareness: catching your saboteur before it drives behavior
-- Authenticity: offering your real perspective, even when tentative
-- Systems awareness: seeing patterns others miss because you're new
-- Achieving: genuine value aligned with organizational need
+- Relating: building genuine connections. Example: "I asked a colleague about their career path and learned something that changed how I see the team."
+- Self-awareness: catching your saboteur before it drives behavior. Example: "I noticed my Expert saboteur wanting to prove I knew everything, and chose to ask a question instead."
+- Authenticity: offering your real perspective, even when tentative. Example: "I shared an observation about the process that no one else had raised."
+- Systems awareness: seeing patterns others miss because you're new. Example: "I noticed a gap between what was said in the all-hands and what happens on the ground."
+- Achieving: genuine value aligned with organizational need.
 
-Review your first contributions: which are creative and which are reactive?
+For each contribution: was it creative or reactive? If reactive, what would the creative version have looked like?
 
-Schein's concept: temporary incompetence is inevitable in any transition. The expert in you wants to skip it. The achiever wants to outrun it. Neither works. Sit in it.`,
+Edgar Schein's research suggests that temporary incompetence is inevitable in any transition. The expert in you wants to skip it. The achiever wants to outrun it. Neither works.`,
     howToRun:
       "Review early contributions through LCP creative-reactive lens. Accept temporary incompetence.",
     themeTags: ["self_awareness", "growth_momentum", "inner_critic"],
@@ -570,26 +572,32 @@ Critical distinction: separate the saboteur's urgency from the situation's actua
     isOnboarding: false,
     description:
       "Introduction to Bridges' neutral zone concept. Applies Enneagram stress/security dynamic. Maps what shifts between secure and stressed states.",
-    instructions: `You are in the neutral zone — between who you were and who you are becoming.
+    instructions: `You are in the neutral zone — between who you were and who you are becoming. William Bridges named this the developmental phase between the old identity and the new one. This is not failure. This is the transition.
 
-William Bridges named this the developmental phase between the old identity and the new one. Its characteristics:
-- Uncertainty about who you are here
-- Inconsistent confidence
-- Heightened sensitivity to signals
-- Feeling of being behind
+Build your personal regulation map — a concrete reference tool:
 
-This is not failure. This is the transition.
+1. MY SECURE STATE TRIGGERS (what shifts me toward growth):
+   List 3-5 specific situations, people, or moments that make you feel safe, connected, and competent in this new role:
+   - ___
+   - ___
+   - ___
 
-Enneagram stress/security dynamic:
-- When you feel secure (safe, connected, competent): you move toward growth — open, flexible, experimenting, taking risks
-- When you feel stressed (threatened, isolated, incompetent): you move toward reactivity — rigid, defended, saboteur-driven
+2. MY STRESS STATE TRIGGERS (what shifts me toward reactivity):
+   List 3-5 specific triggers that activate your saboteur and make you rigid, defended, or reactive:
+   - ___
+   - ___
+   - ___
 
-Map yours:
-- What shifts you into your secure state? (Specific situations, people, achievements)
-- What shifts you into your stressed state? (Specific triggers, environments, interactions)
-- How long do stressed cycles last? What shortens them?
+3. MY RECOVERY TOOLKIT (what shortens the stressed cycle):
+   For each stress trigger above, write one specific thing that helps you return to your secure state:
+   - When [trigger]: I will [specific action]
+   - When [trigger]: I will [specific action]
+   - When [trigger]: I will [specific action]
 
-Awareness does not prevent stress activation. It shortens the cycle.`,
+4. MY NEUTRAL ZONE MANTRA:
+   Complete this sentence: "I am not behind. I am ___."
+
+This is your regulation map — reference it when you notice yourself in a stressed cycle. Awareness doesn't prevent stress activation, but it may shorten the cycle.`,
     howToRun:
       "Name the neutral zone. Map stress/security triggers using Enneagram dynamic. Identify what shortens stressed cycles.",
     themeTags: ["self_awareness", "transition_grief", "resilience"],
@@ -669,28 +677,36 @@ The transition does not stay at work. Name where it's leaking.`,
     isOnboarding: false,
     description:
       "Four forward habits for maintaining awareness beyond Day 30: weekly self-check-in, pre-meeting pause, monthly map update, ongoing Level 3 listening practice.",
-    instructions: `Four habits to carry forward. Minimum viable practice.
+    instructions: `Design the minimum practice you'll actually sustain. Not what sounds good — what you'll do.
+
+For each habit, commit to a specific time and write your version:
 
 1. Weekly self-check-in (15 min)
-   - Saboteur: which was loudest this week?
-   - Values drift: any operational value tested or compromised?
-   - Relationship attention: who needs investment?
+   When: ___ (day of week, time)
+   Three questions I'll answer each week:
+   - Which saboteur was loudest? What did I do about it?
+   - Did any operational value (Day 2) get tested or compromised?
+   - Which relationship needs attention this week?
 
 2. Pre-meeting pause (60 seconds)
-   - Name the saboteur most likely to show up
-   - Name what you actually need from this meeting
-   - Ground: one breath, feet on the floor
+   Trigger: ___ (before which recurring meetings?)
+   My 60-second sequence:
+   - Name the saboteur most likely to show up: ___
+   - Name what I actually need from this meeting: ___
+   - One breath, feet on the floor
 
 3. Monthly map update (30 min)
-   - Cultural map: anything shifted?
-   - Power map: new dynamics?
-   - Constellation: where do you sit now?
+   When: ___ (which day of the month?)
+   I'll review: cultural map, power map, relational proximity
+   One question: where do I sit now vs. last month?
 
-4. Ongoing Level 3 listening (one meeting per week)
-   - Pick one meeting to practice Level 3
-   - After: what did you notice that you would have missed?
+4. Level 3 listening practice (one meeting per week)
+   Which meeting: ___
+   After: what did I notice that I would have missed at Level 1?
 
-This is the floor. Not a ceiling. Not a productivity system. The minimum to maintain what you've built.`,
+Read your plan back. Does it feel realistic? If any habit feels like a "should," drop it and keep only what you'll actually do. Two habits sustained are better than four habits abandoned.
+
+This is your forward practice — save it, print it, put it where you'll see it.`,
     howToRun:
       "Four forward habits: weekly check-in, pre-meeting pause, monthly maps, Level 3 listening. Minimum viable practice.",
     themeTags: ["growth_momentum", "self_awareness", "resilience"],

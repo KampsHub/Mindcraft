@@ -15,7 +15,7 @@ interface VennOverlapProps {
   onAddItem?: (item: VennItem) => void;
 }
 
-const W = 380, H = 260, CY = 140, R = 100, LX = 145, RX = 235;
+const W = 480, H = 320, CY = 170, R = 125, LX = 175, RX = 305;
 
 const zoneCenter = (z: "left" | "overlap" | "right") => {
   if (z === "left") return { x: LX - 40, y: CY };
@@ -86,7 +86,7 @@ export default function VennOverlap({ leftLabel, rightLabel, items, placements, 
       )}
 
       {/* SVG Venn diagram */}
-      <svg viewBox={`0 0 ${W} ${H + 30}`} width="100%" style={{ display: "block", maxWidth: W }}>
+      <svg viewBox={`0 0 ${W} ${H + 30}`} width="100%" style={{ display: "block", maxWidth: W, margin: "0 auto" }}>
         <text x={LX - 30} y={24} textAnchor="middle"
           style={{ fontSize: 13, fontFamily: fonts.display, fontWeight: 600, fill: colors.plumLight }}>
           {leftLabel}
@@ -116,7 +116,7 @@ export default function VennOverlap({ leftLabel, rightLabel, items, placements, 
       {onAddItem && (
         <div style={{ display: "flex", gap: space[2], marginTop: space[4] }}>
           <input type="text" value={newTrait} onChange={(e) => setNewTrait(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAdd()} placeholder="Add a trait..."
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()} placeholder="What else is true about you? Add it here..."
             style={{ flex: 1, padding: `${space[2]}px ${space[3]}px`, background: colors.bgInput,
               border: `1px solid ${colors.borderDefault}`, borderRadius: radii.sm, color: colors.textPrimary,
               fontSize: text.secondary.fontSize, fontFamily: fonts.bodyAlt, outline: "none" }} />

@@ -21,7 +21,7 @@ interface TimelineRiverProps {
 
 const TRACK_HEIGHT = 120;
 const DOT_RADIUS = 8;
-const EVENT_SPACING = 160;
+const EVENT_SPACING = 200;
 const PADDING_X = 60;
 const PADDING_Y = 50;
 
@@ -84,6 +84,23 @@ export default function TimelineRiver({
           .attr("fill", colors.coralWash);
       }
 
+      // Pulse ring (interaction hint)
+      if (!isActive) {
+        g.append("circle")
+          .attr("cx", cx)
+          .attr("cy", trackY)
+          .attr("r", DOT_RADIUS)
+          .attr("fill", "none")
+          .attr("stroke", colors.coral)
+          .attr("stroke-width", 1.5)
+          .attr("stroke-opacity", 0.3)
+          .append("animate")
+          .attr("attributeName", "r")
+          .attr("values", `${DOT_RADIUS};${DOT_RADIUS + 5};${DOT_RADIUS}`)
+          .attr("dur", "2s")
+          .attr("repeatCount", "3");
+      }
+
       // Dot
       g.append("circle")
         .attr("cx", cx)
@@ -107,7 +124,7 @@ export default function TimelineRiver({
         .attr("font-family", fonts.body)
         .attr("font-size", 13)
         .attr("font-weight", 600)
-        .text(evt.label.length > 18 ? evt.label.slice(0, 16) + "..." : evt.label)
+        .text(evt.label.length > 24 ? evt.label.slice(0, 22) + "..." : evt.label)
         .style("cursor", "pointer")
         .on("click", () => {
           setActiveId(isActive ? null : evt.id);
@@ -200,6 +217,13 @@ export default function TimelineRiver({
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         />
       </div>
+
+      {/* Interaction hint */}
+      {!activeEvent && events.length > 0 && (
+        <p style={{ fontFamily: fonts.body, fontSize: 12, color: colors.textMuted, margin: 0, textAlign: "center" }}>
+          Tap a dot to edit its details
+        </p>
+      )}
 
       {/* Edit panel */}
       {activeEvent && (

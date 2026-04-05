@@ -152,7 +152,7 @@ This log becomes data for Day 18 — The Saboteur's Professional Cost. The more 
       "Two-column exercise. Column one: what the PIP document says verbatim. Column two: the story the client has added (interpretations, catastrophizing, minimizing, assumptions about intent). Applies saboteur lens to column two. Separates actionable document from emotional narrative.",
     instructions: `Separate the document from the story you have added to it.
 
-You need your PIP document for this exercise.
+You'll want to have your PIP document handy for this exercise.
 
 Column 1 — The Document
 Write out what the PIP actually says. Verbatim. Each specific requirement, metric, timeline, or behavioral expectation. Just the words on the page.
@@ -548,7 +548,7 @@ Five distortions (David Burns) applied to PIP feedback:
    Your label: ___
    The accurate description: ___
 
-Research finding (Carol Dweck): evaluation threat systematically collapses self-assessment accuracy. Under PIP pressure, you are not a reliable narrator of your own competence. The distortion audit corrects for this.`,
+Carol Dweck's research at Stanford suggests that evaluation threat may systematically collapse self-assessment accuracy. Under PIP pressure, you may not be a reliable narrator of your own competence. The distortion audit can help correct for this.`,
     howToRun:
       "Apply five Burns distortions to PIP claims and self-assessment. Write distorted and accurate versions for each. Correct for evaluation threat.",
     themeTags: ["inner_critic", "identity_self_worth", "self_awareness"],
@@ -653,25 +653,30 @@ Practice: say one Category 2 boundary negotiation out loud. Does it sound like y
       "Structural perspective on how PIPs function in tech organizations — as both development tools and termination mechanisms. Locates the PIP in organizational context: restructuring, reorgs, management changes. Separates structural shame from personal shame.",
     instructions: `Your PIP inside a system. Not just personal — structural.
 
-How PIPs function in tech organizations:
+How PIPs function in tech organizations — they can serve as:
 - Development tool: genuine coaching, specific goals, resources provided, extension possible
 - Termination mechanism: documentation trail, vague requirements, clock running, legal protection for the company
 - Both simultaneously: the system does not always have a single intent
 
-Locate your PIP in organizational context:
-1. Was there a reorg, restructuring, or management change before the PIP?
-2. Are others on PIPs? Is this a pattern or isolated?
-3. What is the company's track record — do people survive PIPs here?
-4. What role does HR play — developmental or procedural?
+For each factor below, tag it as 'structural' (outside your control), 'personal' (within your control), or 'mixed':
+
+1. Was there a reorg, restructuring, or management change before the PIP? Tag: ___
+2. Are others on PIPs? Is this a pattern or isolated? Tag: ___
+3. What is the company's track record — do people survive PIPs here? Tag: ___
+4. What role does HR play — developmental or procedural? Tag: ___
+5. What specific feedback is genuinely about your performance? Tag: ___
+6. What feedback is about misalignment, style mismatch, or shifting expectations? Tag: ___
+
+Count the ratio: how many items are structural vs. personal?
 
 Separate structural shame from personal shame:
 - Structural: "The system uses PIPs as a management tool. I am in a system."
-- Personal: "There is something wrong with me."
-- Accurate: some combination of both, but the ratio matters.
+- Personal: "There are specific areas where I can develop."
+- The ratio matters. Most people carry far more personal shame than the facts warrant.
 
-Amy Edmondson's research: psychological safety collapses under performance threat. When safety collapses, performance declines — creating a self-fulfilling cycle. The PIP itself can cause the performance problems it claims to measure.
+Amy Edmondson's research at Harvard suggests that psychological safety may collapse under performance threat. When safety collapses, performance can decline — potentially creating a self-reinforcing cycle. The PIP itself may contribute to the very performance problems it claims to measure.
 
-What changes when you see the structural forces alongside the personal ones? Neither all-your-fault nor none-of-it.`,
+What changes when you see the structural forces alongside the personal ones?`,
     howToRun:
       "Locate PIP in organizational context. Separate structural from personal shame. Understand the self-fulfilling cycle.",
     themeTags: ["identity_self_worth", "self_awareness", "resilience"],

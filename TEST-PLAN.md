@@ -20,6 +20,8 @@ Use Stripe test card `4242 4242 4242 4242` (any future expiry, any CVC/ZIP).
 - [ ] `NEXT_PUBLIC_APP_URL=https://mindcraft.ing` in Vercel env vars ✅
 
 ---
+Generally: Test for dead links and functionality.
+Especially for payment, report on errors within a dashboard I can review.
 
 ## 1. PAYMENT FLOWS
 

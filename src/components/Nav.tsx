@@ -165,51 +165,7 @@ export default function Nav() {
     </nav>
     <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
 
-    {/* Floating "Capture a thought" button — hidden on /day pages (FreeFlowCapture handles it there) */}
-    {!pathname.startsWith("/day/") && (
-      <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 1000 }}>
-        {/* Warm glow pulse behind the button */}
-        <motion.div
-          animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.15, 1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          style={{
-            position: "absolute",
-            inset: -8,
-            borderRadius: "50%",
-            background: `radial-gradient(circle, ${colors.coral}30 0%, transparent 70%)`,
-            pointerEvents: "none",
-          }}
-        />
-        <motion.button
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 22 }}
-          whileHover={{ scale: 1.1, boxShadow: `0 8px 28px ${colors.coral}50` }}
-          whileTap={{ scale: 0.92 }}
-          onClick={() => router.push("/mindful-journal")}
-          title="Capture a thought"
-          style={{
-            position: "relative",
-            width: 56,
-            height: 56,
-            borderRadius: "50%",
-            background: `radial-gradient(circle at 35% 35%, ${colors.coralLight}, ${colors.coral})`,
-            color: colors.bgDeep,
-            border: "none",
-            cursor: "pointer",
-            fontSize: 22,
-            fontWeight: 700,
-            boxShadow: `0 4px 20px ${colors.coral}40`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: fonts.display,
-          }}
-        >
-          ✎
-        </motion.button>
-      </div>
-    )}
+    {/* Floating buttons moved to FloatingActions component in PageShell */}
     </>
   );
 }

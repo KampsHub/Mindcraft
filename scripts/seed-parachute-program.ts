@@ -662,7 +662,7 @@ const days: ProgramDay[] = [
       {
         name: "Values Pressure Test",
         duration_min: 5,
-        custom_framing: "Knowing your values is one thing. Holding onto them when real life pushes back is another. This exercise puts your top three values under pressure by running them through realistic scenarios you might actually face. Imagine: a role comes along that pays 30% more than your last job, but it clearly violates your top value. Do you take it? What if you've been looking for three months and this is the first offer? Now imagine a role that honors all three values but requires a title step-down or a pay cut. Where is your line between compromise and self-betrayal? Write out your answers. The goal isn't to have perfect answers — it's to see how your values hold up under the weight of real financial and emotional pressure, so you're not making these decisions for the first time in the moment.",
+        custom_framing: "It's one thing to rank values when things are calm — it's another to hold onto them when a real opportunity pushes back. Research by Shalom Schwartz at the Hebrew University of Jerusalem suggests that values only predict behavior when they've been activated under realistic conditions — not just ranked on a list. This exercise creates that activation. Each scenario presents a realistic dilemma where two of your values pull in opposite directions. Read the situation, then choose the option that feels most true to you — not what sounds better on paper. After each choice, notice: did that feel easy or did it cost something? The ones that cost something are the most informative. When you're done with all five scenarios, look at the pattern — are your choices consistent with the ranking from Day 14, or did pressure rearrange them?",
       },
     ],
     overflow_defaults: [
@@ -696,7 +696,7 @@ const days: ProgramDay[] = [
       {
         name: "Structural Perspective",
         duration_min: 5,
-        custom_framing: "When you lose a job, it's natural to make it entirely personal — 'What did I do wrong? Why wasn't I good enough?' But job loss in tech often has very little to do with individual performance. Companies lay off entire teams, restructure around AI, cut costs to hit quarterly numbers, and call it 'optimization.' This exercise asks you to zoom out and see your experience inside the larger system. How many people were laid off alongside you or around the same time in your industry? What market forces were at play? What decisions were made above your level that had nothing to do with your work? This isn't about minimizing your pain or letting anyone off the hook. It's about putting your loss in accurate context so you stop carrying shame that belongs to a system, not to you.",
+        custom_framing: "When you lose a job, it's natural to make it entirely personal — 'What did I do wrong?' But job loss often involves factors far beyond individual performance. This exercise asks you to list the specific factors that contributed to your situation — then tag each one as 'structural' (outside your control), 'personal' (within your control), or 'mixed.' Company-wide layoffs, AI restructuring, budget cuts — these are structural. Avoiding difficult conversations, not adapting to new tools — these are personal. Most people carry far more personal shame than the facts warrant. After tagging everything, count the ratio. What shifts when you see how much of your situation was structural? This isn't about letting yourself off the hook — it's about being accurate, so you can focus your energy on what's actually yours to work on.",
       },
     ],
     overflow_defaults: [
@@ -730,7 +730,7 @@ const days: ProgramDay[] = [
       {
         name: "Evidence Collection",
         duration_min: 5,
-        custom_framing: "After a job loss, your brain tends to build a case against you — replaying mistakes, dismissing accomplishments, and questioning whether you were ever really good at your work. This exercise builds a counter-record. Write down 10 specific things you did well in your career. Not vague strengths like 'good communicator' — specific things. For example: 'I led the migration project that came in under budget,' or 'I mentored three junior engineers who all got promoted,' or 'I caught a critical bug the night before launch.' If you struggle to reach 10, that itself is data — it likely means the inner critic is editing your history, not that you have nothing to list. Ask: what do people consistently trust you with? What have colleagues thanked you for? This list is evidence. Keep it somewhere you can return to.",
+        custom_framing: "After a job loss, your brain tends to build a case against you — replaying mistakes, dismissing accomplishments, and questioning whether you were ever really good at your work. This exercise builds a counter-record. For each entry, write something concrete you did well in your career in the left column, and the evidence of its impact in the right column — a result, a comment from a colleague, a metric, a problem solved. Focus on strength and leadership moments, not just project deliverables: keeping a team calm during a crisis, mentoring someone who grew, speaking up when no one else would, building trust across departments, handling an escalation with grace. Tag each entry: 'leadership' for people and team moments, 'technical' for skills and craft, 'impact' for results and outcomes. Aim for at least eight entries. This list feeds tomorrow's skill discovery work.",
       },
     ],
     overflow_defaults: [
@@ -787,18 +787,18 @@ const days: ProgramDay[] = [
   {
     day_number: 19,
     week_number: 3,
-    title: "The Structural View",
-    territory: "AI and market context, personal shame vs systemic factors",
+    title: "Skills Hidden in Your Evidence",
+    territory: "Skill discovery from evidence, Leadership Circle creative competencies, capability extraction",
     seed_prompts: [
-      { prompt: "Suffering from the loss vs. what it means in tech?", purpose: "Distinguish pain sources" },
-      { prompt: "If market was primary variable?", purpose: "Structural lens" },
-      { prompt: "Where belonging unrelated to job?", purpose: "Anchor belonging" },
+      { prompt: "What capability do people keep coming to you for?", purpose: "Surface natural strengths" },
+      { prompt: "What skill do you use without thinking about it?", purpose: "Identify unconscious competence" },
+      { prompt: "What did you do well that nobody trained you to do?", purpose: "Find innate gifts" },
     ],
     coaching_exercises: [
       {
-        name: "Structural Perspective: AI and Market",
+        name: "Skill Discovery",
         duration_min: 5,
-        custom_framing: "The tech industry is going through a massive structural shift — AI is reshaping roles, companies are restructuring entire departments, and the job market looks fundamentally different than it did a few years ago. When you're in the middle of it, it's easy to take all of that personally. This exercise asks you to separate what's personal from what's systemic. Write down: What industry-wide changes contributed to your situation (hiring freezes, AI replacing functions, budget cuts, market downturns)? What parts of your experience are shared by thousands of others right now? And what parts, if any, are genuinely about your individual performance? This isn't about letting yourself off the hook or making excuses. It's about being accurate. Carrying personal shame for a systemic event is like blaming yourself for the weather. Name what's structural so you can focus your energy on what's actually yours to work on.",
+        custom_framing: "Yesterday you built a counter-record of things you've done well. Today you're going to extract the capabilities hidden inside that evidence. For each entry from Day 17, look underneath the accomplishment: what skill made it possible? 'Kept the team calm during a crisis' → steadiness under pressure. 'Mentored two junior engineers' → developing others. 'Spoke up when everyone else stayed silent' → courageous advocacy. Use the Leadership Circle creative competency domains as a lens: Relating (caring connection, teamwork), Self-Awareness (composure, personal learning), Authenticity (integrity, courageous authenticity), Systems Awareness (seeing the whole picture), and Achieving (strategic focus, decisive action). After mapping your skills, look at which domains they cluster in. Where you're heavy tells you where you naturally lead from. Where you're light may reveal untapped potential. This is Part 1 of a two-day skill awareness arc.",
       },
     ],
     overflow_defaults: [
@@ -864,9 +864,9 @@ const days: ProgramDay[] = [
     ],
     coaching_exercises: [
       {
-        name: "Skill Audit",
+        name: "Skill Map",
         duration_min: 5,
-        custom_framing: "Job loss often triggers a crisis of confidence about your skills — especially in a fast-moving industry where tools and technologies change constantly. But there's a difference between real skill gaps and fear-driven projections. This exercise helps you sort the two. Start with what you trust: write down the skills and capabilities you're genuinely confident in — the things you could do well tomorrow if asked. Then list what feels atrophied — skills you once had but haven't used in a while. Next, list what you're afraid might be obsolete — the things you worry the market no longer values. For each item in that last category, ask honestly: is this based on evidence (you've seen job postings that confirm it), or is it ambient anxiety talking? Real gaps can be addressed with a plan. Projections just need to be named so they stop pretending to be facts.",
+        custom_framing: "This is Part 2 of the skill awareness arc you started on Day 19. Today you're mapping the full landscape of what you bring — not just what your last job used. Sort skill cards into three zones: 'I Lead With This' (strengths you trust and use naturally), 'I Have This But Underuse It' (real capability that's been dormant), and 'I Want to Grow This' (genuine interest, early development). The cards come from three sources: the skills you extracted from your evidence on Day 19, additional capabilities from the Leadership Circle creative competencies you may not have named but recognize in yourself, and — if your Enneagram type is known — your type's natural gifts. After sorting, look at the clusters. If most cards land in 'I Lead With This,' you may be underestimating your range. If most land in 'I Want to Grow,' you may be discounting what you already have. The 'Underuse' zone is often the most interesting — those are capabilities waiting for the right context to come alive.",
       },
     ],
     overflow_defaults: [
@@ -893,8 +893,8 @@ const days: ProgramDay[] = [
   {
     day_number: 22,
     week_number: 4,
-    title: "What Wants to Emerge",
-    territory: "Emerging interests, exploration, following 10%",
+    title: "Thread Pulling",
+    territory: "Emerging interests, concrete exploration steps, planned happenstance",
     seed_prompts: [
       { prompt: "What keeps grabbing your interest that you've dismissed?", purpose: "Notice dismissed pulls" },
       { prompt: "What would following that spark look like?", purpose: "10% exploration" },
@@ -902,9 +902,9 @@ const days: ProgramDay[] = [
     ],
     coaching_exercises: [
       {
-        name: "Emergence Mapping",
+        name: "Thread Pulling",
         duration_min: 5,
-        custom_framing: "After weeks of processing what happened and who you were in your last role, something new may be trying to get your attention — an interest, a curiosity, a direction you've been dismissing because it doesn't seem 'practical' or 'realistic.' This exercise is about noticing those signals. What keeps grabbing your interest that you've pushed aside? Maybe it's a different kind of work, a side project, a field you've always been curious about, or a way of working that your old role never allowed. Write down whatever comes to mind, without filtering for practicality. Then pick one and ask: what would it look like to follow this just 10%? Not quit everything and pursue it — just take one small step. Read an article, have a conversation, try something for an afternoon. You don't need to know where it leads. You just need to stop dismissing it.",
+        custom_framing: "After three weeks of processing, some threads are pulling at you — interests, curiosities, or directions you keep dismissing because they don't seem practical. Stanford psychologist John Krumboltz's planned happenstance theory suggests that career breakthroughs often come from following unexpected interests, not from rigid planning. This exercise names those threads and attaches concrete next steps. A 'thread' is not a career plan — it's something that keeps catching your attention. For each thread, write why it pulls you (genuine curiosity, not 'should') and one small, low-risk step you could take this week: read an article, have a coffee chat, attend a meetup, try something for an afternoon. Your underused skills from Day 21 and journal themes may surface threads you haven't named yet. Which thread would you pull if no one were watching?",
       },
     ],
     overflow_defaults: [
@@ -927,18 +927,18 @@ const days: ProgramDay[] = [
   {
     day_number: 23,
     week_number: 4,
-    title: "The Anchor Day",
-    territory: "Three-week integration, shifts, surprises, unresolved themes",
+    title: "What I Know Now",
+    territory: "Crystallized takeaways, portable statements, operating manual",
     seed_prompts: [
-      { prompt: "What do you already have that's beautiful?", purpose: "Gratitude without performance" },
-      { prompt: "What has this process given you unexpectedly?", purpose: "Unexpected gifts" },
-      { prompt: "What are you ready to release?", purpose: "Letting go" },
+      { prompt: "What do you understand now that you didn't on Day 1?", purpose: "Crystallize learning" },
+      { prompt: "What's the most important thing you've challenged about yourself?", purpose: "Name the shift" },
+      { prompt: "What would you tell someone starting this program?", purpose: "Distill wisdom" },
     ],
     coaching_exercises: [
       {
-        name: "Integration Review",
+        name: "What I Know Now",
         duration_min: 5,
-        custom_framing: "You're three weeks into this program, and today is a day to pause and take stock — not to evaluate yourself, but to notice what's moved. Think back to Day 1: how you felt, what you believed, what was loudest in your head. Compare that to where you are now. Write down: What has genuinely shifted? This could be a belief that loosened, an emotion that softened, a relationship that improved, or a new understanding of yourself. What surprised you? Something you didn't expect to feel, learn, or realize during this process. And what's still working on you — what themes, emotions, or questions haven't resolved yet and keep showing up? There's no pressure to have had a breakthrough. Some of the most important changes are subtle. This is about seeing them clearly so you can build on what's working.",
+        custom_framing: "Today you're consolidating the most important things you've learned into five concrete statements you can carry forward. Not a reflection on the program — a distilled operating manual. Complete each sentence: 1) 'The belief about myself that I've challenged most is ___. What I now think instead is ___.' 2) 'The saboteur pattern I'm most aware of is ___. When it shows up, I now ___.' 3) 'The value I will not compromise on, even under financial pressure, is ___.' 4) 'The capability I was undervaluing or ignoring is ___.' 5) 'The one thing I understand about my situation now that I didn't on Day 1: ___.' Each response should be 1-3 sentences. Not a journal entry — a distilled statement. These five statements become your reference point for Days 25-27 and beyond.",
       },
     ],
     overflow_defaults: [
@@ -972,7 +972,7 @@ const days: ProgramDay[] = [
       {
         name: "Seven Disruptions Reassessment",
         duration_min: 5,
-        custom_framing: "On Day 1, you rated each of the seven disruptions — income, routine, identity, social belonging, sense of competence, future uncertainty, and skill confidence — on a scale of 1 to 10. Today, you're going to rate them again using the same scale. This gives you a concrete before-and-after comparison. Go through each one: where are you now on that 1-10 scale? Some numbers may have dropped significantly. Others may be stubbornly stuck or even higher than before. Both are normal — progress is rarely even across all areas. After rating, compare your Day 1 scores to today's. Where did you move the most? Where did movement surprise you? Which disruption still has the strongest grip? This isn't a pass/fail test. It's data about where you've been and where your energy might need to go next.",
+        custom_framing: "On Day 1, you rated each of the seven disruptions on a scale of 1 to 10. Today you're rating them again — same scale, same disruptions. You'll see your Day 1 scores alongside your new ratings in a side-by-side grid. For each disruption, rate where you are now and note what changed. Some numbers may have dropped significantly. Others may be stubbornly stuck or even higher than before — both are normal. After completing the grid, you'll see a visual comparison highlighting your biggest shifts and the areas that still need attention. Movement is data. Non-movement is also data. Where you moved most tells you where the program landed. Where you're stuck tells you where your energy needs to go next.",
       },
     ],
     overflow_defaults: [
@@ -1006,7 +1006,7 @@ const days: ProgramDay[] = [
       {
         name: "Saboteur Contingency Plan",
         duration_min: 5,
-        custom_framing: "By now you know your saboteurs — those automatic stress patterns that hijack your thinking and behavior. The challenge is that knowing about them doesn't stop them from showing up, especially in high-pressure moments like interviews, networking events, or difficult conversations. This exercise builds a contingency plan so you're not caught off guard. For each of your top saboteurs, write a specific if-then plan: 'If my [Pleaser/Hyper-Achiever/Controller/etc.] activates, I will ___.' For example: 'If my Hyper-Achiever kicks in before an interview and tells me I need to be perfect, I will take three breaths and remind myself that being genuine matters more than being impressive.' Make each plan concrete and realistic — something you can actually do in the moment. Then read them out loud. Rehearsing these plans ahead of time gives your brain an alternative path when stress hits.",
+        custom_framing: "You know your saboteurs from Day 4 — today you build an if-then plan for each one so you're not caught off guard when pressure hits. For each saboteur, you'll see your Day 4 data (the name, exact words, what it protects you from) pre-loaded at the top of a card. Below that, fill in three fields: (1) TRIGGER SITUATION — when does this saboteur show up? Be specific: 'Before an interview when I'm worried I'll say the wrong thing.' (2) THE IF-THEN PLAN — 'When I notice [trigger], I will [specific action].' For example: 'When I notice my Perfectionist telling me I need to be flawless, I will take three breaths and ask: is this voice helping me right now?' (3) THE TRUTH I'LL RETURN TO — from your Day 23 statements, the grounding truth that counters this saboteur. Implementation intentions — 'when X, I will Y' — are one of the most effective behavior change tools in psychology (Peter Gollwitzer, NYU). Read each plan out loud when you're done. Speaking it may help it stick.",
       },
     ],
     overflow_defaults: [
@@ -1040,7 +1040,7 @@ const days: ProgramDay[] = [
       {
         name: "Values Decision Framework",
         duration_min: 5,
-        custom_framing: "You've identified and ranked your values. Now it's time to turn them into a practical decision-making tool you can use when real opportunities show up. Run your top values against specific, realistic scenarios: A company offers you a role that pays exceptionally well but clearly violates your top value — what do you do? A smaller company offers a role that honors all your values but the title is a step down from where you were — can you take it? A friend refers you somewhere exciting but the commute or work-life balance is brutal — how do you weigh it? Write out how your values would guide each decision. Also think about what you'd need to hear in an interview to know a company actually lives its stated values. The goal is to have a framework ready before you're in the emotional fog of a real decision, so your values lead instead of your anxiety.",
+        custom_framing: "Day 15 tested how your values hold under pressure. Today you build a reusable decision-making tool. For each of your top 3 values, write detection criteria: 'I'll know a role/company honors this value when I see/hear ___.' Then write red flags: 'I'll know it violates this value when I see/hear ___.' Be specific — not 'they value autonomy' but 'they describe outcomes, not hours. The manager talks about trust, not oversight.' Finally, write your decision rule: 'If an opportunity clearly violates my top value, I will ___. If it honors two but not the third, I will ___.' This framework is your anchor for real job evaluations. Decisions made in the emotional fog of a job search rarely reflect your actual values — this keeps you grounded.",
       },
     ],
     overflow_defaults: [
@@ -1063,8 +1063,8 @@ const days: ProgramDay[] = [
   {
     day_number: 27,
     week_number: 4,
-    title: "Narrative Pressure-Tested",
-    territory: "Story under conditions, embodied telling, forced vs true",
+    title: "Narrative Rehearsal",
+    territory: "Story in context, three versions for three audiences, embodied telling",
     seed_prompts: [
       { prompt: "Say story out loud. Body?", purpose: "Somatic test" },
       { prompt: "Where saboteur? Where you?", purpose: "Distinguish voice sources" },
@@ -1072,9 +1072,9 @@ const days: ProgramDay[] = [
     ],
     coaching_exercises: [
       {
-        name: "Narrative Under Conditions",
+        name: "Narrative Rehearsal",
         duration_min: 5,
-        custom_framing: "On Day 20, you wrote the version of your story you could stand behind. Today you're going to test it under more realistic conditions. Say it out loud — to yourself, to a mirror, or record it on your phone if you're willing. As you speak, pay attention to your body: where does it tense up? Where does it flow easily? Does it sound like you, or does it sound like someone performing? Notice where your inner critic tries to edit in real time, and where your authentic voice comes through. If parts feel forced or hollow when spoken aloud, that's useful information — those parts may need more work. If it feels surprisingly natural, notice that too. This story doesn't need to be final. There is no final version. Your narrative will keep evolving as you do. The goal today is just to practice saying it with some ownership.",
+        custom_framing: "Day 20 wrote the story. Today you make it usable by practicing it in three real-world contexts. Your Day 20 narrative will appear at the top so you can see your own words. Then write three versions: (1) THE NETWORKING VERSION — someone at a professional event asks 'So what are you up to these days?' Write your 30-second answer. Keep it natural. (2) THE INTERVIEW VERSION — a hiring manager says 'Tell me about your transition.' This version needs to be honest but forward-looking. (3) THE CLOSE FRIEND VERSION — a friend asks 'How are you really doing?' This one can be vulnerable. After writing all three, compare them: the networking version should feel easy (if it doesn't, it's overloaded). The interview version should feel true (if it doesn't, you're performing). The friend version should feel like relief (if it doesn't, you're still protecting something). Then say the networking version out loud. A narrative that doesn't cost energy to maintain is one that adapts to context without losing authenticity (Herminia Ibarra, INSEAD).",
       },
     ],
     overflow_defaults: [
@@ -1176,7 +1176,7 @@ const days: ProgramDay[] = [
       {
         name: "One Sentence",
         duration_min: 3,
-        custom_framing: "This is the final exercise. Write one sentence — just one — that captures where you are today. Not where you wish you were. Not where you think you should be. Not a version that sounds good to others. Where you actually are, right now, after 30 days of doing this work. This is harder than it sounds because it requires you to resist the urge to perform progress, minimize what's left, or catastrophize what hasn't changed. Just one honest sentence. When you've written it, read it back to yourself slowly. Sit with it for a moment. Notice how it feels to state the truth simply, without apology or aspiration. This sentence is your current coordinates — not your destination, not your starting point anymore. Just where you are.",
+        custom_framing: "This is the final exercise. Complete one sentence: 'After 30 days of doing this work, what I know is: ___.' Not 'where I am' — that's too vague. Not 'how I feel' — that's too transient. What you know. Knowledge implies something earned — a conviction, a truth, a clarity that wasn't there before. You'll see your Day 1 response to 'What is true about your situation right now?' displayed alongside your answer, so you can see where you started. Read your sentence back. Does it feel earned? If it sounds like something you could have said on Day 1, dig deeper. If it surprises you, that's the sentence.",
       },
     ],
     overflow_defaults: [

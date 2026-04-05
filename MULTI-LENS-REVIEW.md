@@ -35,10 +35,12 @@
 6. **Learn-recognize-practice arc often incomplete.**
 > **Q: Can you review and implement changes?**
 > **A:** Yes — audit 90 core exercises, add practice steps where missing. **Status: Can execute (~4 hrs).**
+Stefanie: Also audit all other exercises of the 362.
 
 7. **Scaffolding doesn't decrease across the arc.**
 > **Q: Can you execute? (keep light touch early)**
 > **A:** Days 1-10: current levels. Days 11-20: reduce to 1-2 examples. Days 21-30: empty with good placeholders. Visual weight stays same. **Status: Can execute (~4 hrs).**
+Stefanie: Make sure you mention at least once or twice in the first 10 days why it may feel a little heavier.
 
 8. **Cognitive load of whyThis sections.**
 > **Q: Shorten and chunk into interaction.**
@@ -47,7 +49,7 @@
 9. **No Bloom's Taxonomy alignment.**
 > **Q: Is that important for the customer?**
 > **A:** No — internal design guidance only, not user-facing. **Status: No action needed.**
-
+Stefanie: You may want to add labels to the exercises and veer towards those for the tentative exercises that are a little more on the deep learning front (bring up an individual arc for each customer if a concept is mentioned multiple times)
 ---
 
 ## UX Designer
@@ -77,7 +79,7 @@
 
 8. **Sandbox vs production.**
 > **A:** Already separate. Sandbox = localhost:3001 only. Production uses same components but AI-provided data. **Status: No action needed.**
-
+Stefanie: Can you make sure and test that the separation is the case?
 ---
 
 ## UX Researcher
@@ -86,10 +88,12 @@
 1. **No NPS.**
 > **Q: Ask at every weekly insight session?**
 > **A:** Adding NPS slider (0-10) at end of weekly review. **Status: Can execute (~1 hr).**
+Stefanie: Make sure you tell me where you store the data.
 
 2. **No funnel tracking.**
 > **Q: Google Analytics?**
 > **A:** Adding GA events: `signup_started`, `intake_completed`, `day_1_started`, `day_7_completed`, `day_30_completed`. Use GA4 Funnel exploration. **Status: Can execute (~2 hrs).**
+Stefanie: Can you set up the funnel for me?
 
 3. **No session recording.** — **Backburner.**
 4. **No A/B testing.** — **Backburner.**
@@ -147,6 +151,7 @@
 2. **No quality monitoring.**
 > **Q: What can you do?**
 > **A:** Vercel Cron running quality-audit weekly, 10 random sessions. **Status: Can execute (~1 hr).**
+Stefanie: Do you have a dashboard to look at the monitoring?
 
 3. **Exercise selection repeats.**
 > **Q: Dedup 7 days. Mindful journal always there.**
@@ -180,6 +185,7 @@
 2. **In-memory rate limiting.**
 > **Q: Explain?**
 > **A:** Serverless = each request may hit different server. Current limiter is per-server, not shared. Fine at current traffic. Needs Redis at scale. **Status: Not urgent.**
+Stefanie: Which traffic threshold do i need to hit to rethink this?
 
 3. **No error tracking.**
 > **Q: Implement?**
@@ -231,10 +237,14 @@
 6. **No trial/freemium.**
 > **Q: Money-back guarantee — make clearer.**
 > **A:** Adding "30-day money-back guarantee" text on landing pages + Stripe checkout. **Status: Can execute (~30 min).**
+> Stefanie: Instead, integrate this copy in the live stripe checkouts: ## 7-day money-back guarantee
+
+If the program is not working for you within the first week, request a full refund. No conditions. No forms. If it is not useful, you should not pay for it.
 
 7. **No waitlist.**
 > **Q: Where to show "First-Time Manager" and "International Move"?**
 > **A:** "Coming Soon" section on homepage. Email capture per program. **Status: Can execute (~2 hrs).**
+> Stefanie: OK, put under the program section on homescreen. don't yet create a landing page, however.
 
 8. **Content updates require deploy.**
 > **Q: How to change?**

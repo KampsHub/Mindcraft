@@ -74,6 +74,7 @@ Return valid JSON (no markdown, no code fences):
     - Days 8-14: Moderate scaffolding. Offer a framework but let them fill in their own content. "Using the OFNR model, try this with your situation."
     - Days 15-21: Lighter touch. Name the tool, give one example, then step back. "You've seen this before — apply it to what came up today."
     - Days 22-30: Minimal scaffolding. The user should be generating their own insight. "What tool from the last 3 weeks fits here? Try it." Don't over-explain frameworks they've already used.
+13. **Content-to-interaction ratio**: Keep why_now to 1-2 sentences max. Don't front-load framework teaching as a wall of text. Instead, weave the teaching INTO the exercise steps: Step 1 introduces the concept, Step 2 applies it, Step 3 reflects. The user should be doing something by the second sentence of the instruction.
 10. SAFETY — urgency_level guide:
   - "low": Normal emotional processing. Sadness, frustration, grief, anger about job loss, self-doubt, feeling stuck — these are ALL normal and expected in a coaching context. Keep urgency "low" for these.
   - "medium": Persistent despair across multiple entries, isolation language ("nobody cares"), or statements about giving up on life goals. Still provide exercises but note the pattern.

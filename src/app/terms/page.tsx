@@ -167,15 +167,21 @@ export default function TermsPage() {
         <div style={sectionStyle}>
           <h2 style={headingStyle}>6. Refunds</h2>
           <p style={textStyle}>
-            If you are not satisfied within the first 7 days and have not completed more than 3 days
-            of the program, you can request a full refund by emailing{" "}
+            If the program is not working for you within the first 7 days of purchase and you have
+            not completed more than 3 days of the program, request a full refund. No conditions.
+            No forms. Email{" "}
             <a
               href="mailto:crew@allmindsondeck.com"
               style={{ color: colors.coral, textDecoration: "none" }}
             >
               crew@allmindsondeck.com
             </a>
-            . After that window, refunds are handled on a case-by-case basis.
+            .
+          </p>
+          <p style={textStyle}>
+            A day is considered &ldquo;completed&rdquo; when you have logged in and submitted a
+            journal entry. Viewing the dashboard without journaling does not count as completing a
+            day. The 7-day window starts from the date of purchase, not the date you first log in.
           </p>
         </div>
 

@@ -69,19 +69,24 @@ export default function ComingSoonWaitlist() {
 
   return (
     <div style={{ marginTop: 8 }}>
-      <p
-        style={{
-          fontFamily: body,
-          fontSize: 14,
-          color: colors.textSecondary,
-          textTransform: "uppercase",
-          letterSpacing: "0.1em",
-          marginBottom: 16,
-          textAlign: "center",
-        }}
-      >
-        Coming soon
-      </p>
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
+        <span
+          style={{
+            display: "inline-block",
+            fontFamily: body,
+            fontSize: 12,
+            fontWeight: 600,
+            color: "#1a1a1a",
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            backgroundColor: "#fbbf24",
+            padding: "5px 16px",
+            borderRadius: 20,
+          }}
+        >
+          Coming soon
+        </span>
+      </div>
 
       <div
         style={{

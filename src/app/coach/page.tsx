@@ -133,6 +133,8 @@ export default function CoachPage() {
   const [inviting, setInviting] = useState(false);
   const [expandedClient, setExpandedClient] = useState<string | null>(null);
   const [loadingCoachClients, setLoadingCoachClients] = useState(false);
+  const [noteTexts, setNoteTexts] = useState<Record<string, string>>({});
+  const [savingNote, setSavingNote] = useState<string | null>(null);
 
   const supabase = createClient();
   const router = useRouter();
@@ -494,6 +496,67 @@ export default function CoachPage() {
                                 </p>
                               </div>
                             )}
+
+                            {/* Coach note */}
+                            <div style={{ marginTop: 16 }}>
+                              <h4 style={{ fontFamily: display, fontSize: 12, fontWeight: 600, color: colors.textMuted, textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 8 }}>
+                                Leave a note
+                              </h4>
+                              <div style={{ display: "flex", gap: 8 }}>
+                                <input
+                                  type="text"
+                                  placeholder="Note for this client's next session..."
+                                  value={noteTexts[cc.id] || ""}
+                                  onChange={(e) => setNoteTexts(prev => ({ ...prev, [cc.id]: e.target.value }))}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter" && noteTexts[cc.id]?.trim()) {
+                                      setSavingNote(cc.id);
+                                      supabase.from("coach_notes").insert({
+                                        coach_id: user?.id,
+                                        client_id: cc.client_id,
+                                        enrollment_id: cc.enrollment ? (cc.enrollment as unknown as { id: string }).id : null,
+                                        note: noteTexts[cc.id].trim(),
+                                      }).then(() => {
+                                        setNoteTexts(prev => ({ ...prev, [cc.id]: "" }));
+                                        setSavingNote(null);
+                                      });
+                                    }
+                                  }}
+                                  style={{
+                                    flex: 1, padding: "8px 12px", fontFamily: body, fontSize: 13,
+                                    color: colors.textPrimary, backgroundColor: "rgba(255,255,255,0.06)",
+                                    border: `1px solid ${colors.borderDefault}`, borderRadius: 8, outline: "none",
+                                  }}
+                                />
+                                <button
+                                  onClick={() => {
+                                    if (!noteTexts[cc.id]?.trim()) return;
+                                    setSavingNote(cc.id);
+                                    supabase.from("coach_notes").insert({
+                                      coach_id: user?.id,
+                                      client_id: cc.client_id,
+                                      enrollment_id: cc.enrollment ? (cc.enrollment as unknown as { id: string }).id : null,
+                                      note: noteTexts[cc.id].trim(),
+                                    }).then(() => {
+                                      setNoteTexts(prev => ({ ...prev, [cc.id]: "" }));
+                                      setSavingNote(null);
+                                    });
+                                  }}
+                                  disabled={savingNote === cc.id}
+                                  style={{
+                                    padding: "8px 16px", fontFamily: display, fontSize: 12, fontWeight: 600,
+                                    color: colors.bgDeep, backgroundColor: colors.coral,
+                                    border: "none", borderRadius: 8, cursor: "pointer",
+                                    opacity: savingNote === cc.id ? 0.6 : 1,
+                                  }}
+                                >
+                                  {savingNote === cc.id ? "..." : "Send"}
+                                </button>
+                              </div>
+                              <p style={{ fontFamily: body, fontSize: 11, color: colors.textMuted, marginTop: 6 }}>
+                                This note will appear in the client&rsquo;s next daily thread.
+                              </p>
+                            </div>
 
                             {cc.goals.length === 0 && cc.sharedInsights.length === 0 && !cc.enneagram && (
                               <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, marginTop: 16 }}>

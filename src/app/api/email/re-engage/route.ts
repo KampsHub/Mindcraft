@@ -116,6 +116,14 @@ async function handleReEngage(request: Request, dryRun: boolean) {
       const { data: { user } } = await supabase.auth.admin.getUserById(enrollment.client_id);
       if (!user?.email) continue;
 
+      // Check email preferences — skip if user opted out
+      const { data: prefs } = await supabase
+        .from("consent_settings")
+        .select("inactive_reminders")
+        .eq("client_id", enrollment.client_id)
+        .single();
+      if (prefs && prefs.inactive_reminders === false) continue;
+
       // Get last themes for personalization
       const { data: lastThemes } = await supabase
         .from("daily_sessions")

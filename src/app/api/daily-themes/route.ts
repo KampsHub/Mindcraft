@@ -220,6 +220,21 @@ export async function POST(request: Request) {
     const yesterdayAnalysis = recentSessions?.[0]?.step_3_analysis as Record<string, unknown> | null;
     const prevCoachingQuestions = (yesterdayAnalysis as Record<string, unknown> | null)?.coaching_questions || [];
 
+    // Fetch unsurfaced coach notes
+    let coachNotesContext = "No coach notes.";
+    const { data: coachNotes } = await supabase
+      .from("coach_notes")
+      .select("id, note")
+      .eq("client_id", user.id)
+      .eq("surfaced", false)
+      .order("created_at", { ascending: false })
+      .limit(3);
+    if (coachNotes && coachNotes.length > 0) {
+      coachNotesContext = `Your coach left a note:\n${coachNotes.map(n => `- "${n.note}"`).join("\n")}\nWeave this naturally into the Thread — acknowledge the coach's input without making it feel like an assignment.`;
+      // Mark as surfaced (fire-and-forget)
+      supabase.from("coach_notes").update({ surfaced: true }).in("id", coachNotes.map(n => n.id)).then(() => {});
+    }
+
     // Build exercise responses text
     const exerciseResponsesText = (recentExerciseResponses || [])
       .map(e => `- ${e.framework_name}: ${JSON.stringify(e.responses).substring(0, 400)}`)
@@ -271,6 +286,9 @@ Territory: ${todayContext.territory || "unknown"}
 ${activeGoals && activeGoals.length > 0
   ? activeGoals.map((g) => `- ${g.goal_text}`).join("\n")
   : "No active goals yet."}
+
+## Coach Notes
+${coachNotesContext}
 
 ## Yesterday's Commitments
 ${extractedCommitments.length > 0 || committedActions.length > 0

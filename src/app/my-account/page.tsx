@@ -34,6 +34,8 @@ interface ConsentSettings {
   ai_processing: boolean;
   coach_sharing: boolean;
   aggregate_analytics: boolean;
+  inactive_reminders: boolean;
+  program_updates: boolean;
 }
 
 export default function MyAccountPage() {
@@ -45,6 +47,8 @@ export default function MyAccountPage() {
     ai_processing: true,
     coach_sharing: false,
     aggregate_analytics: true,
+    inactive_reminders: true,
+    program_updates: true,
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -71,6 +75,8 @@ export default function MyAccountPage() {
         ai_processing: consentRes.data.ai_processing ?? true,
         coach_sharing: consentRes.data.coach_sharing ?? false,
         aggregate_analytics: consentRes.data.aggregate_analytics ?? true,
+        inactive_reminders: consentRes.data.inactive_reminders ?? true,
+        program_updates: consentRes.data.program_updates ?? true,
       });
     }
 
@@ -379,6 +385,47 @@ export default function MyAccountPage() {
               <Toggle
                 checked={consent.aggregate_analytics}
                 onChange={(v) => setConsent({ ...consent, aggregate_analytics: v })}
+              />
+            </div>
+          </div>
+
+          {/* Email Notifications */}
+          <h3 style={{ fontSize: 14, fontWeight: 600, margin: "20px 0 12px 0", color: colors.textSecondary, fontFamily: display }}>
+            Email Notifications
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{
+              display: "flex", justifyContent: "space-between", alignItems: "flex-start",
+              padding: 16, backgroundColor: colors.bgRecessed, borderRadius: 10,
+            }}>
+              <div style={{ flex: 1, marginRight: 16 }}>
+                <p style={{ fontSize: 14, fontWeight: 600, margin: "0 0 4px 0", color: colors.textPrimary, fontFamily: display }}>
+                  Inactive reminders
+                </p>
+                <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0, lineHeight: 1.5, fontFamily: body }}>
+                  Get a nudge if you haven&rsquo;t logged in for a couple of days.
+                </p>
+              </div>
+              <Toggle
+                checked={consent.inactive_reminders}
+                onChange={(v) => setConsent({ ...consent, inactive_reminders: v })}
+              />
+            </div>
+            <div style={{
+              display: "flex", justifyContent: "space-between", alignItems: "flex-start",
+              padding: 16, backgroundColor: colors.bgRecessed, borderRadius: 10,
+            }}>
+              <div style={{ flex: 1, marginRight: 16 }}>
+                <p style={{ fontSize: 14, fontWeight: 600, margin: "0 0 4px 0", color: colors.textPrimary, fontFamily: display }}>
+                  Program updates
+                </p>
+                <p style={{ fontSize: 13, color: colors.textSecondary, margin: 0, lineHeight: 1.5, fontFamily: body }}>
+                  New features, program launches, and product news.
+                </p>
+              </div>
+              <Toggle
+                checked={consent.program_updates}
+                onChange={(v) => setConsent({ ...consent, program_updates: v })}
               />
             </div>
           </div>

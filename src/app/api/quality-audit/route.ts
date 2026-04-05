@@ -215,6 +215,53 @@ export async function GET(request: NextRequest) {
     const allResults = evalResults.map((e) => e.result);
     const summary = generateSummary(allResults);
 
+    // ── 4b. Check Bloom level distribution for exercises after Day 14 ──
+    let bloomWarning = "";
+    try {
+      const { data: lateExercises } = await supabase
+        .from("exercise_completions")
+        .select("framework_name, daily_session_id")
+        .gte("created_at", sevenDaysAgo.toISOString());
+
+      if (lateExercises && lateExercises.length > 0) {
+        // Check which sessions are Day 14+
+        const sessionIds = [...new Set(lateExercises.map(e => e.daily_session_id))];
+        const { data: lateSessions } = await supabase
+          .from("daily_sessions")
+          .select("id, day_number")
+          .in("id", sessionIds)
+          .gte("day_number", 14);
+
+        if (lateSessions && lateSessions.length > 0) {
+          const lateSessionIds = new Set(lateSessions.map(s => s.id));
+          const lateFrameworks = lateExercises.filter(e => lateSessionIds.has(e.daily_session_id));
+
+          // Check bloom_level from exercises table
+          const frameworkNames = [...new Set(lateFrameworks.map(e => e.framework_name))];
+          if (frameworkNames.length > 0) {
+            const { data: exercises } = await supabase
+              .from("exercises")
+              .select("name, bloom_level")
+              .in("name", frameworkNames);
+
+            if (exercises && exercises.length > 0) {
+              const awarenessCount = exercises.filter(e =>
+                e.bloom_level && (e.bloom_level.toLowerCase().includes("remember") || e.bloom_level.toLowerCase().includes("understand"))
+              ).length;
+              const total = exercises.length;
+              const pct = Math.round((awarenessCount / total) * 100);
+
+              if (pct > 50) {
+                bloomWarning = `⚠️ Bloom Level Alert: ${pct}% of exercises after Day 14 are Awareness-level (Remember/Understand). Consider more Application/Analysis exercises for later program stages.`;
+              }
+            }
+          }
+        }
+      }
+    } catch (bloomErr) {
+      console.warn("Bloom level check failed (non-blocking):", bloomErr);
+    }
+
     // ── 5. Get user flag summary for the email ──
     const { count: userFlagsCount } = await supabase
       .from("quality_flags")
@@ -282,6 +329,12 @@ export async function GET(request: NextRequest) {
               <h2 style="font-size:13px;font-weight:700;color:#99929B;margin:0 0 12px 0;text-transform:uppercase;letter-spacing:0.06em;">User Flags This Week</h2>
               <p style="font-size:28px;font-weight:700;color:${(userFlagsCount || 0) > 0 ? "#D25858" : "#6AB282"};margin:0;">${userFlagsCount || 0}</p>
             </div>
+
+            ${bloomWarning ? `
+            <div style="background:#333339;border-radius:14px;padding:20px;margin-bottom:20px;border-left:3px solid #D25858;">
+              <p style="font-size:14px;color:#E4DDE2;margin:0;line-height:1.5;">${bloomWarning}</p>
+            </div>
+            ` : ""}
 
             <p style="font-size:12px;color:#99929B;text-align:center;margin-top:28px;">
               <a href="${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/coach" style="color:#E09585;">View full dashboard &rarr;</a>

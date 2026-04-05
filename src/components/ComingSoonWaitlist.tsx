@@ -250,7 +250,7 @@ export default function ComingSoonWaitlist() {
                   textAlign: "center",
                 }}
               >
-                This program is on the waitlist. We&apos;ll notify you as soon as it&apos;s released.
+                This program has a waitlist. We&apos;ll notify you as soon as it is released.
               </p>
             )}
 

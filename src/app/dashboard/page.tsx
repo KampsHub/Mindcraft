@@ -205,7 +205,7 @@ export default function DashboardPage() {
     try {
       const { data: rawEnrollments } = await supabase
         .from("program_enrollments")
-        .select("id, program_id, current_day, status, goals_approved, created_at, programs(name, slug)")
+        .select("id, program_id, current_day, status, goals_approved, created_at, current_streak, best_streak, programs(name, slug)")
         .eq("client_id", userId)
         .in("status", ["active", "onboarding", "awaiting_goals", "pre_start", "completed", "paused"])
         .order("created_at", { ascending: false });

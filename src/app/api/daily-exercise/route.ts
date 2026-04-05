@@ -238,7 +238,7 @@ Select the best framework and deliver a personalised exercise for today.`;
     });
 
     // Log the API call (without sensitive content for privacy)
-    await logApiCall({
+    logApiCall({
       clientId: user.id,
       endpoint: "/api/daily-exercise",
       model: message.model,
@@ -252,7 +252,7 @@ Select the best framework and deliver a personalised exercise for today.`;
     const latencyMs = Date.now() - startTime;
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
 
-    await logApiCall({
+    logApiCall({
       endpoint: "/api/daily-exercise",
       error: errorMessage,
       latencyMs,

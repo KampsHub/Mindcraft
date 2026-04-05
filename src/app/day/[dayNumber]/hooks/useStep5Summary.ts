@@ -132,6 +132,24 @@ export function useStep5Summary({
       })
       .eq("id", session.id);
 
+    // Calculate streak
+    const today = new Date().toISOString().split("T")[0];
+    const lastDate = (enrollment as Record<string, unknown>).last_completed_date as string | null;
+    const currentStreak = ((enrollment as Record<string, unknown>).current_streak as number) || 0;
+    const bestStreak = ((enrollment as Record<string, unknown>).best_streak as number) || 0;
+
+    let newStreak = 1;
+    if (lastDate) {
+      const last = new Date(lastDate);
+      const now = new Date(today);
+      const diffDays = Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
+      if (diffDays === 1) {
+        newStreak = currentStreak + 1;
+      } else if (diffDays === 0) {
+        newStreak = currentStreak; // Same day, keep streak
+      }
+    }
+
     await supabase
       .from("program_enrollments")
       .update({
@@ -139,6 +157,9 @@ export function useStep5Summary({
         status: enrollment.status === "pre_start" || enrollment.status === "onboarding"
           ? "active"
           : enrollment.status,
+        current_streak: newStreak,
+        best_streak: Math.max(bestStreak, newStreak),
+        last_completed_date: today,
       })
       .eq("id", enrollment.id);
 

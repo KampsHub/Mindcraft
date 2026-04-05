@@ -24,6 +24,8 @@ interface ProgramEnrollment {
   current_day: number;
   status: string;
   goals_approved: boolean;
+  current_streak?: number;
+  best_streak?: number;
   programs: { name: string; slug: string; weekly_themes?: any[] };
 }
 
@@ -127,11 +129,19 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
             </div>
           )}
 
-          <h2 style={{
-            ...text.title, color: colors.textPrimary, margin: "0 0 4px 0",
-          }}>
-            Day {enrollment.current_day}
-          </h2>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, margin: "0 0 4px 0" }}>
+            <h2 style={{ ...text.title, color: colors.textPrimary, margin: 0 }}>
+              Day {enrollment.current_day}
+            </h2>
+            {(enrollment.current_streak ?? 0) >= 2 && (
+              <span style={{
+                fontSize: 12, fontFamily: display, fontWeight: 600,
+                color: colors.coral, letterSpacing: "0.02em",
+              }}>
+                {enrollment.current_streak}-day streak
+              </span>
+            )}
+          </div>
           <p style={{ ...text.body, color: colors.textPrimary, margin: "0 0 18px 0" }}>
             {todaySessionDone ? "Session complete — nice work." : todaySessionStarted ? "You have an open session." : "Your daily session is ready."}
           </p>

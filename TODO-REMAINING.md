@@ -23,7 +23,10 @@ Go to Vercel → Settings → Environment Variables. Check if `CRON_SECRET` exis
 - If missing: add it with any random string (e.g., go to randomkeygen.com, copy a 256-bit key)
 - This secures the daily inactive-reminder and re-engage email cron jobs. Without it, the crons run but accept any request — a minor security gap.
 
-**4. SQL scripts — Check if these were run (5 min)**
+**4. Run streak migration (1 min)**
+Go to Supabase → SQL Editor → paste contents of `supabase/add-streak-columns.sql` → Run. Adds `current_streak`, `best_streak`, `last_completed_date` to `program_enrollments`.
+
+**5. SQL scripts — Check if these were run (5 min)**
 Go to Supabase → SQL Editor. For each script, you can check if it was already applied:
 - `scripts/add-retrieval-exercises.sql` — Check: run `SELECT count(*) FROM exercises WHERE name LIKE '%Retrieval%'`. If 0, run the script.
 - `scripts/update-scaffolding-notes.sql` — Check: run `SELECT scaffolding_note FROM day_content WHERE day_number = 15 LIMIT 1`. If null, run the script.
@@ -76,10 +79,6 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 - Check Railway logs after next deploy to confirm it starts cleanly
 - If still crashing: also set "Watch paths" to `livekit-agent/**` in Railway dashboard → Settings
 
-### GA4 Funnel Setup (30 min)
-- Go to GA4 → Explore → Create new Exploration → Funnel
-- Steps: `page_view (/)` → `homescreen_program_click` → `begin_checkout` → `login_success` → `day_completed (day 1)` → `day_completed (day 7)`
-
 ### Lawyer Review (send these docs)
 - **`LEGAL-HANGUPS.md`** — 36 specific legal risks across privacy policy + terms, with suggested draft language for arbitration, data retention, warranty disclaimer. Top 10 actions at the bottom.
 - **`GDPR-RIGHTS-IMPLEMENTATION.md`** — Maps all 7 GDPR rights to product, identifies gaps, prioritizes what to build.
@@ -95,8 +94,7 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 | Token Cost API | `GET /api/admin/token-costs?days=7` | JSON: total cost, per-endpoint, top users, avg latency |
 | Quality Audit | Auto-email every Monday 9am PT | AI output quality scores, stored in `quality_audits` table |
 | Sentry Errors | sentry.io (after setting DSN) | Real-time error tracking with stack traces |
-| Re-engage Emails | Auto via Vercel Cron daily 3pm | 3-7 days inactive → nudge, 7+ days → exit survey |
-| Daily Reminders | Auto via Vercel Cron daily 2pm | Reminds active users to journal |
+| Inactive Reminders | Auto via Vercel Cron daily 3pm | 2+ days inactive → nudge (max 3), then exit survey |
 
 ---
 
@@ -156,7 +154,7 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 
 8. **In-memory rate limiting** — Current rate limiting uses in-memory counters. On Vercel, each request can hit a different serverless instance, so counters don't share state. At scale (100+ concurrent users), limits won't be enforced consistently. **Fix:** Add Redis (e.g., Upstash) as a shared counter store. ~2 hours of work.
 
-9. **API logs write synchronously** — Every AI call writes to `api_logs` before returning the response, adding ~50-100ms latency. **Fix:** Use `waitUntil()` (Vercel edge runtime) or a background queue (e.g., Inngest, QStash) to write logs after the response is sent. ~1-2 hours.
+9. ~~**API logs write synchronously**~~ — ✅ Done. Removed `await` from `logApiCall()` calls so responses return immediately. Logs still write in the background.
 
 10. **Memory embeddings retrieval may slow** — As the `coaching_memories` table grows, similarity search queries will slow down. **Fix:** Add a PostgreSQL vector index (pgvector `ivfflat` or `hnsw` index), or limit retrieval to recent memories (last 90 days). Monitor query times in `api_logs` latency.
 
@@ -198,7 +196,7 @@ All of these are tracked automatically — no action needed from Stefanie. To re
 
 10. **Search past entries** — Can't search journal entries or exercises. Suggestion: Add a search page or search bar on the journal/exercises pages. Use Supabase full-text search (`to_tsvector` + `to_tsquery`) on `free_flow_entries.content` and `exercise_completions.responses`. No external search service needed at current scale.
 
-11. **Streak persistence** — Day completion streaks not tracked in database. Add `current_streak` and `longest_streak` integer columns to `program_enrollments`. Update on each day completion (check if previous day was completed yesterday → increment, otherwise reset to 1). Surface on dashboard.
+11. ~~**Streak persistence**~~ — ✅ Done. `current_streak`, `best_streak`, `last_completed_date` columns added. Streak updates on day completion. Shows on dashboard when streak ≥ 2. **Stefanie action:** Run `supabase/add-streak-columns.sql` in Supabase SQL Editor.
 
 ### LOW — Nice to Have
 

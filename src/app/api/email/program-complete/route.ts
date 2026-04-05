@@ -148,7 +148,18 @@ export async function POST(request: Request) {
                 <a href="${appUrl}/apply" style="color: #e09585; font-size: 15px; text-decoration: none;">Book a 1:1 coaching session &rarr;</a>
               </div>
             </div>
-            <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #333339;">
+            <div style="margin: 28px 0; padding: 20px; background-color: rgba(224,149,133,0.08); border-radius: 10px; border: 1px solid rgba(224,149,133,0.15);">
+              <p style="color: #ffffff; font-size: 15px; line-height: 1.6; margin: 0 0 12px 0;">
+                <strong>Would you share your experience?</strong>
+              </p>
+              <p style="color: #a0a0a8; font-size: 14px; line-height: 1.6; margin: 0 0 16px 0;">
+                Two quick questions. Takes 30 seconds. Your feedback helps us improve and helps others decide if this is right for them.
+              </p>
+              <a href="${process.env.TESTIMONIAL_SURVEY_URL || `${appUrl}/contact`}" style="display: inline-block; padding: 10px 24px; background-color: #e09585; color: #18181c; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 100px;">
+                Share feedback &rarr;
+              </a>
+            </div>
+            <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #333339;">
               <p style="color: #ffffff; font-size: 15px; line-height: 1.7; margin: 0; font-style: italic;">
                 This program was designed to end. The tools are yours now.
               </p>

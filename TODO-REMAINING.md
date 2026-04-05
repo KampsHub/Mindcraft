@@ -38,7 +38,7 @@
 - [ ] Playwright tests: 3-5 critical paths (login, journal, exercise, weekly review)
 - [ ] Blog infrastructure at `/blog`: Next.js pages, 9 topic suggestions ready
 - [x] Free lead magnet: "7 Disruptions Self-Assessment" standalone page with email capture ✅ DEPLOYED (mindcraft.ing/assessment — 7-question slider assessment, instant results with disruption map, email capture for results)
-- [ ] Testimonial collection: post-Day-30 email → Typeform (2 questions + permission)
+- [x] Testimonial collection: post-Day-30 email → Typeform (2 questions + permission) ✅ DEPLOYED (testimonial CTA block added to program-complete email. Set TESTIMONIAL_SURVEY_URL env var to Typeform URL when created.)
 
 ## Surveys to Create + Wire
 - [ ] Create testimonial survey (Typeform): "How would you describe Mindcraft to a friend?" + "What changed for you?" + permission checkbox. Wire into post-Day-30 completion email. Add survey URL to PRD.

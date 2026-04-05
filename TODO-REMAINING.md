@@ -121,17 +121,14 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 
 ### CRITICAL — Blocks Launch
 
-1. **Stripe keys** — The keys connected to the current mindcraft.ing products should be live keys. Verify in Vercel env vars that `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are live (not `sk_test_`).
-
-2. ~~**Inactive user reminder emails**~~ — ✅ Done. 2-day threshold, max 3 reminders, exit survey after 3rd + 7 days. Cron scheduled. SQL run.
-
-3. ~~**Subscription lifecycle**~~ — ✅ Not needed. Not officially a subscription.
+1. ~~**Stripe keys**~~ — ✅ Done. Live keys set in Vercel.
 
 ### HIGH — Needed for Quality Launch
 
-4. **Error monitoring (Sentry)** — Sentry is set up. Activate by setting `NEXT_PUBLIC_SENTRY_DSN` in Vercel env vars. Verify errors appear in Sentry dashboard after deploy.
+4. ~~**Error monitoring (Sentry)**~~ — ✅ Activated. DSN set in Vercel. Check sentry.io for first events.
 
 5. **Coach dashboard UI redesign** — API exists (`/api/coach-analytics`), page exists (`/coach`). Needs new UI showing:
+   - Section where you can add client emails in order to get access to their data(they will have to allow and release)
    - Individual client logins and last-active dates
    - Where each client is in the program (current day, week)
    - Insights the client chooses to share
@@ -197,7 +194,7 @@ All of these are tracked automatically — no action needed from Stefanie. To re
 
 10. **Search past entries** — Can't search journal entries or exercises. Suggestion: Add a search page or search bar on the journal/exercises pages. Use Supabase full-text search (`to_tsvector` + `to_tsquery`) on `free_flow_entries.content` and `exercise_completions.responses`. No external search service needed at current scale.
 
-11. ~~**Streak persistence**~~ — ✅ Done. `current_streak`, `best_streak`, `last_completed_date` columns added. Streak updates on day completion. Shows on dashboard when streak ≥ 2. **Stefanie action:** Run `supabase/add-streak-columns.sql` in Supabase SQL Editor.
+11. ~~**Streak persistence**~~ — ✅ Done. Columns added, SQL run, code live.
 
 ### LOW — Nice to Have
 
@@ -223,11 +220,11 @@ Should RetrievalCheck exercises be auto-inserted at Day+3 intervals, or manually
 
 **Trade-off:** Automatic insertion is scalable — the system inserts a retrieval quiz 3 days after any concept-heavy exercise, pulling the original content forward. But it can feel mechanical ("quiz on Day 7 content") and may not match the emotional arc. Curated retrieval means each retrieval moment is designed to land at the right point in the program — but it's more work per program and harder to maintain. **Recommendation:** Hybrid — auto-insert retrieval at Day+3 as a default, but allow manual overrides in the day_content table where the arc demands it. The auto-inserted ones use a generic "what do you remember?" format; the curated ones can be richer.
 
-**B. Commitment follow-through system** — ✅ Decision made.
-- Next day after a commitment: check if user followed through
-- If they didn't: surface again in weekly insights
-- Weekly insights: review all commitments from the week's dailies
-- **Implementation:** Pull `exercise_completions.responses` for commitment-type exercises, carry forward to next day's journal thread + weekly insights API. Needs: a `commitment` tag on exercise responses, a query in `process-journal` and `weekly-insights` to pull recent commitments.
+**B. Commitment follow-through system** — ✅ Built and shipped.
+- Daily themes: Thread now acknowledges yesterday's commitments
+- Process journal: Exercise selection responds to commitment follow-through
+- Weekly insights: Aggregates all week's commitments and reviews follow-through
+- Data flows through `step_5_summary.extracted_commitments` → next day's prompt → weekly aggregation
 
 **C. Progress visualization**
 What should "you improved by X" look like?

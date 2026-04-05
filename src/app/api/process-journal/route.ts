@@ -249,6 +249,24 @@ When selecting overflow exercises, weight toward the most disrupted domains. If 
       })
       .join("\n\n");
 
+    // Fetch yesterday's commitments for follow-through awareness
+    let yesterdayCommitments: string[] = [];
+    if (dayNumber > 1) {
+      const { data: yesterdaySession } = await supabase
+        .from("daily_sessions")
+        .select("step_5_summary")
+        .eq("enrollment_id", enrollmentId)
+        .eq("day_number", dayNumber - 1)
+        .single();
+      if (yesterdaySession?.step_5_summary) {
+        const summary = yesterdaySession.step_5_summary as Record<string, unknown>;
+        yesterdayCommitments = [
+          ...((summary.extracted_commitments as string[]) || []),
+          ...((summary.committed_actions as string[]) || []),
+        ];
+      }
+    }
+
     const userPrompt = `
 ## Today's Journal Entry (Day ${dayNumber})
 ${journalContent}
@@ -260,6 +278,11 @@ ${activeGoals && activeGoals.length > 0
   ? activeGoals.map((g) => `- ${g.goal_text}`).join("\n")
   : "No active goals yet."}
 ${disruptionScoresContext}
+
+## Yesterday's Commitments
+${yesterdayCommitments.length > 0
+  ? yesterdayCommitments.map(c => `- ${c}`).join("\n") + "\nIf the journal mentions following through, select exercises that build momentum. If it mentions not following through, select exercises about barriers or re-commitment — never shame."
+  : "No commitments from yesterday."}
 
 ## Recently Used Exercises (do NOT repeat)
 ${recentCompletions && recentCompletions.length > 0

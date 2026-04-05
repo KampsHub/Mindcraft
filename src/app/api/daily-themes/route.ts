@@ -213,6 +213,8 @@ export async function POST(request: Request) {
     const yesterdaySummary = recentSessions?.[0]?.step_5_summary as Record<string, unknown> | null;
     const threadSeed = yesterdaySummary?.thread_seed || null;
     const forTomorrow = yesterdaySummary?.for_tomorrow as Record<string, unknown> | null;
+    const extractedCommitments = (yesterdaySummary?.extracted_commitments as string[] | undefined) || [];
+    const committedActions = (yesterdaySummary?.committed_actions as string[] | undefined) || [];
 
     // Extract coaching questions from yesterday's analysis (to carry forward if unanswered)
     const yesterdayAnalysis = recentSessions?.[0]?.step_3_analysis as Record<string, unknown> | null;
@@ -270,6 +272,11 @@ ${activeGoals && activeGoals.length > 0
   ? activeGoals.map((g) => `- ${g.goal_text}`).join("\n")
   : "No active goals yet."}
 
+## Yesterday's Commitments
+${extractedCommitments.length > 0 || committedActions.length > 0
+  ? `The user committed to these actions yesterday:\n${[...extractedCommitments, ...committedActions].map(c => `- ${c}`).join("\n")}\nWeave a brief check-in into the Thread — ask how it went. Don't lecture. One sentence, naturally.`
+  : "No commitments from yesterday."}
+
 Generate the Thread and today's themes for Day ${dayNumber}.`;
 
     // Fetch client profile for personalization (edges depth for growth edge naming in Thread)
@@ -303,10 +310,7 @@ Generate the Thread and today's themes for Day ${dayNumber}.`;
       );
     }
 
-    // ── Extract commitment tracking data from recent sessions ──
-    // Yesterday's commitments (from step_5_summary.extracted_commitments)
-    const extractedCommitments = (yesterdaySummary?.extracted_commitments as string[] | undefined) || [];
-    const committedActions = (yesterdaySummary?.committed_actions as string[] | undefined) || [];
+    // ── Commitment tracking data (already extracted above) ──
 
     // Yesterday's for_tomorrow prompts (already extracted above)
     // forTomorrow is already available from line ~187

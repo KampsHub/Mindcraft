@@ -178,6 +178,26 @@ ${s.step_5_summary ? `Summary themes: ${JSON.stringify((s.step_5_summary as { to
     }).join("\n\n")
   : "No sessions completed this week yet."}
 
+## Commitments Made This Week
+${sessions && sessions.length > 0
+  ? (() => {
+      const weekCommitments = sessions
+        .map(s => {
+          const summary = s.step_5_summary as Record<string, unknown> | null;
+          const commitments = [
+            ...((summary?.extracted_commitments as string[]) || []),
+            ...((summary?.committed_actions as string[]) || []),
+          ];
+          return { day: s.day_number, commitments };
+        })
+        .filter(dc => dc.commitments.length > 0);
+      return weekCommitments.length > 0
+        ? weekCommitments.map(dc => `Day ${dc.day}: ${dc.commitments.join(", ")}`).join("\n") +
+          "\n\nReview which commitments were followed through on (look for mentions in subsequent journal entries) and which weren't. Surface unfulfilled commitments as actionable items for next week."
+        : "No explicit commitments made this week.";
+    })()
+  : "No sessions this week."}
+
 Generate the key insights for Week ${weekNumber}.`;
 
     // Fetch client profile for personalization

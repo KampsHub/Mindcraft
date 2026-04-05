@@ -7,8 +7,8 @@
 - [x] Mobile touch targets 44px minimum + pulse signaling on WheelChart, StakeholderMap ✅ DEPLOYED (BodyMap already has tap-to-mark, no resize needed)
 - [x] Add missing FAQs: "Can I pause?", "Export data?", "Share with therapist?" ✅ DEPLOYED
 - [x] GLOBAL: eliminate ALL grey text site-wide — textSecondary→#E0DDD8, textMuted→#D0CCC6 at theme level ✅ DEPLOYED
-- [ ] Specific error messages: journal processing, exercise save, payment, auth session
-- [ ] Re-enrollment CTA after program completion ("Explore other programs")
+- [x] Specific error messages: journal processing improved ✅ DEPLOYED (exercise save, payment, auth still pending)
+- [x] Re-enrollment CTA after program completion ✅ DEPLOYED
 - [ ] 7-day money-back guarantee copy in Stripe checkouts (Stefanie's exact copy provided in MULTI-LENS-REVIEW.md)
 - [ ] Verify sandbox/production separation (test prePopulated doesn't leak)
 
@@ -45,7 +45,7 @@
 - [ ] Create exit survey (Typeform): "What made you stop using Mindcraft?" + "What would bring you back?" Wire into re-engagement email (7 days inactive). Add survey URL to PRD.
 
 ## Legal/Compliance
-- [ ] Signup: require checkbox agreeing to Terms & Privacy Policy (links open in new tab). Block account creation if unchecked. If user paid but won't create account (no consent), flag in Stripe metadata + Supabase for manual outreach.
+- [x] Signup: Terms & Privacy consent checkbox ✅ DEPLOYED (links open in new tab, button disabled until checked). Paid-but-no-account flagging still pending.
 
 ## Infrastructure
 - [ ] Railway keeps crashing on every Vercel deploy. Root Directory was set to /livekit-agent but still triggering. Investigate: is Railway watching the whole repo or just the subfolder? May need to configure "Watch paths" in Railway settings to only trigger on livekit-agent/** changes.

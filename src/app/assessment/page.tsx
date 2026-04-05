@@ -41,7 +41,7 @@ const DISRUPTIONS = [
     id: "belonging",
     label: "Connection",
     question: "How disconnected do you feel from the people around you?",
-    context: "Career disruptions often quietly cut the social threads you didn\u2019t realize you depended on.",
+    context: "Career disruptions quietly cut social threads \u2014 at work and at home. The people closest to you don\u2019t always know how to reach you when you\u2019re in it.",
     dataPoint: "Matthew Lieberman at UCLA found that social rejection activates the same brain regions as physical pain. Belonging isn\u2019t a soft need \u2014 losing it literally hurts, and it impairs decision-making and focus.",
     low: "I feel isolated or on the outside",
     high: "I feel like I belong",

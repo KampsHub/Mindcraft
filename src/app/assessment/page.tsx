@@ -94,7 +94,7 @@ const DISRUPTIONS = [
 ];
 
 export default function AssessmentPage() {
-  const [step, setStep] = useState<"intro" | "assess" | "results" | "context" | "email">("intro");
+  const [step, setStep] = useState<"intro" | "assess" | "results" | "context">("intro");
   const [scores, setScores] = useState<Record<string, number>>({});
   const [currentIdx, setCurrentIdx] = useState(0);
   const [email, setEmail] = useState("");
@@ -996,17 +996,18 @@ export default function AssessmentPage() {
                 ))}
               </div>
 
-              {/* Challenge */}
+              {/* Email capture */}
               <p
                 style={{
                   fontFamily: display,
                   fontSize: 13,
                   fontWeight: 600,
                   color: colors.textPrimary,
-                  marginBottom: 8,
+                  marginBottom: 12,
+                  marginTop: 28,
                 }}
               >
-                What is your biggest challenge right now?
+                Get your personalized next steps
               </p>
               <p
                 style={{
@@ -1014,98 +1015,10 @@ export default function AssessmentPage() {
                   fontSize: 13,
                   color: colors.textMuted,
                   marginBottom: 12,
-                  fontStyle: "italic",
                 }}
               >
-                One or two sentences — whatever is top of mind.
+                One email with your disruption map and a resource matched to your situation. No spam.
               </p>
-              <textarea
-                value={challenge}
-                onChange={(e) => setChallenge(e.target.value)}
-                placeholder="e.g., I can't stop replaying conversations in my head and it's affecting my sleep..."
-                style={{
-                  width: "100%",
-                  fontFamily: body,
-                  fontSize: 14,
-                  color: colors.textPrimary,
-                  backgroundColor: "rgba(255,255,255,0.04)",
-                  border: `1px solid ${colors.borderDefault}`,
-                  borderRadius: 10,
-                  padding: "14px 16px",
-                  minHeight: 80,
-                  resize: "vertical" as const,
-                  outline: "none",
-                  lineHeight: 1.6,
-                  boxSizing: "border-box" as const,
-                  marginBottom: 24,
-                }}
-              />
-
-              {/* Continue */}
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => setStep("email")}
-                disabled={!situation}
-                style={{
-                  fontFamily: display,
-                  fontSize: 15,
-                  fontWeight: 600,
-                  padding: "14px 32px",
-                  borderRadius: 100,
-                  backgroundColor: situation ? colors.coral : colors.bgElevated,
-                  color: situation ? colors.bgDeep : colors.textMuted,
-                  border: "none",
-                  cursor: situation ? "pointer" : "not-allowed",
-                }}
-              >
-                Continue
-              </motion.button>
-              <button
-                onClick={() => setStep("results")}
-                style={{
-                  background: "none", border: "none", color: colors.textMuted,
-                  fontSize: 13, cursor: "pointer", fontFamily: body,
-                  display: "block", margin: "16px auto 0",
-                }}
-              >
-                &larr; Back to results
-              </button>
-            </motion.div>
-          )}
-
-          {/* ── EMAIL CAPTURE ── */}
-          {step === "email" && (
-            <motion.div
-              key="email"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <h2
-                style={{
-                  fontFamily: display,
-                  fontSize: 22,
-                  fontWeight: 600,
-                  marginBottom: 12,
-                }}
-              >
-                Get your personalized results
-              </h2>
-              <p
-                style={{
-                  fontFamily: body,
-                  fontSize: 15,
-                  color: colors.textSecondary,
-                  lineHeight: 1.6,
-                  marginBottom: 24,
-                }}
-              >
-                We&apos;ll send your disruption map, a practical first step matched to
-                your situation, and one resource for your most disrupted area.
-                One email. No spam.
-              </p>
-
               {submitted ? (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
@@ -1132,7 +1045,7 @@ export default function AssessmentPage() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter") handleEmailSubmit(); }}
+                    onKeyDown={(e) => { if (e.key === "Enter" && situation) handleEmailSubmit(); }}
                     style={{
                       flex: 1,
                       padding: "12px 16px",
@@ -1147,17 +1060,17 @@ export default function AssessmentPage() {
                   />
                   <button
                     onClick={handleEmailSubmit}
-                    disabled={submitting}
+                    disabled={submitting || !situation}
                     style={{
                       padding: "12px 24px",
                       fontFamily: display,
                       fontSize: 13,
                       fontWeight: 600,
                       color: colors.bgDeep,
-                      backgroundColor: colors.coral,
+                      backgroundColor: situation ? colors.coral : colors.bgElevated,
                       border: "none",
                       borderRadius: 8,
-                      cursor: submitting ? "not-allowed" : "pointer",
+                      cursor: submitting || !situation ? "not-allowed" : "pointer",
                       opacity: submitting ? 0.6 : 1,
                     }}
                   >
@@ -1165,19 +1078,19 @@ export default function AssessmentPage() {
                   </button>
                 </div>
               )}
-
               <button
-                onClick={() => setStep("context")}
+                onClick={() => setStep("results")}
                 style={{
                   background: "none", border: "none", color: colors.textMuted,
                   fontSize: 13, cursor: "pointer", fontFamily: body,
                   display: "block", margin: "16px auto 0",
                 }}
               >
-                &larr; Back
+                &larr; Back to results
               </button>
             </motion.div>
           )}
+
         </AnimatePresence>
       </div>
     </div>

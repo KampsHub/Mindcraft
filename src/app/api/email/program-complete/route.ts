@@ -155,7 +155,7 @@ export async function POST(request: Request) {
               <p style="color: #a0a0a8; font-size: 14px; line-height: 1.6; margin: 0 0 16px 0;">
                 Two quick questions. Takes 30 seconds. Your feedback helps us improve and helps others decide if this is right for them.
               </p>
-              <a href="${process.env.TESTIMONIAL_SURVEY_URL || `${appUrl}/contact`}" style="display: inline-block; padding: 10px 24px; background-color: #e09585; color: #18181c; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 100px;">
+              <a href="${process.env.TESTIMONIAL_SURVEY_URL || `${appUrl}/feedback/testimonial`}" style="display: inline-block; padding: 10px 24px; background-color: #e09585; color: #18181c; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 100px;">
                 Share feedback &rarr;
               </a>
             </div>

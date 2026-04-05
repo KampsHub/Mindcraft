@@ -154,7 +154,7 @@ async function handleReEngage(request: Request, dryRun: boolean) {
 
         if (isExitSurveyCandidate) {
           // Exit survey email — 7+ days inactive
-          const exitSurveyUrl = process.env.EXIT_SURVEY_URL || "https://mindcraft.ing/contact";
+          const exitSurveyUrl = process.env.EXIT_SURVEY_URL || "https://mindcraft.ing/feedback/exit";
           await resend.emails.send({
             from: "Mindcraft <crew@allmindsondeck.com>",
             to: user.email,

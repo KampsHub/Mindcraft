@@ -6,17 +6,18 @@
 ## YOUR ACTION ITEMS (Stefanie)
 
 ### Set These Env Variables in Vercel (5 min)
-| Variable | Value | Purpose |
-|----------|-------|---------|
-| `NEXT_PUBLIC_SENTRY_DSN` | From sentry.io → Settings → Client Keys | Activates error tracking |
+| Variable      | Value                                                  | Purpose                       |
+| ------------- | ------------------------------------------------------ | ----------------------------- |
 | `CRON_SECRET` | Any random string (e.g., generate at randomkeygen.com) | Secures cron jobs + admin API |
-| `EXIT_SURVEY_URL` | Typeform URL (create below) | Link in 7-day inactive email |
-| `TESTIMONIAL_SURVEY_URL` | Typeform URL (create below) | Link in Day 30 completion email |
 
+### Run These SQL Scripts in Supabase (5 min total)
+Go to Supabase → SQL Editor → paste contents of each file → Run
 
-### Run This SQL in Supabase (2 min)
-- **`scripts/add-retrieval-exercises.sql`** — Adds spaced retrieval quiz exercises on Days 7, 14, 21 for all 3 programs
-- Go to Supabase → SQL Editor → paste contents → Run
+| Script | Path | What it does |
+|--------|------|-------------|
+| Retrieval exercises | `scripts/add-retrieval-exercises.sql` | Adds spaced retrieval quiz exercises on Days 7, 14, 21 for all 3 programs |
+| Scaffolding notes | `scripts/update-scaffolding-notes.sql` | Adds AI instructions to reduce scaffolding in Days 11-30 |
+| Bloom's labels | `scripts/add-bloom-labels.sql` | Adds cognitive depth labels + concept tags to all exercises |
 
 ### Railway Fix (5 min)
 - Go to Railway dashboard → your service → Settings → "Watch paths"
@@ -54,6 +55,8 @@
 | `/assessment` | Free 7 Disruptions Self-Assessment lead magnet | Live |
 | `/blog` | Blog with 9 coming-soon topic cards + email signup | Live |
 | `/admin` | Admin monitoring dashboard (restricted to admin emails) | Live |
+| `/feedback/exit` | Exit survey (why they stopped, what would bring them back) | Live |
+| `/feedback/testimonial` | Testimonial survey (describe to a friend, what changed, permission) | Live |
 
 ---
 

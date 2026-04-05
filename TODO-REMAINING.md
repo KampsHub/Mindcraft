@@ -73,9 +73,9 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
 
 1. **Stripe keys** — The keys connected to the current mindcraft.ing products should be live keys. Verify in Vercel env vars that `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are live (not `sk_test_`).
 
-2. **Inactive user reminder emails** — No daily reminder emails. Instead: if a user hasn't logged in for 2 days, send a reminder. Do this up to 3 times. Implement as a cron job checking `daily_sessions.created_at` and tracking send count in `email_events`.
+2. ~~**Inactive user reminder emails**~~ — ✅ Done. 2-day threshold, max 3 reminders, exit survey after 3rd + 7 days. Cron already scheduled. **Stefanie action:** Run `supabase/extend-email-events.sql` in Supabase SQL Editor.
 
-3. **Subscription lifecycle** — Not officially a subscription. No cancellation flow, billing portal, or renewal webhooks needed.
+3. ~~**Subscription lifecycle**~~ — ✅ Not needed. Not officially a subscription.
 
 ### HIGH — Needed for Quality Launch
 
@@ -88,16 +88,16 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
    - Coaching goals per client
    - Enneagram results (if client uploads)
 
-6. **Referral dashboard** — Coach referral codes work but coaches can't view/manage them. **Parked.**
+6. ~~**Referral dashboard**~~ — Parked.
 
-7. **Admin panel** — All admin work is manual via Supabase console. **Accepted — Stefanie will use Supabase directly.**
+7. ~~**Admin panel**~~ — Accepted. Stefanie will use Supabase directly.
 
 ### Monitoring Features
 
 | Feature | Needs | Status |
 |---------|-------|--------|
 | Sentry | DSN env var in Vercel | Config ready — activate |
-| Quality monitoring cron | Vercel Cron job setup | Code exists at `/api/quality-audit` — schedule it |
+| ~~Quality monitoring cron~~ | ~~Vercel Cron job setup~~ | ✅ Already scheduled in vercel.json: `0 16 * * 1` (Monday 4 PM UTC) |
 | Token cost tracking | Admin query on `api_logs` | Table exists — build query and send to Stefanie |
 
 ### Known Technical Debt
@@ -110,7 +110,7 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
 
 11. **No unit/integration tests** — Only manual `TEST-PLAN.md`. **To start:** Set up Vitest (fast, Vite-native) for unit tests + Playwright for integration tests. Start with: API route tests (process-journal, daily-exercise) and critical UI flows (login → dashboard → day 1). ~1 day for setup + first 10 tests.
 
-12. **283 exercises old format** — If `exerciseDataCore.ts` exercises have been migrated to the new whyThis/instruction format, this is done. Verify by checking if any exercises still have `whyNow` or `science` fields: `grep -c "whyNow\|science" src/lib/exerciseDataCore.ts`.
+12. ~~**283 exercises old format**~~ — ✅ Verified. Exercise data lives in database (not `exerciseDataCore.ts` which doesn't exist). 14 references to `whyNow`/`science` remain in rendering code as backward-compatible fallbacks — not a blocker.
 
 13. **Email templates hardcoded** — All email HTML is inline in route handlers. **Fix:** Use React Email (`@react-email/components`) to build reusable templates as React components. Resend supports React Email natively. Create a `src/emails/` directory with shared layout + per-email templates. ~1 day to migrate existing emails.
 

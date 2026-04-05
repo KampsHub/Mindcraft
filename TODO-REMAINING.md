@@ -5,27 +5,33 @@
 
 ## YOUR ACTION ITEMS (Stefanie)
 
-### Set These Env Variables in Vercel (5 min)
-| Variable      | Value                                                  | Purpose                       | Status |
-| ------------- | ------------------------------------------------------ | ----------------------------- | ------ |
-| `CRON_SECRET` | Any random string (e.g., generate at randomkeygen.com) | Secures cron jobs + admin API | ❓ Check if set |
-| `NEXT_PUBLIC_SENTRY_DSN` | Your Sentry DSN from sentry.io | Error monitoring in production | ❗ Set to activate Sentry |
+### Stefanie: Do These Before Launch
 
-### Run These SQL Scripts in Supabase
-Go to Supabase → SQL Editor → paste contents of each file → Run
+**1. Stripe — Verify live keys (2 min)**
+Go to Vercel → Settings → Environment Variables. Check these two:
+- `STRIPE_SECRET_KEY` — must start with `sk_live_`. If it starts with `sk_test_`, you're in test mode and real payments won't work. Get the live key from Stripe Dashboard → Developers → API keys.
+- `STRIPE_WEBHOOK_SECRET` — must match the webhook endpoint configured for your live Stripe account (not the test one). Check Stripe Dashboard → Developers → Webhooks → your endpoint → Signing secret.
 
-| Script | Path | What it does | Status |
-|--------|------|-------------|--------|
-| ~~Email events~~ | ~~`supabase/extend-email-events.sql`~~ | ~~Creates email_events table for tracking~~ | ✅ Done |
-| Retrieval exercises | `scripts/add-retrieval-exercises.sql` | Adds spaced retrieval quiz exercises on Days 7, 14, 21 | ❓ Check if run |
-| Scaffolding notes | `scripts/update-scaffolding-notes.sql` | Adds AI instructions to reduce scaffolding in Days 11-30 | ❓ Check if run |
-| Bloom's labels | `scripts/add-bloom-labels.sql` | Adds cognitive depth labels + concept tags to all exercises | ❓ Check if run |
+**2. Sentry — Activate error monitoring (5 min)**
+Go to sentry.io → your Mindcraft project → Settings → Client Keys (DSN). Copy the DSN string. Then:
+- Vercel → Settings → Environment Variables → Add `NEXT_PUBLIC_SENTRY_DSN` with the DSN value
+- Push any change (or empty commit) to trigger a redeploy
+- After deploy, go to sentry.io — you should see a "first event" confirmation. From then on, production errors show up automatically.
 
-### Verify in Vercel (5 min)
-- [ ] Confirm `STRIPE_SECRET_KEY` is a live key (starts with `sk_live_`, not `sk_test_`)
-- [ ] Confirm `STRIPE_WEBHOOK_SECRET` is for the live webhook endpoint
-- [ ] Set `NEXT_PUBLIC_SENTRY_DSN` → then push an empty commit to trigger redeploy
-- [ ] Confirm `CRON_SECRET` is set (required for daily reminder + re-engage crons to work)
+**3. Cron secret — Enable scheduled emails (2 min)**
+Go to Vercel → Settings → Environment Variables. Check if `CRON_SECRET` exists.
+- If missing: add it with any random string (e.g., go to randomkeygen.com, copy a 256-bit key)
+- This secures the daily inactive-reminder and re-engage email cron jobs. Without it, the crons run but accept any request — a minor security gap.
+
+**4. SQL scripts — Check if these were run (5 min)**
+Go to Supabase → SQL Editor. For each script, you can check if it was already applied:
+- `scripts/add-retrieval-exercises.sql` — Check: run `SELECT count(*) FROM exercises WHERE name LIKE '%Retrieval%'`. If 0, run the script.
+- `scripts/update-scaffolding-notes.sql` — Check: run `SELECT scaffolding_note FROM day_content WHERE day_number = 15 LIMIT 1`. If null, run the script.
+- `scripts/add-bloom-labels.sql` — Check: run `SELECT bloom_level FROM exercises LIMIT 1`. If column doesn't exist or is null, run the script.
+
+**5. GA4 funnel (30 min)**
+Go to GA4 → Explore → Create new Exploration → Funnel.
+Steps: `page_view (/)` → `homescreen_program_click` → `begin_checkout` → `login_success` → `day_completed (day 1)` → `day_completed (day 7)`
 
 ### Railway Fix ✅ CODE FIX PUSHED
 - The crash was `llm.LLMOptions` not existing in the installed livekit-agents version — **fixed in code** (removed type reference)

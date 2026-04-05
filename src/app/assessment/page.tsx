@@ -168,9 +168,9 @@ export default function AssessmentPage() {
               >
                 {(() => {
                   const SHORT_LABELS = [
-                    "Who am I now?", "Can I do this?", "Am I safe here?",
-                    "Do I belong?", "Will I be okay?", "How am I holding up?",
-                    "What\u2019s expected?", "Can I trust them?", "What\u2019s next?",
+                    "Identity", "Self-doubt", "Safety",
+                    "Loneliness", "Money", "Sleep & focus",
+                    "Expectations", "Trust", "What\u2019s next",
                   ];
                   const total = 9;
                   const viewSize = 460;

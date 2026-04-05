@@ -25,7 +25,7 @@
 - [ ] Staging environment: develop branch exists, needs separate Supabase for full isolation
 - [ ] GA4 funnel setup: build visualization in GA4 Explore (Stefanie asked for this)
 - [x] SEO audit: OG tags, Twitter cards, siteName, enhanced descriptions on all program pages ✅ DEPLOYED
-- [ ] Coming Soon waitlist on homepage: "First-Time Manager" + "International Move" (no landing pages)
+- [x] Coming Soon waitlist on homepage: "First-Time Manager" + "International Move" (no landing pages) ✅ DEPLOYED
 - [ ] Email nurture signup: "Get weekly insights" on blog + homepage, Resend audience list
 
 ## Larger Effort (~3-4+ hrs each)

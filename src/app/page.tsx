@@ -10,6 +10,7 @@ import { trackEvent } from "@/components/GoogleAnalytics";
 import Logo from "@/components/Logo";
 import FadeIn from "@/components/FadeIn";
 import TextReveal from "@/components/TextReveal";
+import ComingSoonWaitlist from "@/components/ComingSoonWaitlist";
 
 /* ── Shared styles ── */
 const display = fonts.display;
@@ -1704,6 +1705,9 @@ export default function Home() {
               </FadeIn>
             ))}
           </div>
+
+          {/* ── Coming Soon ── */}
+          <ComingSoonWaitlist />
 
         </div>
       </section>

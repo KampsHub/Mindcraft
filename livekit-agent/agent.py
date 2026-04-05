@@ -111,8 +111,9 @@ You are having a SPOKEN conversation. This should feel like talking to a sharp, 
         self,
         *,
         chat_ctx: llm.ChatContext,
-        conn_options: llm.LLMOptions = None,
+        conn_options=None,
         fnc_ctx: Optional[llm.FunctionContext] = None,
+        **kwargs,
     ) -> llm.LLMStream:
         # Convert chat context to Claude messages
         messages = []
@@ -150,10 +151,13 @@ class _TextLLMStream(llm.LLMStream):
     """Simple stream that yields a complete text response."""
 
     def __init__(self, text: str):
-        super().__init__(
-            chat_ctx=llm.ChatContext(),
-            conn_options=llm.LLMOptions(),
-        )
+        # Try new API first, fall back to old
+        try:
+            super().__init__(
+                chat_ctx=llm.ChatContext(),
+            )
+        except TypeError:
+            super().__init__()
         self._text = text
 
     async def _run(self):

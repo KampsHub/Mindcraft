@@ -6,7 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
 import { trackEvent } from "@/components/GoogleAnalytics";
 import Logo from "@/components/Logo";
-import { content as c } from "@/content/site";
+
+const display = fonts.display;
+const body = fonts.bodyAlt;
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,7 +17,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [magicLinkLoading, setMagicLinkLoading] = useState(false);
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [mode, setMode] = useState<"magic" | "password">("magic");
   const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -23,7 +25,8 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (searchParams.get("message") === "password-updated") {
-      setSuccessMessage("Password updated successfully. Sign in with your new password.");
+      setSuccessMessage("Password updated. Sign in below.");
+      setMode("password");
     }
   }, [searchParams]);
 
@@ -36,229 +39,309 @@ export default function LoginPage() {
     else { trackEvent("login_success", { method: "password" }); window.location.href = "/dashboard"; }
   }
 
+  async function handleMagicLink() {
+    if (!email) return;
+    setMagicLinkLoading(true);
+    setError("");
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    });
+    setMagicLinkLoading(false);
+    if (error) setError(error.message);
+    else setMagicLinkSent(true);
+  }
+
+  async function handleGoogle() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) setError("Google sign-in failed. Try the magic link instead.");
+  }
+
   const inputStyle: React.CSSProperties = {
-    width: "100%", padding: "14px 16px", fontSize: 15,
+    width: "100%",
+    padding: "14px 16px",
+    fontSize: 15,
     backgroundColor: colors.bgInput,
     color: colors.textPrimary,
-    border: `1px solid ${colors.borderDefault}`, borderRadius: 10,
-    marginBottom: 12, boxSizing: "border-box",
-    outline: "none", transition: "border-color 0.15s",
-    fontFamily: fonts.bodyAlt,
+    border: `1px solid ${colors.borderDefault}`,
+    borderRadius: 10,
+    boxSizing: "border-box",
+    outline: "none",
+    fontFamily: body,
   };
 
   return (
-    <div style={{
-      minHeight: "100vh", display: "flex", alignItems: "center",
-      justifyContent: "center", backgroundColor: colors.bgDeep,
-      fontFamily: fonts.bodyAlt, padding: 24,
-    }}>
-      <div style={{
-        width: "100%", maxWidth: 420,
-        backgroundColor: colors.bgSurface,
-        borderRadius: 20, padding: "48px 36px 36px",
-        border: `1px solid ${colors.borderDefault}`,
-      }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.bgDeep,
+        fontFamily: body,
+        padding: 24,
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: 380 }}>
         {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div style={{ display: "inline-block", marginBottom: 12 }}>
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <div style={{ marginBottom: 16 }}>
             <Logo size={20} />
           </div>
-          <h1 style={{
-            fontSize: 26, fontWeight: 700, margin: "0 0 6px 0",
-            color: colors.textPrimary, fontFamily: fonts.display,
-            letterSpacing: "-0.02em",
-          }}>
-            {c.login.headline}
+          <h1
+            style={{
+              fontSize: 24,
+              fontWeight: 700,
+              margin: 0,
+              color: colors.textPrimary,
+              fontFamily: display,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Sign in
           </h1>
-          <p style={{ fontSize: 15, color: colors.textPrimary, margin: 0 }}>
-            {c.login.subheadline}
-          </p>
         </div>
 
         {successMessage && (
-          <div style={{
-            padding: 14, backgroundColor: colors.successWash,
-            border: `1px solid ${colors.success}44`, borderRadius: 10,
-            color: colors.success, fontSize: 14, marginBottom: 20, textAlign: "center",
-          }}>
+          <div
+            style={{
+              padding: 12,
+              backgroundColor: colors.successWash,
+              border: `1px solid ${colors.success}44`,
+              borderRadius: 10,
+              color: colors.success,
+              fontSize: 14,
+              marginBottom: 20,
+              textAlign: "center",
+            }}
+          >
             {successMessage}
           </div>
         )}
 
-        {/* Email + Magic Link — primary */}
-        <div style={{ marginBottom: 20 }}>
-          <label style={{
-            display: "block", marginBottom: 6, fontSize: 13,
-            fontWeight: 600, color: colors.textPrimary,
-            fontFamily: fonts.display, letterSpacing: "0.01em",
-          }}>
-            {c.login.emailLabel}
-          </label>
-          <input
-            type="email" value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={c.login.emailPlaceholder}
-            style={inputStyle}
-          />
-
-          {magicLinkSent ? (
-            <div style={{
-              padding: 20, backgroundColor: colors.successWash,
-              border: `1px solid ${colors.success}44`, borderRadius: 12,
+        {/* Magic link sent state */}
+        {magicLinkSent ? (
+          <div
+            style={{
+              padding: 32,
+              backgroundColor: colors.bgSurface,
+              borderRadius: 16,
+              border: `1px solid ${colors.borderDefault}`,
               textAlign: "center",
-            }}>
-              <p style={{ fontSize: 16, fontWeight: 700, color: colors.success, margin: "0 0 6px 0", fontFamily: fonts.display }}>
-                Check your email
-              </p>
-              <p style={{ fontSize: 14, color: colors.textPrimary, margin: 0, lineHeight: 1.5 }}>
-                We sent a sign-in link to <strong style={{ color: colors.textPrimary }}>{email}</strong>
-              </p>
+            }}
+          >
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: "50%",
+                backgroundColor: colors.successWash,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 16px",
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={colors.success} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
             </div>
-          ) : (
+            <p style={{ fontSize: 18, fontWeight: 700, color: colors.textPrimary, margin: "0 0 8px", fontFamily: display }}>
+              Check your email
+            </p>
+            <p style={{ fontSize: 14, color: colors.textSecondary, margin: "0 0 20px", lineHeight: 1.5 }}>
+              We sent a sign-in link to <strong style={{ color: colors.textPrimary }}>{email}</strong>
+            </p>
             <button
-              type="button"
-              disabled={!email || magicLinkLoading}
-              onClick={async () => {
-                if (!email) return;
-                setMagicLinkLoading(true);
-                setError("");
-                const { error } = await supabase.auth.signInWithOtp({
-                  email,
-                  options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
-                });
-                setMagicLinkLoading(false);
-                if (error) setError(error.message);
-                else setMagicLinkSent(true);
-              }}
+              onClick={() => { setMagicLinkSent(false); setEmail(""); }}
               style={{
-                width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
-                fontFamily: fonts.display, letterSpacing: "-0.01em",
-                color: (!email || magicLinkLoading) ? colors.textPrimary : colors.bgDeep,
-                backgroundColor: (!email || magicLinkLoading) ? colors.bgElevated : colors.coral,
-                border: "none", borderRadius: 10,
-                cursor: (!email || magicLinkLoading) ? "not-allowed" : "pointer",
-                transition: "all 0.2s",
+                background: "none",
+                border: "none",
+                color: colors.coral,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+                fontFamily: body,
               }}
             >
-              {magicLinkLoading ? "Sending..." : "Send sign-in link"}
+              Use a different email
             </button>
-          )}
-        </div>
-
-        {/* Divider */}
-        <div style={{
-          display: "flex", alignItems: "center", margin: "4px 0 20px",
-          gap: 14,
-        }}>
-          <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
-          <span style={{ fontSize: 12, color: colors.textPrimary, fontFamily: fonts.display, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>or</span>
-          <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
-        </div>
-
-        {/* Google OAuth */}
-        <button
-          type="button"
-          onClick={async () => {
-            const { error } = await supabase.auth.signInWithOAuth({
-              provider: "google",
-              options: { redirectTo: `${window.location.origin}/auth/callback` },
-            });
-            if (error) setError("Google sign-in failed. Try the magic link instead.");
-          }}
-          style={{
-            width: "100%", padding: 14, fontSize: 15, fontWeight: 500,
-            color: colors.textPrimary, fontFamily: fonts.bodyAlt,
-            backgroundColor: colors.bgRecessed,
-            border: `1px solid ${colors.borderDefault}`, borderRadius: 10,
-            cursor: "pointer", display: "flex", alignItems: "center",
-            justifyContent: "center", gap: 10,
-            transition: "background-color 0.15s",
-          }}
-        >
-          <svg width="18" height="18" viewBox="0 0 48 48">
-            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-            <path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.01 24.01 0 0 0 0 21.56l7.98-6.19z"/>
-            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          </svg>
-          Continue with Google
-        </button>
-        <p style={{ fontSize: 11, color: colors.textPrimary, textAlign: "center", margin: "8px 0 0 0" }}>
-          Securely hosted by <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textPrimary, textDecoration: "underline" }}>Supabase</a>
-        </p>
-
-        {/* Password option — collapsible */}
-        {!magicLinkSent && (
+          </div>
+        ) : (
           <>
+            {/* Google — one click, top */}
             <button
               type="button"
-              onClick={() => setShowPasswordForm(!showPasswordForm)}
+              onClick={handleGoogle}
               style={{
-                background: "none", border: "none", color: colors.textPrimary,
-                fontSize: 13, cursor: "pointer", width: "100%", textAlign: "center",
-                padding: "12px 0 4px", fontFamily: fonts.bodyAlt,
+                width: "100%",
+                padding: 14,
+                fontSize: 15,
+                fontWeight: 500,
+                color: colors.textPrimary,
+                fontFamily: body,
+                backgroundColor: colors.bgSurface,
+                border: `1px solid ${colors.borderDefault}`,
+                borderRadius: 10,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+                marginBottom: 20,
               }}
             >
-              {showPasswordForm ? "Hide password login" : "Sign in with password"}
+              <svg width="18" height="18" viewBox="0 0 48 48">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                <path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.01 24.01 0 0 0 0 21.56l7.98-6.19z" />
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+              </svg>
+              Continue with Google
             </button>
 
-            {showPasswordForm && (
-              <form onSubmit={handleLogin} style={{ marginTop: 12 }}>
-                <label style={{
-                  display: "block", marginBottom: 6, fontSize: 13,
-                  fontWeight: 600, color: colors.textPrimary,
-                  fontFamily: fonts.display, letterSpacing: "0.01em",
-                }}>
-                  {c.login.passwordLabel}
-                </label>
-                <input
-                  type="password" value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required style={{ ...inputStyle, marginBottom: 16 }}
-                />
+            {/* Divider */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+              <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
+              <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: display, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>
+                or
+              </span>
+              <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
+            </div>
 
-                <button type="submit" disabled={loading} style={{
-                  width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
-                  fontFamily: fonts.display,
-                  color: loading ? colors.textPrimary : colors.textPrimary,
-                  backgroundColor: loading ? colors.bgElevated : colors.bgRecessed,
-                  border: `1px solid ${colors.borderDefault}`,
+            {/* Email input — shared between modes */}
+            <div style={{ marginBottom: 12 }}>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && mode === "magic") handleMagicLink();
+                }}
+                style={inputStyle}
+              />
+            </div>
+
+            {mode === "magic" ? (
+              /* Magic link button */
+              <button
+                type="button"
+                disabled={!email || magicLinkLoading}
+                onClick={handleMagicLink}
+                style={{
+                  width: "100%",
+                  padding: 14,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  fontFamily: display,
+                  color: !email || magicLinkLoading ? colors.textMuted : colors.bgDeep,
+                  backgroundColor: !email || magicLinkLoading ? colors.bgElevated : colors.coral,
+                  border: "none",
                   borderRadius: 10,
-                  cursor: loading ? "not-allowed" : "pointer",
-                  transition: "all 0.15s",
-                }}>
-                  {loading ? c.login.submitLoading : c.login.submitButton}
+                  cursor: !email || magicLinkLoading ? "not-allowed" : "pointer",
+                  marginBottom: 16,
+                }}
+              >
+                {magicLinkLoading ? "Sending..." : "Send sign-in link"}
+              </button>
+            ) : (
+              /* Password form */
+              <form onSubmit={handleLogin}>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  required
+                  style={{ ...inputStyle, marginBottom: 16 }}
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !email}
+                  style={{
+                    width: "100%",
+                    padding: 14,
+                    fontSize: 15,
+                    fontWeight: 600,
+                    fontFamily: display,
+                    color: loading ? colors.textMuted : colors.bgDeep,
+                    backgroundColor: loading ? colors.bgElevated : colors.coral,
+                    border: "none",
+                    borderRadius: 10,
+                    cursor: loading ? "not-allowed" : "pointer",
+                    marginBottom: 8,
+                  }}
+                >
+                  {loading ? "Signing in..." : "Sign in"}
                 </button>
-
-                <p style={{ marginTop: 10, textAlign: "center", fontSize: 13, color: colors.textPrimary }}>
-                  <a href="/forgot-password" style={{ color: colors.textPrimary, textDecoration: "none" }}>
+                <p style={{ textAlign: "center", margin: "0 0 16px" }}>
+                  <a
+                    href="/forgot-password"
+                    style={{ fontSize: 13, color: colors.textMuted, textDecoration: "none" }}
+                  >
                     Forgot password?
                   </a>
                 </p>
               </form>
             )}
+
+            {/* Mode toggle */}
+            <p style={{ textAlign: "center", margin: 0 }}>
+              <button
+                type="button"
+                onClick={() => { setMode(mode === "magic" ? "password" : "magic"); setError(""); }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: colors.textMuted,
+                  fontSize: 13,
+                  cursor: "pointer",
+                  fontFamily: body,
+                  textDecoration: "underline",
+                  textUnderlineOffset: 3,
+                }}
+              >
+                {mode === "magic" ? "Use password instead" : "Use email link instead"}
+              </button>
+            </p>
           </>
         )}
 
+        {/* Error */}
         {error && (
-          <div style={{
-            padding: 12, backgroundColor: colors.errorWash,
-            border: `1px solid ${colors.error}44`, borderRadius: 10,
-            color: colors.error, fontSize: 13, marginTop: 16, textAlign: "center",
-          }}>
+          <div
+            style={{
+              padding: 12,
+              backgroundColor: colors.errorWash,
+              border: `1px solid ${colors.error}44`,
+              borderRadius: 10,
+              color: colors.error,
+              fontSize: 13,
+              marginTop: 16,
+              textAlign: "center",
+            }}
+          >
             {error}
           </div>
         )}
 
-        <div style={{
-          marginTop: 24, paddingTop: 20,
-          borderTop: `1px solid ${colors.borderDefault}`,
-          textAlign: "center",
-        }}>
-          <p style={{ fontSize: 14, color: colors.textPrimary, margin: 0 }}>
-            {c.login.newHere}{" "}
+        {/* Footer */}
+        <div style={{ textAlign: "center", marginTop: 32 }}>
+          <p style={{ fontSize: 14, color: colors.textSecondary, margin: "0 0 8px" }}>
+            New here?{" "}
             <a href="/#programs" style={{ color: colors.coral, fontWeight: 600, textDecoration: "none" }}>
-              {c.login.newHereLink}
+              Start your journey
+            </a>
+          </p>
+          <p style={{ fontSize: 11, color: colors.textMuted, margin: 0 }}>
+            Securely hosted by{" "}
+            <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>
+              Supabase
             </a>
           </p>
         </div>

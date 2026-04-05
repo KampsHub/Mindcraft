@@ -12,49 +12,63 @@ const body = fonts.bodyAlt;
 const DISRUPTIONS = [
   {
     id: "identity",
-    label: "Identity & Self-Worth",
-    question: "How much is your sense of self tied to your professional role right now?",
-    low: "I know who I am beyond work",
-    high: "Without this role, I don\u2019t know who I am",
+    label: "Professional Identity",
+    question: "How much has your sense of who you are professionally been shaken?",
+    low: "I know who I am",
+    high: "I don\u2019t recognize myself right now",
   },
   {
     id: "competence",
-    label: "Competence Confidence",
-    question: "How confident are you in your ability to perform right now?",
-    low: "I trust my skills",
-    high: "I\u2019m seriously doubting myself",
+    label: "Competence & Confidence",
+    question: "How much is this situation making you doubt your skills or abilities?",
+    low: "I trust what I can do",
+    high: "I\u2019m seriously questioning myself",
+  },
+  {
+    id: "safety",
+    label: "Psychological Safety",
+    question: "How safe do you feel to speak up, make mistakes, or be honest at work?",
+    low: "I feel safe and supported",
+    high: "I\u2019m walking on eggshells",
   },
   {
     id: "belonging",
-    label: "Belonging & Connection",
-    question: "How connected do you feel to the people around you at work?",
+    label: "Belonging & Relationships",
+    question: "How connected do you feel to the people around you right now?",
     low: "I feel like I belong",
     high: "I feel isolated or on the outside",
   },
   {
     id: "stability",
-    label: "Financial & Career Stability",
-    question: "How secure does your professional and financial situation feel?",
-    low: "Stable and secure",
-    high: "Uncertain or at risk",
+    label: "Financial & Career Security",
+    question: "How much is this situation affecting your financial or career stability?",
+    low: "I feel secure",
+    high: "I\u2019m worried about what happens next",
+  },
+  {
+    id: "cognitive",
+    label: "Daily Functioning",
+    question: "How much is the stress affecting your focus, sleep, or daily routine?",
+    low: "I\u2019m functioning well",
+    high: "It\u2019s taking over my days",
   },
   {
     id: "clarity",
-    label: "Clarity of Expectations",
-    question: "How clear are you on what success looks like in your current situation?",
-    low: "I know exactly what\u2019s expected",
+    label: "Clarity & Expectations",
+    question: "How clear are you on what\u2019s expected of you and what success looks like?",
+    low: "Crystal clear",
     high: "I\u2019m guessing or the goalposts keep moving",
   },
   {
-    id: "regulation",
-    label: "Emotional Regulation",
-    question: "How well are you managing stress, anxiety, or difficult emotions day to day?",
-    low: "I\u2019m managing well",
-    high: "It\u2019s affecting my sleep, focus, or relationships",
+    id: "trust",
+    label: "Trust in Leadership",
+    question: "How much do you trust the people making decisions about your career?",
+    low: "I trust them",
+    high: "I don\u2019t trust their intentions",
   },
   {
     id: "future",
-    label: "Future Trajectory",
+    label: "Future Direction",
     question: "How clear is your path forward from here?",
     low: "I have a plan I believe in",
     high: "No idea what\u2019s next",
@@ -143,7 +157,7 @@ export default function AssessmentPage() {
                   marginBottom: 16,
                 }}
               >
-                The 7 Disruptions Self-Assessment
+                How is your career situation affecting you?
               </h1>
               <p
                 style={{
@@ -154,9 +168,9 @@ export default function AssessmentPage() {
                   marginBottom: 12,
                 }}
               >
-                Career disruptions hit more than your work. A layoff, a PIP, a new role,
-                a relocation, a promotion that doesn&apos;t feel like one &mdash; they all shake
-                the same foundations: identity, confidence, belonging, clarity.
+                A layoff, a PIP, a new role, a relocation, a promotion that
+                doesn&apos;t feel like one &mdash; they all disrupt the same things:
+                your identity, your confidence, your sense of safety, your relationships.
               </p>
               <p
                 style={{
@@ -167,7 +181,7 @@ export default function AssessmentPage() {
                   marginBottom: 32,
                 }}
               >
-                This 60-second assessment maps where you are across seven dimensions.
+                This 90-second assessment maps the impact across nine dimensions.
                 No signup required. Your results are immediate and private.
               </p>
               <motion.button

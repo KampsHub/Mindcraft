@@ -257,6 +257,12 @@ DD. **Email nurture for non-customers** — Only welcome + daily reminder emails
 | Sentry errors | Sentry.io (external) | requires `NEXT_PUBLIC_SENTRY_DSN` env var | external |
 | Staging deployments | Vercel | `develop` branch → preview URLs | infra |
 
+| Waitlist signups | Resend (email) | sent to crew@ + confirmation to user | external |
+| Terms & Privacy consent | signup form | `agreedToTerms` state (checked before account creation) | client-side |
+| Coming Soon programs | homepage | "First-Time Manager" + "International Move" cards | UI only |
+| Checkout errors | client state | `checkoutError` shown inline on all 3 program pages | client-side |
+| Exercise save errors | client state | `processError` shown via useStep3Analysis | client-side |
+
 ### Features Built But Not Yet Storing Data
 | Feature | Needs | Status |
 |---------|-------|--------|

@@ -131,38 +131,6 @@ CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeT
 
 ---
 
-### E. Pre/post exercise measurement
-- Should exercises ask "How clear is your thinking?" before and after?
-- **Decision needed:** Is this valuable data or friction for overwhelmed users?
-
-### F. AI Simulation API endpoint
-- The AISimulation primitive has demo mode but needs a real API for production
-- Need to decide: What system prompt establishes the AI character? What guardrails?
-- **Decision needed:** How authentic vs safe should the simulated manager be?
-
-### G. Learn-Recognize-Practice arc completion
-- Many exercises stop at "recognize" (naming the pattern) without reaching "practice" (rehearsing the alternative)
-- From EXERCISE-DESIGN-LEARNINGS Part 2, Lens 1: "Every exercise should complete the full arc"
-- **Decision needed:** Should exercises that currently stop at recognition (e.g., saboteur identification, cognitive distortion naming) be extended with a practice step? Or should the practice come in a separate exercise the next day?
-
-### H. Scaffolded difficulty across the 30-day arc
-- From EXERCISE-DESIGN-LEARNINGS Part 2, Lens 1: "Early exercises should have more pre-filled content and narrower choices. Later exercises should have more blank space."
-- Currently all exercises have similar levels of pre-population regardless of day
-- **Decision needed:** Should Days 1-7 exercises have 80% pre-filled content with the user editing, while Days 22-30 have mostly blank space requiring independent application?
-
-### I. Structured data for AI personalization — ✅ Decision: Yes, build it.
-- Exercise responses update user profile → tag frequency, ratings, bucket assignments adjust exercise selection.
-- **To build:** Post-completion extraction → `client_profiles` update → process-journal reads profile for weighted selection.
-
-### J. Skip button for exercises — ✅ Decision: Skip, not exit.
-- Add skip button to exercise flow. Mark as `skipped` in `exercise_completions`. Don't count toward stats.
-
-### K. Content-to-interaction ratio — Effort: ~2-3 days per program.
-- Redesign whyThis as stepped reveal (Radix accordion / framer-motion). Content + UI refactor.
-	
-
----
-
 ## 6. Open Product Questions
 
 | # | Question |

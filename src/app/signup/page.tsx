@@ -16,6 +16,7 @@ export default function SignupPage() {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [magicLinkLoading, setMagicLinkLoading] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -131,11 +132,39 @@ export default function SignupPage() {
               </p>
             </div>
           ) : (
+            <>
+            {/* Terms & Privacy consent */}
+            <label style={{
+              display: "flex", alignItems: "flex-start", gap: 10,
+              marginBottom: 14, cursor: "pointer",
+              fontSize: 13, color: colors.textPrimary, lineHeight: 1.5,
+              fontFamily: fonts.bodyAlt,
+            }}>
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                style={{
+                  width: 18, height: 18, marginTop: 2, flexShrink: 0,
+                  accentColor: colors.coral, cursor: "pointer",
+                }}
+              />
+              <span>
+                I agree to the{" "}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: colors.coral, textDecoration: "underline" }}>
+                  Terms & Conditions
+                </a>{" "}and{" "}
+                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: colors.coral, textDecoration: "underline" }}>
+                  Privacy Policy
+                </a>
+              </span>
+            </label>
+
             <button
               type="button"
-              disabled={!email || magicLinkLoading}
+              disabled={!email || !agreedToTerms || magicLinkLoading}
               onClick={async () => {
-                if (!email) return;
+                if (!email || !agreedToTerms) return;
                 setMagicLinkLoading(true);
                 setError("");
                 const { error } = await supabase.auth.signInWithOtp({
@@ -149,15 +178,16 @@ export default function SignupPage() {
               style={{
                 width: "100%", padding: 14, fontSize: 15, fontWeight: 600,
                 fontFamily: fonts.display, letterSpacing: "-0.01em",
-                color: (!email || magicLinkLoading) ? colors.textPrimary : colors.bgDeep,
-                backgroundColor: (!email || magicLinkLoading) ? colors.bgElevated : colors.coral,
+                color: (!email || !agreedToTerms || magicLinkLoading) ? colors.textPrimary : colors.bgDeep,
+                backgroundColor: (!email || !agreedToTerms || magicLinkLoading) ? colors.bgElevated : colors.coral,
                 border: "none", borderRadius: 10,
-                cursor: (!email || magicLinkLoading) ? "not-allowed" : "pointer",
+                cursor: (!email || !agreedToTerms || magicLinkLoading) ? "not-allowed" : "pointer",
                 transition: "all 0.2s",
               }}
             >
               {magicLinkLoading ? "Sending..." : "Create account"}
             </button>
+            </>
           )}
         </div>
 

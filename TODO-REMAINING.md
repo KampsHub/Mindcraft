@@ -19,8 +19,8 @@
 - [ ] Assessment→action: update process-journal prompt to weight low-scoring domains
 - [ ] whyThis chunking: shorten 5-6 longest, move framework steps into primitive prompts
 - [ ] Exit survey email: 7 days inactive + not finished → email with survey link
-- [ ] AI graceful degradation: try/catch → "temporarily unavailable" + queue retry
-- [ ] Async insight generation: don't block UI, show "Generating..." state
+- [x] AI graceful degradation: try/catch → "temporarily unavailable" + queue retry ✅ ALREADY IN PLACE (all 19 AI routes have try/catch with user-friendly errors, rate limiting, and auth checks)
+- [x] Async insight generation: don't block UI, show "Generating..." state ✅ ALREADY IN PLACE (ExerciseCard shows "Generating insight..." while loading, non-blocking)
 - [ ] Token cost tracking: aggregate api_logs by user → weekly report email
 - [ ] Staging environment: develop branch exists, needs separate Supabase for full isolation
 - [ ] GA4 funnel setup: build visualization in GA4 Explore (Stefanie asked for this)

@@ -241,7 +241,32 @@ DD. **Email nurture for non-customers** — Only welcome + daily reminder emails
 
 ---
 
-## 8. Known Technical Debt
+## 8. Data Storage Map — New Features (April 4, 2026)
+
+| Feature | Where Stored | Column/Field | Type |
+|---------|-------------|--------------|------|
+| Star rating per exercise | `exercise_completions` | `star_rating` | integer 1-5 |
+| Exercise feedback (≤3 stars) | `exercise_completions` | `feedback` | text |
+| NPS score | `weekly_reviews` | `nps_score` | integer 0-10 |
+| NPS score (backup) | Google Analytics | event `nps_submitted` with score + week | GA event |
+| Day completed event | Google Analytics | event `day_completed` with day_number | GA event |
+| Login success event | Google Analytics | event `login_success` with method | GA event |
+| Cookie consent preference | `localStorage` | key `cookie-consent` = "accepted" or "declined" | client-side |
+| Pause/resume status | `program_enrollments` | `status` = "paused" or "active" | enum |
+| Exercise dedup window | `exercise_completions` | queried with `gte(completed_at, 7 days ago)` | query filter |
+| Sentry errors | Sentry.io (external) | requires `NEXT_PUBLIC_SENTRY_DSN` env var | external |
+| Staging deployments | Vercel | `develop` branch → preview URLs | infra |
+
+### Features Built But Not Yet Storing Data
+| Feature | Needs | Status |
+|---------|-------|--------|
+| Sentry | DSN env var in Vercel | Config ready, needs activation |
+| Quality monitoring cron | Vercel Cron job setup | Code exists at `/api/quality-audit`, needs scheduler |
+| Token cost tracking | Admin query on `api_logs` | Table exists, query not built yet |
+
+---
+
+## 9. Known Technical Debt
 - In-memory rate limiting won't scale across multiple Vercel instances (needs Redis)
 - API logs write synchronously to Supabase (needs async queue at scale)
 - Memory embeddings retrieval may slow as database grows

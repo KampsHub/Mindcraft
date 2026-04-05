@@ -151,7 +151,7 @@ export default function AssessmentPage() {
         color: colors.textPrimary,
       }}
     >
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "60px 24px 80px" }}>{/* v2 */}
+      <div style={{ maxWidth: 600, margin: "0 auto", padding: "60px 24px 80px" }}>{/* v3 */}
         {/* Logo */}
         <div style={{ marginBottom: 40, textAlign: "center" }}>
           <a href="/" style={{ textDecoration: "none" }}>

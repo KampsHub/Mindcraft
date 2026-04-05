@@ -97,21 +97,6 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 ### HIGH — Needed for Quality Launch
 
 
-5. **Coach dashboard UI redesign** — API exists (`/api/coach-analytics`), page exists (`/coach`). Needs new UI showing:
-   - Section where you can add client emails in order to get access to their data(they will have to allow and release)
-   - Individual client logins and last-active dates
-   - Where each client is in the program (current day, week)
-   - Insights the client chooses to share
-   - Coaching goals per client
-   - Enneagram results (if client uploads)
-
-### Monitoring Features
-
-| Feature                     | Needs                         | Status                                                             |
-| --------------------------- | ----------------------------- | ------------------------------------------------------------------ |
-| ~~Sentry~~                  | ~~DSN env var in Vercel~~     | ✅ Active. DSN set, check sentry.io error dashboard.               |
-| ~~Quality monitoring cron~~ | ~~Vercel Cron job setup~~     | ✅ Already scheduled in vercel.json: `0 16 * * 1` (Monday 4 PM UTC) |
-| ~~Token cost tracking~~     | ~~Admin query on `api_logs`~~ | ✅ Top users by cost table added to `/admin` dashboard              |
 
 ### Known Technical Debt
 

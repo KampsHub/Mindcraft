@@ -94,39 +94,49 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 
 ## To Dos
 
-### HIGH — Needed for Quality Launch
-
+### ✅ Completed This Session (April 4-5)
+- ~~Stripe live keys~~ — verified and set
+- ~~Sentry error monitoring~~ — activated, DSN in Vercel
+- ~~Inactive user reminders~~ — 2-day gap, max 3, then exit survey
+- ~~Coach dashboard~~ — invite/accept/revoke, client cards, goals/insights/enneagram, coach notes → daily thread
+- ~~Commitment follow-through~~ — daily thread check-in, exercise selection awareness, weekly aggregation
+- ~~Streak tracking~~ — current_streak, best_streak on dashboard
+- ~~Calendar view~~ — 30-day grid on /goals
+- ~~Notification preferences~~ — toggles in /my-account
+- ~~Unit tests~~ — Vitest setup, 48 tests passing (parse-ai-response, api-validation, rate-limit)
+- ~~Search~~ — /search page with exercises (+ framework instructions), journal entries, insights
+- ~~Progress metrics in weekly insights~~ — pattern shifts, language shifts, mood trend, exercise engagement, narrative
+- ~~Spaced retrieval~~ — curated in weekly insights coaching questions
+- ~~Bloom level audit~~ — quality audit flags >50% Awareness exercises after Day 14
+- ~~Cross-week shift detection~~ — weekly insights compares themes across weeks
+- ~~GDPR deletion gaps~~ — /api/account now covers all 26 tables
+- ~~Memory retrieval optimization~~ — database index (preserves cross-program memories)
+- ~~API logs async~~ — fire-and-forget, no response delay
+- ~~Background image flash~~ — computed synchronously on render
+- ~~Mobile nav fix~~ — parachute page nav overlap fixed
+- ~~Assessment redesign~~ — inverted scale, renamed labels, Next button, merged email step
+- ~~Homepage copy~~ — "Built different" visual grid, trimmed copy throughout, pill labels
+- ~~Token cost tracking~~ — top users table in admin dashboard
+- ~~Daily reminder cron removed~~ — replaced by inactive reminders
+- ~~Docs created~~ — email-audit.md, analytics-tracking.md, customer-data-storage.md
+- ~~PRD updated~~ — reflects all April 5 builds
 
 ### Known Technical Debt
 
-8. **In-memory rate limiting** — Current rate limiting uses in-memory counters. On Vercel, each request can hit a different serverless instance, so counters don't share state. At scale (100+ concurrent users), limits won't be enforced consistently. **Fix:** Add Redis (e.g., Upstash) as a shared counter store. ~2 hours of work.
+8. **In-memory rate limiting** — needs Redis (Upstash) at scale. Not urgent until 100+ concurrent users.
 
-9. **No unit/integration tests** — Only manual `TEST-PLAN.md`. **To start:** Set up Vitest (fast, Vite-native) for unit tests + Playwright for integration tests. Start with: API route tests (process-journal, daily-exercise) and critical UI flows (login → dashboard → day 1). ~1 day for setup + first 10 tests.
+12. **Email templates hardcoded** — all HTML inline in route handlers. Fix: React Email migration (~1 day).
 
+### MEDIUM — Still Open
 
-### MEDIUM — Important for Retention
+10. **Search enhancement** — current search uses ILIKE. Could add full-text search indexes for better performance at scale. Currently fine for <100 users.
 
-9. **Search past entries** — Can't search journal entries or exercises. Suggestion: Add a search page or search bar on the journal/exercises pages. Use Supabase full-text search (`to_tsvector` + `to_tsquery`) on `free_flow_entries.content` and `exercise_completions.responses`. No external search service needed at current scale.
-
-### Product Design Decisions
-
-**A. Spaced retrieval integration** — ✅ Decision made.
-- Curate retrieval and insert in weekly insights (not auto-inserted daily)
-- Weekly insights API should reference key concepts from the week's exercises and ask "what do you remember?"
-- **To build:** Add exercise concept references to weekly-insights prompt for natural retrieval.
-
-**Suggestion for "X":** The most meaningful progress metrics are:
-- **Pattern frequency shift** — "In Week 1 you mentioned [fear of judgment] in 4/5 entries. In Week 3, it appeared once." Shows the pattern loosening.
-- **Self-awareness language** — Track shift from reactive language ("they made me feel") to reflective ("I noticed I felt"). Measurable via NLP.
-- **Mood/rating trend** — `day_rating` over time (already tracked). Simple line chart.
-- **Exercise engagement** — Rating trend + feedback quality over time.
-- **Goal progress** — Weekly goal ratings (already in `weekly_reviews`).
-Best format: a mix — one narrative sentence ("Your relationship with self-doubt has shifted") backed by one small chart (rating trend). Not just numbers, not just words.
-
-**D. Exercise difficulty labeling** — ✅ Decision made.
-- Do NOT show Awareness/Practice/Application/Integration labels to users
-- Use them internally to audit program balance — if too many Awareness exercises cluster in later weeks, flag it as a quality issue in the weekly audit
-- **Implementation:** The `bloom_level` field on exercises (from `add-bloom-labels.sql`) already tracks this. Add a check in `/api/quality-audit` that flags programs with >50% Awareness exercises after Day 14.
+### LOW — Parked
+- Dark/light mode (~2-3 days)
+- i18n (backburner)
+- A/B testing for pricing (needs Statsig, ~2-3 hrs)
+- CMS (Sanity recommended, ~2-3 days, not needed yet)
+- Mobile app (web-only, audit mobile responsiveness as needed)
 
 ---
 

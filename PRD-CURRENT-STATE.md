@@ -41,7 +41,7 @@ Coach: `coach_clients` (invite/accept/revoke relationship), `coach_notes` (notes
 Memory: `coaching_memory` (with relevance index)
 Auth: Supabase Auth (email/password, magic link, Google OAuth)
 
-### API (53 routes)
+### API (60+ routes)
 - Daily flow: process-journal, daily-themes, daily-summary, daily-exercise, reflect
 - Exercises: process-insight, share, download
 - Goals: generate-goals, generate-plan, generate-profile, expand-prompts
@@ -90,6 +90,7 @@ Program Completion (Day 30) → Graduation email
 - Blog (coming-soon topic cards + email signup) ✅
 - Admin dashboard (enrollment stats, AI costs, top users) ✅
 - Feedback: exit survey + testimonial survey ✅
+- Search: exercises + journal entries + insights archive ✅
 
 ### Exercise System (27 primitives)
 CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeTriptych, ForceField, HeatmapTracker, BodyMap, SpectrumSlider, ZonedSpectrum, MultiSpectrum, VennOverlap, HierarchicalBranch, BubbleSort, ForcedChoice, DotGrid, StakeholderMap, TimelineRiver, ProgressRiver, WordCloud, EmotionWheel, SaboteurCard, BeforeAfter, PatternTracker, RetrievalCheck, AISimulation
@@ -122,6 +123,11 @@ CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeT
 - Sentry error monitoring (production, PII redacted) ✅
 - Async API logging (fire-and-forget, no response delay) ✅
 - Background image + greeting stable on login (no flash) ✅
+- Search page for past exercises, journal entries, and insights (`/search`) ✅
+- Progress metrics in weekly insights (pattern shifts, language shifts, mood trend, engagement, narrative) ✅
+- Spaced retrieval via curated coaching questions in weekly insights ✅
+- Unit tests: Vitest + 48 tests (parse-ai-response, api-validation, rate-limit) ✅
+- Admin dashboard: top users by AI cost table ✅
 
 ---
 
@@ -141,7 +147,7 @@ CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeT
 ### MEDIUM — Mostly Resolved
 8. ~~**User-facing analytics**~~ — ✅ Patterns + shifts surfaced in weekly insights
 9. ~~**Notification preferences**~~ — ✅ Toggles in /my-account (inactive reminders, program updates)
-10. **Search** — Still open. Decision needed: simple (journal only) or deep (journals + exercises + insights)
+10. ~~**Search**~~ — ✅ Built. `/search` page with exercises (+ framework instructions), journal entries, and insights. Search in top nav + bottom nav.
 11. ~~**Streak persistence**~~ — ✅ current_streak, best_streak, last_completed_date. Shows on dashboard.
 
 ### LOW — Decisions Documented
@@ -156,16 +162,16 @@ CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeT
 
 ## 6. Exercise System Gaps
 
-### A. Spaced retrieval integration — Decision pending
-Recommendation: Hybrid — auto-insert at Day+3 as default, manual overrides where the arc demands it.
+### A. Spaced retrieval integration — ✅ Built
+Curated retrieval in weekly insights. One coaching question references a key concept from earlier exercises.
 
 ### B. Commitment follow-through — ✅ Built
 - Daily thread checks on yesterday's commitments
 - Process journal selects exercises responsive to commitment outcomes
 - Weekly insights aggregates all week's commitments and reviews follow-through
 
-### C. Progress visualization — Decision: patterns + shifts in weekly insights
-No separate analytics page. Weekly insights surfaces pattern frequency shifts and tone/language changes across weeks.
+### C. Progress visualization — ✅ Built
+Progress section in weekly insights: pattern frequency shifts, language shifts (reactive→reflective), mood/rating trend, exercise engagement, narrative summary. Computed metrics (ratings, themes, counts) passed to Claude. No separate analytics page — weekly insights IS the progress view.
 
 ### D. Exercise difficulty labeling — ✅ Decision made + implemented
 - Labels NOT shown to users

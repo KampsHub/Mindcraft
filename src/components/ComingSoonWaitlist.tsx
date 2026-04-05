@@ -117,7 +117,7 @@ export default function ComingSoonWaitlist() {
             <span
               style={{
                 display: "inline-flex",
-                alignSelf: "flex-start",
+                alignSelf: "center",
                 alignItems: "center",
                 gap: 8,
                 background: "rgba(255,255,255,0.06)",
@@ -238,6 +238,21 @@ export default function ComingSoonWaitlist() {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {!submitted[program.id] && (
+              <p
+                style={{
+                  fontFamily: body,
+                  fontSize: 12,
+                  color: colors.textMuted,
+                  marginTop: 10,
+                  lineHeight: 1.5,
+                  textAlign: "center",
+                }}
+              >
+                This program is on the waitlist. We&apos;ll notify you as soon as it&apos;s released.
+              </p>
+            )}
 
             {errors[program.id] && (
               <p

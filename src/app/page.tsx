@@ -1679,7 +1679,7 @@ export default function Home() {
                       }}>
                         What we&rsquo;ll work on
                       </span>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
                         {card.modules.map((mod: string, mi: number) => (
                           <span
                             key={mi}

@@ -117,7 +117,7 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
 
 ### Content Work (Claude can help in future sessions)
 - [x] **whyThis chunking** — shortened 6 longest exercises (Stress Responses, NVC, Older Pattern, Performance Culture, Cultural Observation, Belonging Sources). Avg reduced from ~1,150 to ~550 chars. Framework teaching stays in instruction/primitive.
-- [ ] **362 exercise arc audit** — add practice steps to ALL exercises (massive content project, Stefanie asked for full audit not just 90)
+- [x] **362 exercise arc audit** — added practice steps to 113 exercises across all programs and modalities. Parachute (13), Jetstream (14), Basecamp (16), relational/integrative (23), cognitive/somatic (28), systems (13), missing (6). Remaining ~249 exercises already had practice steps.
 - [x] **Scaffolding decrease** — SQL script ready (`scripts/update-scaffolding-notes.sql`). Adds system_notes to all program_days: Days 1-10 explain why heavier, Days 11-20 instruct AI to reduce pre-fill by 50%, Days 21-30 minimal scaffolding. Run in Supabase SQL Editor.
 - [x] **Bloom's labels** — SQL script ready (`scripts/add-bloom-labels.sql`). Adds bloom_level column (remember/understand/apply/analyze/evaluate/create) + concept_tags array to frameworks_library. Auto-labels exercises by name pattern. Run in Supabase SQL Editor.
 

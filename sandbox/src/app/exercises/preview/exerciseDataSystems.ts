@@ -20,7 +20,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "dialogueSequence",
     whyThis: "Your journal keeps toggling between your needs and theirs — but no one is speaking for the relationship itself. Systems theory, particularly in ORSC coaching, treats a relationship as an emergent entity distinct from either partner. Research in social cognition suggests that externalizing a system — giving it a voice separate from the individuals — may activate perspective-taking circuits in the temporoparietal junction and quiet the self-referential loops that keep you locked in 'my needs vs. their needs.' When both people collaborate on behalf of the relationship rather than competing within it, something shifts.",
     instruction:
-      "You will move through a guided dialogue in three rounds. First, speak as yourself about what you need. Then speak as the other person — what might they need? Finally, speak as the relationship itself: what does it need to thrive? Type each response in the dialogue panel before advancing to the next round.",
+      "You will move through a guided dialogue in three rounds. First, speak as yourself about what you need. Then speak as the other person — what might they need? Finally, speak as the relationship itself: what does it need to thrive? Type each response in the dialogue panel before advancing to the next round. Take the relationship's stated need from Round 3 and identify one thing you can do this week to serve it.",
     prePopulated: {
       voices: [
         { id: "self", label: "You", color: "#7B9AAD" },
@@ -66,7 +66,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "heatmap",
     whyThis: "There is a pattern of shutdown in your entries — and John Gottman's research at the University of Washington suggests that maps to one of four specific communication toxins worth naming: criticism, contempt, defensiveness, and stonewalling. This exercise maps where those patterns show up across different relationships in your life. Naming and locating the toxins may reduce their implicit power — affect-labeling research indicates that putting precise words to emotional patterns can engage the ventrolateral prefrontal cortex and help quiet amygdala reactivity.",
     instruction:
-      "Each cell in the heatmap represents a combination of a toxin (criticism, contempt, defensiveness, stonewalling) and a context in your life. Tap each cell and rate its intensity from 0 (absent) to 4 (frequent). Look for hot spots — clusters of high intensity reveal where relational repair is most needed.",
+      "Each cell in the heatmap represents a combination of a toxin (criticism, contempt, defensiveness, stonewalling) and a context in your life. Tap each cell and rate its intensity from 0 (absent) to 4 (frequent). Look for hot spots — clusters of high intensity reveal where relational repair is most needed. For the hottest cell on your grid, name the specific antidote and practice it in your next interaction in that context.",
     prePopulated: {
       rows: [
         { id: "criticism", label: "Criticism — attacking character rather than naming a specific behavior" },
@@ -91,7 +91,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "dialogueSequence",
     whyThis: "Your journal has a dominant voice and a quieter one underneath — the quieter one deserves airtime before it becomes a disruption. Deep Democracy, rooted in Arnold Mindell's process work, holds that marginalized voices in any system — including your inner system — carry critical information. When a perspective gets suppressed, it may create cognitive dissonance that quietly drains executive function until it is finally surfaced. Giving voice to dissent can activate divergent thinking and prevent the kind of internal groupthink where only one part of you gets to speak.",
     instruction:
-      "This dialogue moves through three rounds. First, state the mainstream or majority position — the thing most people would say. Next, give voice to the minority or unpopular perspective — the thing that's hard to say. In the final round, find what is true in both and articulate a position that includes the wisdom of each. Type each perspective before advancing.",
+      "This dialogue moves through three rounds. First, state the mainstream or majority position — the thing most people would say. Next, give voice to the minority or unpopular perspective — the thing that's hard to say. In the final round, find what is true in both and articulate a position that includes the wisdom of each. Type each perspective before advancing. Take the integrated position from Round 3 and voice it to one person this week.",
     prePopulated: {
       voices: [
         { id: "mainstream", label: "Mainstream Voice", color: "#7B9AAD" },
@@ -114,7 +114,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     whyThis:
       "You got an offer — 15% less salary, longer commute, but a great team and meaningful work — and you keep going back and forth. One minute you want to accept, the next you think you should hold out. That oscillation is not indecision — it is equal forces pulling in opposite directions. Kurt Lewin, one of the founders of social psychology, created Force Field Analysis in the 1940s to explain exactly this: every stuck situation is an equilibrium between driving and restraining forces. The counterintuitive insight is that reducing the restraining forces works better than pushing harder.",
     instruction:
-      "Write your desired change at the top. Add driving forces on the left and restraining forces on the right. Rate each force's strength. Look for restraining forces you can weaken or remove — that is where the leverage is.",
+      "Write your desired change at the top. Add driving forces on the left and restraining forces on the right. Rate each force's strength. Look for restraining forces you can weaken or remove — that is where the leverage is. Pick one restraining force and take one concrete action this week to weaken it.",
     prePopulated: {
       centerLabel: "Accept the new role",
       drivingForces: [
@@ -156,7 +156,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "timelineRiver",
     whyThis: "You have been telling a story about this relationship — but every relationship has a deeper myth underneath the story. Time to surface it. Narrative psychology research suggests that relationships are governed by shared myths — implicit stories about origin, identity, and destiny. Mapping these myths on a timeline may activate episodic memory and the hippocampal-prefrontal circuit, allowing you to consciously revise the unconscious narratives that constrain how you show up right now.",
     instruction:
-      "Plot the key moments of this relationship along the timeline river — the origin story, turning points, crises, and high points. For each, add a brief note about what it meant. As the river takes shape, notice the underlying myth: is this a rescue story? A rivalry? A quest? Name the myth at the end of the timeline.",
+      "Plot the key moments of this relationship along the timeline river — the origin story, turning points, crises, and high points. For each, add a brief note about what it meant. As the river takes shape, notice the underlying myth: is this a rescue story? A rivalry? A quest? Name the myth at the end of the timeline. Now that you have named the myth, write one sentence describing the new myth you want to author going forward.",
     prePopulated: {
       events: [
         { id: "e1", label: "How we met", date: "Beginning", emotion: "excitement" },
@@ -176,7 +176,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "stakeholderMap",
     whyThis: "You mentioned several people influencing this situation — placing them in space will reveal dynamics that words alone cannot capture. Systemic constellations research (Weinhold et al., 2014) suggests that physically arranging system members may reveal hidden loyalties, alliances, and exclusions that verbal analysis misses. Spatial mapping can engage your parietal cortex's spatial reasoning alongside right-hemisphere gestalt processing — a different kind of knowing than talking things through.",
     instruction:
-      "Place yourself at the center of the map, then add each person or role involved in this situation. Drag them closer or farther to represent emotional closeness. Use the connection lines to show the quality of each relationship — supportive, tense, or distant. Step back and notice the overall shape: who is clustered together? Who is isolated?",
+      "Place yourself at the center of the map, then add each person or role involved in this situation. Drag them closer or farther to represent emotional closeness. Use the connection lines to show the quality of each relationship — supportive, tense, or distant. Step back and notice the overall shape: who is clustered together? Who is isolated? Identify the most isolated figure on your map and take one step this week to strengthen that connection.",
   },
   {
     id: "emotional-field-reading",
@@ -186,7 +186,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "emotionWheel",
     whyThis: "Your recent entries carry an emotional undercurrent you have not named — naming the field is the first step to shifting it. The emotional field is the shared affective atmosphere of any system you are part of. Hatfield et al.'s research on emotional contagion (1994) found that group emotions propagate through mirror neuron networks and are often felt before they are understood. Putting explicit labels on what is hanging in the air may activate your ventrolateral prefrontal cortex, converting that vague 'something feels off' into information you can actually work with.",
     instruction:
-      "Explore the emotion wheel and select every emotion you sense in the current atmosphere — not just what you feel personally, but what seems to hang in the air of this situation. Select as many as feel true. Then identify the two or three that feel most dominant. These form the emotional field you are living inside right now.",
+      "Explore the emotion wheel and select every emotion you sense in the current atmosphere — not just what you feel personally, but what seems to hang in the air of this situation. Select as many as feel true. Then identify the two or three that feel most dominant. These form the emotional field you are living inside right now. Choose one action you can take today to shift the dominant emotion in the field.",
   },
   {
     id: "three-levels-of-reality",
@@ -196,7 +196,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "hierarchicalBranch",
     whyThis: "You keep circling the facts of what happened — but there are two deeper levels of reality you have not explored yet. Arnold Mindell's three levels framework distinguishes Consensus Reality (the facts), Dreaming (feelings, roles, and projections), and Essence (the deepest shared ground). Each level may engage distinct neural processing — from the dorsolateral PFC for factual analysis, to limbic and default-mode networks for meaning-making, to interoceptive networks for felt sense. Moving through all three can help integrate the fragmented processing that keeps you stuck on the surface.",
     instruction:
-      "Start at the top level: Consensus Reality. List the objective facts — what happened, when, who was involved. Then branch down to Dreaming: what roles got activated, what feelings came up, what projections or assumptions appeared? Finally, branch to Essence: beneath all of it, what is the deepest truth or longing present? Build each level before moving deeper.",
+      "Start at the top level: Consensus Reality. List the objective facts — what happened, when, who was involved. Then branch down to Dreaming: what roles got activated, what feelings came up, what projections or assumptions appeared? Finally, branch to Essence: beneath all of it, what is the deepest truth or longing present? Build each level before moving deeper. Take the deepest longing from the Essence level and use it to guide one real-world action this week.",
     prePopulated: {
       levels: [
         { id: "cr1", label: "Consensus Reality — observable facts, verifiable data", prompt: "What are the objective facts? What happened, when, who was involved?", content: "My manager scheduled a meeting with no agenda. Three colleagues were CC'd on the invite. The meeting lasted 20 minutes. My project timeline was moved up by two weeks.", color: "#7B9AAD" },
@@ -251,7 +251,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "dotGrid",
     whyThis: "Your writing holds two truths that seem to contradict each other — a wicked question would hold them both without forcing a choice. Wicked questions, from Lipmanowicz and McCandless's Liberating Structures, surface paradoxes that cannot be resolved, only navigated. Engaging with paradox may activate the anterior cingulate cortex's conflict-monitoring system and increase what researchers call integrative complexity — the ability to hold multiple valid frameworks simultaneously. Leadership research suggests that higher integrative complexity is associated with better decision-making under uncertainty.",
     instruction:
-      "Each dot on the grid represents a possible wicked question — a question that names two apparently contradictory truths as simultaneously valid. Format: 'How is it that [truth A] AND [truth B] at the same time?' Place your wicked questions on the grid. Cluster related paradoxes together. The richest questions are the ones that make you pause.",
+      "Each dot on the grid represents a possible wicked question — a question that names two apparently contradictory truths as simultaneously valid. Format: 'How is it that [truth A] AND [truth B] at the same time?' Place your wicked questions on the grid. Cluster related paradoxes together. The richest questions are the ones that make you pause. Choose your most resonant wicked question and carry it with you for a week — notice what answers emerge when you stop trying to resolve the paradox.",
     prePopulated: {
       items: [
         { id: "w1", label: "How is it that I want to leave AND I'm working harder than ever?", x: 30, y: 25 },
@@ -319,7 +319,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "timelineRiver",
     whyThis: "Some things in your life are growing, others are stalling — mapping where each one lives in its lifecycle will clarify what to invest in and what to release. The adaptive cycle from Gunderson and Holling's panarchy theory describes four phases: birth, maturity, creative destruction, and renewal. Systems that avoid creative destruction become rigid traps; those that skip maturity become poverty traps. Mapping your activities to these lifecycle phases may help your brain's categorization systems reveal structural truths about what to continue, what to sunset, and what to seed — truths that emotion alone can obscure.",
     instruction:
-      "Place your activities, projects, and commitments along the timeline river. Position each one in its lifecycle phase: Birth (just starting, high energy), Maturity (established, producing results), Creative Destruction (declining, needs to be released), or Renewal (cleared space, ready for new growth). Notice what phase is most crowded — that is where you are stuck.",
+      "Place your activities, projects, and commitments along the timeline river. Position each one in its lifecycle phase: Birth (just starting, high energy), Maturity (established, producing results), Creative Destruction (declining, needs to be released), or Renewal (cleared space, ready for new growth). Notice what phase is most crowded — that is where you are stuck. Choose one item in Creative Destruction and take one concrete step to release it this week. Then seed one new Birth-phase activity with a first small action.",
     prePopulated: {
       events: [
         { id: "e1", label: "New role responsibilities", date: "Birth", emotion: "excitement" },
@@ -339,7 +339,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "dotGrid",
     whyThis: "You are trying to predict what will happen next — this exercise replaces prediction with preparation across multiple futures. Scenario planning engages prospective memory and the brain's simulation network to mentally rehearse multiple futures at once. Research on strategic decision-making suggests that considering three to four scenarios may reduce overconfidence bias and improve strategic flexibility. The grid format forces you to consider combined uncertainties — something humans naturally underweight — so you can build strategies that hold up across multiple possible outcomes, not just the one you are hoping for.",
     instruction:
-      "Identify two critical uncertainties — factors that are both highly important and highly unpredictable. These form the two axes of your grid. Each quadrant represents a different possible future. Place a dot in each quadrant and describe: what would this future look like? What would you need to do to thrive in it? The most robust strategies are the ones that work across multiple quadrants.",
+      "Identify two critical uncertainties — factors that are both highly important and highly unpredictable. These form the two axes of your grid. Each quadrant represents a different possible future. Place a dot in each quadrant and describe: what would this future look like? What would you need to do to thrive in it? The most robust strategies are the ones that work across multiple quadrants. Identify one action that would serve you well in at least three quadrants and start it this week.",
     prePopulated: {
       items: [
         { id: "s1", label: "PIP succeeds + I stay: rebuild trust, set new boundaries", x: 25, y: 25 },
@@ -387,7 +387,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "wordCloud",
     whyThis: "You have been processing a lot of information — this structure will help you move from observing to meaning-making to action. The What/So What/Now What protocol, from Lipmanowicz and McCandless's Liberating Structures, separates three cognitive stages that people typically collapse together. 'What' engages perceptual and episodic memory. 'So What' activates interpretive networks for meaning-making. 'Now What' recruits action-planning circuits. Separating these stages may prevent premature conclusions and ensure that your observations actually inform your next move rather than bypassing interpretation altogether.",
     instruction:
-      "Type words and phrases for each of three rounds. Round 1 — WHAT: What did you observe? What happened? Enter the raw facts and noticings. Round 2 — SO WHAT: Why does it matter? What patterns do you see? Enter your interpretations. Round 3 — NOW WHAT: What actions follow? What will you do next? Enter your commitments. Watch the cloud build — the largest words show where your energy concentrates.",
+      "Type words and phrases for each of three rounds. Round 1 — WHAT: What did you observe? What happened? Enter the raw facts and noticings. Round 2 — SO WHAT: Why does it matter? What patterns do you see? Enter your interpretations. Round 3 — NOW WHAT: What actions follow? What will you do next? Enter your commitments. Watch the cloud build — the largest words show where your energy concentrates. Take the top 'Now What' commitment and schedule it — put a specific time on your calendar within the next 48 hours.",
   },
   {
     id: "scarf-model",
@@ -397,7 +397,7 @@ export const SYSTEMS_EXERCISES: ExerciseDefinition[] = [
     primitive: "wheelChart",
     whyThis: "Your journal mentions a social situation that triggered you — SCARF will tell you exactly which social need got threatened. David Rock's SCARF model, informed by Matthew Lieberman's social cognitive neuroscience research, identifies five domains of social threat and reward: Status, Certainty, Autonomy, Relatedness, and Fairness. Lieberman's work suggests these domains may activate the same neural circuitry as physical pain and pleasure — meaning social threats are not 'just in your head.' Identifying the specific domain converts diffuse social distress into a targeted intervention point.",
     instruction:
-      "Rate each of the five SCARF domains on the wheel: Status (sense of importance relative to others), Certainty (ability to predict what comes next), Autonomy (sense of control over events), Relatedness (sense of safety with others), and Fairness (perception of just exchange). Rate each from threatened to fulfilled. The lowest-rated domain is your primary leverage point.",
+      "Rate each of the five SCARF domains on the wheel: Status (sense of importance relative to others), Certainty (ability to predict what comes next), Autonomy (sense of control over events), Relatedness (sense of safety with others), and Fairness (perception of just exchange). Rate each from threatened to fulfilled. The lowest-rated domain is your primary leverage point. Identify the most threatened domain and take one action today to restore it.",
     prePopulated: {
       categories: ["Status — your sense of importance relative to others", "Certainty — your ability to predict what happens next", "Autonomy — your sense of control over events and choices", "Relatedness — your sense of safety and belonging with others", "Fairness — your perception of just and equitable exchange"],
       values: [3, 2, 4, 6, 3],

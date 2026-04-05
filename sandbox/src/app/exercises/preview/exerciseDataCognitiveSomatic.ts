@@ -12,7 +12,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "zonedSpectrum",
     whyThis: "Your journal reflected frustration about feeling stuck in reactive mode — mapping where you are on the seven levels can show you the next available shift. The seven levels model maps to measurable changes in prefrontal cortex activation and default mode network coherence. Lower levels correlate with increased amygdala dominance and cortisol output, while higher levels show greater ventromedial PFC engagement and increased heart rate variability, indicating parasympathetic recovery.",
-    instruction: "The spectrum shows seven distinct zones from coping to transforming. Tap the zone that best matches your current state — the description and body sensations listed will help you confirm your placement. Once set, you will see micro-practices calibrated to move one level up from where you are.",
+    instruction: "The spectrum shows seven distinct zones from coping to transforming. Tap the zone that best matches your current state — the description and body sensations listed will help you confirm your placement. Once set, you will see micro-practices calibrated to move one level up from where you are. Choose one micro-practice from the guidance and do it within the next hour.",
     prePopulated: {
       zones: [
         { id: "z1", label: "Level 1 — Hopelessness", fromPercent: 0, toPercent: 14, color: "#D25858", guidance: "You may feel stuck, powerless, or numb — the amygdala is dominant and the prefrontal cortex is offline. To move to Level 2: (1) Name one small thing you can control right now — even choosing what to eat for lunch. (2) Resist the urge to make big decisions from this state. (3) Focus only on the next hour, not the next month." },
@@ -35,7 +35,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "splitAnnotator",
     whyThis: "You wrote about a situation where you felt conflicted about what to do — separating your red-line assumptions from blue-line possibilities can open new options. Red-line thinking may activate threat-detection circuits centered on the amygdala and anterior insula, narrowing attentional focus. Blue-line thinking may engage the ventromedial prefrontal cortex and broadens the perceptual field, consistent with Fredrickson's broaden-and-build theory of positive emotions.",
-    instruction: "In the left column, write your red-line thoughts — the limiting, fear-based, or assumption-heavy statements about the situation. In the right column, rewrite each one as a blue-line alternative — curious, possibility-oriented, and grounded. The split view lets you see the contrast directly.",
+    instruction: "In the left column, write your red-line thoughts — the limiting, fear-based, or assumption-heavy statements about the situation. In the right column, rewrite each one as a blue-line alternative — curious, possibility-oriented, and grounded. The split view lets you see the contrast directly. Take your strongest blue-line rewrite and use it as your internal mantra the next time the red-line thought fires.",
     prePopulated: {
       leftColumnLabel: "Red Line (fear-based)",
       rightColumnLabel: "Blue Line (possibility-based)",
@@ -60,7 +60,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "wheelChart",
     whyThis: "You mentioned wanting to build a new habit but struggling with consistency — understanding which neuroplasticity levers you are already using (and which you are missing) can accelerate the change. Neuroplasticity requires specific conditions: attention, novelty, repetition, emotional engagement, adequate sleep, aerobic exercise, and social connection. Each factor modulates BDNF expression, long-term potentiation in the hippocampus, and synaptic pruning efficiency in distinct but complementary ways.",
-    instruction: "The wheel displays seven segments, each representing a key driver of neuroplasticity. Rate your current engagement with each by dragging the fill level from center to edge. The resulting shape reveals which keys are strong and which need attention — tap any segment for targeted suggestions.",
+    instruction: "The wheel displays seven segments, each representing a key driver of neuroplasticity. Rate your current engagement with each by dragging the fill level from center to edge. The resulting shape reveals which keys are strong and which need attention — tap any segment for targeted suggestions. Pick the lowest-rated key and add one specific practice for it this week.",
     prePopulated: {
       categories: ["Focused Attention — sustained, undistracted focus on the new skill", "Novelty — exposing your brain to unfamiliar challenges", "Repetition — deliberate practice of the specific behavior", "Emotional Engagement — caring enough that the learning sticks", "Sleep Quality — when consolidation and synaptic pruning happen", "Aerobic Exercise — BDNF production, the brain's growth fertilizer", "Social Connection — learning in relationship accelerates encoding"],
       values: [6, 3, 5, 7, 4, 3, 5],
@@ -73,7 +73,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "splitAnnotator",
     whyThis: "Your entry described anxiety about an upcoming event — making your predictions explicit lets you test them against reality instead of letting them run in the background. The brain is a prediction machine: the prefrontal cortex generates expectations and the anterior cingulate cortex flags prediction errors. By making implicit predictions conscious, you engage metacognitive monitoring networks that reduce the emotional charge of uncertainty and improve calibration over time.",
-    instruction: "In the left column, write your specific predictions about what will happen — be as concrete as possible. In the right column, after the event, return to annotate each prediction with what actually occurred. The gap between prediction and reality is where learning lives.",
+    instruction: "In the left column, write your specific predictions about what will happen — be as concrete as possible. In the right column, after the event, return to annotate each prediction with what actually occurred. The gap between prediction and reality is where learning lives. After the event, return to this exercise and fill in the right column. Then ask: knowing my predictions were off, what will I predict differently next time?",
     prePopulated: {
       leftColumnLabel: "Prediction (before)",
       rightColumnLabel: "What Actually Happened (after)",
@@ -98,7 +98,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "spectrumSlider",
     whyThis: "You described feeling either overwhelmed or underwhelmed at work — finding the sweet spot of optimal prefrontal engagement could help you perform at your best. Prefrontal cortex function follows an inverted-U curve with respect to arousal: too little dopamine/norepinephrine leads to distractibility, too much leads to rigidity and anxiety. The Yerkes-Dodson law, confirmed by neuroimaging, shows peak cognitive performance in a narrow band of moderate arousal.",
-    instruction: "Drag the slider to where you feel your current arousal level sits — from disengaged on the left to overwhelmed on the right. The colored zones indicate under-arousal, optimal, and over-arousal states. Guidance for adjusting toward the sweet spot will appear based on your placement.",
+    instruction: "Drag the slider to where you feel your current arousal level sits — from disengaged on the left to overwhelmed on the right. The colored zones indicate under-arousal, optimal, and over-arousal states. Guidance for adjusting toward the sweet spot will appear based on your placement. Apply one adjustment right now — if over-aroused, take a 5-minute walk; if under-aroused, set a 25-minute focused sprint.",
     prePopulated: {
       labels: ["1 — Disengaged (foggy, bored, can't start)", "2 — Under-stimulated (low energy, going through motions)", "3 — Warming Up (interest building, not yet locked in)", "4 — Sweet Spot (clear thinking, energized, fully engaged)", "5 — Slightly Activated (heart rate up, sharpening but edgy)", "6 — Over-aroused (racing thoughts, rigid, tunnel vision)", "7 — Overwhelmed (can't think straight, fight-or-flight)"],
       value: 55,
@@ -111,7 +111,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "dotGrid",
     whyThis: "Your journal showed a tension between logical analysis and intuitive knowing — this exercise helps you access both hemispheres at full capacity instead of choosing one over the other. Optimal cognitive performance requires interhemispheric integration via the corpus callosum. Left-hemisphere sequential processing and right-hemisphere holistic pattern recognition are not competing resources — they are complementary systems. EEG coherence studies show peak performance when both hemispheres are highly active and synchronized.",
-    instruction: "The dot grid represents a matrix of both analytical (left-brain) and intuitive (right-brain) perspectives on your challenge. Place dots for each insight you have — analytical ones on the left side, intuitive ones on the right. Then look for connections that bridge both sides to find integrated solutions.",
+    instruction: "The dot grid represents a matrix of both analytical (left-brain) and intuitive (right-brain) perspectives on your challenge. Place dots for each insight you have — analytical ones on the left side, intuitive ones on the right. Then look for connections that bridge both sides to find integrated solutions. Write one decision that draws on both your analytical conclusion AND your intuitive sense — commit to acting on the integrated insight.",
     prePopulated: {
       items: [
         { id: "d1", label: "Left-brain: The numbers say this role is not sustainable (data-driven conclusion)", x: 15, y: 30 },
@@ -130,7 +130,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "dotGrid",
     whyThis: "You described trying to solve a complex problem alone — recruiting different internal 'advisors' can give you access to perspectives your dominant thinking style misses. The brain contains multiple semi-independent processing systems — what IFS calls 'parts' and neuroscience maps to distinct neural networks. Deliberately activating underused networks (e.g., the imaginative default mode network when you are stuck in task-positive mode) may increase creative problem-solving by up to 40%.",
-    instruction: "Each dot on the grid represents a different internal advisor — the analyst, the dreamer, the protector, the rebel, and others. Place dots to map which advisors are currently active in your thinking and which are silent. Tap any advisor dot to hear their perspective on your current challenge.",
+    instruction: "Each dot on the grid represents a different internal advisor — the analyst, the dreamer, the protector, the rebel, and others. Place dots to map which advisors are currently active in your thinking and which are silent. Tap any advisor dot to hear their perspective on your current challenge. Activate your most silent advisor today by asking yourself their question before making your next decision.",
     prePopulated: {
       items: [
         { id: "d1", label: "The Analyst — breaks problems into parts, wants data before deciding", x: 20, y: 25 },
@@ -150,7 +150,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "emotionalArc",
     whyThis: "You wrote about difficulty switching between focused work and creative thinking — understanding your TPN/DMN balance can help you navigate between them intentionally. The Task Positive Network (TPN) and Default Mode Network (DMN) are anticorrelated — when one may activate, the other may suppress. However, creative insight requires brief simultaneous co-activation. The ability to fluidly transition between these networks, mediated by the salience network (anterior insula, dACC), predicts creative output.",
-    instruction: "This exercise guides you through four phases of a deliberate TPN→DMN transition. At each phase, rate your focus intensity and write what you notice happening in your mind. The arc shows how your brain naturally moves from task focus through a crossing point where insight lives, into open wandering, and back. The creative crossing point — where both networks briefly co-activate — is where the most valuable ideas emerge.",
+    instruction: "This exercise guides you through four phases of a deliberate TPN→DMN transition. At each phase, rate your focus intensity and write what you notice happening in your mind. The arc shows how your brain naturally moves from task focus through a crossing point where insight lives, into open wandering, and back. The creative crossing point — where both networks briefly co-activate — is where the most valuable ideas emerge. Capture the insight that emerged at the crossing point and act on it today — schedule 15 minutes to develop it.",
     prePopulated: {
       phases: [
         { id: "tpn", label: "Task Focus (TPN)", prompt: "Start here. Think about a specific problem you're working on. Focus hard for 60 seconds. What are you analyzing? What steps are you planning? Notice how your attention narrows.", content: "", intensity: 85 },
@@ -167,7 +167,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "vennOverlap",
     whyThis: "Your entry revealed a values conflict — you want two things that seem incompatible. This exercise finds the integration point where both values can coexist. Values conflicts activate the ventromedial prefrontal cortex and anterior cingulate cortex simultaneously, creating cognitive dissonance. Resolution comes not from choosing one value but from finding a higher-order integration — a process that may engage the rostrolateral PFC, the brain region responsible for relational reasoning and abstraction.",
-    instruction: "Place one value in the left circle and the competing value in the right circle. In each circle, list what that value gives you and what it costs. Then drag items into the overlap zone where both values are honored. The overlap is your valugration — the integrated expression of both.",
+    instruction: "Place one value in the left circle and the competing value in the right circle. In each circle, list what that value gives you and what it costs. Then drag items into the overlap zone where both values are honored. The overlap is your valugration — the integrated expression of both. Choose one item from the overlap zone and design a concrete action this week that honors both values simultaneously.",
     prePopulated: {
       leftLabel: "Security & Stability — what keeps me safe, grounded, and predictable",
       rightLabel: "Freedom & Growth — what lets me explore, risk, and become",
@@ -190,7 +190,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "REBT / Albert Ellis",
     primitive: "splitAnnotator",
     whyThis: "Your manager said 'we need to talk about your trajectory' and your stomach dropped — you immediately thought 'I'm about to be fired' and could not focus for the rest of the day. That thought between the event and your reaction is exactly what Albert Ellis's ABC model targets. Ellis's Rational Emotive Behavior Therapy (REBT), developed in the 1950s, shows that the Activating event (A) does not cause the Consequence (C) — the Belief (B) in between does. The same words with a different belief produce a completely different emotional response. When you can see the belief, you can question it.",
-    instruction: "Left column: describe what happened — just the facts. Right column: identify the belief you held about it and the emotional reaction that followed. The split view shows the belief driving the intensity.",
+    instruction: "Left column: describe what happened — just the facts. Right column: identify the belief you held about it and the emotional reaction that followed. The split view shows the belief driving the intensity. Write an alternative belief and notice whether the emotional consequence shifts. Rehearse the alternative belief the next time the activating event occurs.",
     prePopulated: {
       leftColumnLabel: "A: Activating Event (What happened)",
       rightColumnLabel: "B: Belief → C: Consequence",
@@ -232,7 +232,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "DBT / Marsha Linehan",
     primitive: "splitAnnotator",
     whyThis: "You wrote about a situation with strong emotional charge — checking the facts can help you separate what actually happened from the interpretations your threat system added. Emotions are generated by appraisals, not events. The amygdala responds to perceived threat faster than the cortex can verify accuracy. DBT's Check the Facts protocol may engage the dorsolateral prefrontal cortex to re-evaluate the appraisal, reducing emotional intensity when the facts do not support the initial threat assessment.",
-    instruction: "In the left column, write the prompting event and your initial emotional reaction. In the right column, answer each fact-checking question: What emotion am I feeling? What triggered it? What are my interpretations? What are the actual facts? Does my emotion fit the facts? The contrast between columns reveals where interpretation diverged from reality.",
+    instruction: "In the left column, write the prompting event and your initial emotional reaction. In the right column, answer each fact-checking question: What emotion am I feeling? What triggered it? What are my interpretations? What are the actual facts? Does my emotion fit the facts? The contrast between columns reveals where interpretation diverged from reality. If your emotion does not fit the facts, name one action you will take based on the facts rather than the interpretation — and do it today.",
     prePopulated: {
       leftColumnLabel: "Event + Initial Reaction",
       rightColumnLabel: "Fact-Check",
@@ -255,7 +255,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "splitAnnotator",
     whyThis: "Your entry blended what happened with what it meant to you — teasing apart the signal (data) from the story (interpretation) can reduce emotional reactivity and reveal new choices. The brain automatically constructs narratives from sensory data via the left-hemisphere interpreter (Gazzaniga). This process is so fast that we experience our stories as facts. Deliberately separating signal from story may engage the right dorsolateral PFC, interrupting confabulation and allowing more accurate reality testing.",
-    instruction: "In the left column, write only the raw signals — what you saw, heard, or sensed without any interpretation. In the right column, write the stories your mind created about those signals. Seeing them side by side makes it easier to hold the story lightly and respond to the signal directly.",
+    instruction: "In the left column, write only the raw signals — what you saw, heard, or sensed without any interpretation. In the right column, write the stories your mind created about those signals. Seeing them side by side makes it easier to hold the story lightly and respond to the signal directly. Choose one signal-story pair and respond only to the signal this week — act on what you observed, not what your mind invented about it.",
     prePopulated: {
       leftColumnLabel: "Signal (raw data — what you saw/heard)",
       rightColumnLabel: "Story (what your mind made it mean)",
@@ -311,7 +311,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Integration",
     primitive: "vennOverlap",
     whyThis: "Your entry framed a situation as either/or — this exercise helps you hold two seemingly contradictory truths at the same time, which often reveals a more complete picture. Binary thinking is a cognitive shortcut mediated by the left hemisphere's categorization bias. Holding paradox requires bilateral prefrontal activation and increased connectivity between the default mode and frontoparietal networks. Tolerance for ambiguity, trainable through exercises like this, correlates with greater psychological flexibility and reduced anxiety.",
-    instruction: "Place one side of the dilemma in the left circle and the other in the right. List the truth in each perspective. Then explore the overlap — what becomes possible when both are true simultaneously? The integration zone is where both/and thinking lives.",
+    instruction: "Place one side of the dilemma in the left circle and the other in the right. List the truth in each perspective. Then explore the overlap — what becomes possible when both are true simultaneously? The integration zone is where both/and thinking lives. Write one sentence that holds both truths using the word 'AND' instead of 'but' — carry this sentence as your orientation for the week.",
     prePopulated: {
       leftLabel: "One Truth — what feels undeniably real from this angle",
       rightLabel: "Another Truth — what is also real from a different angle",
@@ -332,7 +332,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Integration",
     primitive: "narrativeTriptych",
     whyThis: "You described a situation where you feel certain about your interpretation — exploring two alternative truths alongside yours can reveal blind spots your certainty is hiding. Cognitive certainty correlates with reduced exploratory behavior and decreased dorsolateral PFC activation. Generating alternative explanations forces the brain into hypothesis-testing mode, activating the rostrolateral prefrontal cortex and increasing epistemic humility — a state associated with better decision-making and reduced confirmation bias.",
-    instruction: "The triptych shows three panels. In the first, write the truth as you currently see it. In the second, write an alternative truth that someone who disagrees with you might hold. In the third, write a truth that transcends or integrates both. Reading all three side by side expands your perspective.",
+    instruction: "The triptych shows three panels. In the first, write the truth as you currently see it. In the second, write an alternative truth that someone who disagrees with you might hold. In the third, write a truth that transcends or integrates both. Reading all three side by side expands your perspective. Before making any decision about this situation, share the alternative truth with someone you trust and ask what they see.",
     prePopulated: {
       panels: [
         { id: "my-truth", title: "My Truth", subtitle: "How I see it right now", placeholder: "What feels true to you?", content: "My manager is setting me up to fail. The PIP requirements are unreasonable and the timeline is designed so I can't meet it." },
@@ -348,7 +348,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Neuroscience",
     primitive: "saboteurCard",
     whyThis: "Someone gave you positive feedback in a team meeting and you immediately deflected — 'Oh it was a team effort.' You noticed you do this every single time and cannot seem to just say thank you. That is a pattern, and it has been running on autopilot. Neuroscience research on affect labeling shows that simply naming a pattern activates the prefrontal cortex and reduces the automatic response. Once a pattern has a name, your brain can recognize it earlier — in the moment instead of only in hindsight. This is the foundation of habit change: you cannot interrupt what you cannot see.",
-    instruction: "Give your pattern a memorable name — something that makes you wince with recognition. Describe its trigger, its moves, and its usual outcome. Once named, you will start spotting it in real time.",
+    instruction: "Give your pattern a memorable name — something that makes you wince with recognition. Describe its trigger, its moves, and its usual outcome. Once named, you will start spotting it in real time. Set a daily check-in for the next week: at the end of each day, note whether the pattern showed up and what you did differently when you caught it.",
     prePopulated: {
       saboteur: {
         id: "deflector",
@@ -426,7 +426,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "splitAnnotator",
     whyThis: "You mentioned wanting to change a deep-seated pattern — mapping the old neural pathway alongside the new one you are building helps you see the rewiring in progress. Neuroplasticity follows Hebb's rule: neurons that fire together wire together. Existing patterns have strong synaptic connections due to long-term potentiation. New patterns require repeated activation, emotional engagement, and adequate sleep for consolidation. Explicitly mapping both pathways may engage metacognitive circuits that accelerate the rewiring process.",
-    instruction: "In the left column, map the old pathway — trigger, automatic thought, habitual behavior, usual result. In the right column, map the new pathway you are building — same trigger, chosen thought, intentional behavior, desired result. Seeing both side by side helps you notice when you are on the old path and consciously switch to the new one.",
+    instruction: "In the left column, map the old pathway — trigger, automatic thought, habitual behavior, usual result. In the right column, map the new pathway you are building — same trigger, chosen thought, intentional behavior, desired result. Seeing both side by side helps you notice when you are on the old path and consciously switch to the new one. Commit to catching the old pathway once this week and deliberately taking the new path instead.",
     prePopulated: {
       leftColumnLabel: "Old Pathway",
       rightColumnLabel: "New Pathway (Building)",
@@ -758,7 +758,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Liberating Structures / Cynefin",
     primitive: "dotGrid",
     whyThis: "You are facing a complex situation and trying to apply simple solutions — mapping where it actually falls on the agreement-certainty matrix can match your response to the real nature of the challenge. The Cynefin framework maps to distinct neural processing modes: simple domains use cached basal ganglia routines, complicated domains engage dorsolateral PFC analytical reasoning, complex domains require the default mode network's pattern detection, and chaotic domains activate the salience network's rapid triage function. Mismatching strategy to domain may produce consistently poor outcomes.",
-    instruction: "The dot grid has two axes: agreement (do stakeholders agree on what to do?) and certainty (can we predict the outcome?). Place a dot where your current challenge sits. The quadrant it falls in — simple, complicated, complex, or chaotic — determines the right approach. You will receive strategy guidance matched to the correct domain.",
+    instruction: "The dot grid has two axes: agreement (do stakeholders agree on what to do?) and certainty (can we predict the outcome?). Place a dot where your current challenge sits. The quadrant it falls in — simple, complicated, complex, or chaotic — determines the right approach. You will receive strategy guidance matched to the correct domain. Identify one action that would serve you in at least three quadrants and start it this week — that is your most resilient next move.",
     prePopulated: {
       items: [
         { id: "d1", label: "My PIP situation — some agreement on goals, uncertain if I can meet them", x: 35, y: 30 },
@@ -797,7 +797,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "David Burns",
     primitive: "splitAnnotator",
     whyThis: "Your journal contained thinking patterns that may be distortions — checking them against Burns's list can help you catch the specific biases your mind tends to favor. Cognitive distortions are systematic errors in information processing maintained by confirmation bias and schema-driven attention. Each distortion maps to a specific neural shortcut: catastrophizing amplifies amygdala threat signals, personalization overactivates the medial PFC self-referential network, and all-or-nothing thinking reflects left-hemisphere categorization dominance.",
-    instruction: "In the left column, write the thought that is bothering you. In the right column, check it against the ten distortions: all-or-nothing thinking, overgeneralization, mental filter, disqualifying the positive, jumping to conclusions, magnification, emotional reasoning, should statements, labeling, and personalization. Identifying the distortion type immediately loosens its grip.",
+    instruction: "In the left column, write the thought that is bothering you. In the right column, check it against the ten distortions: all-or-nothing thinking, overgeneralization, mental filter, disqualifying the positive, jumping to conclusions, magnification, emotional reasoning, should statements, labeling, and personalization. Identifying the distortion type immediately loosens its grip. Write a balanced alternative thought for the distortion and read it aloud — practice using this reframe the next time the distortion fires.",
     prePopulated: {
       leftColumnLabel: "The Thought",
       rightColumnLabel: "Which Distortion?",
@@ -887,7 +887,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Polyvagal / Dan Siegel",
     primitive: "zonedSpectrum",
     whyThis: "You woke up at 4am with your heart pounding, could not sleep, and by 9am you were exhausted but wired — then you snapped at your partner over something small. That is your nervous system swinging between hyperarousal and collapse. Dan Siegel's 'window of tolerance' concept, built on Stephen Porges's Polyvagal Theory, describes the zone where you can feel emotions without being hijacked by them. Above the window is hyperarousal (anxiety, rage, the 4am pounding heart). Below it is hypoarousal (numbness, collapse). Tracking where you are right now is the first step to staying in — or returning to — the window.",
-    instruction: "Tap where you are right now on the three-zone spectrum: hyperarousal at the top, window of tolerance in the middle, hypoarousal at the bottom. The guidance that appears is specific to your current state.",
+    instruction: "Tap where you are right now on the three-zone spectrum: hyperarousal at the top, window of tolerance in the middle, hypoarousal at the bottom. The guidance that appears is specific to your current state. Apply one regulation technique from the guidance right now and re-check your position in 10 minutes.",
     prePopulated: {
       zones: [
         { id: "hyper", label: "Hyperarousal — sympathetic fight/flight", fromPercent: 66, toPercent: 100, color: "#D25858", guidance: "Your sympathetic nervous system is in overdrive: heart racing, muscles tense, mind spinning with worst-case scenarios. To downregulate: (1) Extended exhale breathing — inhale 4 counts, exhale 7 counts, repeat 5 times. The long exhale directly stimulates your vagus nerve. (2) Cold water on wrists or face — triggers the mammalian dive reflex, rapidly lowering heart rate. (3) Bilateral grounding — name 5 things you see, 4 you can touch, 3 you hear. This floods sensory cortex and pulls resources from the worry loop. (4) Orienting — slowly turn your head and let your eyes land on anything neutral or pleasant. This signals safety to your brainstem." },
@@ -967,7 +967,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Somatic Experiencing",
     primitive: "bodyMap",
     whyThis: "You wrote about feeling disconnected from your body or floating in your head — somatic grounding reconnects you to your physical foundation and the present moment. Grounding may activate the somatosensory cortex and posterior insula, increasing interoceptive awareness and pulling attention away from the default mode network's rumination loops. Physical contact with the ground stimulates proprioceptive and mechanoreceptive pathways that signal safety to the nervous system, increasing ventral vagal tone.",
-    instruction: "On the body map, tap the areas where you currently feel the most sensation — tingling, warmth, pressure, numbness, or anything else. Then follow the grounding prompts: feel your feet on the floor, your body in the chair, the weight of gravity. Tap the body map again to notice what shifted after grounding.",
+    instruction: "On the body map, tap the areas where you currently feel the most sensation — tingling, warmth, pressure, numbness, or anything else. Then follow the grounding prompts: feel your feet on the floor, your body in the chair, the weight of gravity. Tap the body map again to notice what shifted after grounding. Practice this grounding sequence once daily for the next three days to build it as an accessible tool.",
     prePopulated: { markers: [] },
   },
   {
@@ -995,7 +995,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Jon Kabat-Zinn",
     primitive: "bodyMap",
     whyThis: "During interview prep today you realized your jaw was clenched so tight it gave you a headache — you have been grinding your teeth at night too, and your shoulders feel like they are touching your ears. Your body is holding stress you have not processed yet. Jon Kabat-Zinn developed the body scan as part of his Mindfulness-Based Stress Reduction (MBSR) program at the University of Massachusetts Medical Center in the 1970s. The practice trains interoception — your ability to sense what is happening inside your body. Research on MBSR shows that body scanning improves body-state awareness, which is the foundation of emotional regulation.",
-    instruction: "Move through the body map from feet to head. Tap each area to mark what you notice — tension, ease, warmth, numbness, tingling. There are no right answers. The completed map shows your body's current landscape.",
+    instruction: "Move through the body map from feet to head. Tap each area to mark what you notice — tension, ease, warmth, numbness, tingling. There are no right answers. The completed map shows your body's current landscape. Choose the area holding the most tension and do one thing to release it right now — roll your shoulders, unclench your jaw, or stretch for 30 seconds.",
     prePopulated: { markers: [] },
   },
   {
@@ -1005,7 +1005,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "BEabove Leadership",
     primitive: "bodyMap",
     whyThis: "You are processing something emotionally complex — the 3×3 process gives you three different body-based entry points to understand what is happening beneath the surface. The 3×3 process leverages the fact that emotional information is distributed across multiple body systems: musculoskeletal tension (proprioception), visceral sensation (interoception), and energetic quality (autonomic tone). Accessing all three channels provides a more complete picture than any single channel alone, engaging a wider network of insular, somatosensory, and cingulate processing.",
-    instruction: "On the body map, complete three passes. First pass: mark where you feel physical tension or holding. Second pass: mark where you feel emotional sensation — the gut feeling, the heart-heaviness, the throat-tightness. Third pass: mark the energy quality — where feels alive and where feels dead or numb. The three layers together reveal the full somatic picture.",
+    instruction: "On the body map, complete three passes. First pass: mark where you feel physical tension or holding. Second pass: mark where you feel emotional sensation — the gut feeling, the heart-heaviness, the throat-tightness. Third pass: mark the energy quality — where feels alive and where feels dead or numb. The three layers together reveal the full somatic picture. Identify the area where emotional sensation and numbness overlap — direct three slow breaths into that spot and notice what shifts.",
     prePopulated: { markers: [] },
   },
   {
@@ -1015,7 +1015,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Somatic Experiencing",
     primitive: "bodyMap",
     whyThis: "Your journal described feeling invaded or overwhelmed by someone else's energy — this exercise helps you feel where your boundaries are in your body so you can hold them in relationship. Boundaries are not just psychological — they are somatically encoded. The peripersonal space network (a body-centered spatial mapping system in the parietal cortex) defines the felt sense of personal space. Trauma and attachment disruption can shrink or dissolve this boundary. Somatic boundary work rebuilds it by pairing interoceptive awareness with motor imagery of containment.",
-    instruction: "On the body map, mark the areas that feel most permeable — where other people's emotions, opinions, or energy tend to seep in. Then mark the areas that feel solid and boundaried. The exercise will guide you through imagining a protective edge around the permeable areas, strengthening the somatic sense of where you end and others begin.",
+    instruction: "On the body map, mark the areas that feel most permeable — where other people's emotions, opinions, or energy tend to seep in. Then mark the areas that feel solid and boundaried. The exercise will guide you through imagining a protective edge around the permeable areas, strengthening the somatic sense of where you end and others begin. Before your next interaction with the person who triggers permeability, spend 30 seconds imagining your protective edge in place.",
     prePopulated: { markers: [] },
   },
   {
@@ -1025,7 +1025,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Somatic / HSP",
     primitive: "bodyMap",
     whyThis: "You described carrying heavy emotions after an interaction — this exercise helps you distinguish between emotions that originate in you and those you absorbed from someone else. Mirror neurons and the empathy network (anterior insula, anterior cingulate cortex) can generate 'emotional contagion' — literally feeling others' emotions in your own body. Highly sensitive people show stronger mirror neuron activation and more permeable self-other boundaries in the temporoparietal junction. Sorting 'mine' from 'theirs' may strengthen the self-other distinction circuit.",
-    instruction: "On the body map, locate every sensation and emotion you are carrying right now. For each one, ask: Is this mine, or did I pick it up from someone else? Mark emotions that are yours in one color and absorbed emotions in another. For the absorbed ones, the exercise will guide you through a somatic release to return them to their owner.",
+    instruction: "On the body map, locate every sensation and emotion you are carrying right now. For each one, ask: Is this mine, or did I pick it up from someone else? Mark emotions that are yours in one color and absorbed emotions in another. For the absorbed ones, the exercise will guide you through a somatic release to return them to their owner. Commit to doing this sorting practice after every emotionally charged interaction this week.",
     prePopulated: { markers: [] },
   },
   {
@@ -1079,7 +1079,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Co-Active / CTI",
     primitive: "wordCloud",
     whyThis: "You seem cluttered with accumulated thoughts and feelings — a clearing empties the buffer so you can show up fresh and present to what matters. Working memory has a limited capacity (approximately 4 chunks in the dorsolateral PFC). When it is full of unprocessed material, new information cannot enter and cognitive performance degrades. The clearing exercise functions like a cognitive dump — externalizing the contents of working memory frees up processing capacity and may reduce the anterior cingulate's 'unfinished business' signal.",
-    instruction: "Tap out every word or phrase that is occupying your mind right now — worries, tasks, feelings, random fragments. Do not organize or judge, just dump. As the word cloud fills, notice the relief of externalizing what was taking up internal bandwidth. When the cloud feels complete, look at it from the outside and notice what has the most weight.",
+    instruction: "Tap out every word or phrase that is occupying your mind right now — worries, tasks, feelings, random fragments. Do not organize or judge, just dump. As the word cloud fills, notice the relief of externalizing what was taking up internal bandwidth. When the cloud feels complete, look at it from the outside and notice what has the most weight. Take the heaviest item in the cloud and either act on it, schedule it, or deliberately let it go.",
   },
   {
     id: "grief-ritual",
@@ -1114,7 +1114,7 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "Burnout Prevention",
     primitive: "heatmap",
     whyThis: "You described exhaustion that rest is not fixing — energy accounting reveals where your energy is actually going so you can find the hidden drains and protect the sources. Burnout is not just about time management — it is about energy management across physical, emotional, mental, and social channels. Each channel depletes different neurochemical systems: physical (ATP, cortisol), emotional (serotonin, oxytocin), mental (prefrontal glucose), social (dopamine). Accounting for all four channels may help prevent the common pattern of optimizing one while neglecting the others.",
-    instruction: "The heatmap shows your week divided by time block and energy channel (physical, emotional, mental, social). For each block, rate the energy transaction: did it give energy (green), cost energy (red), or break even (yellow)? The completed heatmap reveals your energy landscape — where the drains cluster and where the sources are that you might be underleveraging.",
+    instruction: "The heatmap shows your week divided by time block and energy channel (physical, emotional, mental, social). For each block, rate the energy transaction: did it give energy (green), cost energy (red), or break even (yellow)? The completed heatmap reveals your energy landscape — where the drains cluster and where the sources are that you might be underleveraging. Eliminate or reduce one energy drain this week and double down on one energy source — schedule both changes now.",
     prePopulated: {
       rows: [
         { id: "r1", label: "Physical — sleep quality, body tension, exercise, nutrition (ATP + cortisol)" },
@@ -1182,6 +1182,6 @@ export const COGNITIVE_SOMATIC_EXERCISES: ExerciseDefinition[] = [
     originator: "DBT / Marsha Linehan",
     primitive: "emotionWheel",
     whyThis: "You wrote about feeling overwhelmed by emotions without being able to name them — this practice helps you observe your current emotional state with precision and without judgment. Mindful observation of emotion may engage the anterior insula (interoception) and ventrolateral PFC (affect labeling) simultaneously, creating what Linehan calls 'experiencing without being controlled by.' This dual activation allows emotional information to be processed without triggering the behavioral urgency that emotions typically demand, training the capacity to feel without reacting.",
-    instruction: "Explore the emotion wheel to identify what you are feeling right now. Start from the broad categories at the center and narrow down to the specific emotion at the outer rings. Once you land on it, observe it with curiosity — where do you feel it in your body? What is its texture, temperature, and movement? Practice watching it change without trying to change it.",
+    instruction: "Explore the emotion wheel to identify what you are feeling right now. Start from the broad categories at the center and narrow down to the specific emotion at the outer rings. Once you land on it, observe it with curiosity — where do you feel it in your body? What is its texture, temperature, and movement? Practice watching it change without trying to change it. Set a reminder to do this emotion check-in at the same time tomorrow — building a daily practice strengthens your regulation capacity over time.",
   },
 ];

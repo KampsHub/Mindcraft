@@ -16,7 +16,7 @@ const PROGRAMS = [
   },
   {
     id: "global-relocation",
-    tag: "Country Move",
+    tag: "Country Relocation",
     title: "You moved countries for the job. But nobody warned you about the loneliness?",
     desc: "New city, new language, no old friends around the corner. You\u2019re rebuilding everything \u2014 routine, social life, sense of home \u2014 while performing at a job that expects you to hit the ground running. The homesickness hits months in, not days. This program helps you build a life that feels like yours again.",
   },

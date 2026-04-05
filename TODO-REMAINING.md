@@ -52,8 +52,23 @@
 
 ## Legal Review
 - [x] Terms governing law: currently says California — update to Washington State (LLC is registered there). Review all jurisdiction references. ✅ DEPLOYED
-- [ ] Review terms comprehensively against CoachBot and similar products for gaps. Identify anything missing for an AI coaching product (e.g., AI disclaimer specifics, data processing agreements, limitation of liability for AI-generated advice, arbitration, class action waiver).
-- [ ] Call out all legal gaps explicitly to Stefanie for lawyer review.
+- [x] Review terms comprehensively against CoachBot and similar products for gaps ✅ REVIEWED — see gaps below
+- [x] Call out all legal gaps explicitly to Stefanie for lawyer review ✅ DOCUMENTED
+
+**Legal gaps identified for lawyer review:**
+1. **No arbitration clause or class action waiver** — Most SaaS/AI products include mandatory arbitration + class action waiver. Reduces legal exposure significantly. CoachBot has this.
+2. **No dispute resolution process** — Before court, most terms specify informal resolution attempt (30-day email negotiation period). Currently goes straight to courts.
+3. **No data retention timeline** — Terms should specify how long data is kept after account deletion or inactivity. CoachBot specifies 3 years for DSR records.
+4. **No international user disclaimer** — If EU users sign up, GDPR applies regardless. Terms should acknowledge cross-border data transfers and legal basis (Standard Contractual Clauses or adequacy decisions).
+5. **No AI model update disclosure** — Terms should mention that AI models may be updated and outputs may change over time. Currently references "Claude by Anthropic" but doesn't address model changes.
+6. **No disclaimer for AI accuracy percentage** — The limitation of liability mentions AI may be inaccurate, but doesn't explicitly disclaim all warranties on AI output quality.
+7. **No survivability clause** — Standard clause stating which sections survive termination (IP, liability, indemnification).
+8. **No force majeure** — Protects against liability for service interruptions due to circumstances beyond control.
+9. **No severability clause** — If one term is found invalid, the rest should remain enforceable.
+10. **No entire agreement clause** — States these terms + privacy policy constitute the entire agreement.
+11. **Refund window is generous but ambiguous** — "7 days and not completed more than 3 days" — what counts as "completing" a day? Just opening it? Writing in the journal? Finishing all exercises?
+12. **No age verification mechanism** — Terms state 18+ but there's no verification. Consider adding a checkbox or age gate.
+13. **Missing: prohibition on using platform for professional coaching of others** — Users shouldn't use their account to coach clients through the platform.
 
 ## Documents to Write
 - [x] GDPR rights implementation doc: how each right (access, correction, deletion, portability, restriction, objection, withdraw consent) is executed in product, gaps, what to build ✅ WRITTEN (GDPR-RIGHTS-IMPLEMENTATION.md)

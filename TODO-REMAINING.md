@@ -50,6 +50,11 @@
 ## Infrastructure
 - [ ] Railway keeps crashing on every Vercel deploy. Root Directory was set to /livekit-agent but still triggering. Investigate: is Railway watching the whole repo or just the subfolder? May need to configure "Watch paths" in Railway settings to only trigger on livekit-agent/** changes.
 
+## Legal Review
+- [ ] Terms governing law: currently says California — update to Washington State (LLC is registered there). Review all jurisdiction references.
+- [ ] Review terms comprehensively against CoachBot and similar products for gaps. Identify anything missing for an AI coaching product (e.g., AI disclaimer specifics, data processing agreements, limitation of liability for AI-generated advice, arbitration, class action waiver).
+- [ ] Call out all legal gaps explicitly to Stefanie for lawyer review.
+
 ## Documents to Write
 - [ ] GDPR rights implementation doc: how each right (access, correction, deletion, portability, restriction, objection, withdraw consent) is executed in product, gaps, what to build
 - [ ] Review CoachBot privacy policy (https://coachbot.ai/legal/privacy-policy) for ideas to adopt

@@ -1469,7 +1469,7 @@ export default function Home() {
                 textAlign: "left",
               }}
             >
-              When life keeps giving you lemons...
+              When life gives you lemons...
             </motion.p>
           </div>
           <div style={{ flex: "0 0 60%", display: "flex", flexDirection: "column", gap: 24 }}>

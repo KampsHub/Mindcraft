@@ -195,7 +195,7 @@ export function useStep3Analysis({
       }
     } catch (err) {
       console.error("Journal processing failed:", err);
-      setProcessError("Something went wrong. Please try again.");
+      setProcessError("We couldn't process your journal right now. This is usually temporary — wait a moment and try again. If it keeps happening, try refreshing the page.");
     }
     setProcessing(false);
   }
@@ -230,8 +230,8 @@ export function useStep3Analysis({
     customFraming?: string,
     frameworkId?: string,
   ) {
-    if (!session || !enrollment) return;
-    await supabase.from("exercise_completions").insert({
+    if (!session || !enrollment) return undefined;
+    const { data } = await supabase.from("exercise_completions").insert({
       daily_session_id: session.id,
       enrollment_id: enrollment.id,
       framework_name: name,
@@ -241,8 +241,9 @@ export function useStep3Analysis({
       custom_framing: customFraming || null,
       responses,
       star_rating: rating,
-    });
+    }).select("id").single();
     setCompletedExercises((prev) => new Set(prev).add(name));
+    return data?.id;
   }
 
   return {

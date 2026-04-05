@@ -11,53 +11,53 @@ const body = fonts.bodyAlt;
 
 const DISRUPTIONS = [
   {
-    id: "income",
-    label: "Income & Financial Security",
-    question: "How disrupted is your financial stability right now?",
-    low: "Completely secure",
-    high: "Major concern",
-  },
-  {
-    id: "routine",
-    label: "Routine & Structure",
-    question: "How much has your daily structure changed?",
-    low: "Still solid",
-    high: "Completely gone",
-  },
-  {
     id: "identity",
-    label: "Identity",
-    question: "How much of your sense of self was tied to your role?",
-    low: "My identity is intact",
-    high: "I don't know who I am right now",
-  },
-  {
-    id: "belonging",
-    label: "Social Belonging",
-    question: "How connected do you feel to a community or group?",
-    low: "Still connected",
-    high: "Isolated",
+    label: "Identity & Self-Worth",
+    question: "How much is your sense of self tied to your professional role right now?",
+    low: "I know who I am beyond work",
+    high: "Without this role, I don\u2019t know who I am",
   },
   {
     id: "competence",
-    label: "Sense of Competence",
-    question: "How confident are you in your professional abilities?",
-    low: "Confident",
-    high: "Seriously doubting myself",
+    label: "Competence Confidence",
+    question: "How confident are you in your ability to perform right now?",
+    low: "I trust my skills",
+    high: "I\u2019m seriously doubting myself",
+  },
+  {
+    id: "belonging",
+    label: "Belonging & Connection",
+    question: "How connected do you feel to the people around you at work?",
+    low: "I feel like I belong",
+    high: "I feel isolated or on the outside",
+  },
+  {
+    id: "stability",
+    label: "Financial & Career Stability",
+    question: "How secure does your professional and financial situation feel?",
+    low: "Stable and secure",
+    high: "Uncertain or at risk",
+  },
+  {
+    id: "clarity",
+    label: "Clarity of Expectations",
+    question: "How clear are you on what success looks like in your current situation?",
+    low: "I know exactly what\u2019s expected",
+    high: "I\u2019m guessing or the goalposts keep moving",
+  },
+  {
+    id: "regulation",
+    label: "Emotional Regulation",
+    question: "How well are you managing stress, anxiety, or difficult emotions day to day?",
+    low: "I\u2019m managing well",
+    high: "It\u2019s affecting my sleep, focus, or relationships",
   },
   {
     id: "future",
-    label: "Future Uncertainty",
-    question: "How clear is your path forward?",
-    low: "I have a plan",
-    high: "No idea what's next",
-  },
-  {
-    id: "skills",
-    label: "Skill Confidence",
-    question: "How relevant do you feel your skills are right now?",
-    low: "Very relevant",
-    high: "Worried I'm falling behind",
+    label: "Future Trajectory",
+    question: "How clear is your path forward from here?",
+    low: "I have a plan I believe in",
+    high: "No idea what\u2019s next",
   },
 ];
 
@@ -154,8 +154,9 @@ export default function AssessmentPage() {
                   marginBottom: 12,
                 }}
               >
-                Job loss, a PIP, or a new role disrupts more than your work. It hits
-                your identity, your routine, your sense of belonging, your confidence.
+                Career disruptions hit more than your work. A layoff, a PIP, a new role,
+                a relocation, a promotion that doesn&apos;t feel like one &mdash; they all shake
+                the same foundations: identity, confidence, belonging, clarity.
               </p>
               <p
                 style={{

@@ -89,8 +89,9 @@ export default function PageShell({
   useEffect(() => {
     if (!showBgImage) return;
     const pool = PROGRAM_BG_IMAGES[programSlug || "parachute"] || PROGRAM_BG_IMAGES.parachute;
-    const day = Math.floor(Date.now() / 86400000); // days since epoch
-    const idx = day % pool.length;
+    const now = new Date();
+    const localDay = now.getFullYear() * 366 + now.getMonth() * 31 + now.getDate();
+    const idx = localDay % pool.length;
     setBgImage(pool[idx]);
   }, [showBgImage, programSlug]);
 

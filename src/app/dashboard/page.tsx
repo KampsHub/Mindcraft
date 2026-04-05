@@ -564,8 +564,9 @@ function DashboardBgImage({ programSlug }: { programSlug?: string }) {
   const [bgImage, setBgImage] = useState<string | null>(null);
   useEffect(() => {
     const pool = PROGRAM_BG_IMAGES[programSlug || "parachute"] || PROGRAM_BG_IMAGES.parachute;
-    const day = Math.floor(Date.now() / 86400000);
-    setBgImage(pool[day % pool.length]);
+    const now = new Date();
+    const localDay = now.getFullYear() * 366 + now.getMonth() * 31 + now.getDate();
+    setBgImage(pool[localDay % pool.length]);
   }, [programSlug]);
 
   if (!bgImage) return null;

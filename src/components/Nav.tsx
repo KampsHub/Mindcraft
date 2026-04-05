@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/dashboard", label: "Today" },
   { href: "/goals", label: "Plan & Progress" },
   { href: "/weekly-review", label: "Insights" },
+  { href: "/search", label: "Search" },
 ];
 
 function ScrollProgress() {

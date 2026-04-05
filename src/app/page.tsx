@@ -231,7 +231,7 @@ function StatsBar() {
 
 /* ── Pain-Point Marquee ── */
 function PainPointMarquee() {
-  const { row1, row2, row3, row4, row5, circles } = c.marquee;
+  const { row1, row2, row3, row4, row5, row6, row7, circles } = c.marquee;
 
   const MarqueeItem = ({ text }: { text: string }) => (
     <span
@@ -264,7 +264,7 @@ function PainPointMarquee() {
     <section
       className="marquee-section"
       style={{
-        padding: "96px 0",
+        padding: "96px 0 120px",
         backgroundColor: colors.bgDeep,
         position: "relative",
         overflow: "hidden",
@@ -359,7 +359,25 @@ function PainPointMarquee() {
           </div>
         </div>
 
-        {/* Circles — spanning top of row 1 to bottom of row 5 */}
+        {/* Row 6 — scrolls right (new territories) */}
+        <div style={{ overflow: "hidden" }}>
+          <div className="marquee-track-right" style={{ animationDuration: "21s" }}>
+            {[...row6, ...row6, ...row6, ...row6].map((text, i) => (
+              <MarqueeItem key={`r6-${i}`} text={text} />
+            ))}
+          </div>
+        </div>
+
+        {/* Row 7 — scrolls left (ambition & growth) */}
+        <div style={{ overflow: "hidden" }}>
+          <div className="marquee-track-left" style={{ animationDuration: "26s" }}>
+            {[...row7, ...row7, ...row7, ...row7].map((text, i) => (
+              <MarqueeItem key={`r7-${i}`} text={text} />
+            ))}
+          </div>
+        </div>
+
+        {/* Circles — spanning top of row 1 to bottom of row 7 */}
         <div
           style={{
             position: "absolute",
@@ -386,8 +404,8 @@ function PainPointMarquee() {
               <div
                 className="breathe-circle"
                 style={{
-                  width: i === 1 ? 280 : 250,
-                  height: i === 1 ? 280 : 250,
+                  width: i === 1 ? 360 : 310,
+                  height: i === 1 ? 360 : 310,
                   borderRadius: "50%",
                   background: `radial-gradient(circle, ${colors.coral} 0%, rgba(196,148,58,${i === 1 ? "0.28" : "0.15"}) 50%, transparent 100%)`,
                   animationDelay: `${i * 0.8}s`,
@@ -424,7 +442,7 @@ function PainPointMarquee() {
                 textTransform: "uppercase" as const,
                 textAlign: "center",
                 lineHeight: 1.3,
-                width: i === 1 ? 280 : 250,
+                width: i === 1 ? 360 : 310,
               }}
             >
               {label}

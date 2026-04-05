@@ -142,7 +142,7 @@ export default function AssessmentPage() {
     >
       <div style={{ maxWidth: 600, margin: "0 auto", padding: "60px 24px 80px" }}>
         {/* Logo */}
-        <div style={{ marginBottom: 40 }}>
+        <div style={{ marginBottom: 40, textAlign: "center" }}>
           <a href="/" style={{ textDecoration: "none" }}>
             <Logo size={28} />
           </a>
@@ -168,9 +168,9 @@ export default function AssessmentPage() {
               >
                 {(() => {
                   const SHORT_LABELS = [
-                    "Identity", "Confidence", "Safety",
-                    "Belonging", "Stability", "Functioning",
-                    "Clarity", "Trust", "Direction",
+                    "Who am I now?", "Can I do this?", "Am I safe here?",
+                    "Do I belong?", "Will I be okay?", "How am I holding up?",
+                    "What\u2019s expected?", "Can I trust them?", "What\u2019s next?",
                   ];
                   const total = 9;
                   const viewSize = 460;

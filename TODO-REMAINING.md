@@ -13,17 +13,6 @@
 | `EXIT_SURVEY_URL` | Typeform URL (create below) | Link in 7-day inactive email |
 | `TESTIMONIAL_SURVEY_URL` | Typeform URL (create below) | Link in Day 30 completion email |
 
-### Create These Typeform Surveys (15 min each)
-1. **Exit Survey** — for users who stopped using Mindcraft
-   - Q1: "What made you stop using Mindcraft?" (multiple choice + other: Lost motivation / Too busy / Didn't find it helpful / Too expensive / Got what I needed / Other)
-   - Q2: "What would bring you back?" (open text)
-   - After creating → paste URL into `EXIT_SURVEY_URL` in Vercel
-
-2. **Testimonial Survey** — for users who completed Day 30
-   - Q1: "How would you describe Mindcraft to a friend?" (open text)
-   - Q2: "What changed for you during the program?" (open text)
-   - Q3: Permission checkbox: "I give permission to use my response (anonymized) on the Mindcraft website"
-   - After creating → paste URL into `TESTIMONIAL_SURVEY_URL` in Vercel
 
 ### Run This SQL in Supabase (2 min)
 - **`scripts/add-retrieval-exercises.sql`** — Adds spaced retrieval quiz exercises on Days 7, 14, 21 for all 3 programs
@@ -127,7 +116,7 @@
 - [x] **whyThis chunking** — shortened 6 longest exercises (Stress Responses, NVC, Older Pattern, Performance Culture, Cultural Observation, Belonging Sources). Avg reduced from ~1,150 to ~550 chars. Framework teaching stays in instruction/primitive.
 - [ ] **362 exercise arc audit** — add practice steps to ALL exercises (massive content project, Stefanie asked for full audit not just 90)
 - [x] **Scaffolding decrease** — SQL script ready (`scripts/update-scaffolding-notes.sql`). Adds system_notes to all program_days: Days 1-10 explain why heavier, Days 11-20 instruct AI to reduce pre-fill by 50%, Days 21-30 minimal scaffolding. Run in Supabase SQL Editor.
-- [ ] **Bloom's labels** — label deep-learning exercises, track repeated concepts per user across program arc
+- [x] **Bloom's labels** — SQL script ready (`scripts/add-bloom-labels.sql`). Adds bloom_level column (remember/understand/apply/analyze/evaluate/create) + concept_tags array to frameworks_library. Auto-labels exercises by name pattern. Run in Supabase SQL Editor.
 
 ### Infrastructure (needs separate resources)
 - [ ] **Staging environment** — develop branch exists with Vercel preview URLs. Needs separate Supabase project for full data isolation.

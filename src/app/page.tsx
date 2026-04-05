@@ -1507,20 +1507,9 @@ export default function Home() {
           paddingBottom: 140,
           position: "relative",
           overflow: "hidden",
+          backgroundColor: colors.bgRecessed,
         }}
       >
-        <img
-          src="/ocean-bg.jpg"
-          alt=""
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            zIndex: 0,
-          }}
-        />
         <div style={{ maxWidth, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
           <FadeIn preset="slide-up" duration={0.8}>
             <h2
@@ -1908,7 +1897,7 @@ export default function Home() {
           {/* Outcomes — inline list */}
           {(c.steps as any).outcomes && (
             <FadeIn preset="slide-up" duration={0.8}>
-              <div style={{ textAlign: "center", marginTop: 56, maxWidth: 600, marginLeft: "auto", marginRight: "auto", backgroundColor: "rgba(24,24,28,0.75)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", borderRadius: 16, padding: "28px 32px" }}>
+              <div style={{ textAlign: "center", marginTop: 56, maxWidth: 600, marginLeft: "auto", marginRight: "auto", backgroundColor: colors.bgSurface, borderRadius: 16, padding: "28px 32px", border: `1px solid ${colors.borderDefault}` }}>
                 <p style={{
                   fontFamily: display,
                   fontSize: 12,
@@ -2000,6 +1989,7 @@ export default function Home() {
                   </svg>
                 ),
                 title: "Your data stays yours",
+                faqTopic: "Data & privacy",
               },
               {
                 icon: (
@@ -2009,6 +1999,7 @@ export default function Home() {
                   </svg>
                 ),
                 title: "350+ cited frameworks",
+                faqTopic: "The program",
               },
               {
                 icon: (
@@ -2018,6 +2009,7 @@ export default function Home() {
                   </svg>
                 ),
                 title: "Built with real coaches",
+                faqTopic: "About",
               },
               {
                 icon: (
@@ -2033,10 +2025,13 @@ export default function Home() {
                   </svg>
                 ),
                 title: "Adapts to you daily",
+                faqTopic: "Data & privacy",
               },
-            ].map((item, i) => (
+            ].map((item: { icon: React.ReactNode; title: string; faqTopic: string }, i) => (
               <FadeIn key={i} delay={0.1 + i * 0.08} preset="fade">
-                <div
+                <a
+                  href="#faq"
+                  onClick={() => setActiveFaqTopic(item.faqTopic)}
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -2044,6 +2039,9 @@ export default function Home() {
                     textAlign: "center",
                     gap: 12,
                     padding: "24px 16px",
+                    textDecoration: "none",
+                    cursor: "pointer",
+                    transition: "opacity 0.2s",
                   }}
                 >
                   <div style={{
@@ -2069,7 +2067,7 @@ export default function Home() {
                   >
                     {item.title}
                   </h3>
-                </div>
+                </a>
               </FadeIn>
             ))}
           </div>
@@ -2102,105 +2100,6 @@ export default function Home() {
       {/* ── Social Proof ── */}
       <SocialProof />
 
-
-      {/* ── Who Built This ── */}
-      <section
-        style={{
-          paddingTop: 96,
-          paddingLeft: 24,
-          paddingRight: 24,
-          paddingBottom: 140,
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <img
-          src="/lemon-bg.jpg"
-          alt=""
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: 0.7,
-            zIndex: 0,
-          }}
-        />
-        <div style={{
-          maxWidth: 920,
-          margin: "0 auto",
-          textAlign: "center",
-          position: "relative",
-          zIndex: 1,
-          backgroundColor: "rgba(24, 24, 28, 0.30)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          borderRadius: 20,
-          padding: "48px 40px 40px",
-        }}>
-          <FadeIn preset="slide-up" duration={0.8}>
-            <h2
-              style={{
-                fontFamily: display,
-                fontSize: "clamp(32px, 5vw, 52px)",
-                fontWeight: 700,
-                marginBottom: 20,
-                color: colors.textPrimary,
-                letterSpacing: "-0.03em",
-              }}
-            >
-              {c.builtBy.headline}
-            </h2>
-          </FadeIn>
-          <FadeIn preset="blur" delay={0.15} duration={0.9}>
-            <p
-              style={{
-                fontSize: 17,
-                color: colors.textSecondary,
-                lineHeight: 1.85,
-                fontFamily: body,
-                fontStyle: "italic",
-                marginBottom: 28,
-              }}
-            >
-              &ldquo;{c.builtBy.body}&rdquo;
-            </p>
-          </FadeIn>
-          <FadeIn preset="fade" delay={0.3}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <a
-                href={c.builtBy.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontFamily: display,
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: colors.textPrimary,
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                }}
-              >
-                {c.builtBy.name} ↗
-              </a>
-              <p
-                style={{
-                  fontFamily: body,
-                  fontSize: 13,
-                  color: colors.textMuted,
-                }}
-              >
-                {c.builtBy.title}
-              </p>
-            </div>
-          </FadeIn>
-        </div>
-        {/* Wave divider embedded so lemon bg rounds out */}
-        <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, zIndex: 2 }}>
-          <SectionDivider variant="ripple" fromColor="transparent" toColor={colors.bgDeep} height={50} />
-        </div>
-      </section>
 
       {/* ── FAQ ── */}
       <section id="faq" style={{ ...sectionPadding }}>
@@ -2364,6 +2263,104 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Who Built This ── */}
+      <section
+        style={{
+          paddingTop: 96,
+          paddingLeft: 24,
+          paddingRight: 24,
+          paddingBottom: 140,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <img
+          src="/lemon-bg.jpg"
+          alt=""
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: 0.7,
+            zIndex: 0,
+          }}
+        />
+        <div style={{
+          maxWidth: 920,
+          margin: "0 auto",
+          textAlign: "center",
+          position: "relative",
+          zIndex: 1,
+          backgroundColor: "rgba(24, 24, 28, 0.30)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          borderRadius: 20,
+          padding: "48px 40px 40px",
+        }}>
+          <FadeIn preset="slide-up" duration={0.8}>
+            <h2
+              style={{
+                fontFamily: display,
+                fontSize: "clamp(32px, 5vw, 52px)",
+                fontWeight: 700,
+                marginBottom: 20,
+                color: colors.textPrimary,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              {c.builtBy.headline}
+            </h2>
+          </FadeIn>
+          <FadeIn preset="blur" delay={0.15} duration={0.9}>
+            <p
+              style={{
+                fontSize: 17,
+                color: colors.textSecondary,
+                lineHeight: 1.85,
+                fontFamily: body,
+                fontStyle: "italic",
+                marginBottom: 28,
+              }}
+            >
+              &ldquo;{c.builtBy.body}&rdquo;
+            </p>
+          </FadeIn>
+          <FadeIn preset="fade" delay={0.3}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+              <a
+                href={c.builtBy.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontFamily: display,
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                }}
+              >
+                {c.builtBy.name} ↗
+              </a>
+              <p
+                style={{
+                  fontFamily: body,
+                  fontSize: 13,
+                  color: colors.textMuted,
+                }}
+              >
+                {c.builtBy.title}
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+        <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, zIndex: 2 }}>
+          <SectionDivider variant="ripple" fromColor="transparent" toColor={colors.bgDeep} height={50} />
+        </div>
+      </section>
+
       {/* ── Final CTA ── */}
       <section
         style={{
@@ -2371,9 +2368,20 @@ export default function Home() {
           textAlign: "center",
           position: "relative",
           overflow: "hidden",
-          background: colors.bgRecessed,
         }}
       >
+        <img
+          src="/ocean-bg.jpg"
+          alt=""
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: 0,
+          }}
+        />
         <div
           style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1 }}
         >

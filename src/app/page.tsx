@@ -1951,7 +1951,7 @@ export default function Home() {
                 textAlign: "center",
               }}
             >
-              Built different. Built honest.
+              Your data. Your rules.
             </h2>
           </FadeIn>
 
@@ -1964,8 +1964,8 @@ export default function Home() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 ),
-                title: "What you write here stays here.",
-                desc: "Your entries never train any model. Zero third-party access. No data sales. Export or delete at any time.",
+                title: "Your journal is yours. Period.",
+                desc: "Your entries are processed by AI to coach you \u2014 then they stay in your account. They never train any model, are never sold, and are never read by a human unless you choose to share with a coach. Export everything or delete your account at any time.",
               },
               {
                 icon: (
@@ -1974,8 +1974,8 @@ export default function Home() {
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                   </svg>
                 ),
-                title: "Every exercise is cited and explained.",
-                desc: "Nothing is made up. Every exercise comes from a real coaching or psychology framework \u2014 and tells you where it comes from and why it was chosen for you.",
+                title: "Nothing is made up.",
+                desc: "Every exercise comes from a published coaching or psychology framework \u2014 Gottman, IFS, ACT, Positive Intelligence, and others. You\u2019ll see who created it, why it works, and why it was matched to what you wrote today.",
               },
               {
                 icon: (
@@ -1987,7 +1987,7 @@ export default function Home() {
                   </svg>
                 ),
                 title: "Built by someone who\u2019s been through it.",
-                desc: "Designed by a certified leadership coach who\u2019s navigated career crises firsthand. Frameworks from real coaching rooms, shaped by lived experience.",
+                desc: "Designed by a certified executive coach who\u2019s navigated layoffs, relocations, and career reinventions firsthand. Not theory \u2014 frameworks tested in real coaching rooms with real people in real crises.",
               },
             ].map((item, i) => (
               <FadeIn key={i} delay={0.1 + i * 0.12} preset="fade">

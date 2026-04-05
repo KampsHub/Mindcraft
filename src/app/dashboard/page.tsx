@@ -198,6 +198,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [enrollments, setEnrollments] = useState<EnrollmentWithContext[]>([]);
   const [hasEnneagram, setHasEnneagram] = useState(true); // default true to hide upsell until checked
+  const [coachInvitations, setCoachInvitations] = useState<{ id: string; coach_id: string; status: string }[]>([]);
   const supabase = createClient();
   const router = useRouter();
 
@@ -292,6 +293,10 @@ export default function DashboardPage() {
       setUser(user);
       fetchDashboardData(user.id);
       fetch("/api/link-subscription", { method: "POST" }).catch(() => {});
+      // Check for pending coach invitations
+      supabase.from("coach_clients").select("id, coach_id, status").eq("client_email", user.email || "").eq("status", "pending").then(({ data }) => {
+        if (data) setCoachInvitations(data);
+      });
     });
   }, [supabase.auth, router, fetchDashboardData]);
 
@@ -387,6 +392,60 @@ export default function DashboardPage() {
                 Explore programs
               </button>
             </div>
+          </FadeIn>
+        )}
+
+        {/* ── Coach invitation banner ── */}
+        {coachInvitations.length > 0 && (
+          <FadeIn preset="slide-up" triggerOnMount>
+            {coachInvitations.map((inv) => (
+              <div key={inv.id} style={{
+                padding: "16px 20px", marginBottom: 16,
+                backgroundColor: `${colors.coral}10`, borderRadius: 12,
+                border: `1px solid ${colors.coral}30`,
+                display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap",
+              }}>
+                <p style={{ fontFamily: body, fontSize: 14, color: colors.textPrimary, margin: 0 }}>
+                  A coach has requested access to follow your progress.
+                </p>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button
+                    onClick={async () => {
+                      await fetch("/api/coach/accept", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ coachClientId: inv.id }),
+                      });
+                      setCoachInvitations(prev => prev.filter(i => i.id !== inv.id));
+                    }}
+                    style={{
+                      padding: "8px 16px", fontFamily: display, fontSize: 12, fontWeight: 600,
+                      color: colors.bgDeep, backgroundColor: colors.coral,
+                      border: "none", borderRadius: 8, cursor: "pointer",
+                    }}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onClick={async () => {
+                      await fetch("/api/coach/revoke", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ coachClientId: inv.id }),
+                      });
+                      setCoachInvitations(prev => prev.filter(i => i.id !== inv.id));
+                    }}
+                    style={{
+                      padding: "8px 16px", fontFamily: display, fontSize: 12, fontWeight: 600,
+                      color: colors.textMuted, backgroundColor: "transparent",
+                      border: `1px solid ${colors.borderDefault}`, borderRadius: 8, cursor: "pointer",
+                    }}
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            ))}
           </FadeIn>
         )}
 

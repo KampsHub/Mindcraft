@@ -115,6 +115,25 @@ export default function CoachPage() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
 
+  // Coach clients (new relationship model)
+  const [coachClients, setCoachClients] = useState<Array<{
+    id: string;
+    client_id: string | null;
+    client_email: string;
+    status: string;
+    invited_at: string;
+    accepted_at: string | null;
+    enrollment: { current_day: number; status: string; current_streak: number; best_streak: number; programs: { name: string; slug: string } } | null;
+    goals: { goal_text: string; status: string }[];
+    enneagram: unknown;
+    sharedInsights: { approved_summary: unknown; approved_at: string; period_start: string; period_end: string }[];
+    lastActive: string | null;
+  }>>([]);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviting, setInviting] = useState(false);
+  const [expandedClient, setExpandedClient] = useState<string | null>(null);
+  const [loadingCoachClients, setLoadingCoachClients] = useState(false);
+
   const supabase = createClient();
   const router = useRouter();
 
@@ -129,6 +148,39 @@ export default function CoachPage() {
     }
     setLoading(false);
   }, [supabase]);
+
+  const fetchCoachClients = useCallback(async () => {
+    setLoadingCoachClients(true);
+    try {
+      const res = await fetch("/api/coach/clients");
+      if (res.ok) {
+        const data = await res.json();
+        setCoachClients(data.clients || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch coach clients:", err);
+    }
+    setLoadingCoachClients(false);
+  }, []);
+
+  const handleInvite = async () => {
+    if (!inviteEmail.trim()) return;
+    setInviting(true);
+    try {
+      const res = await fetch("/api/coach/invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: inviteEmail.trim() }),
+      });
+      if (res.ok) {
+        setInviteEmail("");
+        fetchCoachClients();
+      }
+    } catch (err) {
+      console.error("Failed to invite:", err);
+    }
+    setInviting(false);
+  };
 
   const fetchAnalytics = useCallback(async () => {
     setLoadingAnalytics(true);
@@ -152,8 +204,9 @@ export default function CoachPage() {
       }
       setUser(user);
       fetchClients();
+      fetchCoachClients();
     });
-  }, [supabase.auth, router, fetchClients]);
+  }, [supabase.auth, router, fetchClients, fetchCoachClients]);
 
   useEffect(() => {
     if (activeTab === "analytics" && !analytics) {
@@ -288,7 +341,181 @@ export default function CoachPage() {
       </div>
 
       {activeTab === "clients" ? (
-        /* ═══════ CLIENTS TAB ═══════ */
+        /* ═══════ CLIENTS TAB — New Coach Dashboard ═══════ */
+        <div>
+          {/* Invite client */}
+          <FadeIn preset="slide-up" triggerOnMount delay={0.05}>
+            <div style={{
+              display: "flex", gap: 8, marginBottom: 24,
+              padding: 20, backgroundColor: colors.bgSurface,
+              borderRadius: 12, border: `1px solid ${colors.borderDefault}`,
+            }}>
+              <input
+                type="email"
+                placeholder="Add client by email..."
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleInvite(); }}
+                style={{
+                  flex: 1, padding: "10px 14px", fontFamily: body, fontSize: 14,
+                  color: colors.textPrimary, backgroundColor: "rgba(255,255,255,0.06)",
+                  border: `1px solid ${colors.borderDefault}`, borderRadius: 8, outline: "none",
+                }}
+              />
+              <button
+                onClick={handleInvite}
+                disabled={inviting}
+                style={{
+                  padding: "10px 20px", fontFamily: display, fontSize: 13, fontWeight: 600,
+                  color: colors.bgDeep, backgroundColor: colors.coral,
+                  border: "none", borderRadius: 8, cursor: inviting ? "not-allowed" : "pointer",
+                  opacity: inviting ? 0.6 : 1,
+                }}
+              >
+                {inviting ? "..." : "Invite"}
+              </button>
+            </div>
+          </FadeIn>
+
+          {/* Client cards */}
+          {loadingCoachClients ? (
+            <p style={{ fontFamily: body, fontSize: 14, color: colors.textMuted }}>Loading clients...</p>
+          ) : coachClients.length === 0 ? (
+            <p style={{ fontFamily: body, fontSize: 14, color: colors.textMuted }}>No clients yet. Add a client email above to get started.</p>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {coachClients.map((cc) => (
+                <FadeIn key={cc.id} preset="fade" triggerOnMount>
+                  <motion.div
+                    whileHover={{ borderColor: colors.coral + "40" }}
+                    style={{
+                      backgroundColor: colors.bgSurface,
+                      borderRadius: 12,
+                      border: `1px solid ${colors.borderDefault}`,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {/* Client header row */}
+                    <button
+                      onClick={() => cc.status === "active" && setExpandedClient(expandedClient === cc.id ? null : cc.id)}
+                      style={{
+                        width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
+                        padding: "16px 20px", background: "none", border: "none", cursor: cc.status === "active" ? "pointer" : "default",
+                        textAlign: "left",
+                      }}
+                    >
+                      <div>
+                        <span style={{ fontFamily: display, fontSize: 14, fontWeight: 600, color: colors.textPrimary }}>
+                          {cc.client_email}
+                        </span>
+                        {cc.enrollment && (
+                          <span style={{ fontFamily: body, fontSize: 12, color: colors.textMuted, marginLeft: 12 }}>
+                            Day {cc.enrollment.current_day} · {cc.enrollment.programs?.name}
+                            {(cc.enrollment.current_streak || 0) >= 2 && ` · ${cc.enrollment.current_streak}-day streak`}
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        {cc.lastActive && (
+                          <span style={{ fontFamily: body, fontSize: 11, color: colors.textMuted }}>
+                            Last active {new Date(cc.lastActive).toLocaleDateString()}
+                          </span>
+                        )}
+                        <span style={{
+                          fontSize: 10, fontWeight: 600, fontFamily: display, textTransform: "uppercase" as const,
+                          letterSpacing: "0.08em", padding: "3px 8px", borderRadius: 20,
+                          backgroundColor: cc.status === "active" ? `${colors.coral}20` : cc.status === "pending" ? "rgba(255,255,255,0.06)" : "rgba(255,0,0,0.1)",
+                          color: cc.status === "active" ? colors.coral : cc.status === "pending" ? colors.textMuted : "#e08585",
+                        }}>
+                          {cc.status}
+                        </span>
+                      </div>
+                    </button>
+
+                    {/* Expanded client detail */}
+                    <AnimatePresence>
+                      {expandedClient === cc.id && cc.status === "active" && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{ overflow: "hidden" }}
+                        >
+                          <div style={{ padding: "0 20px 20px", borderTop: `1px solid ${colors.borderSubtle}` }}>
+                            {/* Goals */}
+                            {cc.goals.length > 0 && (
+                              <div style={{ marginTop: 16 }}>
+                                <h4 style={{ fontFamily: display, fontSize: 12, fontWeight: 600, color: colors.textMuted, textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 8 }}>
+                                  Goals
+                                </h4>
+                                {cc.goals.map((g, gi) => (
+                                  <p key={gi} style={{ fontFamily: body, fontSize: 13, color: colors.textSecondary, margin: "0 0 4px 0", paddingLeft: 12, borderLeft: `2px solid ${colors.coral}40` }}>
+                                    {g.goal_text}
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Shared Insights */}
+                            {cc.sharedInsights.length > 0 && (
+                              <div style={{ marginTop: 16 }}>
+                                <h4 style={{ fontFamily: display, fontSize: 12, fontWeight: 600, color: colors.textMuted, textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 8 }}>
+                                  Shared Insights
+                                </h4>
+                                {cc.sharedInsights.map((si, sii) => (
+                                  <div key={sii} style={{
+                                    padding: 12, backgroundColor: "rgba(255,255,255,0.03)", borderRadius: 8, marginBottom: 8,
+                                    fontSize: 13, fontFamily: body, color: colors.textSecondary, lineHeight: 1.5,
+                                  }}>
+                                    <span style={{ fontSize: 11, color: colors.textMuted }}>
+                                      {new Date(si.period_start).toLocaleDateString()} — {new Date(si.period_end).toLocaleDateString()}
+                                    </span>
+                                    <p style={{ margin: "6px 0 0 0" }}>
+                                      {typeof si.approved_summary === "object" && si.approved_summary
+                                        ? ((si.approved_summary as { sections?: { title: string; content: string }[] }).sections || [])
+                                            .map(s => s.content).join(" ").substring(0, 300) + "..."
+                                        : "Summary available"}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Enneagram */}
+                            {cc.enneagram && (
+                              <div style={{ marginTop: 16 }}>
+                                <h4 style={{ fontFamily: display, fontSize: 12, fontWeight: 600, color: colors.textMuted, textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 8 }}>
+                                  Enneagram
+                                </h4>
+                                <p style={{ fontFamily: body, fontSize: 13, color: colors.textSecondary }}>
+                                  Type {(cc.enneagram as { type?: string })?.type || "Unknown"}
+                                  {(cc.enneagram as { wing?: string })?.wing && ` w${(cc.enneagram as { wing?: string }).wing}`}
+                                </p>
+                              </div>
+                            )}
+
+                            {cc.goals.length === 0 && cc.sharedInsights.length === 0 && !cc.enneagram && (
+                              <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, marginTop: 16 }}>
+                                No shared data yet. Client hasn&rsquo;t shared insights or set goals.
+                              </p>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                </FadeIn>
+              ))}
+            </div>
+          )}
+
+          {/* Legacy client list (admin fallback) */}
+          {clients.length > 0 && (
+            <details style={{ marginTop: 32 }}>
+              <summary style={{ fontFamily: display, fontSize: 13, fontWeight: 600, color: colors.textMuted, cursor: "pointer", marginBottom: 12 }}>
+                All users ({clients.length})
+              </summary>
         <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: 24 }}>
           {/* Client list */}
           <FadeIn preset="slide-up" triggerOnMount delay={0.1}>
@@ -574,6 +801,9 @@ export default function CoachPage() {
               )}
             </AnimatePresence>
           </div>
+        </div>
+            </details>
+          )}
         </div>
       ) : (
         /* ═══════ ANALYTICS & QUALITY TAB ═══════ */

@@ -119,10 +119,6 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 
 ## To Dos
 
-### CRITICAL — Blocks Launch
-
-1. ~~**Stripe keys**~~ — ✅ Done. Live keys set in Vercel.
-
 ### HIGH — Needed for Quality Launch
 
 4. ~~**Error monitoring (Sentry)**~~ — ✅ Activated. DSN set in Vercel. Check sentry.io for first events.
@@ -135,31 +131,23 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
    - Coaching goals per client
    - Enneagram results (if client uploads)
 
-6. ~~**Referral dashboard**~~ — Parked.
-
-7. ~~**Admin panel**~~ — Accepted. Stefanie will use Supabase directly.
-
 ### Monitoring Features
 
-| Feature | Needs | Status |
-|---------|-------|--------|
-| Sentry | DSN env var in Vercel | Config ready — activate |
-| ~~Quality monitoring cron~~ | ~~Vercel Cron job setup~~ | ✅ Already scheduled in vercel.json: `0 16 * * 1` (Monday 4 PM UTC) |
-| ~~Token cost tracking~~ | ~~Admin query on `api_logs`~~ | ✅ Top users by cost table added to `/admin` dashboard |
+| Feature                     | Needs                         | Status                                                             |
+| --------------------------- | ----------------------------- | ------------------------------------------------------------------ |
+| ~~Sentry~~                  | ~~DSN env var in Vercel~~     | ✅ Active. DSN set, check sentry.io error dashboard.               |
+| ~~Quality monitoring cron~~ | ~~Vercel Cron job setup~~     | ✅ Already scheduled in vercel.json: `0 16 * * 1` (Monday 4 PM UTC) |
+| ~~Token cost tracking~~     | ~~Admin query on `api_logs`~~ | ✅ Top users by cost table added to `/admin` dashboard              |
 
 ### Known Technical Debt
 
 8. **In-memory rate limiting** — Current rate limiting uses in-memory counters. On Vercel, each request can hit a different serverless instance, so counters don't share state. At scale (100+ concurrent users), limits won't be enforced consistently. **Fix:** Add Redis (e.g., Upstash) as a shared counter store. ~2 hours of work.
 
-9. ~~**API logs write synchronously**~~ — ✅ Done. Removed `await` from `logApiCall()` calls so responses return immediately. Logs still write in the background.
+9. **Memory embeddings retrieval may slow** — As the `coaching_memories` table grows, similarity search queries will slow down. **Fix:** Add a PostgreSQL vector index (pgvector `ivfflat` or `hnsw` index), or limit retrieval to recent memories (last 90 days). Monitor query times in `api_logs` latency.
 
-10. **Memory embeddings retrieval may slow** — As the `coaching_memories` table grows, similarity search queries will slow down. **Fix:** Add a PostgreSQL vector index (pgvector `ivfflat` or `hnsw` index), or limit retrieval to recent memories (last 90 days). Monitor query times in `api_logs` latency.
+10. **No unit/integration tests** — Only manual `TEST-PLAN.md`. **To start:** Set up Vitest (fast, Vite-native) for unit tests + Playwright for integration tests. Start with: API route tests (process-journal, daily-exercise) and critical UI flows (login → dashboard → day 1). ~1 day for setup + first 10 tests.
 
-11. **No unit/integration tests** — Only manual `TEST-PLAN.md`. **To start:** Set up Vitest (fast, Vite-native) for unit tests + Playwright for integration tests. Start with: API route tests (process-journal, daily-exercise) and critical UI flows (login → dashboard → day 1). ~1 day for setup + first 10 tests.
-
-12. ~~**283 exercises old format**~~ — ✅ Verified. Exercise data lives in database (not `exerciseDataCore.ts` which doesn't exist). 14 references to `whyNow`/`science` remain in rendering code as backward-compatible fallbacks — not a blocker.
-
-13. **Email templates hardcoded** — All email HTML is inline in route handlers. **Fix:** Use React Email (`@react-email/components`) to build reusable templates as React components. Resend supports React Email natively. Create a `src/emails/` directory with shared layout + per-email templates. ~1 day to migrate existing emails.
+11. **Email templates hardcoded** — All email HTML is inline in route handlers. **Fix:** Use React Email (`@react-email/components`) to build reusable templates as React components. Resend supports React Email natively. Create a `src/emails/` directory with shared layout + per-email templates. ~1 day to migrate existing emails.
 
 ### Data Storage Map — New Features (April 4, 2026)
 

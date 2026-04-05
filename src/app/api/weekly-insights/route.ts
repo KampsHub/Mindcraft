@@ -54,7 +54,15 @@ Return valid JSON (no markdown, no code fences):
     "what_it_protects": "One sentence — what this pattern is protecting them from.",
     "what_it_costs": "One sentence — what this pattern is costing them."
   },
-  "next_week_focus": "One sentence — what next week should focus on based on what emerged this week."
+  "next_week_focus": "One sentence — what next week should focus on based on what emerged this week.",
+
+  "progress": {
+    "pattern_shift": "Name a specific theme or pattern that changed frequency this week vs. last. Quote evidence: 'You mentioned [X] 4 times last week. This week, once.' If no shift, say so honestly.",
+    "language_shift": "Did their language shift from reactive ('they made me feel') to reflective ('I noticed I felt')? Quote a before/after example if you see one. If no shift, null.",
+    "mood_trend": "One sentence describing the day_rating trajectory this week. Rising, falling, stable, volatile?",
+    "exercise_engagement": "One sentence on how they engaged with exercises — ratings going up? Written feedback getting longer or more specific? Or phoning it in?",
+    "narrative": "One warm, direct sentence that captures what's actually different about this person compared to when they started. Not praise — observation. E.g., 'Your relationship with self-doubt looks different than it did on Day 2.'"
+  }
 }
 
 ## Guidelines
@@ -65,7 +73,9 @@ Return valid JSON (no markdown, no code fences):
 5. Coaching questions should make them pause. Not therapy questions — coaching questions.
 6. The week_pattern teaches them something about WHY the pattern exists, not just that it exists.
 7. Be direct. No motivational language. No praise.
-8. IMPORTANT: Match their engagement level. If they barely wrote all week, keep it brief. Don't over-analyze thin data.`;
+8. IMPORTANT: Match their engagement level. If they barely wrote all week, keep it brief. Don't over-analyze thin data.
+9. The "progress" section is new — use the computed metrics to ground your observations. Don't invent improvements that aren't supported by the data. If ratings are flat, say so. If language hasn't shifted, say null. Honesty over optimism.
+10. Include ONE spaced retrieval question in coaching_questions — reference a key concept from an exercise earlier in the program and ask if they remember the core idea or can apply it now. This reinforces learning without being a quiz.`;
 
 export async function POST(request: Request) {
   try {
@@ -225,6 +235,34 @@ ${sessions && sessions.length > 0
   : "No sessions this week."}
 
 ${prevWeekContext}
+
+## Progress Metrics (use these to generate the "progress" section)
+${(() => {
+  // Day ratings this week
+  const ratings = (sessions || []).map(s => s.day_rating).filter(Boolean) as number[];
+  const avgRating = ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : "n/a";
+  const ratingTrend = ratings.length >= 2
+    ? ratings[ratings.length - 1] > ratings[0] ? "rising" : ratings[ratings.length - 1] < ratings[0] ? "falling" : "stable"
+    : "insufficient data";
+
+  // Exercise ratings this week
+  const exRatings = exercises.map(e => e.star_rating).filter(Boolean) as number[];
+  const avgExRating = exRatings.length > 0 ? (exRatings.reduce((a, b) => a + b, 0) / exRatings.length).toFixed(1) : "n/a";
+
+  // Theme frequency
+  const allThemes: string[] = (sessions || []).flatMap(s => {
+    const summary = s.step_5_summary as Record<string, unknown> | null;
+    return (summary?.today_themes as string[]) || [];
+  });
+  const themeCounts = allThemes.reduce((acc, t) => { acc[t] = (acc[t] || 0) + 1; return acc; }, {} as Record<string, number>);
+  const topThemes = Object.entries(themeCounts).sort(([, a], [, b]) => b - a).slice(0, 5);
+
+  return `Day ratings: [${ratings.join(", ")}] — avg ${avgRating}, trend: ${ratingTrend}
+Exercise ratings: [${exRatings.join(", ")}] — avg ${avgExRating}
+Top themes this week: ${topThemes.map(([t, c]) => \`\${t} (×\${c})\`).join(", ") || "none"}
+Sessions completed: ${(sessions || []).filter(s => s.completed_at).length}/${(sessions || []).length}
+Exercises completed: ${exercises.length}`;
+})()}
 
 Generate the key insights for Week ${weekNumber}.`;
 

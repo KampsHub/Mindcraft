@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
+const MAX_REMINDERS = 3;
+
 // GET handler for Vercel cron
 export async function GET(request: Request) {
   return handleReEngage(request, false);
@@ -15,27 +17,20 @@ export async function POST(request: Request) {
 
 async function handleReEngage(request: Request, dryRun: boolean) {
   try {
-
-    // Verify cron secret for internal/cron endpoints
+    // Verify cron secret
     const cronSecret = process.env.CRON_SECRET;
     const authHeader = request.headers.get("authorization");
     if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Use service role for admin-level queries (user lookups, cross-user data)
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // Find active enrollments where the latest session is older than 3 days
-    const threeDaysAgo = new Date(
-      Date.now() - 3 * 24 * 60 * 60 * 1000
-    ).toISOString();
-    const sevenDaysAgo = new Date(
-      Date.now() - 7 * 24 * 60 * 60 * 1000
-    ).toISOString();
+    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
     const { data: enrollments, error: enrollError } = await supabase
       .from("program_enrollments")
@@ -44,31 +39,24 @@ async function handleReEngage(request: Request, dryRun: boolean) {
 
     if (enrollError) {
       console.error("Error fetching enrollments:", enrollError);
-      return NextResponse.json(
-        { error: "Failed to fetch enrollments" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to fetch enrollments" }, { status: 500 });
     }
 
     if (!enrollments || enrollments.length === 0) {
       return NextResponse.json({ emailed: [], count: 0 });
     }
 
-    const subjects = [
-      (day: number) => `Day ${day} is waiting`,
-      () => "Your program is still here",
-      () => "3 days \u2014 checking in",
-    ];
-
     const results: Array<{
       userId: string;
       email: string;
       currentDay: number;
       programName: string;
+      emailType: string;
+      reminderCount: number;
     }> = [];
 
     for (const enrollment of enrollments) {
-      // Check if latest session is older than 3 days
+      // Check last session
       const { data: latestSession } = await supabase
         .from("daily_sessions")
         .select("created_at")
@@ -77,35 +65,55 @@ async function handleReEngage(request: Request, dryRun: boolean) {
         .limit(1)
         .single();
 
-      if (latestSession && latestSession.created_at > threeDaysAgo) {
-        continue; // Active recently, skip
+      // Skip if active in last 2 days
+      if (latestSession && latestSession.created_at > twoDaysAgo) {
+        continue;
       }
 
-      // Determine if this is a 7+ day inactive user (exit survey) or 3-day (re-engage)
-      const isExitSurveyCandidate = latestSession
-        ? latestSession.created_at < sevenDaysAgo
-        : true;
+      // Count how many inactive_reminder emails we've already sent for this enrollment
+      const { count: reminderCount } = await supabase
+        .from("email_events")
+        .select("id", { count: "exact", head: true })
+        .eq("enrollment_id", enrollment.id)
+        .eq("event_type", "inactive_reminder");
 
-      // Check cooldown: don't re-engage if emailed in last 7 days
-      const emailType = isExitSurveyCandidate ? "exit_survey" : "re_engage";
+      const sentCount = reminderCount || 0;
+
+      // Determine email type
+      const isExitSurveyCandidate = sentCount >= MAX_REMINDERS && latestSession
+        ? latestSession.created_at < sevenDaysAgo
+        : false;
+
+      // If we've sent all 3 reminders AND already sent exit survey, skip entirely
+      if (sentCount >= MAX_REMINDERS) {
+        // Check if exit survey already sent
+        const { data: exitSent } = await supabase
+          .from("email_events")
+          .select("id")
+          .eq("enrollment_id", enrollment.id)
+          .eq("event_type", "exit_survey")
+          .limit(1)
+          .single();
+
+        if (exitSent) continue; // All done for this user
+        if (!isExitSurveyCandidate) continue; // Not yet 7 days, wait
+      }
+
+      // Cooldown: don't email same user within 2 days
+      const cooldownCheck = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
       const { data: recentEmail } = await supabase
         .from("email_events")
         .select("id")
-        .eq("user_id", enrollment.client_id)
-        .eq("event_type", emailType)
-        .gte("created_at", sevenDaysAgo)
+        .eq("enrollment_id", enrollment.id)
+        .in("event_type", ["inactive_reminder", "exit_survey"])
+        .gte("created_at", cooldownCheck)
         .limit(1)
         .single();
 
-      if (recentEmail) {
-        continue; // Already emailed recently
-      }
+      if (recentEmail) continue;
 
       // Fetch user email
-      const {
-        data: { user },
-      } = await supabase.auth.admin.getUserById(enrollment.client_id);
-
+      const { data: { user } } = await supabase.auth.admin.getUserById(enrollment.client_id);
       if (!user?.email) continue;
 
       // Get last themes for personalization
@@ -117,43 +125,33 @@ async function handleReEngage(request: Request, dryRun: boolean) {
         .limit(1)
         .single();
 
-      const programName =
-        (enrollment.programs as unknown as { name: string })?.name ||
-        "Mindcraft";
+      const programName = (enrollment.programs as unknown as { name: string })?.name || "Mindcraft";
       const currentDay = enrollment.current_day || 1;
       const themes: string[] = lastThemes?.themes || [];
       const lastTheme = themes.length > 0 ? themes[0] : null;
-
-      const subjectPicker =
-        subjects[Math.floor(Math.random() * subjects.length)];
-      const subject = subjectPicker(currentDay);
-
-      const themeReference = lastTheme
-        ? `Your last entry touched on ${lastTheme}.`
-        : "You were making real progress.";
+      const emailType = isExitSurveyCandidate ? "exit_survey" : "inactive_reminder";
 
       results.push({
         userId: enrollment.client_id,
         email: user.email,
         currentDay,
         programName,
+        emailType,
+        reminderCount: sentCount,
       });
 
       if (!dryRun) {
         const resendKey = process.env.RESEND_API_KEY;
         if (!resendKey) {
-          console.warn("RESEND_API_KEY not set, skipping re-engage emails");
-          return NextResponse.json({
-            skipped: true,
-            reason: "no_api_key",
-          });
+          console.warn("RESEND_API_KEY not set, skipping emails");
+          return NextResponse.json({ skipped: true, reason: "no_api_key" });
         }
 
         const { Resend } = await import("resend");
         const resend = new Resend(resendKey);
 
         if (isExitSurveyCandidate) {
-          // Exit survey email — 7+ days inactive
+          // Exit survey — after 3 reminders and 7+ days inactive
           const exitSurveyUrl = process.env.EXIT_SURVEY_URL || "https://mindcraft.ing/feedback/exit";
           await resend.emails.send({
             from: "Mindcraft <crew@allmindsondeck.com>",
@@ -187,7 +185,18 @@ async function handleReEngage(request: Request, dryRun: boolean) {
             `,
           });
         } else {
-          // Standard re-engage email — 3-7 days inactive
+          // Inactive reminder — 2+ days, up to 3 times
+          const themeReference = lastTheme
+            ? `Your last entry touched on ${lastTheme}.`
+            : "You were making real progress.";
+
+          const reminderSubjects = [
+            `Day ${currentDay} is waiting`,
+            "Your program is still here",
+            "Checking in \u2014 one more nudge",
+          ];
+          const subject = reminderSubjects[Math.min(sentCount, reminderSubjects.length - 1)];
+
           await resend.emails.send({
             from: "Mindcraft <noreply@allmindsondeck.org>",
             to: user.email,
@@ -215,11 +224,13 @@ async function handleReEngage(request: Request, dryRun: boolean) {
           });
         }
 
-        // Log the email event for cooldown tracking
+        // Log for tracking + cooldown
         await supabase.from("email_events").insert({
           user_id: enrollment.client_id,
           event_type: emailType,
           enrollment_id: enrollment.id,
+          resend_email_id: `outbound_${Date.now()}`,
+          timestamp: new Date().toISOString(),
         });
       }
     }
@@ -231,8 +242,7 @@ async function handleReEngage(request: Request, dryRun: boolean) {
     });
   } catch (error: unknown) {
     console.error("Re-engage email error:", error);
-    const message =
-      error instanceof Error ? error.message : "Internal server error";
+    const message = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

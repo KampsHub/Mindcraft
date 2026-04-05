@@ -69,25 +69,6 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
 
 ## To Dos
 
-### HIGH — Needed for Quality Launch
-
-4. **Error monitoring** — Sentry DSN is configured but needs to be set in Vercel env vars. Once live, production errors will surface in sentry.io with stack traces. PII is redacted (journal text stripped from request bodies).
-   - **Status:** Produce — set `NEXT_PUBLIC_SENTRY_DSN` in Vercel, verify errors appear in Sentry dashboard.
-
-5. **Coach dashboard UI** — API exists (`/api/coach-analytics`), page exists (`/coach`). Needs redesign to show:
-   - Individual client logins and last-active dates
-   - Where each client is in the program (current day, week)
-   - Insights the client chooses to share
-   - Coaching goals per client
-   - Enneagram results (if client uploads)
-   - **Status:** Design and build new coach dashboard UI.
-
-6. **Referral dashboard** — Coach referral codes work but coaches can't view/manage them.
-   - **Status:** Parked.
-
-7. **Admin panel** — All admin work is manual via Supabase console.
-   - **Status:** Accepted — Stefanie will use Supabase directly.
-
 ### CRITICAL — Blocks Launch
 
 1. **Stripe keys** — The keys connected to the current mindcraft.ing products should be live keys. Verify in Vercel env vars that `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are live (not `sk_test_`).
@@ -157,8 +138,15 @@ All of these are tracked automatically — no action needed from Stefanie. To re
 ### Quick Fixes
 
 
-### Medium Effort
+### MEDIUM — Important for Retention
 
+8. **User-facing analytics** — Users see no progress metrics beyond day count. Suggestion: Surface on the Insights page — patterns detected over time, exercise completion rate, mood/rating trends, most-used frameworks, streak data. Could use recharts (already installed) to show week-over-week shifts.
+
+9. **Notification preferences** — Users can't control email frequency. Build an email opt-in UI in the `/my-account` page with toggles for: inactive reminders, daily reminders, weekly insights, program updates. Store preferences in `clients` table (new `email_preferences` jsonb column).
+
+10. **Search past entries** — Can't search journal entries or exercises. Suggestion: Add a search page or search bar on the journal/exercises pages. Use Supabase full-text search (`to_tsvector` + `to_tsquery`) on `free_flow_entries.content` and `exercise_completions.responses`. No external search service needed at current scale.
+
+11. **Streak persistence** — Day completion streaks not tracked in database. Add `current_streak` and `longest_streak` integer columns to `program_enrollments`. Update on each day completion (check if previous day was completed yesterday → increment, otherwise reset to 1). Surface on dashboard.
 
 ### Larger Effort
 

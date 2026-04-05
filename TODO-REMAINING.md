@@ -34,7 +34,7 @@
 - [ ] Bloom's labels + individual concept arcs: label deep-learning exercises, track repeated concepts per user
 - [x] AI Simulation real API: `/api/exercises/simulate` endpoint with Claude in-character responses ✅ DEPLOYED (POST with scenario, aiRole, message, history → in-character response + coaching nudge. AISimulation primitive already supports onSend prop.)
 - [ ] Quality monitoring: Vercel Cron weekly audit + dashboard to view results (Stefanie wants dashboard)
-- [ ] Monitoring dashboard: admin page querying api_logs for latency, errors, tokens, active users
+- [x] Monitoring dashboard: admin page querying api_logs for latency, errors, tokens, active users ✅ DEPLOYED (mindcraft.ing/admin — enrollment stats, AI cost breakdown by endpoint, quick links. Restricted to admin emails.)
 - [ ] Playwright tests: 3-5 critical paths (login, journal, exercise, weekly review)
 - [ ] Blog infrastructure at `/blog`: Next.js pages, 9 topic suggestions ready
 - [x] Free lead magnet: "7 Disruptions Self-Assessment" standalone page with email capture ✅ DEPLOYED (mindcraft.ing/assessment — 7-question slider assessment, instant results with disruption map, email capture for results)

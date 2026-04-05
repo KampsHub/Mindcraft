@@ -536,6 +536,20 @@ export default function AssessmentPage() {
                       </motion.button>
                     ))}
                   </div>
+
+                  {/* Back button */}
+                  {currentIdx > 0 && (
+                    <button
+                      onClick={() => setCurrentIdx((prev) => prev - 1)}
+                      style={{
+                        background: "none", border: "none", color: colors.textMuted,
+                        fontSize: 13, cursor: "pointer", fontFamily: body,
+                        marginTop: 20, display: "block", margin: "20px auto 0",
+                      }}
+                    >
+                      &larr; Previous question
+                    </button>
+                  )}
                 </motion.div>
               </AnimatePresence>
             </motion.div>
@@ -701,6 +715,17 @@ export default function AssessmentPage() {
                   </motion.button>
                 </div>
               </div>
+
+              <button
+                onClick={() => { setStep("assess"); setCurrentIdx(DISRUPTIONS.length - 1); }}
+                style={{
+                  background: "none", border: "none", color: colors.textMuted,
+                  fontSize: 13, cursor: "pointer", fontFamily: body,
+                  marginTop: 20, display: "block", margin: "20px auto 0",
+                }}
+              >
+                &larr; Back to questions
+              </button>
             </motion.div>
           )}
 
@@ -804,7 +829,7 @@ export default function AssessmentPage() {
               <textarea
                 value={challenge}
                 onChange={(e) => setChallenge(e.target.value)}
-                placeholder="e.g., I can\u2019t stop replaying conversations in my head and it\u2019s affecting my sleep..."
+                placeholder="e.g., I can't stop replaying conversations in my head and it's affecting my sleep..."
                 style={{
                   width: "100%",
                   fontFamily: body,
@@ -843,6 +868,16 @@ export default function AssessmentPage() {
               >
                 Continue
               </motion.button>
+              <button
+                onClick={() => setStep("results")}
+                style={{
+                  background: "none", border: "none", color: colors.textMuted,
+                  fontSize: 13, cursor: "pointer", fontFamily: body,
+                  display: "block", margin: "16px auto 0",
+                }}
+              >
+                &larr; Back to results
+              </button>
             </motion.div>
           )}
 
@@ -939,19 +974,14 @@ export default function AssessmentPage() {
               )}
 
               <button
-                onClick={() => setStep("results")}
+                onClick={() => setStep("context")}
                 style={{
-                  fontFamily: body,
-                  fontSize: 13,
-                  color: colors.textMuted,
-                  backgroundColor: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  marginTop: 16,
-                  textDecoration: "underline",
+                  background: "none", border: "none", color: colors.textMuted,
+                  fontSize: 13, cursor: "pointer", fontFamily: body,
+                  display: "block", margin: "16px auto 0",
                 }}
               >
-                Back to results
+                &larr; Back
               </button>
             </motion.div>
           )}

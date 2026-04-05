@@ -124,7 +124,7 @@
 ## REMAINING ITEMS (need content work or external access)
 
 ### Content Work (Claude can help in future sessions)
-- [ ] **whyThis chunking** — shorten the 5-6 longest exercise descriptions, move framework steps into primitive prompts
+- [x] **whyThis chunking** — shortened 6 longest exercises (Stress Responses, NVC, Older Pattern, Performance Culture, Cultural Observation, Belonging Sources). Avg reduced from ~1,150 to ~550 chars. Framework teaching stays in instruction/primitive.
 - [ ] **362 exercise arc audit** — add practice steps to ALL exercises (massive content project, Stefanie asked for full audit not just 90)
 - [ ] **Scaffolding decrease** — Days 11-20 reduce pre-fill, Days 21-30 minimal. Add note in Days 1-10 explaining why scaffolding is heavier early.
 - [ ] **Bloom's labels** — label deep-learning exercises, track repeated concepts per user across program arc

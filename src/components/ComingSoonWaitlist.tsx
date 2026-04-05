@@ -11,19 +11,19 @@ const PROGRAMS = [
   {
     id: "first-time-manager",
     tag: "First-Time Manager",
-    title: "You used to be great at your job. Now your job is managing people who do your old job.",
+    title: "You got promoted. So why does managing people feel harder than doing the work?",
     desc: "The skills that got you promoted won't get you through this. This program helps you lead without losing yourself.",
   },
   {
     id: "global-relocation",
     tag: "Global Relocation",
-    title: "You moved countries for the job. Now you\u2019re building a life from scratch.",
+    title: "You moved for the opportunity. But nobody warned you about the loneliness?",
     desc: "New language, new rules, no safety net. The culture shock hits months in, not days. This program helps you rebuild routine, belonging, and identity when everything familiar is gone.",
   },
   {
     id: "next-move",
     tag: "Next Move",
-    title: "You\u2019ve outgrown your role. But nobody handed you a map for what\u2019s next.",
+    title: "You know you\u2019re ready for more. So why does asking for it feel this hard?",
     desc: "Promotion, pivot, or a bigger seat at the table. This program helps you build a plan that\u2019s strategic, not desperate \u2014 and navigate the politics, the self-doubt, and the conversations nobody prepares you for.",
   },
 ];

@@ -150,20 +150,16 @@ CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeT
 - Currently all exercises have similar levels of pre-population regardless of day
 - **Decision needed:** Should Days 1-7 exercises have 80% pre-filled content with the user editing, while Days 22-30 have mostly blank space requiring independent application?
 
-### I. Structured data for AI personalization
-- From EXERCISE-DESIGN-LEARNINGS Part 2, Lens 3: "Exercise responses should update the user's profile. High anxiety scores → offer regulation exercises."
-- Currently exercises produce freeform JSON — the AI reads everything but doesn't systematically act on patterns
-- **Decision needed:** Should tag frequency, rating patterns, and bucket assignments automatically adjust which exercises are selected? This is a feedback loop that could make the product significantly smarter.
+### I. Structured data for AI personalization — ✅ Decision: Yes, build it.
+- Exercise responses update user profile → tag frequency, ratings, bucket assignments adjust exercise selection.
+- **To build:** Post-completion extraction → `client_profiles` update → process-journal reads profile for weighted selection.
 
-### J. The coaching container — exit affordance
-- From EXERCISE-DESIGN-LEARNINGS Part 2, Lens 5: "Never trap the user in an exercise that escalates without an exit"
-- Some exercises (Grief Ritual, The Path Exercise, 3-2-1 Process) go into deep emotional territory
-- **Decision needed:** Should these exercises have an explicit "I need to stop" button that saves progress and offers grounding resources? What does a safe exit look like?
+### J. Skip button for exercises — ✅ Decision: Skip, not exit.
+- Add skip button to exercise flow. Mark as `skipped` in `exercise_completions`. Don't count toward stats.
 
-### K. Content-to-interaction ratio
-- From EXERCISE-DESIGN-LEARNINGS Part 2, Lens 2: "Most exercises currently have more reading than doing. The ratio should favor interaction."
-- whyThis sections average 150-200 words, instructions 80-120 words — that's 250-320 words of reading before any interaction
-- **Decision needed:** Should framework teaching move INTO the interaction (guided steps that reveal one concept at a time) rather than front-loading as a wall of text? -- how much effort would this be?
+### K. Content-to-interaction ratio — Effort: ~2-3 days per program.
+- Redesign whyThis as stepped reveal (Radix accordion / framer-motion). Content + UI refactor.
+	
 
 ---
 

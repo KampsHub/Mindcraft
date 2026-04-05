@@ -490,6 +490,29 @@ export default function DoTab({
               : { filter: "none", opacity: 1, transition: "filter 0.4s, opacity 0.4s" }),
           }}
         >
+        {/* Exercise progress */}
+        {(() => {
+          const totalExercises = (programDay.coaching_exercises?.length || 0) + overflowExercises.length;
+          const completedCount = completedExercises.size;
+          if (totalExercises === 0) return null;
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: space[3], marginBottom: space[4] }}>
+              <div style={{ display: "flex", gap: 4 }}>
+                {Array.from({ length: totalExercises }, (_, i) => (
+                  <div key={i} style={{
+                    width: 8, height: 8, borderRadius: "50%",
+                    backgroundColor: i < completedCount ? colors.coral : colors.bgElevated,
+                    transition: "background-color 0.3s",
+                  }} />
+                ))}
+              </div>
+              <span style={{ ...textPreset.caption, color: colors.textPrimary }}>
+                {completedCount} of {totalExercises} done
+              </span>
+            </div>
+          );
+        })()}
+
         {/* Coaching Plan Exercises (Required) */}
         {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
           <div style={{ marginBottom: space[6] }}>

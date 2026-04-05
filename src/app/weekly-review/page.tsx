@@ -13,6 +13,7 @@ import GoalSlider from "@/components/GoalSlider";
 import ProgramSwitcher from "@/components/ProgramSwitcher";
 import UpsellSection from "@/app/dashboard/UpsellSection";
 import NPSPrompt from "@/components/NPSPrompt";
+import ThenVsNowCard from "@/components/ThenVsNowCard";
 
 /* ── Design tokens (matches dashboard/landing page) ── */
 const display = fonts.display;
@@ -144,6 +145,8 @@ function WeeklyReviewPage() {
   const [sendingExercise, setSendingExercise] = useState(false);
   const [exerciseShareSuccess, setExerciseShareSuccess] = useState(false);
   const [journalEntryCount, setJournalEntryCount] = useState(0);
+  const [firstDayRating, setFirstDayRating] = useState<number | null>(null);
+  const [totalExercises, setTotalExercises] = useState(0);
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loadingInsights, setLoadingInsights] = useState(false);
   const [goalRatings, setGoalRatings] = useState<Record<string, GoalRating>>({});
@@ -372,6 +375,21 @@ function WeeklyReviewPage() {
       .neq("week_number", reviewWeek)
       .order("week_number", { ascending: false });
     if (pastReviews) setWeekSummaries(pastReviews as PastWeekSummary[]);
+
+    // Fetch Day 1 rating + total exercises for "Then vs Now" card
+    const { data: day1Session } = await supabase
+      .from("daily_sessions")
+      .select("day_rating")
+      .eq("enrollment_id", enroll.id)
+      .eq("day_number", 1)
+      .maybeSingle();
+    if (day1Session?.day_rating) setFirstDayRating(day1Session.day_rating);
+
+    const { count: totalExCount } = await supabase
+      .from("exercise_completions")
+      .select("id", { count: "exact", head: true })
+      .eq("enrollment_id", enroll.id);
+    if (totalExCount !== null) setTotalExercises(totalExCount);
 
     setLoading(false);
   }, [supabase, enrollmentParam]);
@@ -879,6 +897,24 @@ function WeeklyReviewPage() {
 
       {weekComplete && (
       <>
+      {/* ── Then vs Now Progress ── */}
+      <FadeIn preset="slide-up" delay={0.12} triggerOnMount>
+        <ThenVsNowCard
+          weekNumber={weekNumber}
+          firstDayRating={firstDayRating}
+          weekAvgRating={
+            sessions.filter((s) => s.day_rating !== null).length > 0
+              ? sessions.filter((s) => s.day_rating !== null).reduce((sum, s) => sum + (s.day_rating || 0), 0) / sessions.filter((s) => s.day_rating !== null).length
+              : null
+          }
+          firstWeekExercises={weekNumber === 1 ? weekExercises.length : 0}
+          currentWeekExercises={weekExercises.length}
+          totalExercisesCompleted={totalExercises}
+          journalEntryCount={journalEntryCount}
+          daysCompleted={sessions.filter((s) => s.completed_at).length}
+        />
+      </FadeIn>
+
       {/* ── Goal Check-in ── */}
       {activeGoals.length > 0 && (
         <FadeIn preset="slide-up" delay={0.15} triggerOnMount>

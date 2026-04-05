@@ -14,7 +14,7 @@
 
 ## Medium Effort (~2-3 hrs each)
 - [ ] Spaced retrieval: RetrievalCheck exercises on Days 7, 14, 21 (seed data update)
-- [ ] Progress visualization: "Then vs Now" card on weekly review page
+- [x] Progress visualization: "Then vs Now" card on weekly review page ✅ DEPLOYED (shows Day 1 rating → week avg, exercises, days completed)
 - [ ] Skill progression badges on exercise cards (Awareness/Practice/Application/Integration by week)
 - [x] Assessment→action: update process-journal prompt to weight low-scoring domains ✅ DEPLOYED (queries Day 1 Seven Disruptions scores, injects into prompt, adds selection rule 7)
 - [ ] whyThis chunking: shorten 5-6 longest, move framework steps into primitive prompts

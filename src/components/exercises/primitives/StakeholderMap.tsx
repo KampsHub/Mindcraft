@@ -19,7 +19,7 @@ interface StakeholderMapProps {
 const TC: Record<StakeholderNode["type"], string> = { ally: colors.success, neutral: colors.textMuted, blocker: colors.error, unknown: colors.plum };
 const TL: Record<StakeholderNode["type"], string> = { ally: "Ally", neutral: "Neutral", blocker: "Blocker", unknown: "Unknown" };
 const TYPES: StakeholderNode["type"][] = ["ally", "neutral", "blocker", "unknown"];
-const NR = 2, SR = 2.4; // node / self radius in SVG units
+const NR = 3.5, SR = 3; // node / self radius in SVG units (44px minimum touch target)
 
 const inputSt: React.CSSProperties = {
   width: "100%", padding: `${space[2]}px ${space[3]}px`, backgroundColor: colors.bgInput,
@@ -100,6 +100,13 @@ export default function StakeholderMap({ nodes, selfLabel = "You", onChange, onA
           const c = TC[n.type]; const isEd = editId === n.id;
           return (
             <g key={n.id} style={{ cursor: dragId === n.id ? "grabbing" : "grab" }}>
+              {/* Pulse ring — signals interactivity */}
+              {onChange && (
+                <circle cx={n.x} cy={n.y} r={NR + 1} fill="none" stroke={c} strokeWidth={0.3} opacity={0.4}>
+                  <animate attributeName="r" values={`${NR + 1};${NR + 3};${NR + 1}`} dur="2s" repeatCount="3" />
+                  <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2s" repeatCount="3" />
+                </circle>
+              )}
               <circle cx={n.x} cy={n.y} r={NR} fill={c} opacity={isEd ? 1 : 0.85}
                 stroke={isEd ? colors.textPrimary : "none"} strokeWidth={isEd ? 0.4 : 0}
                 onPointerDown={(e) => onPtrDown(e, n.id)} onClick={() => openEdit(n)} />

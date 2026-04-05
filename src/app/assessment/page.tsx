@@ -692,15 +692,15 @@ export default function AssessmentPage() {
             >
               {/* Completed radial chart */}
               <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-                <svg viewBox="0 0 300 300" width="240" height="240">
+                <svg viewBox="0 0 400 400" width="280" height="280">
                   {DISRUPTIONS.map((d, i) => {
                     const total = DISRUPTIONS.length;
                     const angleStep = (2 * Math.PI) / total;
                     const startAngle = i * angleStep - Math.PI / 2;
                     const endAngle = startAngle + angleStep;
                     const gap = 0.03;
-                    const cx = 150, cy = 150;
-                    const innerR = 55;
+                    const cx = 200, cy = 200;
+                    const innerR = 60;
                     const maxOuterR = 140;
                     const score = scores[d.id] || 5;
                     // Invert: low score = big segment (more disrupted)
@@ -720,7 +720,7 @@ export default function AssessmentPage() {
                     // Label
                     const SHORT = ["Identity", "Confidence", "Safety", "Connection", "Money", "Body & Brain", "Clarity", "Trust", "Direction"];
                     const midAngle = (startAngle + endAngle) / 2;
-                    const labelR = maxOuterR + 14;
+                    const labelR = maxOuterR + 30;
                     const lx = cx + labelR * Math.cos(midAngle);
                     const ly = cy + labelR * Math.sin(midAngle);
                     const cosA = Math.cos(midAngle);
@@ -740,15 +740,15 @@ export default function AssessmentPage() {
                           transition={{ delay: 0.1 + i * 0.05, duration: 0.4 }}
                           style={{ transformOrigin: `${cx}px ${cy}px` }}
                         />
-                        <text x={lx} y={ly} textAnchor={anchor} dominantBaseline={baseline} fill={colors.textMuted} fontSize="8" fontFamily={display} fontWeight="600">
+                        <text x={lx} y={ly} textAnchor={anchor} dominantBaseline={baseline} fill={colors.textMuted} fontSize="11" fontFamily={display} fontWeight="600">
                           {SHORT[i]}
                         </text>
                       </g>
                     );
                   })}
-                  <circle cx="150" cy="150" r="53" fill={colors.bgDeep} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                  <text x="150" y="146" textAnchor="middle" dominantBaseline="middle" fill={colors.coral} fontSize="8" fontFamily={display} fontWeight="600" letterSpacing="0.12em">YOUR</text>
-                  <text x="150" y="158" textAnchor="middle" dominantBaseline="middle" fill={colors.textPrimary} fontSize="9" fontFamily={display} fontWeight="700" letterSpacing="0.04em">RESULTS</text>
+                  <circle cx="200" cy="200" r="58" fill={colors.bgDeep} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+                  <text x="200" y="196" textAnchor="middle" dominantBaseline="middle" fill={colors.coral} fontSize="9" fontFamily={display} fontWeight="600" letterSpacing="0.12em">YOUR</text>
+                  <text x="200" y="210" textAnchor="middle" dominantBaseline="middle" fill={colors.textPrimary} fontSize="10" fontFamily={display} fontWeight="700" letterSpacing="0.04em">RESULTS</text>
                 </svg>
               </div>
 

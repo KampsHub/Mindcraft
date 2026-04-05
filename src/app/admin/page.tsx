@@ -240,7 +240,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Top Users by Cost ── */}
-        {tokenData && tokenData.topUsers && tokenData.topUsers.length > 0 && (
+        {data && data.topUsers && data.topUsers.length > 0 && (
           <div style={cardStyle}>
             <h2 style={{ fontFamily: display, fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Top Users by Cost</h2>
             <div style={{ overflowX: "auto" }}>
@@ -253,7 +253,7 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {tokenData.topUsers.map((u) => (
+                  {data.topUsers.map((u: { userId: string; calls: number; totalCost: number }) => (
                     <tr key={u.userId} style={{ borderBottom: `1px solid ${colors.borderSubtle}` }}>
                       <td style={{ padding: "8px 12px", color: colors.textSecondary, fontFamily: "monospace", fontSize: 11 }}>{u.userId.slice(0, 8)}...</td>
                       <td style={{ padding: "8px 12px", textAlign: "right", color: colors.textSecondary }}>{u.calls}</td>

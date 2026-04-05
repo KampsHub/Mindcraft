@@ -134,9 +134,9 @@ export function useStep5Summary({
 
     // Calculate streak
     const today = new Date().toISOString().split("T")[0];
-    const lastDate = (enrollment as Record<string, unknown>).last_completed_date as string | null;
-    const currentStreak = ((enrollment as Record<string, unknown>).current_streak as number) || 0;
-    const bestStreak = ((enrollment as Record<string, unknown>).best_streak as number) || 0;
+    const lastDate = (enrollment as unknown as Record<string, unknown>).last_completed_date as string | null;
+    const currentStreak = ((enrollment as unknown as Record<string, unknown>).current_streak as number) || 0;
+    const bestStreak = ((enrollment as unknown as Record<string, unknown>).best_streak as number) || 0;
 
     let newStreak = 1;
     if (lastDate) {

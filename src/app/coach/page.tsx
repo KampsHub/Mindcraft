@@ -125,8 +125,8 @@ export default function CoachPage() {
     accepted_at: string | null;
     enrollment: { current_day: number; status: string; current_streak: number; best_streak: number; programs: { name: string; slug: string } } | null;
     goals: { goal_text: string; status: string }[];
-    enneagram: unknown;
-    sharedInsights: { approved_summary: unknown; approved_at: string; period_start: string; period_end: string }[];
+    enneagram: Record<string, string> | null;
+    sharedInsights: { approved_summary: Record<string, unknown> | null; approved_at: string; period_start: string; period_end: string }[];
     lastActive: string | null;
   }>>([]);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -474,10 +474,13 @@ export default function CoachPage() {
                                       {new Date(si.period_start).toLocaleDateString()} — {new Date(si.period_end).toLocaleDateString()}
                                     </span>
                                     <p style={{ margin: "6px 0 0 0" }}>
-                                      {typeof si.approved_summary === "object" && si.approved_summary
-                                        ? ((si.approved_summary as { sections?: { title: string; content: string }[] }).sections || [])
-                                            .map(s => s.content).join(" ").substring(0, 300) + "..."
-                                        : "Summary available"}
+                                      {(() => {
+                                        if (typeof si.approved_summary === "object" && si.approved_summary) {
+                                          const sections = (si.approved_summary as { sections?: { title: string; content: string }[] }).sections || [];
+                                          return sections.map(s => s.content).join(" ").substring(0, 300) + "...";
+                                        }
+                                        return "Summary available";
+                                      })()}
                                     </p>
                                   </div>
                                 ))}

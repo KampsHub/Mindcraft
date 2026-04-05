@@ -259,7 +259,7 @@ ${(() => {
 
   return `Day ratings: [${ratings.join(", ")}] — avg ${avgRating}, trend: ${ratingTrend}
 Exercise ratings: [${exRatings.join(", ")}] — avg ${avgExRating}
-Top themes this week: ${topThemes.map(([t, c]) => \`\${t} (×\${c})\`).join(", ") || "none"}
+Top themes this week: ${topThemes.map(function([t, c]) { return t + " (x" + c + ")"; }).join(", ") || "none"}
 Sessions completed: ${(sessions || []).filter(s => s.completed_at).length}/${(sessions || []).length}
 Exercises completed: ${exercises.length}`;
 })()}

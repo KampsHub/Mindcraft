@@ -1675,6 +1675,7 @@ export default function Home() {
                         color: "rgba(255,255,255,0.85)",
                         display: "block",
                         marginBottom: 10,
+                        textAlign: "center" as const,
                       }}>
                         What we&rsquo;ll work on
                       </span>

@@ -37,8 +37,8 @@ export const content = {
   differentiator: {
     items: [
       "...then shouldn\u2019t you wonder why it\u2019s you who keeps getting them?",
-      "A career crisis demands clear thinking - but clear thinking is the first thing it takes from you. The tools that could help each need something from you first: the right questions, the right person, the right timing. When you\u2019re already overwhelmed, that\u2019s a lot to figure out.",
-      "Mindcraft removes that barrier. Coaching structure tells the technology where to look. The technology surfaces what you can\u2019t see on your own - your blind spots, reactive patterns, and buried strengths. By week one, you\u2019re not guessing anymore. You\u2019re working with what\u2019s real.",
+      "A career crisis takes your clear thinking first. And the tools that could help all need something from you \u2014 the right questions, the right person, the right timing.",
+      "Mindcraft removes that barrier. Coaching structure tells the technology where to look. It surfaces your blind spots, reactive patterns, and buried strengths. By week one, you\u2019re working with what\u2019s real.",
     ],
   },
 
@@ -96,21 +96,21 @@ export const content = {
         title: "The panic is louder than the feedback?",
         desc: "Separate the signal from the noise. Think clearly when everything feels personal.",
         href: "/jetstream",
-        modules: ["Feedback vs. fear", "Managing up under pressure", "The inner critic on repeat", "What\u2019s actually in your control", "Planning for both outcomes", "Performing without spiraling"],
+        modules: ["Feedback vs. fear", "Managing up", "The inner critic", "What you control", "Both outcomes", "Performing without spiraling"],
       },
       {
         tag: "Layoff",
         title: "It wasn\u2019t just a job. And this isn\u2019t just a transition?",
         desc: "Grieve what you lost. Rebuild what matters. Figure out what\u2019s next without pretending you\u2019re fine.",
         href: "/parachute",
-        modules: ["The 3am money math", "Identity without the title", "Grief nobody calls grief", "Days without structure", "The story you tell yourself", "Trusting yourself again"],
+        modules: ["The 3am money math", "Identity without the title", "Unnamed grief", "Days without structure", "The story you\u2019re telling", "Trusting yourself again"],
       },
       {
         tag: "New Role",
         title: "You got the job. So why does it feel this hard?",
         desc: "Land with confidence instead of survival mode. Prove yourself without losing yourself.",
         href: "/basecamp",
-        modules: ["Starting from zero", "Reading the room blind", "Earning credibility", "Old identity vs. new role", "What does success look like here?", "When nothing feels natural"],
+        modules: ["Starting from zero", "Reading the room", "Earning credibility", "Old identity vs. new role", "Defining success here", "When nothing feels natural"],
       },
     ],
     cta: "Find your program",

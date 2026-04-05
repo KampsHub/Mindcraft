@@ -12,19 +12,19 @@ const PROGRAMS = [
     id: "first-time-manager",
     tag: "First-Time Manager",
     title: "You got promoted. So why does managing people feel harder than doing the work?",
-    desc: "The skills that got you promoted won't get you through this. This program helps you lead without losing yourself.",
+    desc: "Lead without losing yourself. The skills that got you here won\u2019t get you through this.",
   },
   {
     id: "global-relocation",
     tag: "Country Relocation",
     title: "You moved countries for the job. But nobody warned you about the loneliness?",
-    desc: "New city, new language, no old friends around the corner. You\u2019re rebuilding everything \u2014 routine, social life, sense of home \u2014 while performing at a job that expects you to hit the ground running. The homesickness hits months in, not days. This program helps you build a life that feels like yours again.",
+    desc: "Rebuild routine, social life, and sense of home \u2014 while performing at a job that expects you to hit the ground running.",
   },
   {
     id: "next-move",
     tag: "Next Move",
     title: "You\u2019ve outgrown where you are. But should you push for more here or leave?",
-    desc: "Stay and grow, or go and start fresh. This program helps you get clarity on the move that\u2019s right \u2014 not the one that\u2019s just available. Navigate the politics, the self-doubt, and the conversations nobody prepares you for.",
+    desc: "Get clarity on the right move \u2014 not just the available one. Navigate the politics, the self-doubt, and the conversations nobody prepares you for.",
   },
 ];
 

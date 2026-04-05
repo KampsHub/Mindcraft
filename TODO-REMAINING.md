@@ -43,6 +43,9 @@
 ## Legal/Compliance
 - [ ] Signup: require checkbox agreeing to Terms & Privacy Policy (links open in new tab). Block account creation if unchecked. If user paid but won't create account (no consent), flag in Stripe metadata + Supabase for manual outreach.
 
+## Infrastructure
+- [ ] Railway keeps crashing on every Vercel deploy. Root Directory was set to /livekit-agent but still triggering. Investigate: is Railway watching the whole repo or just the subfolder? May need to configure "Watch paths" in Railway settings to only trigger on livekit-agent/** changes.
+
 ## Documents to Write
 - [ ] GDPR rights implementation doc: how each right (access, correction, deletion, portability, restriction, objection, withdraw consent) is executed in product, gaps, what to build
 - [ ] Review CoachBot privacy policy (https://coachbot.ai/legal/privacy-policy) for ideas to adopt

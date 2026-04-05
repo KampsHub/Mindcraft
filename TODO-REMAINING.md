@@ -24,7 +24,7 @@
 - [ ] Token cost tracking: aggregate api_logs by user → weekly report email
 - [ ] Staging environment: develop branch exists, needs separate Supabase for full isolation
 - [ ] GA4 funnel setup: build visualization in GA4 Explore (Stefanie asked for this)
-- [ ] SEO audit: meta descriptions, OG tags, structured data across all pages
+- [x] SEO audit: OG tags, Twitter cards, siteName, enhanced descriptions on all program pages ✅ DEPLOYED
 - [ ] Coming Soon waitlist on homepage: "First-Time Manager" + "International Move" (no landing pages)
 - [ ] Email nurture signup: "Get weekly insights" on blog + homepage, Resend audience list
 

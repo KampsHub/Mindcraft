@@ -108,6 +108,26 @@ export default function PrivacyPolicyPage() {
           Last updated: April 4, 2026
         </p>
 
+        {/* Plain-English Summary */}
+        <div style={{
+          ...sectionStyle,
+          padding: "24px",
+          backgroundColor: colors.bgSurface,
+          borderRadius: 12,
+          border: `1px solid ${colors.borderDefault}`,
+          marginBottom: 48,
+        }}>
+          <h2 style={{ ...headingStyle, fontSize: 18, marginBottom: 16 }}>The short version</h2>
+          <ul style={{ ...listStyle, lineHeight: 1.8 }}>
+            <li><strong>Your journal is yours.</strong> No human reads it unless you choose to share with a coach.</li>
+            <li><strong>AI processes your entries to coach you</strong> — then the data stays in your account. Anthropic does not train on your data.</li>
+            <li><strong>We don&rsquo;t sell your data.</strong> Not to advertisers, not to data brokers, not to anyone.</li>
+            <li><strong>You can export or delete everything</strong> at any time from your account settings.</li>
+            <li><strong>Voice sessions are processed in real time</strong> and not stored after the session ends.</li>
+            <li><strong>We use only essential cookies.</strong> Analytics cookies are optional and you can opt out.</li>
+          </ul>
+        </div>
+
         {/* 1. Overview */}
         <div style={sectionStyle}>
           <h2 style={headingStyle}>1. Overview</h2>

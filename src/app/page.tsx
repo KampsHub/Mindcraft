@@ -1679,17 +1679,19 @@ export default function Home() {
                       }}>
                         What we&rsquo;ll work on
                       </span>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center" }}>
                         {card.modules.map((mod: string, mi: number) => (
                           <span
                             key={mi}
                             style={{
-                              fontSize: 12,
+                              fontSize: 11,
                               fontFamily: body,
-                              color: "rgba(255,255,255,0.9)",
-                              lineHeight: 1.4,
-                              paddingLeft: 12,
-                              borderLeft: `2px solid ${colors.coral}40`,
+                              color: "rgba(255,255,255,0.85)",
+                              lineHeight: 1,
+                              padding: "5px 10px",
+                              borderRadius: 20,
+                              border: `1px solid rgba(255,255,255,0.12)`,
+                              whiteSpace: "nowrap",
                             }}
                           >
                             {mod}

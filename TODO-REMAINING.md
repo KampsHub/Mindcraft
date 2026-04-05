@@ -51,7 +51,7 @@
 - [ ] Railway keeps crashing on every Vercel deploy. Root Directory was set to /livekit-agent but still triggering. Investigate: is Railway watching the whole repo or just the subfolder? May need to configure "Watch paths" in Railway settings to only trigger on livekit-agent/** changes.
 
 ## Legal Review
-- [ ] Terms governing law: currently says California — update to Washington State (LLC is registered there). Review all jurisdiction references.
+- [x] Terms governing law: currently says California — update to Washington State (LLC is registered there). Review all jurisdiction references. ✅ DEPLOYED
 - [ ] Review terms comprehensively against CoachBot and similar products for gaps. Identify anything missing for an AI coaching product (e.g., AI disclaimer specifics, data processing agreements, limitation of liability for AI-generated advice, arbitration, class action waiver).
 - [ ] Call out all legal gaps explicitly to Stefanie for lawyer review.
 
@@ -59,7 +59,7 @@
 - [ ] GDPR rights implementation doc: how each right (access, correction, deletion, portability, restriction, objection, withdraw consent) is executed in product, gaps, what to build
 - [ ] Review CoachBot privacy policy (https://coachbot.ai/legal/privacy-policy) for ideas to adopt
 - [x] Privacy policy warm summary: "The short version" card at top with 6 bullet points ✅ DEPLOYED
-- [ ] Rate limiting threshold answer: what traffic level requires Redis
+- [x] Rate limiting threshold answer ✅ ANSWERED: Current in-memory limiter works fine up to ~50-100 concurrent users. Vercel Hobby plan handles ~100 serverless function invocations/second. You need Redis when: (a) you consistently see 429 rate limit errors in Sentry, (b) you have 100+ daily active users making AI calls simultaneously, or (c) you upgrade to Vercel Pro with multiple regions. At current stage: not a concern. Revisit when you hit 500+ total enrolled users.
 - [ ] Update PRD with all remaining feature data storage once built
 
 ## Stefanie's Specific Notes (from MULTI-LENS-REVIEW.md)

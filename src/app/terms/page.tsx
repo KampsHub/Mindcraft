@@ -319,9 +319,9 @@ export default function TermsPage() {
         <div style={sectionStyle}>
           <h2 style={headingStyle}>14. Governing law</h2>
           <p style={textStyle}>
-            These terms are governed by the laws of the State of California, United States, without
+            These terms are governed by the laws of the State of Washington, United States, without
             regard to conflict of law principles. Any disputes shall be resolved in the courts
-            located in the State of California.
+            located in the State of Washington.
           </p>
         </div>
 

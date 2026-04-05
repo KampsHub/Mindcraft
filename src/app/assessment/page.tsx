@@ -207,9 +207,14 @@ export default function AssessmentPage() {
                         const lx = cx + labelR * Math.cos(midAngle);
                         const ly = cy + labelR * Math.sin(midAngle);
 
-                        // Anchor labels based on position
-                        const isLeft = midAngle > Math.PI / 2 && midAngle < (3 * Math.PI) / 2;
-                        const isTop = midAngle < 0 || midAngle > Math.PI;
+                        // Normalize angle to 0-2PI for anchor logic
+                        const normAngle = ((midAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+                        // Determine text anchor: labels on the left side anchor "end", right side "start", top/bottom "middle"
+                        const cosA = Math.cos(midAngle);
+                        const sinA = Math.sin(midAngle);
+                        const anchor = Math.abs(cosA) < 0.15 ? "middle" : cosA > 0 ? "start" : "end";
+                        const baseline = Math.abs(sinA) < 0.15 ? "middle" : sinA > 0 ? "hanging" : "auto";
+                        void normAngle; // suppress unused warning
 
                         // Connector line
                         const connStart = outerR + 4;
@@ -244,8 +249,8 @@ export default function AssessmentPage() {
                             <motion.text
                               x={lx}
                               y={ly}
-                              textAnchor={isLeft ? "end" : Math.abs(midAngle + Math.PI / 2) < 0.2 ? "middle" : "start"}
-                              dominantBaseline={isTop ? "auto" : "hanging"}
+                              textAnchor={anchor}
+                              dominantBaseline={baseline}
                               fill={colors.textPrimary}
                               fontSize="12"
                               fontFamily={display}

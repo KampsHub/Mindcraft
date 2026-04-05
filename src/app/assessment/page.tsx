@@ -419,7 +419,7 @@ export default function AssessmentPage() {
                   marginTop: 14,
                 }}
               >
-                No signup required &middot; Results are immediate and private
+                See your results instantly &middot; Add your email for personalized resources
               </motion.p>
             </motion.div>
           )}

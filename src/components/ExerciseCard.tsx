@@ -53,6 +53,8 @@ interface ExerciseCardProps {
   onPark?: () => void;
   /** Whether the exercise is currently parked */
   isParked?: boolean;
+  /** Called when user skips the exercise */
+  onSkip?: () => void;
   /** Current day number — used for skill progression badge */
   dayNumber?: number;
 }
@@ -98,6 +100,7 @@ export default function ExerciseCard({
   dailySessionId,
   onPark,
   isParked = false,
+  onSkip,
   dayNumber,
 }: ExerciseCardProps) {
   const [expanded, setExpanded] = useState(type === "coaching_plan");
@@ -107,6 +110,7 @@ export default function ExerciseCard({
   const [showScience, setShowScience] = useState(false);
   const [showGuided, setShowGuided] = useState(false);
   const [parked, setParked] = useState(false);
+  const [skipped, setSkipped] = useState(false);
   const [showParkInfo, setShowParkInfo] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   // Insight state
@@ -472,6 +476,32 @@ export default function ExerciseCard({
                         </div>
                       )}
                     </div>
+                  )}
+                  {onSkip && !skipped && !parked && !isParked && !submitted && (
+                    <button
+                      onClick={() => { setSkipped(true); onSkip(); }}
+                      style={{
+                        display: "inline-flex", alignItems: "center", gap: space[1],
+                        padding: `6px ${space[3]}px`, borderRadius: radii.full,
+                        backgroundColor: "transparent", border: "none",
+                        cursor: "pointer", ...textScale.caption, fontSize: 12, fontWeight: 500,
+                        color: colors.textMuted, transition: "color 0.15s",
+                      }}
+                    >
+                      <svg width={12} height={12} viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                      ><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
+                      Skip
+                    </button>
+                  )}
+                  {skipped && (
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: space[1],
+                      padding: `6px ${space[3]}px`, marginLeft: "auto",
+                      ...textScale.caption, fontSize: 12, fontWeight: 500, color: colors.textMuted,
+                    }}>
+                      Skipped
+                    </span>
                   )}
                   {(parked || isParked) && (
                     <span style={{

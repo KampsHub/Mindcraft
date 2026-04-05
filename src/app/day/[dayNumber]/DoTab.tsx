@@ -540,11 +540,8 @@ export default function DoTab({
                 onComplete={async (responses, rating) =>
                   await handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
                 }
-                onPark={() => {
-                  // Coaching exercises appear in the dashboard "Parked" tab automatically
-                  // when they have no exercise_completion record for a completed day.
-                  // No database write needed — the visual park state is handled by ExerciseCard.
-                }}
+                onPark={() => {}}
+                onSkip={() => handleExerciseComplete(ex.name, "coaching_plan", undefined, { _skipped: "true" }, null, ex.custom_framing)}
               />
               </motion.div>
             ))}
@@ -584,11 +581,8 @@ export default function DoTab({
                     responses, rating, ex.custom_framing, ex.framework_id
                   )
                 }
-                onPark={() => {
-                  // Overflow exercises are ephemeral (generated per-session), so parking
-                  // is purely visual — collapses the card and shows "Parked" indicator.
-                  // The user can revisit coaching-plan exercises from the dashboard Parked tab.
-                }}
+                onPark={() => {}}
+                onSkip={() => handleExerciseComplete(ex.framework_name, "overflow", ex.modality, { _skipped: "true" }, null, ex.custom_framing, ex.framework_id)}
               />
               </motion.div>
             ))}
@@ -666,6 +660,7 @@ export default function DoTab({
                     responses, rating, undefined, frameworkAnalysis.framework_id
                   )
                 }
+                onSkip={() => handleExerciseComplete(`Reflect: ${frameworkAnalysis.framework_name}`, "framework_analysis", undefined, { _skipped: "true" }, null, undefined, frameworkAnalysis.framework_id)}
               />
             </div>
           </div>

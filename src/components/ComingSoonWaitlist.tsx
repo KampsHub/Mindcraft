@@ -17,14 +17,14 @@ const PROGRAMS = [
   {
     id: "global-relocation",
     tag: "Global Relocation",
-    title: "You moved for the opportunity. But nobody warned you about the loneliness.",
-    desc: "New country, new rules, no safety net. This program helps you rebuild belonging when everything familiar is gone.",
+    title: "You moved countries for the job. Now you\u2019re building a life from scratch.",
+    desc: "New language, new rules, no safety net. The culture shock hits months in, not days. This program helps you rebuild routine, belonging, and identity when everything familiar is gone.",
   },
   {
     id: "career-leap",
     tag: "Career Leap",
-    title: "You know you want more. You just don\u2019t know how to get there without burning out.",
-    desc: "Promotion, pivot, or a bigger role \u2014 this program helps you build a plan that\u2019s strategic, not desperate. Move toward what you want, not away from what you fear.",
+    title: "You\u2019ve outgrown your role. But nobody handed you a map for what\u2019s next.",
+    desc: "Promotion, pivot, or a bigger seat at the table. This program helps you build a plan that\u2019s strategic, not desperate \u2014 and navigate the politics, the self-doubt, and the conversations nobody prepares you for.",
   },
 ];
 

@@ -1601,6 +1601,12 @@ function Pricing() {
               >
                 {checkoutLoading === "standard" ? "Redirecting..." : "Start now"}
               </button>
+              <p style={{
+                fontSize: 12, color: colors.textPrimary, textAlign: "center",
+                margin: "10px 0 0 0", fontFamily: body, lineHeight: 1.5, opacity: 0.7,
+              }}>
+                7-day money-back guarantee. If the program is not working for you within the first week, request a full refund. No conditions. No forms.
+              </p>
             </div>
           </FadeIn>
 

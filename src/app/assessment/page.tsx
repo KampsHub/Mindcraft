@@ -107,10 +107,14 @@ export default function AssessmentPage() {
   const handleScore = (id: string, score: number) => {
     setScores((prev) => ({ ...prev, [id]: score }));
     setShowInsight(true);
+  };
+
+  const handleNext = () => {
+    setShowInsight(false);
     if (currentIdx < DISRUPTIONS.length - 1) {
-      setTimeout(() => { setShowInsight(false); setCurrentIdx((prev) => prev + 1); }, 3500);
+      setCurrentIdx((prev) => prev + 1);
     } else {
-      setTimeout(() => { setShowInsight(false); setStep("results"); }, 3500);
+      setStep("results");
     }
   };
 
@@ -638,18 +642,39 @@ export default function AssessmentPage() {
                     )}
                   </AnimatePresence>
 
-                  {/* Back button */}
-                  {currentIdx > 0 && (
-                    <button
-                      onClick={() => { setShowInsight(false); setCurrentIdx((prev) => prev - 1); }}
-                      style={{
-                        background: "none", border: "none", color: colors.textMuted,
-                        fontSize: 13, cursor: "pointer", fontFamily: body,
-                        marginTop: 20, display: "block", margin: "20px auto 0",
-                      }}
-                    >
-                      &larr; Previous question
-                    </button>
+                  {/* Next / Back buttons */}
+                  {scores[DISRUPTIONS[currentIdx].id] && (
+                    <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 24 }}>
+                      {currentIdx > 0 && (
+                        <button
+                          onClick={() => { setShowInsight(false); setCurrentIdx((prev) => prev - 1); }}
+                          style={{
+                            background: "none", border: "none", color: colors.textMuted,
+                            fontSize: 13, cursor: "pointer", fontFamily: body,
+                          }}
+                        >
+                          &larr; Back
+                        </button>
+                      )}
+                      <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={handleNext}
+                        style={{
+                          fontFamily: display,
+                          fontSize: 14,
+                          fontWeight: 600,
+                          padding: "10px 28px",
+                          borderRadius: 100,
+                          backgroundColor: colors.coral,
+                          color: colors.bgDeep,
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {currentIdx < DISRUPTIONS.length - 1 ? "Next" : "See results"}
+                      </motion.button>
+                    </div>
                   )}
                 </motion.div>
               </AnimatePresence>

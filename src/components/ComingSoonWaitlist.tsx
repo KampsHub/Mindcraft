@@ -15,14 +15,14 @@ const PROGRAMS = [
     desc: "The skills that got you promoted won't get you through this. This program helps you lead without losing yourself.",
   },
   {
-    id: "international-move",
-    tag: "International Move",
+    id: "global-relocation",
+    tag: "Global Relocation",
     title: "You moved for the opportunity. But nobody warned you about the loneliness.",
     desc: "New country, new rules, no safety net. This program helps you rebuild belonging when everything familiar is gone.",
   },
   {
-    id: "next-move",
-    tag: "Next Move",
+    id: "career-leap",
+    tag: "Career Leap",
     title: "You know you want more. You just don\u2019t know how to get there without burning out.",
     desc: "Promotion, pivot, or a bigger role \u2014 this program helps you build a plan that\u2019s strategic, not desperate. Move toward what you want, not away from what you fear.",
   },
@@ -79,7 +79,7 @@ export default function ComingSoonWaitlist() {
             color: "#1a1a1a",
             textTransform: "uppercase",
             letterSpacing: "0.1em",
-            backgroundColor: "#fbbf24",
+            backgroundColor: colors.coral,
             padding: "5px 16px",
             borderRadius: 20,
           }}

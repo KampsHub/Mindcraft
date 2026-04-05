@@ -85,10 +85,12 @@ const DISRUPTIONS = [
 ];
 
 export default function AssessmentPage() {
-  const [step, setStep] = useState<"intro" | "assess" | "results" | "email">("intro");
+  const [step, setStep] = useState<"intro" | "assess" | "results" | "context" | "email">("intro");
   const [scores, setScores] = useState<Record<string, number>>({});
   const [currentIdx, setCurrentIdx] = useState(0);
   const [email, setEmail] = useState("");
+  const [situation, setSituation] = useState("");
+  const [challenge, setChallenge] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -119,7 +121,7 @@ export default function AssessmentPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          program: `7 Disruptions Assessment (avg: ${avgScore.toFixed(1)}, top: ${topDisruptions.map((d) => d.label).join(", ")})`,
+          program: `Assessment | Situation: ${situation || "not specified"} | Avg: ${avgScore.toFixed(1)} | Top: ${topDisruptions.map((d) => d.label).join(", ")} | Challenge: ${challenge || "not provided"}`,
         }),
       });
       setSubmitted(true);
@@ -682,7 +684,7 @@ export default function AssessmentPage() {
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => setStep("email")}
+                    onClick={() => setStep("context")}
                     style={{
                       fontFamily: display,
                       fontSize: 14,
@@ -695,10 +697,152 @@ export default function AssessmentPage() {
                       cursor: "pointer",
                     }}
                   >
-                    Get results by email
+                    Get personalized next steps
                   </motion.button>
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {/* ── CONTEXT: situation + challenge ── */}
+          {step === "context" && (
+            <motion.div
+              key="context"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+            >
+              <h2
+                style={{
+                  fontFamily: display,
+                  fontSize: 22,
+                  fontWeight: 600,
+                  marginBottom: 8,
+                }}
+              >
+                One more thing
+              </h2>
+              <p
+                style={{
+                  fontFamily: body,
+                  fontSize: 15,
+                  color: colors.textSecondary,
+                  lineHeight: 1.6,
+                  marginBottom: 28,
+                }}
+              >
+                This helps us send you something actually useful — not generic advice.
+              </p>
+
+              {/* Situation selector */}
+              <p
+                style={{
+                  fontFamily: display,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: colors.textPrimary,
+                  marginBottom: 12,
+                }}
+              >
+                What best describes your situation?
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 28 }}>
+                {[
+                  { id: "layoff", label: "I was laid off or lost my job" },
+                  { id: "pip", label: "I\u2019m on a PIP or under performance pressure" },
+                  { id: "new-role", label: "I\u2019m in a new role and finding my footing" },
+                  { id: "stuck", label: "I\u2019m stuck and trying to figure out my next move" },
+                  { id: "other", label: "Something else" },
+                ].map((opt) => (
+                  <motion.button
+                    key={opt.id}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSituation(opt.id)}
+                    style={{
+                      width: "100%",
+                      fontFamily: body,
+                      fontSize: 14,
+                      color: colors.textPrimary,
+                      backgroundColor: situation === opt.id ? `${colors.coral}20` : "rgba(255,255,255,0.04)",
+                      border: `1px solid ${situation === opt.id ? colors.coral : colors.borderDefault}`,
+                      borderRadius: 10,
+                      padding: "12px 16px",
+                      cursor: "pointer",
+                      textAlign: "left",
+                      transition: "all 0.15s",
+                    }}
+                  >
+                    {opt.label}
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Challenge */}
+              <p
+                style={{
+                  fontFamily: display,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: colors.textPrimary,
+                  marginBottom: 8,
+                }}
+              >
+                What is your biggest challenge right now?
+              </p>
+              <p
+                style={{
+                  fontFamily: body,
+                  fontSize: 13,
+                  color: colors.textMuted,
+                  marginBottom: 12,
+                  fontStyle: "italic",
+                }}
+              >
+                One or two sentences — whatever is top of mind.
+              </p>
+              <textarea
+                value={challenge}
+                onChange={(e) => setChallenge(e.target.value)}
+                placeholder="e.g., I can\u2019t stop replaying conversations in my head and it\u2019s affecting my sleep..."
+                style={{
+                  width: "100%",
+                  fontFamily: body,
+                  fontSize: 14,
+                  color: colors.textPrimary,
+                  backgroundColor: "rgba(255,255,255,0.04)",
+                  border: `1px solid ${colors.borderDefault}`,
+                  borderRadius: 10,
+                  padding: "14px 16px",
+                  minHeight: 80,
+                  resize: "vertical" as const,
+                  outline: "none",
+                  lineHeight: 1.6,
+                  boxSizing: "border-box" as const,
+                  marginBottom: 24,
+                }}
+              />
+
+              {/* Continue */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setStep("email")}
+                disabled={!situation}
+                style={{
+                  fontFamily: display,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  padding: "14px 32px",
+                  borderRadius: 100,
+                  backgroundColor: situation ? colors.coral : colors.bgElevated,
+                  color: situation ? colors.bgDeep : colors.textMuted,
+                  border: "none",
+                  cursor: situation ? "pointer" : "not-allowed",
+                }}
+              >
+                Continue
+              </motion.button>
             </motion.div>
           )}
 
@@ -718,7 +862,7 @@ export default function AssessmentPage() {
                   marginBottom: 12,
                 }}
               >
-                Save your results
+                Get your personalized results
               </h2>
               <p
                 style={{
@@ -729,7 +873,8 @@ export default function AssessmentPage() {
                   marginBottom: 24,
                 }}
               >
-                We will send your disruption map and a few resources matched to your top areas.
+                We&apos;ll send your disruption map, a practical first step matched to
+                your situation, and one resource for your most disrupted area.
                 One email. No spam.
               </p>
 

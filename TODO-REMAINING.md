@@ -126,7 +126,7 @@
 ### Content Work (Claude can help in future sessions)
 - [x] **whyThis chunking** — shortened 6 longest exercises (Stress Responses, NVC, Older Pattern, Performance Culture, Cultural Observation, Belonging Sources). Avg reduced from ~1,150 to ~550 chars. Framework teaching stays in instruction/primitive.
 - [ ] **362 exercise arc audit** — add practice steps to ALL exercises (massive content project, Stefanie asked for full audit not just 90)
-- [ ] **Scaffolding decrease** — Days 11-20 reduce pre-fill, Days 21-30 minimal. Add note in Days 1-10 explaining why scaffolding is heavier early.
+- [x] **Scaffolding decrease** — SQL script ready (`scripts/update-scaffolding-notes.sql`). Adds system_notes to all program_days: Days 1-10 explain why heavier, Days 11-20 instruct AI to reduce pre-fill by 50%, Days 21-30 minimal scaffolding. Run in Supabase SQL Editor.
 - [ ] **Bloom's labels** — label deep-learning exercises, track repeated concepts per user across program arc
 
 ### Infrastructure (needs separate resources)

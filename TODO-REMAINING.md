@@ -162,8 +162,22 @@ All of these are tracked automatically — no action needed from Stefanie. To re
 
 11. **Streak persistence** — Day completion streaks not tracked in database. Add `current_streak` and `longest_streak` integer columns to `program_enrollments`. Update on each day completion (check if previous day was completed yesterday → increment, otherwise reset to 1). Surface on dashboard.
 
-### Larger Effort
+### LOW — Nice to Have
 
+12. **Dark/light mode toggle** — Currently dark-only. Adding light mode would require creating a second set of color tokens in `src/lib/theme.ts` and wrapping the app in a theme context. The current `colors.bgDeep`, `colors.textPrimary`, etc. are hardcoded to dark values throughout 50+ files. **Effort:** ~2-3 days. No issues for current dark mode — it would be additive, not a rewrite. The toggle would sit in `/my-account` and store preference in localStorage.
+
+13. **Calendar view** — Month-level view of program progress. Build into the Plan & Progress page (`/goals`). Show a 30-day grid with completed days filled, current day highlighted, and streaks visible. Pull from `daily_sessions` + `program_enrollments.current_day`. **Effort:** ~4-6 hours.
+
+14. **Mobile app** — Not now. Keep web-only but ensure mobile accessibility. **Action:** Audit responsive breakpoints, tap targets (min 44px), and touch gestures across all pages. The homepage and dashboard already have responsive CSS — day flow and exercises need checking.
+
+15. **Internationalization** — English only for now. Backburner. When ready: use `next-intl` or `next-i18next`. Main effort is extracting ~200 UI strings from inline text to translation files. Exercise content lives in the database and would need a `locale` column. **Effort:** ~1 week for UI, ongoing for content translation.
+
+16. **A/B testing for pricing** — Statsig is a good choice — free tier covers early-stage, integrates with Next.js via `@statsig/js-client`, and supports feature flags + experiments. Alternative: PostHog (also free tier, more analytics-focused). Vercel also has built-in Edge Config for simple feature flags. **Recommendation:** Statsig for pricing experiments specifically — it has paywall-specific tooling and statistical rigor. ~2-3 hours to integrate.
+
+17. **Content management (CMS)** — Currently all content is in `src/content/site.ts` (homepage), database (exercises, day content), and inline in page files. **Options:**
+    - **Sanity.io** (recommended): Free tier, real-time preview, structured content. ~2-3 days to set up schema + migrate homepage/program content. Exercise content stays in Supabase.
+    - **Contentlayer + MDX**: No external service, content lives in repo as markdown. Simpler but no visual editor. ~1 day.
+    - **Keep as-is**: If content changes are infrequent and you're comfortable editing `site.ts`, a CMS adds complexity without much benefit at this stage.
 
 ---
 

@@ -16,9 +16,9 @@ const PROGRAMS = [
   },
   {
     id: "global-relocation",
-    tag: "Culture Shock",
-    title: "Everything around you changed. But nobody told you how much that would change you?",
-    desc: "New country, new company, new rules \u2014 you\u2019re code-switching all day, performing a version of yourself that doesn\u2019t feel like you. The culture shock hits months in, not days, and it\u2019s less about language than about the gap between who you are and who this place needs you to be. This program helps you adapt without losing yourself.",
+    tag: "Country Move",
+    title: "You moved countries for the job. But nobody warned you about the loneliness?",
+    desc: "New city, new language, no old friends around the corner. You\u2019re rebuilding everything \u2014 routine, social life, sense of home \u2014 while performing at a job that expects you to hit the ground running. The homesickness hits months in, not days. This program helps you build a life that feels like yours again.",
   },
   {
     id: "next-move",

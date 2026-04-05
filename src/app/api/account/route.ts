@@ -132,6 +132,19 @@ export async function DELETE(request: NextRequest) {
     await admin.from("entries").delete().eq("client_id", user.id);
     await admin.from("consent_settings").delete().eq("client_id", user.id);
 
+    // GDPR: delete from tables that store user context
+    await admin.from("api_logs").delete().eq("client_id", user.id);
+    await admin.from("quality_flags").delete().eq("client_id", user.id);
+    await admin.from("email_events").delete().eq("user_id", user.id);
+    await admin.from("coaching_memories").delete().eq("client_id", user.id);
+    await admin.from("coach_clients").delete().eq("client_id", user.id);
+    await admin.from("coach_notes").delete().eq("client_id", user.id);
+    // Best-effort: contact_messages and waitlist_signups (keyed by email, not id)
+    if (user.email) {
+      await admin.from("contact_messages").delete().eq("email", user.email);
+      await admin.from("waitlist_signups").delete().eq("email", user.email);
+    }
+
     // Clean up Supabase Storage (enneagram docs)
     try {
       const { data: storageFiles } = await admin.storage

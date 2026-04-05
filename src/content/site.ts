@@ -38,7 +38,7 @@ export const content = {
     items: [
       "When life gives you lemons... what if you can\u2019t figure out that dang lemonade?",
       "A career crisis takes your clear thinking first. And the tools that could help all need something from you \u2014 the right questions, the right person, the right timing.",
-      "Mindcraft removes that barrier. Coaching structure tells the technology where to look. It surfaces your blind spots, reactive patterns, and buried strengths. By week one, you\u2019re working with pragmatic and actual insights about yourself.",
+      "Mindcraft removes that barrier. It starts revealing your blind spots, reactive patterns, and buried strengths by week one. Come up with pragmatic action \u2014 fast.",
     ],
   },
 

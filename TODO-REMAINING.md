@@ -58,7 +58,7 @@
 ## Documents to Write
 - [ ] GDPR rights implementation doc: how each right (access, correction, deletion, portability, restriction, objection, withdraw consent) is executed in product, gaps, what to build
 - [ ] Review CoachBot privacy policy (https://coachbot.ai/legal/privacy-policy) for ideas to adopt
-- [ ] Privacy policy warm summary: human-language section at top before legal text
+- [x] Privacy policy warm summary: "The short version" card at top with 6 bullet points ✅ DEPLOYED
 - [ ] Rate limiting threshold answer: what traffic level requires Redis
 - [ ] Update PRD with all remaining feature data storage once built
 

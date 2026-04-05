@@ -14,6 +14,7 @@ const DISRUPTIONS = [
     id: "identity",
     label: "Professional Identity",
     question: "How much has your sense of who you are professionally been shaken?",
+    context: "Your title, your expertise, your role in a team \u2014 when that shifts, it can feel like losing a piece of yourself.",
     low: "I know who I am",
     high: "I don\u2019t recognize myself right now",
   },
@@ -21,6 +22,7 @@ const DISRUPTIONS = [
     id: "competence",
     label: "Competence & Confidence",
     question: "How much is this situation making you doubt your skills or abilities?",
+    context: "Self-doubt often spikes during transitions \u2014 even when your track record says otherwise.",
     low: "I trust what I can do",
     high: "I\u2019m seriously questioning myself",
   },
@@ -28,6 +30,7 @@ const DISRUPTIONS = [
     id: "safety",
     label: "Psychological Safety",
     question: "How safe do you feel to speak up, make mistakes, or be honest at work?",
+    context: "When safety drops, you stop taking risks, stop asking questions, and start performing instead of contributing.",
     low: "I feel safe and supported",
     high: "I\u2019m walking on eggshells",
   },
@@ -35,6 +38,7 @@ const DISRUPTIONS = [
     id: "belonging",
     label: "Belonging & Relationships",
     question: "How connected do you feel to the people around you right now?",
+    context: "Career disruptions often quietly cut the social threads you didn\u2019t realize you depended on.",
     low: "I feel like I belong",
     high: "I feel isolated or on the outside",
   },
@@ -42,6 +46,7 @@ const DISRUPTIONS = [
     id: "stability",
     label: "Financial & Career Security",
     question: "How much is this situation affecting your financial or career stability?",
+    context: "Financial worry activates your survival brain \u2014 it makes everything else harder to think about clearly.",
     low: "I feel secure",
     high: "I\u2019m worried about what happens next",
   },
@@ -49,6 +54,7 @@ const DISRUPTIONS = [
     id: "cognitive",
     label: "Daily Functioning",
     question: "How much is the stress affecting your focus, sleep, or daily routine?",
+    context: "When stress leaks into your body \u2014 sleep, appetite, concentration \u2014 that\u2019s your nervous system signaling overload.",
     low: "I\u2019m functioning well",
     high: "It\u2019s taking over my days",
   },
@@ -56,6 +62,7 @@ const DISRUPTIONS = [
     id: "clarity",
     label: "Clarity & Expectations",
     question: "How clear are you on what\u2019s expected of you and what success looks like?",
+    context: "Ambiguity is exhausting. Without clear expectations, you end up guessing \u2014 and second-guessing.",
     low: "Crystal clear",
     high: "I\u2019m guessing or the goalposts keep moving",
   },
@@ -63,6 +70,7 @@ const DISRUPTIONS = [
     id: "trust",
     label: "Trust in Leadership",
     question: "How much do you trust the people making decisions about your career?",
+    context: "When you can\u2019t trust the people above you, every interaction becomes a calculation instead of a conversation.",
     low: "I trust them",
     high: "I don\u2019t trust their intentions",
   },
@@ -70,6 +78,7 @@ const DISRUPTIONS = [
     id: "future",
     label: "Future Direction",
     question: "How clear is your path forward from here?",
+    context: "Not having a plan isn\u2019t the problem \u2014 it\u2019s the feeling that you should have one and don\u2019t.",
     low: "I have a plan I believe in",
     high: "No idea what\u2019s next",
   },
@@ -469,6 +478,18 @@ export default function AssessmentPage() {
                   >
                     {DISRUPTIONS[currentIdx].question}
                   </h2>
+                  <p
+                    style={{
+                      fontFamily: body,
+                      fontSize: 14,
+                      color: colors.textMuted,
+                      lineHeight: 1.6,
+                      marginBottom: 32,
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {DISRUPTIONS[currentIdx].context}
+                  </p>
 
                   {/* Scale labels */}
                   <div

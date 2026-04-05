@@ -2,9 +2,9 @@
 **As of:** April 4, 2026 (end of session)
 
 ## Quick Fixes (~1 hr each)
-- [ ] Exercise completion micro-animation (motion.dev scale+glow, no confetti)
-- [ ] Exercise-to-exercise navigation ("Next: [Name] →" + progress dots ● ○ ○)
-- [ ] Mobile touch targets 44px minimum + pulse signaling on WheelChart, StakeholderMap, BodyMap
+- [x] Exercise completion micro-animation (motion.dev scale+glow, no confetti) ✅ DEPLOYED
+- [x] Exercise-to-exercise navigation (progress dots ● ○ ○ + "X of Y done" counter) ✅ DEPLOYED
+- [x] Mobile touch targets 44px minimum + pulse signaling on WheelChart, StakeholderMap ✅ DEPLOYED (BodyMap already has tap-to-mark, no resize needed)
 - [ ] Add missing FAQs: "Can I pause?", "Export data?", "Journal private?", "Share with therapist?", "After 30 days?"
 - [ ] Specific error messages: journal processing, exercise save, payment, auth session
 - [ ] Re-enrollment CTA after program completion ("Explore other programs")

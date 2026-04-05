@@ -16,9 +16,9 @@ const PROGRAMS = [
   },
   {
     id: "global-relocation",
-    tag: "Global Relocation",
-    title: "You moved for the opportunity. But nobody warned you about the loneliness?",
-    desc: "You\u2019re code-switching all day, performing a version of yourself that doesn\u2019t feel like you. The culture shock hits months in, not days \u2014 and it\u2019s less about language than about the gap between who you are and who this place needs you to be. This program helps you adapt without losing yourself.",
+    tag: "Cultural Relocation",
+    title: "Everything around you changed. But nobody told you how much that would change you?",
+    desc: "New country, new company, new rules \u2014 you\u2019re code-switching all day, performing a version of yourself that doesn\u2019t feel like you. The culture shock hits months in, not days, and it\u2019s less about language than about the gap between who you are and who this place needs you to be. This program helps you adapt without losing yourself.",
   },
   {
     id: "next-move",

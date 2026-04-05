@@ -1770,7 +1770,7 @@ export default function Home() {
                 textAlign: "center",
               }}
             >
-              How it works — and what it does.
+              How it works.
             </h2>
           </FadeIn>
 

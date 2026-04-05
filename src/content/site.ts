@@ -117,38 +117,23 @@ export const content = {
 
   // ── How it works ──
   steps: {
-    headline: "How it works \u2014 and what it does.",
+    headline: "How it works.",
     subheadline: "",
     items: [
       {
         icon: "compass",
-        title: "Pick your 30-day program.",
-        desc: "Layoff, PIP, or new role. Each one is built for that specific moment.",
-      },
-      {
-        icon: "intake",
-        title: "Tell your story.",
-        desc: "Over the first three days, we ask the questions a good coach would ask. Your goals come from your own words.",
-      },
-      {
-        icon: "mirror",
-        title: "See what\u2019s hard to see.",
-        desc: "The system detects patterns and blind spots keeping you stuck \u2014 and adapts your exercises around them.",
+        title: "Pick your program.",
+        desc: "Layoff, PIP, or new role. 30 days built for that specific moment.",
       },
       {
         icon: "daily",
-        title: "15\u201330 minutes a day.",
-        desc: "A thread, a journal prompt, 4 matched exercises, insights connecting the dots, and a seed for tomorrow.",
-      },
-      {
-        icon: "progress",
-        title: "Track your progress.",
-        desc: "Weekly check-ins with progress tracking and in-depth insights. See your shift when it\u2019s hard to feel it.",
+        title: "15 minutes a day.",
+        desc: "Journal, matched exercises, pattern detection, and weekly insights. The program adapts to what surfaces.",
       },
       {
         icon: "human",
-        title: "Call a Coach.",
-        desc: "Reach out to professional coaches who you can easily share your data with. Fast data handover if you need it.",
+        title: "Go deeper if you need to.",
+        desc: "Connect with a professional coach who already has your context. No starting from scratch.",
       },
     ],
     outcomes: [

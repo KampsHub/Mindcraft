@@ -1,5 +1,5 @@
 # Mindcraft Product Requirements Document — Current State
-**Last Updated:** 2026-04-04
+**Last Updated:** 2026-04-05
 **Status:** Production (mindcraft.ing)
 
 ---
@@ -24,19 +24,21 @@ Mindcraft is a 30-day AI-powered coaching platform for professionals navigating 
 - **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Vercel (Hobby plan)
 - **Database:** Supabase (PostgreSQL + Auth + RLS + pgvector)
 - **AI:** Anthropic Claude 3.5 Sonnet via `@anthropic-ai/sdk`
-- **Payments:** Stripe (test mode)
+- **Payments:** Stripe (live keys)
 - **Email:** Resend from `allmindsondeck.com`
 - **Voice:** LiveKit + Deepgram/Speechmatics
 - **Animation:** framer-motion v12, motion.dev (additive), canvas-confetti, lottie-react
 - **Styling:** Inline styles with shared theme tokens (`src/lib/theme.ts`)
 
-### Database (22 tables)
-Core: `clients`, `programs`, `program_enrollments`, `program_days`, `daily_sessions`
+### Database (26 tables)
+Core: `clients`, `programs`, `program_enrollments` (+ streak columns), `program_days`, `daily_sessions`
 Content: `frameworks_library` (350+ exercises), `free_flow_entries`
 Progress: `exercise_completions`, `client_goals`, `weekly_reviews`, `client_profiles`
 Assessment: `client_assessments`, `intake_responses`
-Sharing: `shared_summaries`, `consent_settings`
-Monitoring: `quality_flags`, `quality_audits`, `api_logs`, `email_events`
+Sharing: `shared_summaries`, `consent_settings` (+ email preference columns)
+Monitoring: `quality_flags`, `quality_audits`, `api_logs`, `email_events` (+ user tracking columns)
+Coach: `coach_clients` (invite/accept/revoke relationship), `coach_notes` (notes → daily thread)
+Memory: `coaching_memory` (with relevance index)
 Auth: Supabase Auth (email/password, magic link, Google OAuth)
 
 ### API (53 routes)
@@ -47,7 +49,8 @@ Auth: Supabase Auth (email/password, magic link, Google OAuth)
 - Assessment: enneagram-analyze, framework-analysis, emotional-mirror, sentiment
 - Quality: quality-flag, quality-audit
 - Payment: checkout (4 program-specific + generic), checkout/verify, webhook, link-subscription, price
-- Email: welcome, daily-reminder, day-complete, program-complete, coach-notes, re-engage
+- Email: welcome, day-complete, program-complete, coach-notes, re-engage (inactive reminders × 3 + exit survey)
+- Coach: coach/invite, coach/accept, coach/revoke, coach/clients
 - Voice: token, transcribe, eval, exercise-voice, tts
 - Account: data export, deletion, contact, apply
 
@@ -83,6 +86,10 @@ Program Completion (Day 30) → Graduation email
 - Dashboard, Day flow (Tell/Do/Done tabs), Goals, Weekly Review, Monthly Summary ✅
 - Mindful Journal, Account, Coach demo, Intake ✅
 - Privacy Policy, Terms, Contact, Apply ✅
+- Assessment (9 disruptions self-assessment lead magnet) ✅
+- Blog (coming-soon topic cards + email signup) ✅
+- Admin dashboard (enrollment stats, AI costs, top users) ✅
+- Feedback: exit survey + testimonial survey ✅
 
 ### Exercise System (27 primitives)
 CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeTriptych, ForceField, HeatmapTracker, BodyMap, SpectrumSlider, ZonedSpectrum, MultiSpectrum, VennOverlap, HierarchicalBranch, BubbleSort, ForcedChoice, DotGrid, StakeholderMap, TimelineRiver, ProgressRiver, WordCloud, EmotionWheel, SaboteurCard, BeforeAfter, PatternTracker, RetrievalCheck, AISimulation
@@ -97,66 +104,75 @@ CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeT
 - Voice input (journal + exercises) ✅
 - Exercise insight generation ✅
 - Goals workflow (AI-generate → approve → track) ✅
-- Weekly reviews with AI insights ✅
-- Quality flagging ✅
+- Weekly reviews with AI insights (+ cross-week shift detection) ✅
+- Quality flagging + weekly quality audit (cron, email report, Bloom level check) ✅
 - Coach sharing (approved summaries) ✅
+- Coach dashboard (invite clients by email, accept/revoke, view progress/goals/insights/enneagram, leave notes) ✅
+- Coach notes → daily thread (notes surface in client's next session) ✅
 - Crisis detection + resources banner ✅
-- GDPR compliance (export, delete, consent) ✅
-- Responsive design (mobile-first) ✅
+- GDPR compliance (export, delete, consent — covers all 26 tables + storage) ✅
+- Responsive design (mobile-first, parachute nav fixed for mobile) ✅
 - Magic link + Google OAuth + password auth ✅
-- Email system (6+ templates) ✅
+- Email system (welcome, day-complete, program-complete, coach-notes, inactive reminders × 3, exit survey) ✅
+- Notification preferences (inactive reminders + program updates toggles in /my-account) ✅
+- Commitment follow-through (daily thread check-in, exercise selection awareness, weekly aggregation) ✅
+- Streak tracking (current_streak, best_streak, displayed on dashboard when ≥ 2) ✅
+- 30-day calendar view on goals page ✅
+- Assessment page (9 disruptions, inverted scale 1=neg/10=pos, data points, Next button, email capture) ✅
+- Sentry error monitoring (production, PII redacted) ✅
+- Async API logging (fire-and-forget, no response delay) ✅
+- Background image + greeting stable on login (no flash) ✅
 
 ---
 
-## 5. What's Missing / Needs Decision
+## 5. Status of Previously Missing Items
 
-### CRITICAL — Blocks Launch
-1. **Stripe in test mode** — Need to switch to live keys before accepting real payments
-2. **Email scheduling** — Daily reminder emails exist but no cron job triggers them
-3. **Subscription lifecycle** — No cancellation flow, no billing portal, no renewal webhooks
+### CRITICAL — ✅ All Resolved
+1. ~~**Stripe live keys**~~ — ✅ Live keys set in Vercel
+2. ~~**Inactive user reminders**~~ — ✅ 2-day threshold, max 3 reminders, then exit survey. Cron daily 3 PM UTC.
+3. ~~**Subscription lifecycle**~~ — ✅ Not needed (not a subscription model)
 
-### HIGH — Needed for Quality Launch
-4. **Error monitoring** — No Sentry or equivalent. Production errors are invisible.
-5. **Coach dashboard** — Coaches can't see student progress in-app (API exists, no UI)
-6. **Referral dashboard** — Coach referral codes work but coaches can't view/manage them
-7. **Admin panel** — All admin work is manual via Supabase console
+### HIGH — ✅ All Resolved
+4. ~~**Sentry error monitoring**~~ — ✅ Activated, DSN in Vercel, PII redacted
+5. ~~**Coach dashboard**~~ — ✅ Built: invite by email, client cards, goals/insights/enneagram, coach notes → daily thread
+6. ~~**Referral dashboard**~~ — Parked
+7. ~~**Admin panel**~~ — Accepted (Supabase manual)
 
-### MEDIUM — Important for Retention
-8. **User-facing analytics** — Users see no progress metrics beyond day count
-9. **Notification preferences** — Users can't control email frequency
-10. **Search** — Can't search past journal entries or exercises
-11. **Streak persistence** — Day completion streaks not persisted in database
+### MEDIUM — Mostly Resolved
+8. ~~**User-facing analytics**~~ — ✅ Patterns + shifts surfaced in weekly insights
+9. ~~**Notification preferences**~~ — ✅ Toggles in /my-account (inactive reminders, program updates)
+10. **Search** — Still open. Decision needed: simple (journal only) or deep (journals + exercises + insights)
+11. ~~**Streak persistence**~~ — ✅ current_streak, best_streak, last_completed_date. Shows on dashboard.
 
-### LOW — Nice to Have
-12. **Dark/light mode toggle** — Currently dark-only
-13. **Calendar view** — Month-level view of program progress
-14. **Mobile app** — Web-only
-15. **Internationalization** — English only
-16. **A/B testing** — No experiment infrastructure
-17. **Content management** — All content hardcoded, no CMS
+### LOW — Decisions Documented
+12. **Dark/light mode** — ~2-3 days, additive, won't break current dark theme
+13. ~~**Calendar view**~~ — ✅ 30-day grid on /goals page
+14. **Mobile audit** — Parachute nav fixed. Post-login audit pending (needs manual test)
+15. **Internationalization** — Backburner
+16. **A/B testing** — Statsig recommended for pricing experiments (~2-3 hrs)
+17. **CMS** — Sanity.io recommended (~2-3 days) but keep-as-is is fine for now
 
 ---
 
-## 6. Exercise System Gaps (Needs Your Thinking)
+## 6. Exercise System Gaps
 
-### A. Spaced retrieval integration
-- Should RetrievalCheck exercises be auto-inserted at Day+3 intervals?
-- Or should they be manually designed per concept?
-- **Decision needed:** Automatic vs curated retrieval schedule
+### A. Spaced retrieval integration — Decision pending
+Recommendation: Hybrid — auto-insert at Day+3 as default, manual overrides where the arc demands it.
 
-### B. Commitment follow-through system
-- When a user commits to "morning walk" on Day 6, should Day 14 automatically ask "how's that going?"
-- Requires pulling exercise_completions data forward into future exercises
-- **Decision needed:** How persistent should commitments be? What happens if they fail?
+### B. Commitment follow-through — ✅ Built
+- Daily thread checks on yesterday's commitments
+- Process journal selects exercises responsive to commitment outcomes
+- Weekly insights aggregates all week's commitments and reviews follow-through
 
-### C. Progress visualization
-- Day 1 vs Day 24 ratings exist but aren't surfaced as "you improved by X"
-- Should there be a "Your Progress" dashboard section?
-- **Decision needed:** What does progress look like? Numbers? Graphs? Narrative?
+### C. Progress visualization — Decision: patterns + shifts in weekly insights
+No separate analytics page. Weekly insights surfaces pattern frequency shifts and tone/language changes across weeks.
 
-### D. Exercise difficulty labeling
-- Should exercises show "Awareness → Practice → Application → Integration" labels?
-- **Decision needed:** Is explicit difficulty labeling helpful or anxiety-inducing for users in crisis?
+### D. Exercise difficulty labeling — ✅ Decision made + implemented
+- Labels NOT shown to users
+- Bloom level distribution checked in weekly quality audit
+- Warns if >50% Awareness-level exercises after Day 14
+
+___________________________________
 
 ### E. Pre/post exercise measurement
 - Should exercises ask "How clear is your thinking?" before and after?
@@ -243,6 +259,8 @@ DD. **Email nurture for non-customers** — Only welcome + daily reminder emails
 
 ## 8. Data Storage Map — New Features (April 4, 2026)
 
+Stefanie Question: In the following, is anything needed from my perspective to track properly? Also, how can I retrieve this information (e.g. exercise_completions).
+
 | Feature | Where Stored | Column/Field | Type |
 |---------|-------------|--------------|------|
 | Star rating per exercise | `exercise_completions` | `star_rating` | integer 1-5 |
@@ -264,18 +282,37 @@ DD. **Email nurture for non-customers** — Only welcome + daily reminder emails
 | Exercise save errors | client state | `processError` shown via useStep3Analysis | client-side |
 
 ### Features Built But Not Yet Storing Data
-| Feature | Needs | Status |
-|---------|-------|--------|
-| Sentry | DSN env var in Vercel | Config ready, needs activation |
-| Quality monitoring cron | Vercel Cron job setup | Code exists at `/api/quality-audit`, needs scheduler |
-| Token cost tracking | Admin query on `api_logs` | Table exists, query not built yet |
+| Feature                 | Needs                     | Status                                               |                                        |
+| ----------------------- | ------------------------- | ---------------------------------------------------- | -------------------------------------- |
+| Sentry                  | DSN env var in Vercel     | Config ready, needs activation                       | Stefanie: Sentry is set up - activate. |
+| Quality monitoring cron | Vercel Cron job setup     | Code exists at `/api/quality-audit`, needs scheduler | Stefanie: then schedule                |
+| Token cost tracking     | Admin query on `api_logs` | Table exists, query not built yet                    | Stefanie: Build query and send to me   |
 
 ---
 
 ## 9. Known Technical Debt
-- In-memory rate limiting won't scale across multiple Vercel instances (needs Redis)
-- API logs write synchronously to Supabase (needs async queue at scale)
-- Memory embeddings retrieval may slow as database grows
-- No unit/integration tests (manual TEST-PLAN.md only)
-- 283 exercises still use old whyNow/science format in exerciseDataCore.ts
-- Email templates hardcoded in route handlers (no template system)
+- In-memory rate limiting won't scale across multiple Vercel instances (needs Redis) -- Stefanie Question: What does that mean?
+- API logs write synchronously to Supabase (needs async queue at scale) -- Stefanie Question: What needs to get done for this to work async?
+- Memory embeddings retrieval may slow as database grows -- Stefanie Question: How can this problem be alleviated?
+- No unit/integration tests (manual TEST-PLAN.md only) -- Stefanie Question: What is required to set up unit and integration testing? What should we start on?
+- 283 exercises still use old whyNow/science format in exerciseDataCore.ts -- Stefanie Question: I believe this is fixed now?
+- Email templates hardcoded in route handlers (no template system) -- Stefanie Question: How can we set up with a template system to not have to hardcode this anymore?
+
+
+
+To do:
+1) 
+
+
+2. Data sharing with coach
+3. coaching goals and how they are set
+4. weekly insights and how they can be shared
+5. injection of enneagram
+6. share & tell program
+7. offramp into continued service
+8. re-doing/referring to exercises
+9. Data storage / deletion per privacy policy etc
+
+
+10. Offramp strategy into regular subscription at 20% off ((Referral for a $20 gift card for the referrer once the person signs up, testimonial, other programs, continuous program at discounted price, enneagram for deeper insight, work with me))
+11. Share & Tell in general (gifting & referring)

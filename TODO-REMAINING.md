@@ -102,16 +102,7 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 
 8. **In-memory rate limiting** — Current rate limiting uses in-memory counters. On Vercel, each request can hit a different serverless instance, so counters don't share state. At scale (100+ concurrent users), limits won't be enforced consistently. **Fix:** Add Redis (e.g., Upstash) as a shared counter store. ~2 hours of work.
 
-9. ~~**Memory embeddings retrieval may slow**~~ — ✅ Fixed with database index instead of time cutoff (preserves cross-program memories). **Stefanie: Run `supabase/optimize-memory-index.sql`.**
-
-10. **No unit/integration tests** — Only manual `TEST-PLAN.md`. **To start:** Set up Vitest (fast, Vite-native) for unit tests + Playwright for integration tests. Start with: API route tests (process-journal, daily-exercise) and critical UI flows (login → dashboard → day 1). ~1 day for setup + first 10 tests.
-
-### Data Storage Map — New Features (April 4, 2026)
-
-All of these are tracked automatically — no action needed from Stefanie. To retrieve data:
-- **Supabase tables** (`exercise_completions`, `weekly_reviews`, `program_enrollments`): Go to Supabase → Table Editor → select table → filter/export
-- **Google Analytics events**: GA4 → Reports → Events → filter by event name
-- **Sentry**: sentry.io dashboard (after activation)
+9. **No unit/integration tests** — Only manual `TEST-PLAN.md`. **To start:** Set up Vitest (fast, Vite-native) for unit tests + Playwright for integration tests. Start with: API route tests (process-journal, daily-exercise) and critical UI flows (login → dashboard → day 1). ~1 day for setup + first 10 tests.
 
 ### Quick Fixes
 - [ ] Test post-login experience on mobile (dashboard, day flow, exercises)
@@ -121,28 +112,7 @@ All of these are tracked automatically — no action needed from Stefanie. To re
 
 8. **User-facing analytics** — Users see no progress metrics beyond day count. Suggestion: Surface on the Insights page — patterns detected over time, exercise completion rate, mood/rating trends, most-used frameworks, streak data. Could use recharts (already installed) to show week-over-week shifts.
 
-9. ~~**Notification preferences**~~ — ✅ Done. Toggles in `/my-account` for inactive reminders + program updates. Stored in `consent_settings`. Re-engage cron checks before sending. **Stefanie: Run `supabase/add-email-preferences.sql`.**
-
-10. **Search past entries** — Can't search journal entries or exercises. Suggestion: Add a search page or search bar on the journal/exercises pages. Use Supabase full-text search (`to_tsvector` + `to_tsquery`) on `free_flow_entries.content` and `exercise_completions.responses`. No external search service needed at current scale.
-
-11. ~~**Streak persistence**~~ — ✅ Done. Columns added, SQL run, code live.
-
-### LOW — Nice to Have
-
-12. **Dark/light mode toggle** — Currently dark-only. Adding light mode would require creating a second set of color tokens in `src/lib/theme.ts` and wrapping the app in a theme context. The current `colors.bgDeep`, `colors.textPrimary`, etc. are hardcoded to dark values throughout 50+ files. **Effort:** ~2-3 days. No issues for current dark mode — it would be additive, not a rewrite. The toggle would sit in `/my-account` and store preference in localStorage.
-
-13. ~~**Calendar view**~~ — ✅ Done. 30-day grid on `/goals` page showing completed/current/future days.
-
-14. **Mobile app** — Not now. Keep web-only but ensure mobile accessibility. **Action:** Audit responsive breakpoints, tap targets (min 44px), and touch gestures across all pages. The homepage and dashboard already have responsive CSS — day flow and exercises need checking.
-
-15. **Internationalization** — English only for now. Backburner. When ready: use `next-intl` or `next-i18next`. Main effort is extracting ~200 UI strings from inline text to translation files. Exercise content lives in the database and would need a `locale` column. **Effort:** ~1 week for UI, ongoing for content translation.
-
-16. **A/B testing for pricing** — Statsig is a good choice — free tier covers early-stage, integrates with Next.js via `@statsig/js-client`, and supports feature flags + experiments. Alternative: PostHog (also free tier, more analytics-focused). Vercel also has built-in Edge Config for simple feature flags. **Recommendation:** Statsig for pricing experiments specifically — it has paywall-specific tooling and statistical rigor. ~2-3 hours to integrate.
-
-17. **Content management (CMS)** — Currently all content is in `src/content/site.ts` (homepage), database (exercises, day content), and inline in page files. **Options:**
-    - **Sanity.io** (recommended): Free tier, real-time preview, structured content. ~2-3 days to set up schema + migrate homepage/program content. Exercise content stays in Supabase.
-    - **Contentlayer + MDX**: No external service, content lives in repo as markdown. Simpler but no visual editor. ~1 day.
-    - **Keep as-is**: If content changes are infrequent and you're comfortable editing `site.ts`, a CMS adds complexity without much benefit at this stage.
+9. **Search past entries** — Can't search journal entries or exercises. Suggestion: Add a search page or search bar on the journal/exercises pages. Use Supabase full-text search (`to_tsvector` + `to_tsquery`) on `free_flow_entries.content` and `exercise_completions.responses`. No external search service needed at current scale.
 
 ### Product Design Decisions
 

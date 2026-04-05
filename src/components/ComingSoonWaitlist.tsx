@@ -71,24 +71,24 @@ export default function ComingSoonWaitlist() {
     <div style={{ marginTop: 8 }}>
       <div
         style={{
-          backgroundColor: "#000000",
-          padding: "12px 0",
-          borderRadius: 10,
+          backgroundColor: "rgba(24, 24, 28, 0.80)",
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
+          padding: "16px 24px",
+          borderRadius: 12,
           marginBottom: 16,
           textAlign: "center",
         }}
       >
         <span
           style={{
-            fontFamily: display,
-            fontSize: 12,
-            fontWeight: 600,
-            color: "#ffffff",
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
+            fontFamily: body,
+            fontSize: 17,
+            color: colors.textSecondary,
+            lineHeight: 1.7,
           }}
         >
-          Coming soon
+          More programs are on the way. Join the waitlist to be first in line.
         </span>
       </div>
 

@@ -6,7 +6,7 @@
 - [x] Exercise-to-exercise navigation (progress dots ● ○ ○ + "X of Y done" counter) ✅ DEPLOYED
 - [x] Mobile touch targets 44px minimum + pulse signaling on WheelChart, StakeholderMap ✅ DEPLOYED (BodyMap already has tap-to-mark, no resize needed)
 - [x] Add missing FAQs: "Can I pause?", "Export data?", "Share with therapist?" ✅ DEPLOYED
-- [ ] GLOBAL: eliminate ALL grey text site-wide — brighten textMuted/textSecondary to white (textPrimary). Don't hardcode anywhere. Fix at theme level so it applies everywhere.
+- [x] GLOBAL: eliminate ALL grey text site-wide — textSecondary→#E0DDD8, textMuted→#D0CCC6 at theme level ✅ DEPLOYED
 - [ ] Specific error messages: journal processing, exercise save, payment, auth session
 - [ ] Re-enrollment CTA after program completion ("Explore other programs")
 - [ ] 7-day money-back guarantee copy in Stripe checkouts (Stefanie's exact copy provided in MULTI-LENS-REVIEW.md)
@@ -39,6 +39,10 @@
 - [ ] Blog infrastructure at `/blog`: Next.js pages, 9 topic suggestions ready
 - [ ] Free lead magnet: "7 Disruptions Self-Assessment" standalone page with email capture
 - [ ] Testimonial collection: post-Day-30 email → Typeform (2 questions + permission)
+
+## Surveys to Create + Wire
+- [ ] Create testimonial survey (Typeform): "How would you describe Mindcraft to a friend?" + "What changed for you?" + permission checkbox. Wire into post-Day-30 completion email. Add survey URL to PRD.
+- [ ] Create exit survey (Typeform): "What made you stop using Mindcraft?" + "What would bring you back?" Wire into re-engagement email (7 days inactive). Add survey URL to PRD.
 
 ## Legal/Compliance
 - [ ] Signup: require checkbox agreeing to Terms & Privacy Policy (links open in new tab). Block account creation if unchecked. If user paid but won't create account (no consent), flag in Stripe metadata + Supabase for manual outreach.

@@ -277,6 +277,21 @@ export const content = {
         a: "No. We use Anthropic\u2019s Claude API for processing \u2014 they do not train on your data. Your entries are used only to generate your coaching reflections and exercises. Nothing else. Ever.",
       },
       {
+        topic: "The program",
+        q: "Can I pause my program?",
+        a: "Yes. You can pause and resume your program at any time from your account settings. Your progress and journal entries are saved — pick up where you left off whenever you're ready.",
+      },
+      {
+        topic: "Data & privacy",
+        q: "How do I export my data?",
+        a: "Go to My Account and click 'Download my data.' You'll get a complete export of your journal entries, exercises, goals, and insights in JSON format.",
+      },
+      {
+        topic: "Data & privacy",
+        q: "Can I share my progress with a therapist or coach?",
+        a: "Yes. You can generate shareable summaries of your coaching progress and share them with your therapist or coach. You review and approve everything before it's shared — they never see your raw journal entries.",
+      },
+      {
         topic: "About",
         q: "Who built this?",
         a: "Getting laid off broke something open I didn\u2019t know was sealed shut. That experience changed how I show up for people. As a certified coach, I\u2019ve since sat with people through layoffs, PIPs, and the quiet panic of a new role. Mindcraft came from knowing what it feels like when the ground disappears. \u2014 Stefanie Kamps, Founder",

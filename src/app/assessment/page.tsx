@@ -15,6 +15,7 @@ const DISRUPTIONS = [
     label: "Professional Identity",
     question: "How much has your sense of who you are professionally been shaken?",
     context: "Your title, your expertise, your role in a team \u2014 when that shifts, it can feel like losing a piece of yourself.",
+    dataPoint: "Herminia Ibarra at London Business School found that professionals in career transitions experience an average of 2\u20133 identity shifts before settling into a new sense of self. The disorientation is the process, not a sign something is wrong.",
     low: "I know who I am",
     high: "I don\u2019t recognize myself right now",
   },
@@ -23,6 +24,7 @@ const DISRUPTIONS = [
     label: "Competence & Confidence",
     question: "How much is this situation making you doubt your skills or abilities?",
     context: "Self-doubt often spikes during transitions \u2014 even when your track record says otherwise.",
+    dataPoint: "Research by Pauline Clance found that up to 70% of high-performing professionals experience imposter feelings during career transitions. The doubt correlates with capability, not incompetence \u2014 the less qualified rarely worry.",
     low: "I trust what I can do",
     high: "I\u2019m seriously questioning myself",
   },
@@ -31,6 +33,7 @@ const DISRUPTIONS = [
     label: "Psychological Safety",
     question: "How safe do you feel to speak up, make mistakes, or be honest at work?",
     context: "When safety drops, you stop taking risks, stop asking questions, and start performing instead of contributing.",
+    dataPoint: "Amy Edmondson at Harvard found that teams with low psychological safety have 19% more errors and 50% less innovation. When safety drops for an individual, performance follows \u2014 not because of skill, but because of self-protection.",
     low: "I feel safe and supported",
     high: "I\u2019m walking on eggshells",
   },
@@ -39,6 +42,7 @@ const DISRUPTIONS = [
     label: "Belonging & Relationships",
     question: "How connected do you feel to the people around you right now?",
     context: "Career disruptions often quietly cut the social threads you didn\u2019t realize you depended on.",
+    dataPoint: "Matthew Lieberman at UCLA found that social rejection activates the same brain regions as physical pain. Belonging isn\u2019t a soft need \u2014 losing it literally hurts, and it impairs decision-making and focus.",
     low: "I feel like I belong",
     high: "I feel isolated or on the outside",
   },
@@ -47,6 +51,7 @@ const DISRUPTIONS = [
     label: "Financial & Career Security",
     question: "How much is this situation affecting your financial or career stability?",
     context: "Financial worry activates your survival brain \u2014 it makes everything else harder to think about clearly.",
+    dataPoint: "Princeton researchers found that financial scarcity reduces cognitive bandwidth by the equivalent of 13 IQ points. It\u2019s not that you\u2019re thinking poorly \u2014 your brain is allocating resources to the threat.",
     low: "I feel secure",
     high: "I\u2019m worried about what happens next",
   },
@@ -55,6 +60,7 @@ const DISRUPTIONS = [
     label: "Daily Functioning",
     question: "How much is the stress affecting your focus, sleep, or daily routine?",
     context: "When stress leaks into your body \u2014 sleep, appetite, concentration \u2014 that\u2019s your nervous system signaling overload.",
+    dataPoint: "The American Institute of Stress reports that 77% of people in career crises experience physical symptoms: disrupted sleep, fatigue, headaches, digestive issues. Your body processes what your mind tries to override.",
     low: "I\u2019m functioning well",
     high: "It\u2019s taking over my days",
   },
@@ -63,6 +69,7 @@ const DISRUPTIONS = [
     label: "Clarity & Expectations",
     question: "How clear are you on what\u2019s expected of you and what success looks like?",
     context: "Ambiguity is exhausting. Without clear expectations, you end up guessing \u2014 and second-guessing.",
+    dataPoint: "Gallup data shows that only 50% of employees strongly agree they know what\u2019s expected of them at work. During transitions, that drops further. Ambiguity is one of the largest predictors of workplace anxiety.",
     low: "Crystal clear",
     high: "I\u2019m guessing or the goalposts keep moving",
   },
@@ -71,6 +78,7 @@ const DISRUPTIONS = [
     label: "Trust in Leadership",
     question: "How much do you trust the people making decisions about your career?",
     context: "When you can\u2019t trust the people above you, every interaction becomes a calculation instead of a conversation.",
+    dataPoint: "Paul Zak at Claremont found that people in high-trust work environments report 74% less stress, 50% higher productivity, and 76% more engagement. When trust breaks down, everything takes more energy.",
     low: "I trust them",
     high: "I don\u2019t trust their intentions",
   },
@@ -79,6 +87,7 @@ const DISRUPTIONS = [
     label: "Future Direction",
     question: "How clear is your path forward from here?",
     context: "Not having a plan isn\u2019t the problem \u2014 it\u2019s the feeling that you should have one and don\u2019t.",
+    dataPoint: "William Bridges\u2019 transition research shows that the \u201Cneutral zone\u201D \u2014 the period between an ending and a new beginning \u2014 is where the most important psychological work happens. The discomfort of not knowing is actually the process working.",
     low: "I have a plan I believe in",
     high: "No idea what\u2019s next",
   },
@@ -93,13 +102,15 @@ export default function AssessmentPage() {
   const [challenge, setChallenge] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showInsight, setShowInsight] = useState(false);
 
   const handleScore = (id: string, score: number) => {
     setScores((prev) => ({ ...prev, [id]: score }));
+    setShowInsight(true);
     if (currentIdx < DISRUPTIONS.length - 1) {
-      setTimeout(() => setCurrentIdx((prev) => prev + 1), 300);
+      setTimeout(() => { setShowInsight(false); setCurrentIdx((prev) => prev + 1); }, 3500);
     } else {
-      setTimeout(() => setStep("results"), 500);
+      setTimeout(() => { setShowInsight(false); setStep("results"); }, 3500);
     }
   };
 
@@ -596,10 +607,41 @@ export default function AssessmentPage() {
                     ))}
                   </div>
 
+                  {/* Data point after selection */}
+                  <AnimatePresence>
+                    {showInsight && scores[DISRUPTIONS[currentIdx].id] && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4 }}
+                        style={{
+                          marginTop: 24,
+                          padding: "16px 20px",
+                          backgroundColor: "rgba(255,255,255,0.03)",
+                          borderLeft: `3px solid ${colors.coral}`,
+                          borderRadius: "0 10px 10px 0",
+                        }}
+                      >
+                        <p
+                          style={{
+                            fontFamily: body,
+                            fontSize: 13,
+                            color: colors.textSecondary,
+                            lineHeight: 1.65,
+                            margin: 0,
+                          }}
+                        >
+                          {DISRUPTIONS[currentIdx].dataPoint}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   {/* Back button */}
                   {currentIdx > 0 && (
                     <button
-                      onClick={() => setCurrentIdx((prev) => prev - 1)}
+                      onClick={() => { setShowInsight(false); setCurrentIdx((prev) => prev - 1); }}
                       style={{
                         background: "none", border: "none", color: colors.textMuted,
                         fontSize: 13, cursor: "pointer", fontFamily: body,

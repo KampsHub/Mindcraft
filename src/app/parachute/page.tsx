@@ -250,12 +250,13 @@ function Nav() {
         }}
       >
         <a href="/" style={{ textDecoration: "none" }}><Logo size={18} /></a>
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <a
           href="/login"
+          className="nav-signin"
           style={{
             fontFamily: body,
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: 500,
             color: "#ffffff",
             textDecoration: "none",
@@ -266,6 +267,7 @@ function Nav() {
         </a>
         <a
           href="#pricing"
+          className="nav-price-btn"
           style={{
             fontFamily: body,
             fontSize: 14,
@@ -278,7 +280,7 @@ function Nav() {
             transition: "all 0.2s",
           }}
         >
-          Sliding scale from $29
+          From $29
         </a>
         </div>
       </div>
@@ -3479,6 +3481,7 @@ function ResponsiveStyles() {
       @media (max-width: 520px) {
       }
       @media (max-width: 768px) {
+        .nav-signin { display: none !important; }
         .parachute-pers-grid { grid-template-columns: 1fr !important; }
         .parachute-arc-grid { grid-template-columns: 1fr 1fr !important; }
         .parachute-features-grid { grid-template-columns: 1fr !important; }

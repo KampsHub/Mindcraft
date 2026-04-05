@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,6 +21,17 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Store in Supabase (use service role to bypass RLS)
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    await supabase.from("waitlist_signups").upsert(
+      { email: email.toLowerCase().trim(), program },
+      { onConflict: "email,program" }
+    );
 
     // Send notification to team + confirmation to user
     const resend = new Resend(process.env.RESEND_API_KEY);

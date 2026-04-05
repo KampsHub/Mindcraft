@@ -12,6 +12,7 @@ import { colors, fonts } from "@/lib/theme";
 import GoalSlider from "@/components/GoalSlider";
 import ProgramSwitcher from "@/components/ProgramSwitcher";
 import UpsellSection from "@/app/dashboard/UpsellSection";
+import NPSPrompt from "@/components/NPSPrompt";
 
 /* ── Design tokens (matches dashboard/landing page) ── */
 const display = fonts.display;
@@ -1782,6 +1783,13 @@ function WeeklyReviewPage() {
               </>
             )}
           </div>
+        </FadeIn>
+      )}
+
+      {/* ── NPS ── */}
+      {weekComplete && (
+        <FadeIn preset="fade" delay={0.3} triggerOnMount>
+          <NPSPrompt enrollmentId={enrollment.id} weekNumber={weekNumber} />
         </FadeIn>
       )}
 

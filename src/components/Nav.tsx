@@ -11,7 +11,7 @@ const navLinks = [
   { href: "/dashboard", label: "Today" },
   { href: "/goals", label: "Plan & Progress" },
   { href: "/weekly-review", label: "Insights" },
-  { href: "/search", label: "Search" },
+  { href: "/search", label: "Search", icon: true },
 ];
 
 function ScrollProgress() {
@@ -78,19 +78,25 @@ export default function Nav() {
 
         {/* Desktop links */}
         <div style={{ display: "flex", alignItems: "center", gap: 4 }} className="nav-desktop desktop-nav-links">
-          {navLinks.map((link) => (
+          {navLinks.map((link: { href: string; label: string; icon?: boolean }) => (
             <button
               key={link.href}
               onClick={() => router.push(link.href)}
+              aria-label={link.label}
               style={{
-                padding: "6px 14px", fontSize: 14, fontWeight: 500,
+                padding: link.icon ? "6px 8px" : "6px 14px", fontSize: 14, fontWeight: 500,
                 color: isActive(link.href) ? colors.coral : colors.textPrimary,
                 backgroundColor: isActive(link.href) ? colors.coralWash : "transparent",
                 border: "none", borderRadius: 6, cursor: "pointer",
                 transition: "all 0.15s",
+                display: "flex", alignItems: "center",
               }}
             >
-              {link.label}
+              {link.icon ? (
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              ) : link.label}
             </button>
           ))}
           <div style={{ width: 1, height: 20, backgroundColor: colors.borderSubtle, margin: "0 8px" }} />

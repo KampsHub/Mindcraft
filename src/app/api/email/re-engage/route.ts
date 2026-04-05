@@ -81,12 +81,18 @@ async function handleReEngage(request: Request, dryRun: boolean) {
         continue; // Active recently, skip
       }
 
+      // Determine if this is a 7+ day inactive user (exit survey) or 3-day (re-engage)
+      const isExitSurveyCandidate = latestSession
+        ? latestSession.created_at < sevenDaysAgo
+        : true;
+
       // Check cooldown: don't re-engage if emailed in last 7 days
+      const emailType = isExitSurveyCandidate ? "exit_survey" : "re_engage";
       const { data: recentEmail } = await supabase
         .from("email_events")
         .select("id")
         .eq("user_id", enrollment.client_id)
-        .eq("event_type", "re_engage")
+        .eq("event_type", emailType)
         .gte("created_at", sevenDaysAgo)
         .limit(1)
         .single();
@@ -146,36 +152,73 @@ async function handleReEngage(request: Request, dryRun: boolean) {
         const { Resend } = await import("resend");
         const resend = new Resend(resendKey);
 
-        await resend.emails.send({
-          from: "Mindcraft <noreply@allmindsondeck.org>",
-          to: user.email,
-          subject,
-          html: `
-            <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, -apple-system, sans-serif;">
-              <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
-                <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
-                  You were on Day ${currentDay}. ${themeReference}
-                </p>
-                <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
-                  The program doesn&rsquo;t judge gaps. Pick up where you left off.
-                </p>
-                <div style="text-align: center; margin: 32px 0;">
-                  <a href="https://mindcraft.ing/dashboard" style="display: inline-block; padding: 14px 32px; background-color: #e09585; color: #18181c; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 100px;">
-                    Continue Day ${currentDay}
-                  </a>
+        if (isExitSurveyCandidate) {
+          // Exit survey email — 7+ days inactive
+          const exitSurveyUrl = process.env.EXIT_SURVEY_URL || "https://mindcraft.ing/contact";
+          await resend.emails.send({
+            from: "Mindcraft <crew@allmindsondeck.com>",
+            to: user.email,
+            subject: "Quick question before you go",
+            html: `
+              <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, -apple-system, sans-serif;">
+                <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
+                  <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
+                    It looks like you stepped away from ${programName}.
+                  </p>
+                  <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 12px 0;">
+                    No judgment &mdash; life happens. But your feedback would genuinely help us make this better for the next person.
+                  </p>
+                  <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
+                    Two questions, takes 30 seconds:
+                  </p>
+                  <div style="text-align: center; margin: 32px 0;">
+                    <a href="${exitSurveyUrl}" style="display: inline-block; padding: 14px 32px; background-color: #e09585; color: #18181c; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 100px;">
+                      Share quick feedback
+                    </a>
+                  </div>
+                  <p style="color: #a0a0a8; font-size: 14px; line-height: 1.6; margin: 24px 0 0 0; text-align: center;">
+                    Your program is still here if you want to come back. <a href="https://mindcraft.ing/dashboard" style="color: #e09585; text-decoration: none;">Continue Day ${currentDay} &rarr;</a>
+                  </p>
+                  <p style="font-size: 12px; color: #666; line-height: 1.5; margin: 20px 0 0 0; text-align: center;">
+                    Reply STOP to opt out of check-ins.
+                  </p>
                 </div>
-                <p style="font-size: 12px; color: #a0a0a8; line-height: 1.5; margin: 24px 0 0 0; text-align: center;">
-                  Reply STOP to opt out of check-ins.
-                </p>
               </div>
-            </div>
-          `,
-        });
+            `,
+          });
+        } else {
+          // Standard re-engage email — 3-7 days inactive
+          await resend.emails.send({
+            from: "Mindcraft <noreply@allmindsondeck.org>",
+            to: user.email,
+            subject,
+            html: `
+              <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, -apple-system, sans-serif;">
+                <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
+                  <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
+                    You were on Day ${currentDay}. ${themeReference}
+                  </p>
+                  <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
+                    The program doesn&rsquo;t judge gaps. Pick up where you left off.
+                  </p>
+                  <div style="text-align: center; margin: 32px 0;">
+                    <a href="https://mindcraft.ing/dashboard" style="display: inline-block; padding: 14px 32px; background-color: #e09585; color: #18181c; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 100px;">
+                      Continue Day ${currentDay}
+                    </a>
+                  </div>
+                  <p style="font-size: 12px; color: #a0a0a8; line-height: 1.5; margin: 24px 0 0 0; text-align: center;">
+                    Reply STOP to opt out of check-ins.
+                  </p>
+                </div>
+              </div>
+            `,
+          });
+        }
 
         // Log the email event for cooldown tracking
         await supabase.from("email_events").insert({
           user_id: enrollment.client_id,
-          event_type: "re_engage",
+          event_type: emailType,
           enrollment_id: enrollment.id,
         });
       }

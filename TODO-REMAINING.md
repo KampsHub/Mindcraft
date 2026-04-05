@@ -18,7 +18,7 @@
 - [ ] Skill progression badges on exercise cards (Awareness/Practice/Application/Integration by week)
 - [x] Assessment→action: update process-journal prompt to weight low-scoring domains ✅ DEPLOYED (queries Day 1 Seven Disruptions scores, injects into prompt, adds selection rule 7)
 - [ ] whyThis chunking: shorten 5-6 longest, move framework steps into primitive prompts
-- [ ] Exit survey email: 7 days inactive + not finished → email with survey link
+- [x] Exit survey email: 7 days inactive + not finished → email with survey link ✅ DEPLOYED (re-engage route now sends exit survey at 7+ days, re-engage at 3-7 days. Set EXIT_SURVEY_URL env var to Typeform URL when created.)
 - [x] AI graceful degradation: try/catch → "temporarily unavailable" + queue retry ✅ ALREADY IN PLACE (all 19 AI routes have try/catch with user-friendly errors, rate limiting, and auth checks)
 - [x] Async insight generation: don't block UI, show "Generating..." state ✅ ALREADY IN PLACE (ExerciseCard shows "Generating insight..." while loading, non-blocking)
 - [ ] Token cost tracking: aggregate api_logs by user → weekly report email

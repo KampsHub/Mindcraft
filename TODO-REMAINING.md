@@ -56,8 +56,8 @@
 - [ ] Call out all legal gaps explicitly to Stefanie for lawyer review.
 
 ## Documents to Write
-- [ ] GDPR rights implementation doc: how each right (access, correction, deletion, portability, restriction, objection, withdraw consent) is executed in product, gaps, what to build
-- [ ] Review CoachBot privacy policy (https://coachbot.ai/legal/privacy-policy) for ideas to adopt
+- [x] GDPR rights implementation doc: how each right (access, correction, deletion, portability, restriction, objection, withdraw consent) is executed in product, gaps, what to build ✅ WRITTEN (GDPR-RIGHTS-IMPLEMENTATION.md)
+- [x] Review CoachBot privacy policy (https://coachbot.ai/legal/privacy-policy) for ideas to adopt ✅ REVIEWED — key takeaways: (1) They explicitly name AI providers (OpenAI, Azure) — we should name Anthropic Claude more prominently, (2) They have separate data controller designations for coaches vs platform — not applicable to us yet, (3) They mention DPA per Article 28 — we reference this, (4) They use Termly for cookie compliance — we have custom banner, (5) They have 3-year DSR retention policy — we should add a data retention timeline, (6) They disclose cross-border transfers via standard contractual clauses — we should add this since Anthropic processes in the US. Items to consider adding to our policy: explicit data retention periods, cross-border transfer mechanism (SCCs), and explicit mention of Anthropic as AI processor.
 - [x] Privacy policy warm summary: "The short version" card at top with 6 bullet points ✅ DEPLOYED
 - [x] Rate limiting threshold answer ✅ ANSWERED: Current in-memory limiter works fine up to ~50-100 concurrent users. Vercel Hobby plan handles ~100 serverless function invocations/second. You need Redis when: (a) you consistently see 429 rate limit errors in Sentry, (b) you have 100+ daily active users making AI calls simultaneously, or (c) you upgrade to Vercel Pro with multiple regions. At current stage: not a concern. Revisit when you hit 500+ total enrolled users.
 - [ ] Update PRD with all remaining feature data storage once built

@@ -1903,10 +1903,10 @@ export default function Home() {
             })}
           </div>
 
-          {/* Outcomes — what's different in 30 days */}
+          {/* Outcomes — inline list */}
           {(c.steps as any).outcomes && (
-            <>
-              <FadeIn preset="slide-up" duration={0.8}>
+            <FadeIn preset="slide-up" duration={0.8}>
+              <div style={{ textAlign: "center", marginTop: 56, maxWidth: 600, marginLeft: "auto", marginRight: "auto" }}>
                 <p style={{
                   fontFamily: display,
                   fontSize: 12,
@@ -1914,91 +1914,25 @@ export default function Home() {
                   letterSpacing: 2,
                   textTransform: "uppercase" as const,
                   color: colors.coral,
-                  textAlign: "center",
-                  marginTop: 64,
-                  marginBottom: 10,
+                  marginBottom: 16,
                 }}>
                   After 30 days
                 </p>
-                <p style={{
-                  fontSize: 17,
-                  color: colors.textMuted,
-                  maxWidth: 560,
-                  margin: "0 auto 32px",
-                  lineHeight: 1.7,
-                  fontFamily: body,
-                  textAlign: "center",
-                }}>
-                  30 days of structure when you can&rsquo;t even finish your morning coffee.
-                </p>
-              </FadeIn>
-              <div
-                className="takeaways-grid"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, 1fr)",
-                  gap: 20,
-                  maxWidth: 900,
-                  margin: "0 auto",
-                }}
-              >
-                {(c.steps as any).outcomes.map((item: { title: string; desc: string }, i: number) => (
-                  <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">
-                    <motion.div
-                      whileHover={{ y: -4, borderColor: `rgba(196,148,58,0.3)` }}
-                      transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                      style={{
-                        padding: 28,
-                        backgroundColor: colors.bgSurface,
-                        borderRadius: 16,
-                        border: `1px solid ${colors.borderDefault}`,
-                        height: "100%",
-                        boxSizing: "border-box" as const,
-                      }}
-                    >
-                      <div style={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: 10,
-                        backgroundColor: `${colors.coral}15`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: 16,
-                      }}>
-                        <span style={{
-                          fontFamily: display,
-                          fontSize: 18,
-                          fontWeight: 600,
-                          color: colors.coral,
-                        }}>
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                      </div>
-                      <h3 style={{
-                        fontFamily: display,
-                        fontSize: 17,
-                        fontWeight: 700,
-                        lineHeight: 1.35,
-                        marginBottom: 10,
-                        color: colors.textPrimary,
-                      }}>
-                        {item.title}
-                      </h3>
-                      <p style={{
-                        fontSize: 14,
-                        color: colors.textMuted,
-                        lineHeight: 1.65,
-                        margin: 0,
-                        fontFamily: body,
-                      }}>
-                        {item.desc}
-                      </p>
-                    </motion.div>
-                  </FadeIn>
-                ))}
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {(c.steps as any).outcomes.map((item: { title: string; desc: string }, i: number) => (
+                    <p key={i} style={{
+                      fontFamily: body,
+                      fontSize: 15,
+                      color: colors.textMuted,
+                      lineHeight: 1.5,
+                      margin: 0,
+                    }}>
+                      <span style={{ color: colors.textPrimary, fontWeight: 600 }}>{item.title}.</span>{" "}{item.desc}
+                    </p>
+                  ))}
+                </div>
               </div>
-            </>
+            </FadeIn>
           )}
 
           {/* CTA */}

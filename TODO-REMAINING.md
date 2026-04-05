@@ -16,7 +16,7 @@
 - [ ] Spaced retrieval: RetrievalCheck exercises on Days 7, 14, 21 (seed data update)
 - [ ] Progress visualization: "Then vs Now" card on weekly review page
 - [ ] Skill progression badges on exercise cards (Awareness/Practice/Application/Integration by week)
-- [ ] Assessment→action: update process-journal prompt to weight low-scoring domains
+- [x] Assessment→action: update process-journal prompt to weight low-scoring domains ✅ DEPLOYED (queries Day 1 Seven Disruptions scores, injects into prompt, adds selection rule 7)
 - [ ] whyThis chunking: shorten 5-6 longest, move framework steps into primitive prompts
 - [ ] Exit survey email: 7 days inactive + not finished → email with survey link
 - [x] AI graceful degradation: try/catch → "temporarily unavailable" + queue retry ✅ ALREADY IN PLACE (all 19 AI routes have try/catch with user-friendly errors, rate limiting, and auth checks)

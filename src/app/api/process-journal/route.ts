@@ -65,6 +65,7 @@ Return valid JSON (no markdown, no code fences):
    - Explain WHY it works (the neuroscience/psychology in one sentence)
    - THEN give the steps
 6. IMPORTANT: Your total output should be SHORT. If the user wrote 50 words, keep readings brief. But exercises always need full context + steps regardless of journal length.
+7. **Assessment weighting**: If disruption assessment scores are provided, weight exercise selection toward low-scoring domains (scores ≤ 4). When the journal touches on a low-scoring area, the exercise should feel directly responsive to both what they wrote AND the underlying disruption. This does NOT mean every exercise must address a low-scoring domain — journal relevance always comes first — but when choosing between equally relevant options, prefer exercises that address disrupted areas.
 9. **Framework attribution**: When selecting a framework, use its exact official name and originator as listed in the library. Specifically: "The Seven Levels of Personal, Group and Organizational Effectiveness" must always use the full name and be attributed to BEabove Leadership (© BEabove Leadership). Never abbreviate or paraphrase copyrighted framework names.
 10. SAFETY — urgency_level guide:
   - "low": Normal emotional processing. Sadness, frustration, grief, anger about job loss, self-doubt, feeling stuck — these are ALL normal and expected in a coaching context. Keep urgency "low" for these.
@@ -181,6 +182,53 @@ System notes: ${programDay.system_notes || "none"}`;
       }
     }
 
+    // Fetch Day 1 disruption inventory scores (assessment data)
+    let disruptionScoresContext = "";
+    if (dayNumber > 1) {
+      const { data: disruptionExercise } = await supabase
+        .from("exercise_completions")
+        .select("responses")
+        .eq("enrollment_id", enrollmentId)
+        .ilike("framework_name", "%Seven Disruptions%")
+        .order("completed_at", { ascending: true })
+        .limit(1)
+        .single();
+
+      if (disruptionExercise?.responses) {
+        try {
+          const responses = disruptionExercise.responses as Record<string, string>;
+          // Extract scores — stored as JSON in the "main" response field or as direct key-value pairs
+          const mainData = responses.main ? JSON.parse(responses.main) : responses;
+          const scores: { domain: string; score: number }[] = [];
+
+          for (const [key, val] of Object.entries(mainData)) {
+            const numVal = typeof val === "number" ? val : parseFloat(val as string);
+            if (!isNaN(numVal) && numVal >= 1 && numVal <= 10) {
+              scores.push({ domain: key, score: numVal });
+            }
+          }
+
+          if (scores.length > 0) {
+            // Sort by score ascending — lowest scores = most disrupted = highest priority
+            scores.sort((a, b) => a.score - b.score);
+            const lowScoring = scores.filter((s) => s.score <= 4);
+            const highScoring = scores.filter((s) => s.score >= 7);
+
+            disruptionScoresContext = `
+## Disruption Assessment Scores (Day 1 baseline)
+${scores.map((s) => `- ${s.domain}: ${s.score}/10`).join("\n")}
+
+${lowScoring.length > 0 ? `**Most disrupted areas (prioritize exercises here):** ${lowScoring.map((s) => s.domain).join(", ")}` : ""}
+${highScoring.length > 0 ? `**Strengths (less urgent):** ${highScoring.map((s) => s.domain).join(", ")}` : ""}
+
+When selecting overflow exercises, weight toward the most disrupted domains. If the journal touches on a low-scoring area, that exercise should feel directly responsive to both what they wrote AND what the assessment revealed.`;
+          }
+        } catch {
+          // Non-blocking — if scores can't be parsed, proceed without them
+        }
+      }
+    }
+
     // Build the prompt — group frameworks by modality for Claude
     const frameworksByModality: Record<string, Record<string, unknown>[]> = {};
     candidateFrameworks.forEach((f) => {
@@ -211,6 +259,7 @@ ${programDayContext}
 ${activeGoals && activeGoals.length > 0
   ? activeGoals.map((g) => `- ${g.goal_text}`).join("\n")
   : "No active goals yet."}
+${disruptionScoresContext}
 
 ## Recently Used Exercises (do NOT repeat)
 ${recentCompletions && recentCompletions.length > 0

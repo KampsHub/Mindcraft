@@ -149,6 +149,9 @@ const quickLinks = [
   { href: "/mindful-journal", label: "Journal", desc: "Write freely", icon: "✎", accent: colors.coral },
   { href: "/goals", label: "Plan & Progress", desc: "Goals & milestones", icon: "◎", accent: colors.coral },
   { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻", accent: colors.coral },
+  { href: "/search", label: "Search", desc: "Past exercises & entries", icon: "⌕", accent: colors.coral },
+  { href: "/contact?type=coach", label: "Ask a Coach", desc: "Get human support", icon: "💬", accent: colors.coral },
+  { href: "/contact?type=bug", label: "Report a Bug", desc: "Something broken?", icon: "🐛", accent: colors.coral },
 ];
 
 class DashboardErrorBoundary extends React.Component<

@@ -239,6 +239,33 @@ export default function AdminDashboard() {
           )}
         </div>
 
+        {/* ── Top Users by Cost ── */}
+        {tokenData && tokenData.topUsers && tokenData.topUsers.length > 0 && (
+          <div style={cardStyle}>
+            <h2 style={{ fontFamily: display, fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Top Users by Cost</h2>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: body, fontSize: 13 }}>
+                <thead>
+                  <tr style={{ borderBottom: `1px solid ${colors.borderDefault}` }}>
+                    <th style={{ padding: "8px 12px", textAlign: "left", color: colors.textMuted, fontWeight: 500 }}>User ID</th>
+                    <th style={{ padding: "8px 12px", textAlign: "right", color: colors.textMuted, fontWeight: 500 }}>Calls</th>
+                    <th style={{ padding: "8px 12px", textAlign: "right", color: colors.textMuted, fontWeight: 500 }}>Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tokenData.topUsers.map((u) => (
+                    <tr key={u.userId} style={{ borderBottom: `1px solid ${colors.borderSubtle}` }}>
+                      <td style={{ padding: "8px 12px", color: colors.textSecondary, fontFamily: "monospace", fontSize: 11 }}>{u.userId.slice(0, 8)}...</td>
+                      <td style={{ padding: "8px 12px", textAlign: "right", color: colors.textSecondary }}>{u.calls}</td>
+                      <td style={{ padding: "8px 12px", textAlign: "right", color: colors.textPrimary }}>${u.totalCost}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {/* ── Quick Links ── */}
         <div style={cardStyle}>
           <h2 style={{ fontFamily: display, fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Quick Links</h2>

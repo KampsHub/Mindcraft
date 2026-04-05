@@ -148,7 +148,7 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 |---------|-------|--------|
 | Sentry | DSN env var in Vercel | Config ready — activate |
 | ~~Quality monitoring cron~~ | ~~Vercel Cron job setup~~ | ✅ Already scheduled in vercel.json: `0 16 * * 1` (Monday 4 PM UTC) |
-| Token cost tracking | Admin query on `api_logs` | Table exists — build query and send to Stefanie |
+| ~~Token cost tracking~~ | ~~Admin query on `api_logs`~~ | ✅ Top users by cost table added to `/admin` dashboard |
 
 ### Known Technical Debt
 
@@ -186,6 +186,7 @@ All of these are tracked automatically — no action needed from Stefanie. To re
 | Staging deploys | Vercel | `develop` branch → preview URLs | infra |
 
 ### Quick Fixes
+- [ ] Test post-login experience on mobile (dashboard, day flow, exercises)
 
 
 ### MEDIUM — Important for Retention
@@ -214,6 +215,35 @@ All of these are tracked automatically — no action needed from Stefanie. To re
     - **Sanity.io** (recommended): Free tier, real-time preview, structured content. ~2-3 days to set up schema + migrate homepage/program content. Exercise content stays in Supabase.
     - **Contentlayer + MDX**: No external service, content lives in repo as markdown. Simpler but no visual editor. ~1 day.
     - **Keep as-is**: If content changes are infrequent and you're comfortable editing `site.ts`, a CMS adds complexity without much benefit at this stage.
+
+### Product Design Decisions
+
+**A. Spaced retrieval integration**
+Should RetrievalCheck exercises be auto-inserted at Day+3 intervals, or manually designed per concept?
+
+**Trade-off:** Automatic insertion is scalable — the system inserts a retrieval quiz 3 days after any concept-heavy exercise, pulling the original content forward. But it can feel mechanical ("quiz on Day 7 content") and may not match the emotional arc. Curated retrieval means each retrieval moment is designed to land at the right point in the program — but it's more work per program and harder to maintain. **Recommendation:** Hybrid — auto-insert retrieval at Day+3 as a default, but allow manual overrides in the day_content table where the arc demands it. The auto-inserted ones use a generic "what do you remember?" format; the curated ones can be richer.
+
+**B. Commitment follow-through system** — ✅ Decision made.
+- Next day after a commitment: check if user followed through
+- If they didn't: surface again in weekly insights
+- Weekly insights: review all commitments from the week's dailies
+- **Implementation:** Pull `exercise_completions.responses` for commitment-type exercises, carry forward to next day's journal thread + weekly insights API. Needs: a `commitment` tag on exercise responses, a query in `process-journal` and `weekly-insights` to pull recent commitments.
+
+**C. Progress visualization**
+What should "you improved by X" look like?
+
+**Suggestion for "X":** The most meaningful progress metrics are:
+- **Pattern frequency shift** — "In Week 1 you mentioned [fear of judgment] in 4/5 entries. In Week 3, it appeared once." Shows the pattern loosening.
+- **Self-awareness language** — Track shift from reactive language ("they made me feel") to reflective ("I noticed I felt"). Measurable via NLP.
+- **Mood/rating trend** — `day_rating` over time (already tracked). Simple line chart.
+- **Exercise engagement** — Rating trend + feedback quality over time.
+- **Goal progress** — Weekly goal ratings (already in `weekly_reviews`).
+Best format: a mix — one narrative sentence ("Your relationship with self-doubt has shifted") backed by one small chart (rating trend). Not just numbers, not just words.
+
+**D. Exercise difficulty labeling** — ✅ Decision made.
+- Do NOT show Awareness/Practice/Application/Integration labels to users
+- Use them internally to audit program balance — if too many Awareness exercises cluster in later weeks, flag it as a quality issue in the weekly audit
+- **Implementation:** The `bloom_level` field on exercises (from `add-bloom-labels.sql`) already tracks this. Add a check in `/api/quality-audit` that flags programs with >50% Awareness exercises after Day 14.
 
 ---
 

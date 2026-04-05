@@ -77,6 +77,7 @@ function GoalsPage() {
   const [exerciseCount, setExerciseCount] = useState(0);
   const [journalEntryCount, setJournalEntryCount] = useState(0);
   const [totalCompletedSessions, setTotalCompletedSessions] = useState(0);
+  const [allSessions, setAllSessions] = useState<DailySession[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [enneagramData, setEnneagramData] = useState<EnneagramAnalysis | null>(null);
   const [weekNumber, setWeekNumber] = useState(1);
@@ -139,11 +140,13 @@ function GoalsPage() {
         .order("day_number", { ascending: true });
       if (weekSessions) setSessions(weekSessions);
 
-      // Also fetch ALL sessions for total counts
+      // Also fetch ALL sessions for total counts + calendar
       const { data: totalSessions } = await supabase
         .from("daily_sessions")
-        .select("id, completed_at")
-        .eq("enrollment_id", selectedEnrollment.id);
+        .select("id, day_number, completed_at")
+        .eq("enrollment_id", selectedEnrollment.id)
+        .order("day_number", { ascending: true });
+      setAllSessions(totalSessions || []);
       setTotalCompletedSessions(totalSessions?.filter((s: { completed_at: string | null }) => s.completed_at).length || 0);
 
       // Count ALL exercises across the entire program
@@ -593,6 +596,62 @@ function GoalsPage() {
           />
         </div>
       </FadeIn>
+
+      {/* ── 30-Day Calendar ── */}
+      {allSessions.length > 0 && enrollment && (
+        <FadeIn preset="fade" delay={0.12} triggerOnMount>
+          <div style={{ marginBottom: 32 }}>
+            <h2 style={{
+              fontFamily: display, fontSize: 16, fontWeight: 700,
+              color: colors.textPrimary, margin: "0 0 14px 0", letterSpacing: "-0.02em",
+            }}>
+              Your 30 days
+            </h2>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(7, 1fr)",
+              gap: 4,
+            }}>
+              {Array.from({ length: 30 }, (_, i) => {
+                const dayNum = i + 1;
+                const session = allSessions.find(s => s.day_number === dayNum);
+                const isCompleted = session?.completed_at != null;
+                const isStarted = !!session && !isCompleted;
+                const isCurrent = dayNum === enrollment.current_day;
+                const isFuture = dayNum > enrollment.current_day;
+
+                return (
+                  <div
+                    key={dayNum}
+                    style={{
+                      aspectRatio: "1",
+                      borderRadius: 6,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 11,
+                      fontFamily: display,
+                      fontWeight: isCurrent ? 700 : 500,
+                      color: isCompleted ? colors.bgDeep : isCurrent ? colors.coral : isFuture ? colors.textMuted : colors.textSecondary,
+                      backgroundColor: isCompleted
+                        ? colors.coral
+                        : isCurrent
+                          ? `${colors.coral}20`
+                          : isStarted
+                            ? `${colors.coral}10`
+                            : colors.bgElevated,
+                      border: isCurrent ? `1.5px solid ${colors.coral}` : "1px solid transparent",
+                      opacity: isFuture ? 0.4 : 1,
+                    }}
+                  >
+                    {dayNum}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </FadeIn>
+      )}
 
       {/* ── Enneagram Section ── */}
       <FadeIn preset="fade" delay={0.12} triggerOnMount>

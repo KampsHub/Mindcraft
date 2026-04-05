@@ -433,20 +433,79 @@ export default function AssessmentPage() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
             >
-              {/* Progress */}
-              <div style={{ display: "flex", gap: 4, marginBottom: 32 }}>
-                {DISRUPTIONS.map((_, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      flex: 1,
-                      height: 3,
-                      borderRadius: 2,
-                      backgroundColor: i <= currentIdx ? colors.coral : colors.borderDefault,
-                      transition: "background-color 0.3s",
-                    }}
-                  />
-                ))}
+              {/* Live mini radial chart — builds as user answers */}
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
+                <svg viewBox="0 0 200 200" width="120" height="120">
+                  {DISRUPTIONS.map((d, i) => {
+                    const total = DISRUPTIONS.length;
+                    const angleStep = (2 * Math.PI) / total;
+                    const startAngle = i * angleStep - Math.PI / 2;
+                    const endAngle = startAngle + angleStep;
+                    const gap = 0.04;
+                    const cx = 100, cy = 100;
+                    const innerR = 38;
+                    const maxOuterR = 90;
+                    const score = scores[d.id] || 0;
+                    const outerR = innerR + (maxOuterR - innerR) * (score / 10);
+                    const isActive = i === currentIdx;
+                    const isAnswered = score > 0;
+
+                    const x1 = cx + outerR * Math.cos(startAngle + gap);
+                    const y1 = cy + outerR * Math.sin(startAngle + gap);
+                    const x2 = cx + outerR * Math.cos(endAngle - gap);
+                    const y2 = cy + outerR * Math.sin(endAngle - gap);
+                    const x3 = cx + innerR * Math.cos(endAngle - gap);
+                    const y3 = cy + innerR * Math.sin(endAngle - gap);
+                    const x4 = cx + innerR * Math.cos(startAngle + gap);
+                    const y4 = cy + innerR * Math.sin(startAngle + gap);
+
+                    // Empty segment outline
+                    const emptyR = maxOuterR;
+                    const ex1 = cx + emptyR * Math.cos(startAngle + gap);
+                    const ey1 = cy + emptyR * Math.sin(startAngle + gap);
+                    const ex2 = cx + emptyR * Math.cos(endAngle - gap);
+                    const ey2 = cy + emptyR * Math.sin(endAngle - gap);
+                    const ex3 = cx + innerR * Math.cos(endAngle - gap);
+                    const ey3 = cy + innerR * Math.sin(endAngle - gap);
+                    const ex4 = cx + innerR * Math.cos(startAngle + gap);
+                    const ey4 = cy + innerR * Math.sin(startAngle + gap);
+
+                    const segColor = score >= 7 ? colors.coral : score >= 4 ? "#60a5fa" : "#34d399";
+
+                    return (
+                      <g key={d.id}>
+                        {/* Empty outline */}
+                        <path
+                          d={`M ${ex1} ${ey1} A ${emptyR} ${emptyR} 0 0 1 ${ex2} ${ey2} L ${ex3} ${ey3} A ${innerR} ${innerR} 0 0 0 ${ex4} ${ey4} Z`}
+                          fill="none"
+                          stroke={isActive ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)"}
+                          strokeWidth={isActive ? "1.5" : "0.5"}
+                        />
+                        {/* Filled segment */}
+                        {isAnswered && (
+                          <motion.path
+                            d={`M ${x1} ${y1} A ${outerR} ${outerR} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 0 0 ${x4} ${y4} Z`}
+                            fill={`${segColor}50`}
+                            stroke={segColor}
+                            strokeWidth="1"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            style={{ transformOrigin: `${cx}px ${cy}px` }}
+                          />
+                        )}
+                      </g>
+                    );
+                  })}
+                  {/* Center */}
+                  <circle cx="100" cy="100" r="36" fill={colors.bgDeep} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+                  <text x="100" y="97" textAnchor="middle" dominantBaseline="middle" fill={colors.textMuted} fontSize="9" fontFamily={display} fontWeight="600">
+                    {Object.keys(scores).length}/{DISRUPTIONS.length}
+                  </text>
+                  <text x="100" y="110" textAnchor="middle" dominantBaseline="middle" fill="rgba(255,255,255,0.3)" fontSize="6" fontFamily={body}>
+                    answered
+                  </text>
+                </svg>
               </div>
 
               <AnimatePresence mode="wait">
@@ -517,12 +576,12 @@ export default function AssessmentPage() {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleScore(DISRUPTIONS[currentIdx].id, n)}
                         style={{
-                          width: 44,
-                          height: 44,
+                          width: 40,
+                          height: 40,
                           borderRadius: 8,
-                          border: `1px solid ${scores[DISRUPTIONS[currentIdx].id] === n ? colors.coral : colors.borderDefault}`,
+                          border: `1px solid ${scores[DISRUPTIONS[currentIdx].id] === n ? (n >= 7 ? colors.coral : n >= 4 ? "#60a5fa" : "#34d399") : colors.borderDefault}`,
                           backgroundColor: scores[DISRUPTIONS[currentIdx].id] === n
-                            ? `${colors.coral}30`
+                            ? `${n >= 7 ? colors.coral : n >= 4 ? "#60a5fa" : "#34d399"}30`
                             : "transparent",
                           color: colors.textPrimary,
                           fontFamily: display,

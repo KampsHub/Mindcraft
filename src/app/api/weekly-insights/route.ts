@@ -115,6 +115,32 @@ export async function POST(request: Request) {
       .lte("day_number", endDay)
       .order("day_number", { ascending: true });
 
+    // Fetch previous week's key themes for shift detection
+    let prevWeekContext = "";
+    if (weekNumber > 1) {
+      const prevStart = (weekNumber - 2) * 7 + 1;
+      const prevEnd = (weekNumber - 1) * 7;
+      const { data: prevSessions } = await supabase
+        .from("daily_sessions")
+        .select("day_number, step_5_summary")
+        .eq("enrollment_id", enrollmentId)
+        .gte("day_number", prevStart)
+        .lte("day_number", prevEnd)
+        .order("day_number", { ascending: true });
+      if (prevSessions && prevSessions.length > 0) {
+        const prevThemes = prevSessions
+          .map(s => {
+            const summary = s.step_5_summary as Record<string, unknown> | null;
+            const themes = (summary?.today_themes as string[]) || [];
+            return themes.length > 0 ? `Day ${s.day_number}: ${themes.join(", ")}` : null;
+          })
+          .filter(Boolean);
+        if (prevThemes.length > 0) {
+          prevWeekContext = `\n## Previous Week's Themes (for shift detection)\n${prevThemes.join("\n")}\nCompare this week's tone, language, and themes to last week. If something shifted — a topic that disappeared, a new one that emerged, or a change in how they talk about something — name it as a "shift" insight.`;
+        }
+      }
+    }
+
     const sIds = sessions?.map((s) => s.id) || [];
 
     let exercises: { framework_name: string; exercise_type: string; modality: string | null; responses: Record<string, unknown>; star_rating: number | null; daily_session_id: string }[] = [];
@@ -197,6 +223,8 @@ ${sessions && sessions.length > 0
         : "No explicit commitments made this week.";
     })()
   : "No sessions this week."}
+
+${prevWeekContext}
 
 Generate the key insights for Week ${weekNumber}.`;
 

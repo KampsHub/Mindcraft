@@ -118,7 +118,7 @@ export const content = {
 
   // ── How it works ──
   steps: {
-    headline: "How it works",
+    headline: "How it works \u2014 and what it does.",
     subheadline: "",
     items: [
       {
@@ -150,6 +150,24 @@ export const content = {
         icon: "human",
         title: "Call a Coach.",
         desc: "Reach out to professional coaches who you can easily share your data with. Fast data handover if you need it.",
+      },
+    ],
+    outcomes: [
+      {
+        title: "See clearly",
+        desc: "Name the patterns underneath the panic \u2014 what triggers you, what you avoid, what keeps looping.",
+      },
+      {
+        title: "Handle the anxiety",
+        desc: "Exercises that change how you actually respond under pressure \u2014 the 1:1, the spiral, the interview.",
+      },
+      {
+        title: "Pick up real insight",
+        desc: "Track your own shifts week over week. When your brain says \u2018nothing\u2019s working,\u2019 you have data.",
+      },
+      {
+        title: "Keep the tools",
+        desc: "Evidence-based frameworks explained in plain language. By Day 30, you know which ones work for you.",
       },
     ],
   },

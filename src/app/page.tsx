@@ -1768,7 +1768,7 @@ export default function Home() {
                 textAlign: "center",
               }}
             >
-              How it works
+              How it works — and what it does.
             </h2>
           </FadeIn>
 
@@ -1902,6 +1902,104 @@ export default function Home() {
               );
             })}
           </div>
+
+          {/* Outcomes — what's different in 30 days */}
+          {(c.steps as any).outcomes && (
+            <>
+              <FadeIn preset="slide-up" duration={0.8}>
+                <p style={{
+                  fontFamily: display,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: 2,
+                  textTransform: "uppercase" as const,
+                  color: colors.coral,
+                  textAlign: "center",
+                  marginTop: 64,
+                  marginBottom: 10,
+                }}>
+                  After 30 days
+                </p>
+                <p style={{
+                  fontSize: 17,
+                  color: colors.textMuted,
+                  maxWidth: 560,
+                  margin: "0 auto 32px",
+                  lineHeight: 1.7,
+                  fontFamily: body,
+                  textAlign: "center",
+                }}>
+                  30 days of structure when you can&rsquo;t even finish your morning coffee.
+                </p>
+              </FadeIn>
+              <div
+                className="takeaways-grid"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 1fr)",
+                  gap: 20,
+                  maxWidth: 900,
+                  margin: "0 auto",
+                }}
+              >
+                {(c.steps as any).outcomes.map((item: { title: string; desc: string }, i: number) => (
+                  <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">
+                    <motion.div
+                      whileHover={{ y: -4, borderColor: `rgba(196,148,58,0.3)` }}
+                      transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                      style={{
+                        padding: 28,
+                        backgroundColor: colors.bgSurface,
+                        borderRadius: 16,
+                        border: `1px solid ${colors.borderDefault}`,
+                        height: "100%",
+                        boxSizing: "border-box" as const,
+                      }}
+                    >
+                      <div style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: 10,
+                        backgroundColor: `${colors.coral}15`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: 16,
+                      }}>
+                        <span style={{
+                          fontFamily: display,
+                          fontSize: 18,
+                          fontWeight: 600,
+                          color: colors.coral,
+                        }}>
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+                      <h3 style={{
+                        fontFamily: display,
+                        fontSize: 17,
+                        fontWeight: 700,
+                        lineHeight: 1.35,
+                        marginBottom: 10,
+                        color: colors.textPrimary,
+                      }}>
+                        {item.title}
+                      </h3>
+                      <p style={{
+                        fontSize: 14,
+                        color: colors.textMuted,
+                        lineHeight: 1.65,
+                        margin: 0,
+                        fontFamily: body,
+                      }}>
+                        {item.desc}
+                      </p>
+                    </motion.div>
+                  </FadeIn>
+                ))}
+              </div>
+            </>
+          )}
 
           {/* CTA */}
           <FadeIn preset="fade" delay={0.6} duration={0.8}>
@@ -2083,113 +2181,6 @@ export default function Home() {
       {/* ── Social Proof ── */}
       <SocialProof />
 
-      {/* ── Takeaways ── */}
-      <section style={{ paddingTop: 80, paddingBottom: 96, paddingLeft: 24, paddingRight: 24 }}>
-        <div style={{ maxWidth, margin: "0 auto" }}>
-          <FadeIn preset="slide-up" duration={0.8}>
-            <div style={{ textAlign: "center", marginBottom: 56 }}>
-              <p style={{
-                fontFamily: body,
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: 2,
-                textTransform: "uppercase" as const,
-                color: colors.coral,
-                marginBottom: 14,
-              }}>
-                After 30 days
-              </p>
-              <h2 style={{
-                fontFamily: display,
-                fontSize: "clamp(32px, 5vw, 52px)",
-                fontWeight: 700,
-                color: colors.textPrimary,
-                letterSpacing: "-0.03em",
-                marginBottom: 12,
-              }}>
-                {c.takeaways.headline}
-              </h2>
-              <p style={{
-                fontSize: 17,
-                color: colors.textMuted,
-                maxWidth: 560,
-                margin: "0 auto",
-                lineHeight: 1.7,
-                fontFamily: body,
-              }}>
-                {c.takeaways.subheadline}
-              </p>
-            </div>
-          </FadeIn>
-
-          <div
-            className="takeaways-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 20,
-              maxWidth: 900,
-              margin: "0 auto",
-            }}
-          >
-            {c.takeaways.items.map((item, i) => (
-              <FadeIn key={i} delay={0.1 + i * 0.1} preset="slide-up">
-                <motion.div
-                  whileHover={{ y: -4, borderColor: `rgba(196,148,58,0.3)` }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  style={{
-                    padding: 28,
-                    backgroundColor: colors.bgSurface,
-                    borderRadius: 16,
-                    border: `1px solid ${colors.borderDefault}`,
-                    height: "100%",
-                    boxSizing: "border-box" as const,
-                  }}
-                >
-                  <div style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 10,
-                    backgroundColor: `${colors.coral}15`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 16,
-                  }}>
-                    <span style={{
-                      fontFamily: display,
-                      fontSize: 18,
-                      fontWeight: 600,
-                      color: colors.coral,
-                    }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                  <h3 style={{
-                    fontFamily: display,
-                    fontSize: 17,
-                    fontWeight: 700,
-                    lineHeight: 1.35,
-                    marginBottom: 10,
-                    color: colors.textPrimary,
-                  }}>
-                    {item.title}
-                  </h3>
-                  <p style={{
-                    fontSize: 14,
-                    color: colors.textMuted,
-                    lineHeight: 1.65,
-                    margin: 0,
-                    fontFamily: body,
-                  }}>
-                    {item.desc}
-                  </p>
-                </motion.div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── Who Built This ── */}
       <section

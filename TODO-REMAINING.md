@@ -10,7 +10,7 @@
 - [x] Specific error messages: journal processing improved ✅ DEPLOYED (exercise save, payment, auth still pending)
 - [x] Re-enrollment CTA after program completion ✅ DEPLOYED
 - [x] 7-day money-back guarantee copy on all 3 program pricing sections ✅ DEPLOYED
-- [ ] Verify sandbox/production separation (test prePopulated doesn't leak)
+- [x] Verify sandbox/production separation ✅ CONFIRMED (no prePopulated imports in production, primitives receive data via props only)
 
 ## Medium Effort (~2-3 hrs each)
 - [ ] Spaced retrieval: RetrievalCheck exercises on Days 7, 14, 21 (seed data update)

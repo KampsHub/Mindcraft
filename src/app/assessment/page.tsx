@@ -432,7 +432,7 @@ export default function AssessmentPage() {
 
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                   <motion.a
-                    href="/parachute"
+                    href="/#programs"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     style={{

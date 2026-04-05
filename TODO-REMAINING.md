@@ -97,38 +97,23 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 ### HIGH — Needed for Quality Launch
 
 
-
 ### Known Technical Debt
 
 8. **In-memory rate limiting** — Current rate limiting uses in-memory counters. On Vercel, each request can hit a different serverless instance, so counters don't share state. At scale (100+ concurrent users), limits won't be enforced consistently. **Fix:** Add Redis (e.g., Upstash) as a shared counter store. ~2 hours of work.
 
 9. **No unit/integration tests** — Only manual `TEST-PLAN.md`. **To start:** Set up Vitest (fast, Vite-native) for unit tests + Playwright for integration tests. Start with: API route tests (process-journal, daily-exercise) and critical UI flows (login → dashboard → day 1). ~1 day for setup + first 10 tests.
 
-### Quick Fixes
-- [ ] Test post-login experience on mobile (dashboard, day flow, exercises)
-
 
 ### MEDIUM — Important for Retention
-
-8. **User-facing analytics** — Users see no progress metrics beyond day count. Suggestion: Surface on the Insights page — patterns detected over time, exercise completion rate, mood/rating trends, most-used frameworks, streak data. Could use recharts (already installed) to show week-over-week shifts.
 
 9. **Search past entries** — Can't search journal entries or exercises. Suggestion: Add a search page or search bar on the journal/exercises pages. Use Supabase full-text search (`to_tsvector` + `to_tsquery`) on `free_flow_entries.content` and `exercise_completions.responses`. No external search service needed at current scale.
 
 ### Product Design Decisions
 
-**A. Spaced retrieval integration**
-Should RetrievalCheck exercises be auto-inserted at Day+3 intervals, or manually designed per concept?
-
-**Trade-off:** Automatic insertion is scalable — the system inserts a retrieval quiz 3 days after any concept-heavy exercise, pulling the original content forward. But it can feel mechanical ("quiz on Day 7 content") and may not match the emotional arc. Curated retrieval means each retrieval moment is designed to land at the right point in the program — but it's more work per program and harder to maintain. **Recommendation:** Hybrid — auto-insert retrieval at Day+3 as a default, but allow manual overrides in the day_content table where the arc demands it. The auto-inserted ones use a generic "what do you remember?" format; the curated ones can be richer.
-
-**B. Commitment follow-through system** — ✅ Built and shipped.
-- Daily themes: Thread now acknowledges yesterday's commitments
-- Process journal: Exercise selection responds to commitment follow-through
-- Weekly insights: Aggregates all week's commitments and reviews follow-through
-- Data flows through `step_5_summary.extracted_commitments` → next day's prompt → weekly aggregation
-
-**C. Progress visualization**
-What should "you improved by X" look like?
+**A. Spaced retrieval integration** — ✅ Decision made.
+- Curate retrieval and insert in weekly insights (not auto-inserted daily)
+- Weekly insights API should reference key concepts from the week's exercises and ask "what do you remember?"
+- **To build:** Add exercise concept references to weekly-insights prompt for natural retrieval.
 
 **Suggestion for "X":** The most meaningful progress metrics are:
 - **Pattern frequency shift** — "In Week 1 you mentioned [fear of judgment] in 4/5 entries. In Week 3, it appeared once." Shows the pattern loosening.

@@ -142,49 +142,160 @@ export default function AssessmentPage() {
           {step === "intro" && (
             <motion.div
               key="intro"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.6 }}
+              style={{ textAlign: "center" }}
             >
-              <h1
+              {/* Radial diagram */}
+              <motion.div
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                style={{ position: "relative", width: 340, height: 340, margin: "0 auto 40px" }}
+              >
+                <svg viewBox="0 0 340 340" width="340" height="340">
+                  {/* Outer ring segments */}
+                  {DISRUPTIONS.map((d, i) => {
+                    const total = DISRUPTIONS.length;
+                    const angleStep = (2 * Math.PI) / total;
+                    const startAngle = i * angleStep - Math.PI / 2;
+                    const endAngle = startAngle + angleStep;
+                    const gap = 0.02;
+                    const outerR = 165;
+                    const innerR = 95;
+                    const cx = 170, cy = 170;
+
+                    const x1 = cx + outerR * Math.cos(startAngle + gap);
+                    const y1 = cy + outerR * Math.sin(startAngle + gap);
+                    const x2 = cx + outerR * Math.cos(endAngle - gap);
+                    const y2 = cy + outerR * Math.sin(endAngle - gap);
+                    const x3 = cx + innerR * Math.cos(endAngle - gap);
+                    const y3 = cy + innerR * Math.sin(endAngle - gap);
+                    const x4 = cx + innerR * Math.cos(startAngle + gap);
+                    const y4 = cy + innerR * Math.sin(startAngle + gap);
+
+                    const midAngle = (startAngle + endAngle) / 2;
+                    const labelR = 132;
+                    const lx = cx + labelR * Math.cos(midAngle);
+                    const ly = cy + labelR * Math.sin(midAngle);
+                    const rotation = (midAngle * 180) / Math.PI + (midAngle > Math.PI / 2 && midAngle < (3 * Math.PI) / 2 ? 180 : 0);
+
+                    return (
+                      <g key={d.id}>
+                        <motion.path
+                          d={`M ${x1} ${y1} A ${outerR} ${outerR} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 0 0 ${x4} ${y4} Z`}
+                          fill="rgba(255,255,255,0.04)"
+                          stroke="rgba(255,255,255,0.12)"
+                          strokeWidth="1"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.3 + i * 0.08 }}
+                        />
+                        <motion.text
+                          x={lx}
+                          y={ly}
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          transform={`rotate(${rotation}, ${lx}, ${ly})`}
+                          fill={colors.textSecondary}
+                          fontSize="9"
+                          fontFamily={display}
+                          fontWeight="600"
+                          letterSpacing="0.04em"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.5 + i * 0.08 }}
+                        >
+                          {d.label.toUpperCase()}
+                        </motion.text>
+                      </g>
+                    );
+                  })}
+
+                  {/* Inner circle */}
+                  <motion.circle
+                    cx="170" cy="170" r="80"
+                    fill="rgba(196,148,58,0.06)"
+                    stroke="rgba(196,148,58,0.25)"
+                    strokeWidth="2"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.6 }}
+                  />
+                  <motion.text
+                    x="170" y="162"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill={colors.coral}
+                    fontSize="11"
+                    fontFamily={display}
+                    fontWeight="700"
+                    letterSpacing="0.12em"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    YOUR
+                  </motion.text>
+                  <motion.text
+                    x="170" y="178"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill={colors.coral}
+                    fontSize="11"
+                    fontFamily={display}
+                    fontWeight="700"
+                    letterSpacing="0.12em"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    DISRUPTION MAP
+                  </motion.text>
+                </svg>
+              </motion.div>
+
+              {/* Text */}
+              <motion.h1
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
                 style={{
                   fontFamily: display,
-                  fontSize: "clamp(28px, 5vw, 36px)",
+                  fontSize: "clamp(26px, 5vw, 34px)",
                   fontWeight: 700,
                   lineHeight: 1.2,
                   letterSpacing: "-0.02em",
-                  marginBottom: 16,
+                  marginBottom: 14,
                 }}
               >
-                How is your career situation affecting you?
-              </h1>
-              <p
-                style={{
-                  fontFamily: body,
-                  fontSize: 16,
-                  color: colors.textSecondary,
-                  lineHeight: 1.7,
-                  marginBottom: 12,
-                }}
-              >
-                A layoff, a PIP, a new role, a relocation, a promotion that
-                doesn&apos;t feel like one &mdash; they all disrupt the same things:
-                your identity, your confidence, your sense of safety, your relationships.
-              </p>
-              <p
+                How is your career situation<br />affecting you?
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.55, duration: 0.5 }}
                 style={{
                   fontFamily: body,
                   fontSize: 16,
                   color: colors.textSecondary,
                   lineHeight: 1.7,
                   marginBottom: 32,
+                  maxWidth: 460,
+                  marginLeft: "auto",
+                  marginRight: "auto",
                 }}
               >
+                A layoff, a PIP, a new role, a relocation, a promotion that
+                doesn&apos;t feel like one &mdash; they all disrupt the same foundations.
                 This 90-second assessment maps the impact across nine dimensions.
-                No signup required. Your results are immediate and private.
-              </p>
+              </motion.p>
               <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.4 }}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setStep("assess")}
@@ -192,16 +303,30 @@ export default function AssessmentPage() {
                   fontFamily: display,
                   fontSize: 15,
                   fontWeight: 600,
-                  padding: "14px 32px",
+                  padding: "14px 36px",
                   borderRadius: 100,
                   backgroundColor: colors.coral,
                   color: colors.bgDeep,
                   border: "none",
                   cursor: "pointer",
+                  letterSpacing: "0.01em",
                 }}
               >
-                Start assessment
+                Take free self-assessment
               </motion.button>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9 }}
+                style={{
+                  fontFamily: body,
+                  fontSize: 12,
+                  color: colors.textMuted,
+                  marginTop: 14,
+                }}
+              >
+                No signup required &middot; Results are immediate and private
+              </motion.p>
             </motion.div>
           )}
 

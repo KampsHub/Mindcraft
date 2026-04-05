@@ -18,7 +18,7 @@ const PROGRAMS = [
     id: "global-relocation",
     tag: "Global Relocation",
     title: "You moved for the opportunity. But nobody warned you about the loneliness?",
-    desc: "New language, new rules, no safety net. The culture shock hits months in, not days. This program helps you rebuild routine, belonging, and identity when everything familiar is gone.",
+    desc: "You\u2019re code-switching all day, performing a version of yourself that doesn\u2019t feel like you. The culture shock hits months in, not days \u2014 and it\u2019s less about language than about the gap between who you are and who this place needs you to be. This program helps you adapt without losing yourself.",
   },
   {
     id: "next-move",

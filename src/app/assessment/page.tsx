@@ -148,113 +148,191 @@ export default function AssessmentPage() {
               transition={{ duration: 0.6 }}
               style={{ textAlign: "center" }}
             >
-              {/* Radial diagram */}
+              {/* Radial diagram — labels outside */}
               <motion.div
-                initial={{ scale: 0.85, opacity: 0 }}
+                initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                style={{ position: "relative", width: 340, height: 340, margin: "0 auto 40px" }}
+                style={{ position: "relative", width: "100%", maxWidth: 460, margin: "0 auto 44px", aspectRatio: "1" }}
               >
-                <svg viewBox="0 0 340 340" width="340" height="340">
-                  {/* Outer ring segments */}
-                  {DISRUPTIONS.map((d, i) => {
-                    const total = DISRUPTIONS.length;
-                    const angleStep = (2 * Math.PI) / total;
-                    const startAngle = i * angleStep - Math.PI / 2;
-                    const endAngle = startAngle + angleStep;
-                    const gap = 0.02;
-                    const outerR = 165;
-                    const innerR = 95;
-                    const cx = 170, cy = 170;
+                {(() => {
+                  const SHORT_LABELS = [
+                    "Identity", "Confidence", "Safety",
+                    "Belonging", "Stability", "Functioning",
+                    "Clarity", "Trust", "Direction",
+                  ];
+                  const total = 9;
+                  const viewSize = 460;
+                  const cx = viewSize / 2;
+                  const cy = viewSize / 2;
+                  const outerR = 140;
+                  const innerR = 85;
+                  const labelR = 175;
 
-                    const x1 = cx + outerR * Math.cos(startAngle + gap);
-                    const y1 = cy + outerR * Math.sin(startAngle + gap);
-                    const x2 = cx + outerR * Math.cos(endAngle - gap);
-                    const y2 = cy + outerR * Math.sin(endAngle - gap);
-                    const x3 = cx + innerR * Math.cos(endAngle - gap);
-                    const y3 = cy + innerR * Math.sin(endAngle - gap);
-                    const x4 = cx + innerR * Math.cos(startAngle + gap);
-                    const y4 = cy + innerR * Math.sin(startAngle + gap);
+                  return (
+                    <svg viewBox={`0 0 ${viewSize} ${viewSize}`} width="100%" height="100%">
+                      <defs>
+                        <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+                          <stop offset="0%" stopColor={colors.coral} stopOpacity="0.12" />
+                          <stop offset="100%" stopColor={colors.coral} stopOpacity="0" />
+                        </radialGradient>
+                      </defs>
 
-                    const midAngle = (startAngle + endAngle) / 2;
-                    const labelR = 132;
-                    const lx = cx + labelR * Math.cos(midAngle);
-                    const ly = cy + labelR * Math.sin(midAngle);
-                    const rotation = (midAngle * 180) / Math.PI + (midAngle > Math.PI / 2 && midAngle < (3 * Math.PI) / 2 ? 180 : 0);
+                      {/* Subtle glow behind center */}
+                      <motion.circle
+                        cx={cx} cy={cy} r={innerR + 30}
+                        fill="url(#centerGlow)"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3, duration: 1 }}
+                      />
 
-                    return (
-                      <g key={d.id}>
-                        <motion.path
-                          d={`M ${x1} ${y1} A ${outerR} ${outerR} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 0 0 ${x4} ${y4} Z`}
-                          fill="rgba(255,255,255,0.04)"
-                          stroke="rgba(255,255,255,0.12)"
-                          strokeWidth="1"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.3 + i * 0.08 }}
-                        />
-                        <motion.text
-                          x={lx}
-                          y={ly}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          transform={`rotate(${rotation}, ${lx}, ${ly})`}
-                          fill={colors.textSecondary}
-                          fontSize="9"
-                          fontFamily={display}
-                          fontWeight="600"
-                          letterSpacing="0.04em"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.5 + i * 0.08 }}
-                        >
-                          {d.label.toUpperCase()}
-                        </motion.text>
-                      </g>
-                    );
-                  })}
+                      {/* Segments */}
+                      {SHORT_LABELS.map((label, i) => {
+                        const angleStep = (2 * Math.PI) / total;
+                        const startAngle = i * angleStep - Math.PI / 2;
+                        const endAngle = startAngle + angleStep;
+                        const gap = 0.03;
 
-                  {/* Inner circle */}
-                  <motion.circle
-                    cx="170" cy="170" r="80"
-                    fill="rgba(196,148,58,0.06)"
-                    stroke="rgba(196,148,58,0.25)"
-                    strokeWidth="2"
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.2, duration: 0.6 }}
-                  />
-                  <motion.text
-                    x="170" y="162"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill={colors.coral}
-                    fontSize="11"
-                    fontFamily={display}
-                    fontWeight="700"
-                    letterSpacing="0.12em"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    YOUR
-                  </motion.text>
-                  <motion.text
-                    x="170" y="178"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill={colors.coral}
-                    fontSize="11"
-                    fontFamily={display}
-                    fontWeight="700"
-                    letterSpacing="0.12em"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                  >
-                    DISRUPTION MAP
-                  </motion.text>
-                </svg>
+                        const x1 = cx + outerR * Math.cos(startAngle + gap);
+                        const y1 = cy + outerR * Math.sin(startAngle + gap);
+                        const x2 = cx + outerR * Math.cos(endAngle - gap);
+                        const y2 = cy + outerR * Math.sin(endAngle - gap);
+                        const x3 = cx + innerR * Math.cos(endAngle - gap);
+                        const y3 = cy + innerR * Math.sin(endAngle - gap);
+                        const x4 = cx + innerR * Math.cos(startAngle + gap);
+                        const y4 = cy + innerR * Math.sin(startAngle + gap);
+
+                        const midAngle = (startAngle + endAngle) / 2;
+                        const lx = cx + labelR * Math.cos(midAngle);
+                        const ly = cy + labelR * Math.sin(midAngle);
+
+                        // Anchor labels based on position
+                        const isLeft = midAngle > Math.PI / 2 && midAngle < (3 * Math.PI) / 2;
+                        const isTop = midAngle < 0 || midAngle > Math.PI;
+
+                        // Connector line
+                        const connStart = outerR + 4;
+                        const connEnd = labelR - 8;
+                        const cx1 = cx + connStart * Math.cos(midAngle);
+                        const cy1 = cy + connStart * Math.sin(midAngle);
+                        const cx2 = cx + connEnd * Math.cos(midAngle);
+                        const cy2 = cy + connEnd * Math.sin(midAngle);
+
+                        return (
+                          <g key={label}>
+                            <motion.path
+                              d={`M ${x1} ${y1} A ${outerR} ${outerR} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 0 0 ${x4} ${y4} Z`}
+                              fill="rgba(255,255,255,0.03)"
+                              stroke="rgba(255,255,255,0.1)"
+                              strokeWidth="1"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.15 + i * 0.06, duration: 0.5 }}
+                              style={{ transformOrigin: `${cx}px ${cy}px` }}
+                            />
+                            {/* Connector line */}
+                            <motion.line
+                              x1={cx1} y1={cy1} x2={cx2} y2={cy2}
+                              stroke="rgba(255,255,255,0.08)"
+                              strokeWidth="1"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.4 + i * 0.06 }}
+                            />
+                            {/* Label outside */}
+                            <motion.text
+                              x={lx}
+                              y={ly}
+                              textAnchor={isLeft ? "end" : Math.abs(midAngle + Math.PI / 2) < 0.2 ? "middle" : "start"}
+                              dominantBaseline={isTop ? "auto" : "hanging"}
+                              fill={colors.textPrimary}
+                              fontSize="12"
+                              fontFamily={display}
+                              fontWeight="600"
+                              letterSpacing="0.03em"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.5 + i * 0.06 }}
+                            >
+                              {label}
+                            </motion.text>
+                          </g>
+                        );
+                      })}
+
+                      {/* Inner circle */}
+                      <motion.circle
+                        cx={cx} cy={cy} r={innerR}
+                        fill="rgba(24,24,28,0.9)"
+                        stroke={`${colors.coral}40`}
+                        strokeWidth="1.5"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                      />
+
+                      {/* Decorative inner ring */}
+                      <motion.circle
+                        cx={cx} cy={cy} r={innerR - 12}
+                        fill="none"
+                        stroke="rgba(255,255,255,0.05)"
+                        strokeWidth="1"
+                        strokeDasharray="3 6"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                      />
+
+                      {/* Center text */}
+                      <motion.text
+                        x={cx} y={cy - 10}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill={colors.coral}
+                        fontSize="10"
+                        fontFamily={display}
+                        fontWeight="600"
+                        letterSpacing="0.18em"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                      >
+                        YOUR
+                      </motion.text>
+                      <motion.text
+                        x={cx} y={cy + 6}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill={colors.textPrimary}
+                        fontSize="13"
+                        fontFamily={display}
+                        fontWeight="700"
+                        letterSpacing="0.06em"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.7 }}
+                      >
+                        DISRUPTION
+                      </motion.text>
+                      <motion.text
+                        x={cx} y={cy + 22}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill={colors.textPrimary}
+                        fontSize="13"
+                        fontFamily={display}
+                        fontWeight="700"
+                        letterSpacing="0.06em"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.75 }}
+                      >
+                        MAP
+                      </motion.text>
+                    </svg>
+                  );
+                })()}
               </motion.div>
 
               {/* Text */}

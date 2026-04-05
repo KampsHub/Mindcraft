@@ -16,7 +16,7 @@ const PROGRAMS = [
   },
   {
     id: "global-relocation",
-    tag: "Country Relocation",
+    tag: "Relocation",
     title: "You moved countries for the job. But nobody warned you about the loneliness?",
     desc: "Rebuild routine, social life, and sense of home \u2014 while performing at a job that expects you to hit the ground running.",
   },
@@ -69,24 +69,6 @@ export default function ComingSoonWaitlist() {
 
   return (
     <div style={{ marginTop: 8 }}>
-      <p
-        style={{
-          fontSize: 17,
-          color: colors.textSecondary,
-          margin: "0 auto 20px",
-          lineHeight: 1.7,
-          fontFamily: body,
-          maxWidth: 640,
-          backgroundColor: "rgba(24, 24, 28, 0.80)",
-          backdropFilter: "blur(6px)",
-          WebkitBackdropFilter: "blur(6px)",
-          borderRadius: 12,
-          padding: "16px 24px",
-          textAlign: "center",
-        }}
-      >
-        More programs are on the way. Join the waitlist to be first in line.
-      </p>
 
       <div
         style={{

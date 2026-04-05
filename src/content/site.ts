@@ -26,7 +26,7 @@ export const content = {
     headline: "You\u2019re not broken.",
     headlineAccent: "You\u2019re just overwhelmed.",
     subheadline:
-      "A career crisis can be one of the most difficult phases you\u2019ll handle in life. This is 30 days of structure at a time when you can\u2019t even finish your morning coffee. See clearly. Handle anxiety. Pick up insight about yourself. Gain interpersonal skills.",
+      "30 days of structure when you can\u2019t even finish your morning coffee.",
     cta: "Find your program",
     heroVideo: "/hero-bg-v5.mp4",
     heroImage: "", // e.g. "/images/hero.jpg" - fallback or standalone image
@@ -88,7 +88,7 @@ export const content = {
   programs: {
     headline: "What\u2019s your situation?",
     subheadline:
-      "Each program is built for a specific moment \u2014 not a generic self-help arc. One month of structure when everything feels like chaos.",
+      "One month of structure, built for your situation.",
     cards: [
       {
         tag: "PIP",

@@ -1908,7 +1908,7 @@ export default function Home() {
           {/* Outcomes — inline list */}
           {(c.steps as any).outcomes && (
             <FadeIn preset="slide-up" duration={0.8}>
-              <div style={{ textAlign: "center", marginTop: 56, maxWidth: 600, marginLeft: "auto", marginRight: "auto" }}>
+              <div style={{ textAlign: "center", marginTop: 56, maxWidth: 600, marginLeft: "auto", marginRight: "auto", backgroundColor: "rgba(24,24,28,0.75)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", borderRadius: 16, padding: "28px 32px" }}>
                 <p style={{
                   fontFamily: display,
                   fontSize: 12,
@@ -1990,41 +1990,38 @@ export default function Home() {
             </h2>
           </FadeIn>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 48 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24, maxWidth: 640, margin: "0 auto" }}>
             {[
               {
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 ),
-                title: "What you write here stays here.",
-                desc: "No model training. No third-party access. No data sales. Export or delete at any time.",
+                title: "Your data stays yours",
               },
               {
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                   </svg>
                 ),
-                title: "Every exercise is cited and explained.",
-                desc: "350+ exercises from published coaching and psychology frameworks. Each one tells you where it comes from and why it was chosen for you.",
+                title: "350+ cited frameworks",
               },
               {
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10" />
                     <path d="m9 12 2 2 4-4" />
                   </svg>
                 ),
-                title: "Developed with practitioners, not just engineers.",
-                desc: "Built with professional coaches trained in neuroscience, mindfulness, positive psychology, change management, NVC, and psychometric assessment.",
+                title: "Built with real coaches",
               },
               {
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 2v4" />
                     <path d="m6.34 6.34 2.83 2.83" />
                     <path d="M2 12h4" />
@@ -2035,55 +2032,43 @@ export default function Home() {
                     <path d="m17.66 6.34-2.83 2.83" />
                   </svg>
                 ),
-                title: "Smarter than a chatbot. More available than a coach.",
-                desc: "Reads your journal daily, matches exercises to what\u2019s actually showing up, and adapts as you move \u2014 with rigor no chatbot has and consistency no human schedule can match.",
+                title: "Adapts to you daily",
               },
             ].map((item, i) => (
-              <FadeIn key={i} delay={0.1 + i * 0.12} preset="fade">
+              <FadeIn key={i} delay={0.1 + i * 0.08} preset="fade">
                 <div
                   style={{
                     display: "flex",
-                    alignItems: "flex-start",
-                    gap: 24,
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    gap: 12,
+                    padding: "24px 16px",
                   }}
                 >
                   <div style={{
-                    width: 52,
-                    height: 52,
+                    width: 56,
+                    height: 56,
                     borderRadius: "50%",
                     backgroundColor: `${colors.coral}15`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    flexShrink: 0,
                   }}>
                     {item.icon}
                   </div>
-                  <div>
-                    <h3
-                      style={{
-                        fontFamily: display,
-                        fontSize: 18,
-                        fontWeight: 700,
-                        lineHeight: 1.35,
-                        marginBottom: 6,
-                        color: "#18181C",
-                      }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: 15,
-                        color: "rgba(24,24,28,0.6)",
-                        lineHeight: 1.6,
-                        margin: 0,
-                        fontFamily: body,
-                      }}
-                    >
-                      {item.desc}
-                    </p>
-                  </div>
+                  <h3
+                    style={{
+                      fontFamily: display,
+                      fontSize: 15,
+                      fontWeight: 700,
+                      lineHeight: 1.35,
+                      margin: 0,
+                      color: "#18181C",
+                    }}
+                  >
+                    {item.title}
+                  </h3>
                 </div>
               </FadeIn>
             ))}

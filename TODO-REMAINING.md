@@ -42,21 +42,6 @@ check admin site
 
 ### Stefanie: Co-Creation Decisions Needed
 
-These are questions you raised that need your input before we can build:
-
-
-**Search (#10) — How deep should search go?**
-You asked how to make this possible. Two levels:
-- **Simple (1 day):** Search bar on the journal page. Full-text search over `free_flow_entries.content`. Returns matching entries with highlighted snippets.
-- **Deep (3 days):** Search across journals + exercises + insights. Unified search page with filters (date range, type, keyword). Could also search exercise responses.
-- [ ] Which level do you want first?
-
-**Streak Persistence (#11)**
-No decision needed — I can just build this. Will add `current_streak` and `longest_streak` to enrollments and surface on dashboard.
-
-**Token Cost Tracking (Monitoring)**
-The admin dashboard at `/admin` already shows token costs by endpoint. Want me to also build a weekly cost summary email sent to `crew@allmindsondeck.com`? Or is checking the dashboard enough?
-- [ ] Dashboard only, or also a weekly email?
 
 
 ---
@@ -94,49 +79,16 @@ The admin dashboard at `/admin` already shows token costs by endpoint. Want me t
 
 ## To Dos
 
-### ✅ Completed This Session (April 4-5)
-- ~~Stripe live keys~~ — verified and set
-- ~~Sentry error monitoring~~ — activated, DSN in Vercel
-- ~~Inactive user reminders~~ — 2-day gap, max 3, then exit survey
-- ~~Coach dashboard~~ — invite/accept/revoke, client cards, goals/insights/enneagram, coach notes → daily thread
-- ~~Commitment follow-through~~ — daily thread check-in, exercise selection awareness, weekly aggregation
-- ~~Streak tracking~~ — current_streak, best_streak on dashboard
-- ~~Calendar view~~ — 30-day grid on /goals
-- ~~Notification preferences~~ — toggles in /my-account
-- ~~Unit tests~~ — Vitest setup, 48 tests passing (parse-ai-response, api-validation, rate-limit)
-- ~~Search~~ — /search page with exercises (+ framework instructions), journal entries, insights
-- ~~Progress metrics in weekly insights~~ — pattern shifts, language shifts, mood trend, exercise engagement, narrative
-- ~~Spaced retrieval~~ — curated in weekly insights coaching questions
-- ~~Bloom level audit~~ — quality audit flags >50% Awareness exercises after Day 14
-- ~~Cross-week shift detection~~ — weekly insights compares themes across weeks
-- ~~GDPR deletion gaps~~ — /api/account now covers all 26 tables
-- ~~Memory retrieval optimization~~ — database index (preserves cross-program memories)
-- ~~API logs async~~ — fire-and-forget, no response delay
-- ~~Background image flash~~ — computed synchronously on render
-- ~~Mobile nav fix~~ — parachute page nav overlap fixed
-- ~~Assessment redesign~~ — inverted scale, renamed labels, Next button, merged email step
-- ~~Homepage copy~~ — "Built different" visual grid, trimmed copy throughout, pill labels
-- ~~Token cost tracking~~ — top users table in admin dashboard
-- ~~Daily reminder cron removed~~ — replaced by inactive reminders
-- ~~Docs created~~ — email-audit.md, analytics-tracking.md, customer-data-storage.md
-- ~~PRD updated~~ — reflects all April 5 builds
 
-### Known Technical Debt
-
-8. **In-memory rate limiting** — needs Redis (Upstash) at scale. Not urgent until 100+ concurrent users.
-
-12. **Email templates hardcoded** — all HTML inline in route handlers. Fix: React Email migration (~1 day).
-
-### MEDIUM — Still Open
-
-10. **Search enhancement** — current search uses ILIKE. Could add full-text search indexes for better performance at scale. Currently fine for <100 users.
-
-### LOW — Parked
+### Backlog
+- In-memory rate limiting → Redis (Upstash) when 100+ concurrent users
+- Email templates hardcoded → React Email migration (~1 day)
+- Search enhancement → full-text search indexes when >100 users
 - Dark/light mode (~2-3 days)
 - i18n (backburner)
-- A/B testing for pricing (needs Statsig, ~2-3 hrs)
-- CMS (Sanity recommended, ~2-3 days, not needed yet)
-- Mobile app (web-only, audit mobile responsiveness as needed)
+- A/B testing for pricing (Statsig, ~2-3 hrs)
+- CMS (Sanity, ~2-3 days, not needed yet)
+- Mobile app (web-only, audit as needed)
 
 ---
 

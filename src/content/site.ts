@@ -522,7 +522,7 @@ export const content = {
     headline: "Intelligent Coaching + Intelligent Tech",
     subheadline: "",
     columns: ["Live coaching", "DIY with AI", "Mindcraft"],
-    footnote: "Developed with professional leadership and team coaches and practitioners trained in neuroscience, mindfulness, positive psychology, global dexterity, change management, non-violent communication, and psychometric assessment.",
+    footnote: "",
     rows: [
       // ── Group: Ready when you are ──
       { group: "Ready when you are" },

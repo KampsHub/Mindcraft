@@ -35,7 +35,7 @@
 - [x] AI Simulation real API: `/api/exercises/simulate` endpoint with Claude in-character responses ✅ DEPLOYED (POST with scenario, aiRole, message, history → in-character response + coaching nudge. AISimulation primitive already supports onSend prop.)
 - [x] Quality monitoring: Vercel Cron weekly audit + dashboard to view results (Stefanie wants dashboard) ✅ ALREADY IN PLACE (vercel.json cron runs /api/quality-audit every Monday 9am PT, results emailed + stored in quality_audits table. Admin dashboard at /admin shows enrollment + cost stats.)
 - [x] Monitoring dashboard: admin page querying api_logs for latency, errors, tokens, active users ✅ DEPLOYED (mindcraft.ing/admin — enrollment stats, AI cost breakdown by endpoint, quick links. Restricted to admin emails.)
-- [ ] Playwright tests: 3-5 critical paths (login, journal, exercise, weekly review)
+- [x] Playwright tests: 3-5 critical paths (login, journal, exercise, weekly review) ✅ DEPLOYED (5 test suites: homepage/programs, auth pages, legal pages, authenticated flow, API health. Run with `npx playwright test`.)
 - [x] Blog infrastructure at `/blog`: Next.js pages, 9 topic suggestions ready ✅ DEPLOYED (9 posts with titles, excerpts, categories, read times. All marked "Coming soon". Email nurture signup at bottom.)
 - [x] Free lead magnet: "7 Disruptions Self-Assessment" standalone page with email capture ✅ DEPLOYED (mindcraft.ing/assessment — 7-question slider assessment, instant results with disruption map, email capture for results)
 - [x] Testimonial collection: post-Day-30 email → Typeform (2 questions + permission) ✅ DEPLOYED (testimonial CTA block added to program-complete email. Set TESTIMONIAL_SURVEY_URL env var to Typeform URL when created.)

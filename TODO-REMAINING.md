@@ -19,10 +19,10 @@ Go to Supabase → SQL Editor → paste contents of each file → Run
 | Scaffolding notes | `scripts/update-scaffolding-notes.sql` | Adds AI instructions to reduce scaffolding in Days 11-30 |
 | Bloom's labels | `scripts/add-bloom-labels.sql` | Adds cognitive depth labels + concept tags to all exercises |
 
-### Railway Fix (5 min)
-- Go to Railway dashboard → your service → Settings → "Watch paths"
-- Set to: `livekit-agent/**`
-- This stops Railway from crashing on every Vercel deploy
+### Railway Fix ✅ CODE FIX PUSHED
+- The crash was `llm.LLMOptions` not existing in the installed livekit-agents version — **fixed in code** (removed type reference)
+- Check Railway logs after next deploy to confirm it starts cleanly
+- If still crashing: also set "Watch paths" to `livekit-agent/**` in Railway dashboard → Settings
 
 ### GA4 Funnel Setup (30 min)
 - Go to GA4 → Explore → Create new Exploration → Funnel

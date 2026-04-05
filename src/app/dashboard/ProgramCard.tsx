@@ -298,6 +298,17 @@ export default function ProgramCard({ enrollment, goals, todaySessionDone, today
           >
             Review Your Journey
           </motion.button>
+          <button
+            onClick={() => onNavigate("/#programs")}
+            style={{
+              marginTop: 12, padding: "10px 24px", fontSize: 13, fontWeight: 500,
+              color: colors.textPrimary, backgroundColor: "transparent",
+              border: `1px solid ${colors.borderDefault}`, borderRadius: radii.full,
+              cursor: "pointer", fontFamily: display, display: "block",
+            }}
+          >
+            Explore other programs
+          </button>
         </div>
       </motion.div>
     );

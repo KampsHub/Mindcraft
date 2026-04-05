@@ -32,7 +32,7 @@ const DISRUPTIONS = [
     id: "safety",
     label: "Pressure",
     question: "How much pressure are you under right now?",
-    context: "When safety drops, you stop taking risks, stop asking questions, and start performing instead of contributing.",
+    context: "When the pressure is constant, you stop thinking clearly and start just surviving the day.",
     dataPoint: "Amy Edmondson at Harvard found that teams with low psychological safety have 19% more errors and 50% less innovation. When safety drops for an individual, performance follows \u2014 not because of skill, but because of self-protection.",
     low: "I\u2019m walking on eggshells",
     high: "I feel safe and supported",

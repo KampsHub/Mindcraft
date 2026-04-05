@@ -168,9 +168,9 @@ export default function AssessmentPage() {
               >
                 {(() => {
                   const SHORT_LABELS = [
-                    "Identity", "Self-doubt", "Safety",
-                    "Loneliness", "Money", "Sleep & focus",
-                    "Expectations", "Trust", "What\u2019s next",
+                    "Identity", "Confidence", "Pressure",
+                    "Connection", "Money", "Body & Brain",
+                    "Clarity", "Trust", "Direction",
                   ];
                   const total = 9;
                   const viewSize = 460;

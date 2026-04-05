@@ -131,55 +131,6 @@ CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeT
 
 ---
 
-## 5. Status of Previously Missing Items
-
-### CRITICAL — ✅ All Resolved
-1. ~~**Stripe live keys**~~ — ✅ Live keys set in Vercel
-2. ~~**Inactive user reminders**~~ — ✅ 2-day threshold, max 3 reminders, then exit survey. Cron daily 3 PM UTC.
-3. ~~**Subscription lifecycle**~~ — ✅ Not needed (not a subscription model)
-
-### HIGH — ✅ All Resolved
-4. ~~**Sentry error monitoring**~~ — ✅ Activated, DSN in Vercel, PII redacted
-5. ~~**Coach dashboard**~~ — ✅ Built: invite by email, client cards, goals/insights/enneagram, coach notes → daily thread
-6. ~~**Referral dashboard**~~ — Parked
-7. ~~**Admin panel**~~ — Accepted (Supabase manual)
-
-### MEDIUM — Mostly Resolved
-8. ~~**User-facing analytics**~~ — ✅ Patterns + shifts surfaced in weekly insights
-9. ~~**Notification preferences**~~ — ✅ Toggles in /my-account (inactive reminders, program updates)
-10. ~~**Search**~~ — ✅ Built. `/search` page with exercises (+ framework instructions), journal entries, and insights. Search in top nav + bottom nav.
-11. ~~**Streak persistence**~~ — ✅ current_streak, best_streak, last_completed_date. Shows on dashboard.
-
-### LOW — Decisions Documented
-12. **Dark/light mode** — ~2-3 days, additive, won't break current dark theme
-13. ~~**Calendar view**~~ — ✅ 30-day grid on /goals page
-14. **Mobile audit** — Parachute nav fixed. Post-login audit pending (needs manual test)
-15. **Internationalization** — Backburner
-16. **A/B testing** — Statsig recommended for pricing experiments (~2-3 hrs)
-17. **CMS** — Sanity.io recommended (~2-3 days) but keep-as-is is fine for now
-
----
-
-## 6. Exercise System Gaps
-
-### A. Spaced retrieval integration — ✅ Built
-Curated retrieval in weekly insights. One coaching question references a key concept from earlier exercises.
-
-### B. Commitment follow-through — ✅ Built
-- Daily thread checks on yesterday's commitments
-- Process journal selects exercises responsive to commitment outcomes
-- Weekly insights aggregates all week's commitments and reviews follow-through
-
-### C. Progress visualization — ✅ Built
-Progress section in weekly insights: pattern frequency shifts, language shifts (reactive→reflective), mood/rating trend, exercise engagement, narrative summary. Computed metrics (ratings, themes, counts) passed to Claude. No separate analytics page — weekly insights IS the progress view.
-
-### D. Exercise difficulty labeling — ✅ Decision made + implemented
-- Labels NOT shown to users
-- Bloom level distribution checked in weekly quality audit
-- Warns if >50% Awareness-level exercises after Day 14
-
-___________________________________
-
 ### E. Pre/post exercise measurement
 - Should exercises ask "How clear is your thinking?" before and after?
 - **Decision needed:** Is this valuable data or friction for overwhelmed users?
@@ -212,113 +163,68 @@ ___________________________________
 ### K. Content-to-interaction ratio
 - From EXERCISE-DESIGN-LEARNINGS Part 2, Lens 2: "Most exercises currently have more reading than doing. The ratio should favor interaction."
 - whyThis sections average 150-200 words, instructions 80-120 words — that's 250-320 words of reading before any interaction
-- **Decision needed:** Should framework teaching move INTO the interaction (guided steps that reveal one concept at a time) rather than front-loading as a wall of text?
+- **Decision needed:** Should framework teaching move INTO the interaction (guided steps that reveal one concept at a time) rather than front-loading as a wall of text? -- how much effort would this be?
 
 ---
 
-## 7. Open Questions — Things I'm Unclear On
+## 6. Open Product Questions
 
-### Product Model
-L. **What happens after Day 30?** The program ends but the user's career crisis may not. Is there a post-program offering? A maintenance mode? Re-enrollment in a different program? Currently: graduation email, nothing after.
-
-M. **Can users enroll in multiple programs simultaneously?** The DB supports it (unique constraint is client_id + program_id) but the UX doesn't address it. What happens on the dashboard if someone is in Parachute Day 15 AND Basecamp Day 3?
-
-N. **Is Mindcraft a self-serve product or does it require a coach?** The coach referral system, coach sharing, and coach analytics suggest a B2B2C model (coaches refer clients). But the entire product works without a coach. Which is the primary go-to-market?
-
-O. **What's the pricing model?** Currently $29.95/month but: is it per-program? Per-month until cancelled? One-time for 30 days? The Stripe integration creates a subscription but the program is finite (30 days). Does the subscription auto-cancel at Day 30?
-
-P. **What does "completed" mean?** Does the user need to finish all 30 days to complete? All exercises? Just journal entries? Can they skip days? Currently: `completed_at` is set when they click "Complete Day" on all 30 days, but there's no enforcement.
-
-### User Experience
-Q. **First-time user experience** — A new user lands on the dashboard after signup. What should they see? Currently: a ProgramCard with "Continue to Day 1." But there's no tour, no welcome moment beyond the welcome page, no "here's what to expect today."
-
-R. **What if the AI gives bad advice?** The crisis banner handles acute risk, but what about subtle bad coaching — an exercise recommendation that doesn't fit, or a reframe that misses the point? Quality flagging exists but there's no feedback loop to the user ("we heard you, here's a better exercise").
-
-S. **Voice vs text — which is primary?** The TellTab supports both, but the UX doesn't guide the user on which to use when. Is voice for some people and text for others? Or is voice for certain emotional states?
-
-### Content & Coaching
-T. **Are the 350+ exercises in frameworks_library all used?** The process-journal API selects from this library, but are there exercises that never get selected? Should there be a curation pass?
-
-U. **How does the coaching plan work in production?** The seed scripts define coaching_exercises per day, but the process-journal API also selects overflow exercises from the full library. What's the relationship? Are coaching_plan exercises mandatory and overflow optional?
-
-V. **Enneagram integration** — The Enneagram assessment is a paid add-on that produces a type analysis. But how does it feed into the daily exercises? Is the Enneagram type used for exercise personalization?
-
-### From Multi-Lens Review (not yet in PRD)
-
-W. **Onboarding tour** — New users get no guidance on what to do. Should there be a 3-step onboarding tour? ("Here's your dashboard. Start your day here. Your exercises appear after you journal.") (UX Designer #5)
-
-X. **Trial/freemium** — No way to try before buying. Should Day 1 be free? A sample exercise? A free assessment? This is a significant conversion barrier for a $30/month product targeting people who just lost their income. (PM #6)
-
-Y. **Re-enrollment path** — After completing Parachute, can you start Jetstream? The flow isn't designed. (PM #5)
-
-Z. **User referral program** — Coaches can refer, but users can't. "Share with a friend going through a layoff" could be the strongest growth channel for this product. (PMM #1)
-
-AA. **Exit survey** — When users stop using the product, there's no way to learn why. This is critical data for a new product. (UX Researcher #7)
-
-BB. **Outcome measurement and social proof** — Day 1 vs Day 24 disruption ratings exist but aren't aggregated into "87% of users improved" stats. This data could power the landing page. (UX Researcher #5, PMM #2)
-
-CC. **Free lead magnet** — No way to capture emails from people who aren't ready to buy. A free disruption assessment, a PDF guide ("5 things to do in your first week after a layoff"), or a sample exercise could build a nurture list. (PMM #10)
-
-DD. **Email nurture for non-customers** — Only welcome + daily reminder emails exist. No educational drip sequence for people who visited but didn't buy. (PMM #4)
+| # | Question |
+|---|----------|
+| L | What happens after Day 30? Post-program offering? |
+| M | Multiple simultaneous enrollments — UX? |
+| N | Self-serve vs coach-referred GTM? |
+| O | Pricing: per-program, monthly, one-time? Auto-cancel at Day 30? |
+| P | What does "completed" mean? All 30 days required? |
+| Q | First-time user onboarding tour? |
+| R | AI bad advice → user feedback loop? |
+| S | Voice vs text — guidance for when to use which? |
+| T | 350+ exercises — all used? Curation pass needed? |
+| U | Coaching plan vs overflow — relationship? |
+| V | Enneagram → exercise personalization? |
+| W | Trial/freemium — Day 1 free? |
+| X | Re-enrollment path (Parachute → Jetstream)? |
+| Y | User referral program? |
 
 ---
 
-## 8. Data Storage Map — New Features (April 4, 2026)
+## 7. Growth & Monetization (Stefanie's roadmap)
 
-Stefanie Question: In the following, is anything needed from my perspective to track properly? Also, how can I retrieve this information (e.g. exercise_completions).
-
-| Feature | Where Stored | Column/Field | Type |
-|---------|-------------|--------------|------|
-| Star rating per exercise | `exercise_completions` | `star_rating` | integer 1-5 |
-| Exercise feedback (≤3 stars) | `exercise_completions` | `feedback` | text |
-| NPS score | `weekly_reviews` | `nps_score` | integer 0-10 |
-| NPS score (backup) | Google Analytics | event `nps_submitted` with score + week | GA event |
-| Day completed event | Google Analytics | event `day_completed` with day_number | GA event |
-| Login success event | Google Analytics | event `login_success` with method | GA event |
-| Cookie consent preference | `localStorage` | key `cookie-consent` = "accepted" or "declined" | client-side |
-| Pause/resume status | `program_enrollments` | `status` = "paused" or "active" | enum |
-| Exercise dedup window | `exercise_completions` | queried with `gte(completed_at, 7 days ago)` | query filter |
-| Sentry errors | Sentry.io (external) | requires `NEXT_PUBLIC_SENTRY_DSN` env var | external |
-| Staging deployments | Vercel | `develop` branch → preview URLs | infra |
-
-| Waitlist signups | Resend (email) | sent to crew@ + confirmation to user | external |
-| Terms & Privacy consent | signup form | `agreedToTerms` state (checked before account creation) | client-side |
-| Coming Soon programs | homepage | "First-Time Manager" + "International Move" cards | UI only |
-| Checkout errors | client state | `checkoutError` shown inline on all 3 program pages | client-side |
-| Exercise save errors | client state | `processError` shown via useStep3Analysis | client-side |
-
-### Features Built But Not Yet Storing Data
-| Feature                 | Needs                     | Status                                               |                                        |
-| ----------------------- | ------------------------- | ---------------------------------------------------- | -------------------------------------- |
-| Sentry                  | DSN env var in Vercel     | Config ready, needs activation                       | Stefanie: Sentry is set up - activate. |
-| Quality monitoring cron | Vercel Cron job setup     | Code exists at `/api/quality-audit`, needs scheduler | Stefanie: then schedule                |
-| Token cost tracking     | Admin query on `api_logs` | Table exists, query not built yet                    | Stefanie: Build query and send to me   |
+1. Offramp into continued subscription at 20% off
+2. Referral: $20 gift card for referrer on signup
+3. Testimonial collection → social proof
+4. Cross-program enrollment
+5. Enneagram upsell
+6. "Work with me" coaching upsell
+7. Share & Tell (gifting & referring)
+8. Free lead magnet ✅ (assessment at /assessment)
+9. Email nurture for non-customers (not built)
+10. Outcome measurement → "87% improved" landing page stats
+11. Exit survey ✅ (built at /feedback/exit)
 
 ---
 
-## 9. Known Technical Debt
-- In-memory rate limiting won't scale across multiple Vercel instances (needs Redis) -- Stefanie Question: What does that mean?
-- API logs write synchronously to Supabase (needs async queue at scale) -- Stefanie Question: What needs to get done for this to work async?
-- Memory embeddings retrieval may slow as database grows -- Stefanie Question: How can this problem be alleviated?
-- No unit/integration tests (manual TEST-PLAN.md only) -- Stefanie Question: What is required to set up unit and integration testing? What should we start on?
-- 283 exercises still use old whyNow/science format in exerciseDataCore.ts -- Stefanie Question: I believe this is fixed now?
-- Email templates hardcoded in route handlers (no template system) -- Stefanie Question: How can we set up with a template system to not have to hardcode this anymore?
+## 8. Backlog
 
+- In-memory rate limiting → Redis at scale
+- Email templates → React Email (~1 day)
+- Search → full-text indexes at scale
+- Dark/light mode (~2-3 days)
+- i18n (backburner)
+- A/B testing (Statsig, ~2-3 hrs)
+- CMS (Sanity, ~2-3 days)
+- Staging environment (separate Supabase)
 
+---
 
-To do:
-1) 
+## 9. Docs
 
-
-2. Data sharing with coach
-3. coaching goals and how they are set
-4. weekly insights and how they can be shared
-5. injection of enneagram
-6. share & tell program
-7. offramp into continued service
-8. re-doing/referring to exercises
-9. Data storage / deletion per privacy policy etc
-
-
-10. Offramp strategy into regular subscription at 20% off ((Referral for a $20 gift card for the referrer once the person signs up, testimonial, other programs, continuous program at discounted price, enneagram for deeper insight, work with me))
-11. Share & Tell in general (gifting & referring)
+| Document | Location |
+|----------|----------|
+| Email audit | `docs/email-audit.md` |
+| Analytics & tracking | `docs/analytics-tracking.md` |
+| Customer data & deletion | `docs/customer-data-storage.md` |
+| Legal risks | `LEGAL-HANGUPS.md` |
+| GDPR rights | `GDPR-RIGHTS-IMPLEMENTATION.md` |
+| Test plan | `TEST-PLAN.md` |
+| TODO tracker | `TODO-REMAINING.md` |

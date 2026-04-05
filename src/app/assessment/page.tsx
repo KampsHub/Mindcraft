@@ -16,8 +16,8 @@ const DISRUPTIONS = [
     question: "How much has your sense of who you are professionally been shaken?",
     context: "Your title, your expertise, your role in a team \u2014 when that shifts, it can feel like losing a piece of yourself.",
     dataPoint: "Herminia Ibarra at London Business School found that professionals in career transitions experience an average of 2\u20133 identity shifts before settling into a new sense of self. The disorientation is the process, not a sign something is wrong.",
-    low: "I know who I am",
-    high: "I don\u2019t recognize myself right now",
+    low: "I don\u2019t recognize myself right now",
+    high: "I know who I am",
   },
   {
     id: "competence",
@@ -25,8 +25,8 @@ const DISRUPTIONS = [
     question: "How much are you doubting your skills and abilities right now?",
     context: "Self-doubt often spikes during transitions \u2014 even when your track record says otherwise.",
     dataPoint: "Research by Pauline Clance found that up to 70% of high-performing professionals experience imposter feelings during career transitions. The doubt correlates with capability, not incompetence \u2014 the less qualified rarely worry.",
-    low: "I fully trust what I can do",
-    high: "I\u2019m seriously questioning myself",
+    low: "I\u2019m seriously questioning myself",
+    high: "I fully trust what I can do",
   },
   {
     id: "safety",
@@ -34,8 +34,8 @@ const DISRUPTIONS = [
     question: "How much pressure are you under right now?",
     context: "When safety drops, you stop taking risks, stop asking questions, and start performing instead of contributing.",
     dataPoint: "Amy Edmondson at Harvard found that teams with low psychological safety have 19% more errors and 50% less innovation. When safety drops for an individual, performance follows \u2014 not because of skill, but because of self-protection.",
-    low: "I feel safe and supported",
-    high: "I\u2019m walking on eggshells",
+    low: "I\u2019m walking on eggshells",
+    high: "I feel safe and supported",
   },
   {
     id: "belonging",
@@ -43,8 +43,8 @@ const DISRUPTIONS = [
     question: "How disconnected do you feel from the people around you?",
     context: "Career disruptions often quietly cut the social threads you didn\u2019t realize you depended on.",
     dataPoint: "Matthew Lieberman at UCLA found that social rejection activates the same brain regions as physical pain. Belonging isn\u2019t a soft need \u2014 losing it literally hurts, and it impairs decision-making and focus.",
-    low: "I feel like I belong",
-    high: "I feel isolated or on the outside",
+    low: "I feel isolated or on the outside",
+    high: "I feel like I belong",
   },
   {
     id: "stability",
@@ -52,8 +52,8 @@ const DISRUPTIONS = [
     question: "How much is financial worry affecting you right now?",
     context: "Financial worry activates your survival brain \u2014 it makes everything else harder to think about clearly.",
     dataPoint: "Princeton researchers found that financial scarcity reduces cognitive bandwidth by the equivalent of 13 IQ points. It\u2019s not that you\u2019re thinking poorly \u2014 your brain is allocating resources to the threat.",
-    low: "I feel secure",
-    high: "I\u2019m worried about what happens next",
+    low: "I\u2019m worried about what happens next",
+    high: "I feel secure",
   },
   {
     id: "cognitive",
@@ -61,8 +61,8 @@ const DISRUPTIONS = [
     question: "How much is stress affecting your sleep, focus, or daily routine?",
     context: "When stress leaks into your body \u2014 sleep, appetite, concentration \u2014 that\u2019s your nervous system signaling overload.",
     dataPoint: "The American Institute of Stress reports that 77% of people in career crises experience physical symptoms: disrupted sleep, fatigue, headaches, digestive issues. Your body processes what your mind tries to override.",
-    low: "I\u2019m functioning well",
-    high: "It\u2019s taking over my days",
+    low: "It\u2019s taking over my days",
+    high: "I\u2019m functioning well",
   },
   {
     id: "clarity",
@@ -70,8 +70,8 @@ const DISRUPTIONS = [
     question: "How lost do you feel about what\u2019s expected of you?",
     context: "Ambiguity is exhausting. Without clear expectations, you end up guessing \u2014 and second-guessing.",
     dataPoint: "Gallup data shows that only 50% of employees strongly agree they know what\u2019s expected of them at work. During transitions, that drops further. Ambiguity is one of the largest predictors of workplace anxiety.",
-    low: "Crystal clear",
-    high: "I\u2019m guessing or the goalposts keep moving",
+    low: "I\u2019m guessing or the goalposts keep moving",
+    high: "Crystal clear",
   },
   {
     id: "trust",
@@ -79,8 +79,8 @@ const DISRUPTIONS = [
     question: "How much has your trust in the people above you broken down?",
     context: "When you can\u2019t trust the people above you, every interaction becomes a calculation instead of a conversation.",
     dataPoint: "Paul Zak at Claremont found that people in high-trust work environments report 74% less stress, 50% higher productivity, and 76% more engagement. When trust breaks down, everything takes more energy.",
-    low: "I trust them completely",
-    high: "I don\u2019t trust their intentions",
+    low: "I don\u2019t trust their intentions",
+    high: "I trust them completely",
   },
   {
     id: "future",
@@ -88,8 +88,8 @@ const DISRUPTIONS = [
     question: "How lost do you feel about what\u2019s next?",
     context: "Not having a plan isn\u2019t the problem \u2014 it\u2019s the feeling that you should have one and don\u2019t.",
     dataPoint: "William Bridges\u2019 transition research shows that the \u201Cneutral zone\u201D \u2014 the period between an ending and a new beginning \u2014 is where the most important psychological work happens. The discomfort of not knowing is actually the process working.",
-    low: "I have a plan I believe in",
-    high: "No idea what\u2019s next",
+    low: "No idea what\u2019s next",
+    high: "I have a plan I believe in",
   },
 ];
 
@@ -119,7 +119,7 @@ export default function AssessmentPage() {
     : 0;
 
   const topDisruptions = Object.entries(scores)
-    .sort(([, a], [, b]) => b - a)
+    .sort(([, a], [, b]) => a - b)
     .slice(0, 3)
     .map(([id]) => DISRUPTIONS.find((d) => d.id === id)!);
 
@@ -481,7 +481,7 @@ export default function AssessmentPage() {
                     const ex4 = cx + innerR * Math.cos(startAngle + gap);
                     const ey4 = cy + innerR * Math.sin(startAngle + gap);
 
-                    const segColor = score >= 8 ? colors.coral : score >= 5 ? "#60a5fa" : "#34d399";
+                    const segColor = score <= 3 ? colors.coral : score <= 6 ? "#60a5fa" : "#34d399";
 
                     return (
                       <g key={d.id}>
@@ -590,9 +590,9 @@ export default function AssessmentPage() {
                           width: 40,
                           height: 40,
                           borderRadius: 8,
-                          border: `1px solid ${scores[DISRUPTIONS[currentIdx].id] === n ? (n >= 8 ? colors.coral : n >= 5 ? "#60a5fa" : "#34d399") : colors.borderDefault}`,
+                          border: `1px solid ${scores[DISRUPTIONS[currentIdx].id] === n ? (n <= 3 ? colors.coral : n <= 6 ? "#60a5fa" : "#34d399") : colors.borderDefault}`,
                           backgroundColor: scores[DISRUPTIONS[currentIdx].id] === n
-                            ? `${n >= 8 ? colors.coral : n >= 5 ? "#60a5fa" : "#34d399"}30`
+                            ? `${n <= 3 ? colors.coral : n <= 6 ? "#60a5fa" : "#34d399"}30`
                             : "transparent",
                           color: colors.textPrimary,
                           fontFamily: display,
@@ -678,9 +678,10 @@ export default function AssessmentPage() {
                     const innerR = 55;
                     const maxOuterR = 140;
                     const score = scores[d.id] || 5;
-                    // High score = big segment (more disrupted)
-                    const outerR = innerR + (maxOuterR - innerR) * (score / 10);
-                    const segColor = score >= 8 ? colors.coral : score >= 5 ? "#60a5fa" : "#34d399";
+                    // Invert: low score = big segment (more disrupted)
+                    const disruption = 11 - score;
+                    const outerR = innerR + (maxOuterR - innerR) * (disruption / 10);
+                    const segColor = score <= 3 ? colors.coral : score <= 6 ? "#60a5fa" : "#34d399";
 
                     const x1 = cx + outerR * Math.cos(startAngle + gap);
                     const y1 = cy + outerR * Math.sin(startAngle + gap);
@@ -745,20 +746,21 @@ export default function AssessmentPage() {
                   lineHeight: 1.6,
                 }}
               >
-                {avgScore >= 7
+                {avgScore <= 3
                   ? "You are experiencing significant disruption across multiple areas. This is a lot to carry."
-                  : avgScore >= 4
+                  : avgScore <= 6
                     ? "Some areas are hitting harder than others. Knowing which ones helps you focus."
-                    : "You have real stability in most areas. The higher scores show where targeted support would help most."}
+                    : "You have real stability in most areas. The lower scores show where targeted support would help most."}
               </p>
 
               {/* Score bars */}
               <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
                 {DISRUPTIONS.map((d) => {
                   const score = scores[d.id] || 0;
-                  const isHigh = score >= 8;
-                  const isMid = score >= 5 && score <= 7;
-                  const barColor = isHigh ? colors.coral : isMid ? "#60a5fa" : "#34d399";
+                  const isLow = score <= 3;
+                  const isMid = score >= 4 && score <= 6;
+                  const barColor = isLow ? colors.coral : isMid ? "#60a5fa" : "#34d399";
+                  const isHigh = isLow;
                   return (
                     <FadeIn key={d.id} preset="slide-up" delay={0.05 * DISRUPTIONS.indexOf(d)}>
                       <div>

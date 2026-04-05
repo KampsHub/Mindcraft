@@ -249,6 +249,22 @@ export function useStep3Analysis({
         return undefined;
       }
       setCompletedExercises((prev) => new Set(prev).add(name));
+
+      // Fire-and-forget: log observation for AI personalization
+      if (responses._skipped !== "true") {
+        fetch("/api/log-observation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            enrollmentId: enrollment.id,
+            dayNumber: session.day_number,
+            exerciseName: name,
+            modality: modality || null,
+            rating,
+          }),
+        }).catch(() => {});
+      }
+
       return data?.id;
     } catch (err) {
       console.error("Exercise save error:", err);

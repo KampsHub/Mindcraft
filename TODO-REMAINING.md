@@ -13,7 +13,7 @@
 - [x] Verify sandbox/production separation ✅ CONFIRMED (no prePopulated imports in production, primitives receive data via props only)
 
 ## Medium Effort (~2-3 hrs each)
-- [ ] Spaced retrieval: RetrievalCheck exercises on Days 7, 14, 21 (seed data update)
+- [x] Spaced retrieval: RetrievalCheck exercises on Days 7, 14, 21 (seed data update) ✅ SQL SCRIPT READY (scripts/add-retrieval-exercises.sql — run in Supabase SQL Editor to add retrieval exercises to all 3 programs)
 - [x] Progress visualization: "Then vs Now" card on weekly review page ✅ DEPLOYED (shows Day 1 rating → week avg, exercises, days completed)
 - [ ] Skill progression badges on exercise cards (Awareness/Practice/Application/Integration by week)
 - [x] Assessment→action: update process-journal prompt to weight low-scoring domains ✅ DEPLOYED (queries Day 1 Seven Disruptions scores, injects into prompt, adds selection rule 7)

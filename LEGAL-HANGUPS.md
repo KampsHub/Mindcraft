@@ -154,4 +154,43 @@ If Mindcraft isn't a registered entity, the copyright notice should reference th
 
 ---
 
+## SUGGESTED DRAFTS FOR LAWYER REVIEW
+
+### #1+#2 Arbitration + Dispute Resolution
+Suggest lawyer draft a clause that includes:
+1. A 30-day informal resolution period via email to crew@allmindsondeck.com
+2. Binding arbitration through JAMS or AAA under their consumer rules
+3. Individual claims only (class action waiver)
+4. Small claims court exception (claims under $10,000)
+5. Opt-out window (30 days from signup to opt out of arbitration by emailing)
+
+The opt-out window is key to enforceability in WA.
+
+### #3 Data Retention
+Suggested language: "Active account data is retained for the duration of your enrollment plus 90 days. After account deletion, all personal data is removed within 30 days. Anonymized aggregate data may be retained indefinitely. Email event logs are retained for 3 years for compliance."
+
+### #4 International Users / GDPR
+Needs lawyer to confirm whether to rely on the EU-US Data Privacy Framework (check if Anthropic/Supabase are DPF-certified) or implement Standard Contractual Clauses (SCCs).
+
+### #6 Warranty Disclaimer
+Standard SaaS language: "TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, ALL MINDS ON DECK LLC DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT."
+
+Have WA lawyer confirm this holds under the WA Consumer Protection Act (RCW 19.86).
+
+### #11 Refund Definition ✅ ALREADY ADDED TO TERMS
+"A day is considered 'completed' when you have logged in and submitted a journal entry. Viewing the dashboard without journaling does not count as completing a day. The 7-day window starts from the date of purchase, not the date you first log in."
+
+### ALREADY ADDED TO TERMS (this session)
+- ✅ Severability (Section 18)
+- ✅ Survivability (Section 17)
+- ✅ Entire agreement (Section 19)
+- ✅ Force majeure (Section 16)
+- ✅ Waiver (Section 20)
+- ✅ Third-party service disclaimer (Section 15)
+- ✅ AI model update disclosure (added to Section 7)
+- ✅ Prohibition on professional use (added to Section 10)
+- ✅ Refund definition clarified (Section 6)
+
+---
+
 *Disclaimer: This is not legal advice. Have a licensed attorney in Washington State review all of the above before making changes.*

@@ -53,6 +53,19 @@ interface ExerciseCardProps {
   onPark?: () => void;
   /** Whether the exercise is currently parked */
   isParked?: boolean;
+  /** Current day number — used for skill progression badge */
+  dayNumber?: number;
+}
+
+const progressionStages = [
+  { label: "Awareness", color: "#818cf8", range: [1, 7] },    // Week 1: awareness & noticing
+  { label: "Practice", color: "#60a5fa", range: [8, 14] },    // Week 2: trying tools
+  { label: "Application", color: "#34d399", range: [15, 21] }, // Week 3: applying to real situations
+  { label: "Integration", color: "#fbbf24", range: [22, 30] }, // Week 4: making it yours
+] as const;
+
+function getProgressionStage(dayNumber: number) {
+  return progressionStages.find((s) => dayNumber >= s.range[0] && dayNumber <= s.range[1]) || null;
 }
 
 const modalityConfig: Record<string, { label: string }> = {
@@ -85,6 +98,7 @@ export default function ExerciseCard({
   dailySessionId,
   onPark,
   isParked = false,
+  dayNumber,
 }: ExerciseCardProps) {
   const [expanded, setExpanded] = useState(type === "coaching_plan");
   const [response, setResponse] = useState(existingResponses?.main || "");
@@ -327,6 +341,26 @@ export default function ExerciseCard({
                 {mod.label}
               </span>
             )}
+            {dayNumber && (() => {
+              const stage = getProgressionStage(dayNumber);
+              if (!stage) return null;
+              return (
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 600,
+                    color: stage.color,
+                    backgroundColor: `${stage.color}18`,
+                    padding: "2px 8px",
+                    borderRadius: 10,
+                    letterSpacing: "0.04em",
+                    textTransform: "uppercase" as const,
+                  }}
+                >
+                  {stage.label}
+                </span>
+              );
+            })()}
           </div>
         </div>
 

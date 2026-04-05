@@ -536,6 +536,7 @@ export default function DoTab({
                 isRequired={true}
                 isCompleted={completedExercises.has(ex.name)}
                 dailySessionId={session?.id}
+                dayNumber={dayNumber}
                 onComplete={async (responses, rating) =>
                   await handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
                 }
@@ -576,6 +577,7 @@ export default function DoTab({
                 estimatedMinutes={ex.estimated_minutes}
                 isCompleted={completedExercises.has(ex.framework_name)}
                 dailySessionId={session?.id}
+                dayNumber={dayNumber}
                 onComplete={async (responses, rating) =>
                   await handleExerciseComplete(
                     ex.framework_name, "overflow", ex.modality,
@@ -656,6 +658,7 @@ export default function DoTab({
                 instructions="Write what comes up as you sit with this framework and the reflection question above."
                 isCompleted={completedExercises.has(`Reflect: ${frameworkAnalysis.framework_name}`)}
                 dailySessionId={session?.id}
+                dayNumber={dayNumber}
                 onComplete={async (responses, rating) =>
                   await handleExerciseComplete(
                     `Reflect: ${frameworkAnalysis.framework_name}`,

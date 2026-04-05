@@ -15,7 +15,7 @@
 ## Medium Effort (~2-3 hrs each)
 - [x] Spaced retrieval: RetrievalCheck exercises on Days 7, 14, 21 (seed data update) ✅ SQL SCRIPT READY (scripts/add-retrieval-exercises.sql — run in Supabase SQL Editor to add retrieval exercises to all 3 programs)
 - [x] Progress visualization: "Then vs Now" card on weekly review page ✅ DEPLOYED (shows Day 1 rating → week avg, exercises, days completed)
-- [ ] Skill progression badges on exercise cards (Awareness/Practice/Application/Integration by week)
+- [x] Skill progression badges on exercise cards (Awareness/Practice/Application/Integration by week) ✅ DEPLOYED (color-coded pill badges on exercise cards by week: purple Awareness → blue Practice → green Application → amber Integration)
 - [x] Assessment→action: update process-journal prompt to weight low-scoring domains ✅ DEPLOYED (queries Day 1 Seven Disruptions scores, injects into prompt, adds selection rule 7)
 - [ ] whyThis chunking: shorten 5-6 longest, move framework steps into primitive prompts
 - [x] Exit survey email: 7 days inactive + not finished → email with survey link ✅ DEPLOYED (re-engage route now sends exit survey at 7+ days, re-engage at 3-7 days. Set EXIT_SURVEY_URL env var to Typeform URL when created.)

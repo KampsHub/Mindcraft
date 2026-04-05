@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Nav from "@/components/Nav";
 import Logo from "@/components/Logo";
@@ -84,16 +84,13 @@ export default function PageShell({
 }: PageShellProps) {
   const positions = blobPositions[blobVariant];
 
-  // Pick a background image — rotates daily, stable within a session
-  const [bgImage, setBgImage] = useState<string | null>(null);
-  useEffect(() => {
-    if (!showBgImage) return;
+  // Pick a background image — rotates daily, computed immediately to avoid flash
+  const bgImage = showBgImage ? (() => {
     const pool = PROGRAM_BG_IMAGES[programSlug || "parachute"] || PROGRAM_BG_IMAGES.parachute;
     const now = new Date();
     const localDay = now.getFullYear() * 366 + now.getMonth() * 31 + now.getDate();
-    const idx = localDay % pool.length;
-    setBgImage(pool[idx]);
-  }, [showBgImage, programSlug]);
+    return pool[localDay % pool.length];
+  })() : null;
 
   return (
     <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative", overflow: "hidden" }}>

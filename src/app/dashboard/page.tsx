@@ -560,16 +560,15 @@ const PROGRAM_BG_IMAGES: Record<string, string[]> = {
   ],
 };
 
-function DashboardBgImage({ programSlug }: { programSlug?: string }) {
-  const [bgImage, setBgImage] = useState<string | null>(null);
-  useEffect(() => {
-    const pool = PROGRAM_BG_IMAGES[programSlug || "parachute"] || PROGRAM_BG_IMAGES.parachute;
-    const now = new Date();
-    const localDay = now.getFullYear() * 366 + now.getMonth() * 31 + now.getDate();
-    setBgImage(pool[localDay % pool.length]);
-  }, [programSlug]);
+function getDailyBgImage(programSlug?: string) {
+  const pool = PROGRAM_BG_IMAGES[programSlug || "parachute"] || PROGRAM_BG_IMAGES.parachute;
+  const now = new Date();
+  const localDay = now.getFullYear() * 366 + now.getMonth() * 31 + now.getDate();
+  return pool[localDay % pool.length];
+}
 
-  if (!bgImage) return null;
+function DashboardBgImage({ programSlug }: { programSlug?: string }) {
+  const bgImage = getDailyBgImage(programSlug);
 
   return (
     <div

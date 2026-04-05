@@ -291,7 +291,7 @@ Analyze the journal content and select the best overflow exercises for this clie
 
     const message = await anthropic.messages.create({
       model: getModelForTier("standard"),
-      max_tokens: 800,
+      max_tokens: 2000,
       system: buildCachedSystem(STANDARD_VOICE, systemPrompt),
       messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
     });

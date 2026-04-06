@@ -34,11 +34,24 @@ Go to Supabase → SQL Editor. For each script, you can check if it was already 
 - `scripts/update-scaffolding-notes.sql` — Check: run `SELECT scaffolding_note FROM day_content WHERE day_number = 15 LIMIT 1`. If null, run the script.
 - `scripts/add-bloom-labels.sql` — Check: run `SELECT bloom_level FROM exercises LIMIT 1`. If column doesn't exist or is null, run the script.
 
-**5. GA4 funnel (30 min)**
+**6. GA4 funnel (30 min)**
 Go to GA4 → Explore → Create new Exploration → Funnel.
 Steps: `page_view (/)` → `homescreen_program_click` → `begin_checkout` → `login_success` → `day_completed (day 1)` → `day_completed (day 7)`
 
+**7. Tremendous API + referral system activation**
+- Awaiting email response from Tremendous for API access
+- Once approved: get API key (Team Settings → API) + Funding Source ID (Funding page)
+- Fund through business account (same one connected to Stripe payouts)
+- Add to Vercel env vars: `TREMENDOUS_API_KEY`, `TREMENDOUS_FUNDING_SOURCE_ID`
+- Enable auto-reload: Funding → Auto-reload → set threshold ($50 when below $20)
+- Run SQL: `supabase/referrals-and-gifts.sql` in Supabase SQL Editor
+
+**8. Run referrals SQL migration**
+Go to Supabase → SQL Editor → paste contents of `supabase/referrals-and-gifts.sql` → Run.
+Creates `referrals`, `referral_redemptions`, and `gift_codes` tables.
+
 check admin site
+check coach dashboard
 
 ### Stefanie: Co-Creation Decisions Needed
 

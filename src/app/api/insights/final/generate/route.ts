@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         .limit(60),
       supabase.from("weekly_reviews")
         .select("week_number, approved_summary, draft_summary, created_at")
-        .eq("enrollment_id", enrollmentId)
+        .eq("enrollment_id", enrollment_id)
         .order("week_number", { ascending: true })
         .limit(6),
     ]);
@@ -106,16 +106,17 @@ ${weeklySnippets || "(no weekly summaries found)"}
 
 Now write the reflection.`;
 
-    const anthropic = getAnthropicClient();
-    const msg = await anthropic.messages.create({
+    const ac = getAnthropicClient();
+    if (!ac.success) return ac.response;
+    const msg = await ac.client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 2500,
       messages: [{ role: "user", content: prompt }],
     });
 
     const content = msg.content
-      .filter((c): c is { type: "text"; text: string } => c.type === "text")
-      .map((c) => c.text)
+      .map((b) => (b.type === "text" ? b.text : ""))
+      .filter(Boolean)
       .join("\n\n")
       .trim();
 

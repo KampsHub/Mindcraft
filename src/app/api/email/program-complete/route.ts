@@ -160,6 +160,16 @@ export async function POST(request: Request) {
               </a>
             </div>
             <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #333339;">
+              <p style="color: #a0a0a8; font-size: 14px; line-height: 1.7; margin: 0 0 16px 0;">
+                Know someone navigating a career crisis? Refer them (you get a $10 Amazon gift card) or gift them a program.
+              </p>
+              <div style="text-align: center;">
+                <a href="https://mindcraft.ing/refer" style="display: inline-block; padding: 10px 24px; background-color: rgba(224,149,133,0.2); color: #e09585; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 100px; border: 1px solid rgba(224,149,133,0.3);">
+                  Refer or gift &rarr;
+                </a>
+              </div>
+            </div>
+            <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #333339;">
               <p style="color: #ffffff; font-size: 15px; line-height: 1.7; margin: 0; font-style: italic;">
                 This program was designed to end. The tools are yours now.
               </p>

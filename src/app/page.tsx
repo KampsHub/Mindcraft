@@ -1193,6 +1193,7 @@ export default function Home() {
               { label: "Programs", href: "#programs" },
               { label: "How it works", href: "#how" },
               { label: "FAQ", href: "#faq" },
+              { label: "Refer & Gift", href: "/refer" },
             ].map(({ label, href }) => (
               <motion.a
                 key={label}

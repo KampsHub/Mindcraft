@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       const customerEmail = session.customer_details?.email;
       const stripeCustomerId = session.customer as string;
 
-      // Check if a coach referral promo code was used
+      // Check if a promo code was used (coach referral, user referral, or gift)
       let referringCoachId: string | undefined;
       const discount = session.discounts?.[0];
       if (discount?.promotion_code) {
@@ -51,12 +51,115 @@ export async function POST(request: NextRequest) {
               ? discount.promotion_code
               : discount.promotion_code.id;
           const promoCode = await stripe.promotionCodes.retrieve(promoCodeId);
+
           if (promoCode.metadata?.type === "coach_referral" && promoCode.metadata?.coach_id) {
             referringCoachId = promoCode.metadata.coach_id;
-            console.log(`Referral detected — coach: ${referringCoachId}, code: ${promoCode.code}`);
+            console.log(`Coach referral detected — coach: ${referringCoachId}, code: ${promoCode.code}`);
+          }
+
+          // Track user referral redemption
+          if (promoCode.metadata?.type === "user_referral" && promoCode.metadata?.referrer_id) {
+            const { data: referral } = await supabase
+              .from("referrals")
+              .select("id")
+              .eq("referral_code", promoCode.code)
+              .single();
+            if (referral) {
+              await supabase.from("referral_redemptions").insert({
+                referral_id: referral.id,
+                referred_email: customerEmail,
+                referred_user_id: userId || null,
+                stripe_session_id: session.id,
+                status: "redeemed",
+                redeemed_at: new Date().toISOString(),
+                eligible_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+              });
+              console.log(`User referral redeemed — referrer: ${promoCode.metadata.referrer_id}, code: ${promoCode.code}`);
+            }
+          }
+
+          // Track gift code redemption
+          if (promoCode.metadata?.type === "gift_code") {
+            await supabase
+              .from("gift_codes")
+              .update({
+                status: "redeemed",
+                recipient_email: customerEmail,
+                recipient_user_id: userId || null,
+                redeemed_at: new Date().toISOString(),
+              })
+              .eq("gift_code", promoCode.code);
+            console.log(`Gift code redeemed — code: ${promoCode.code}`);
           }
         } catch (err) {
           console.error("Failed to retrieve promotion code:", err);
+        }
+      }
+
+      // Handle gift purchases — generate 100% off code for gifter to send
+      if (session.metadata?.is_gift === "true") {
+        try {
+          const giftChars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+          let giftCode = "GIFT-";
+          for (let i = 0; i < 6; i++) giftCode += giftChars[Math.floor(Math.random() * giftChars.length)];
+
+          const giftCoupon = await stripe.coupons.create({
+            percent_off: 100,
+            duration: "once",
+            name: `Gift: ${giftCode}`,
+            max_redemptions: 1,
+          });
+          const giftPromo = await stripe.promotionCodes.create({
+            coupon: giftCoupon.id,
+            code: giftCode,
+            max_redemptions: 1,
+            metadata: { type: "gift_code", gifter_email: customerEmail || "" },
+          });
+
+          await supabase.from("gift_codes").insert({
+            gifter_id: userId || null,
+            gifter_email: customerEmail || "",
+            gift_code: giftCode,
+            stripe_promo_id: giftPromo.id,
+            stripe_session_id: session.id,
+            program: session.metadata?.program || "unknown",
+            status: "purchased",
+          });
+
+          // Email the gift code to the gifter
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey && customerEmail) {
+            const { Resend } = await import("resend");
+            const resend = new Resend(resendKey);
+            await resend.emails.send({
+              from: "Mindcraft <noreply@allmindsondeck.org>",
+              to: customerEmail,
+              subject: "Your Mindcraft gift code is ready",
+              html: `
+                <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, sans-serif;">
+                  <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
+                    <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
+                      Your gift is ready.
+                    </p>
+                    <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 24px 0;">
+                      Send this code to the person you&rsquo;d like to gift a Mindcraft program to. They&rsquo;ll use it at checkout to enroll for free.
+                    </p>
+                    <div style="text-align: center; margin: 28px 0; padding: 20px; background-color: rgba(255,255,255,0.06); border-radius: 10px;">
+                      <p style="font-size: 28px; font-weight: 700; color: #e09585; margin: 0; letter-spacing: 0.08em;">
+                        ${giftCode}
+                      </p>
+                    </div>
+                    <p style="color: #a0a0a8; font-size: 14px; line-height: 1.6; margin: 0; text-align: center;">
+                      This code is single-use and works at <a href="https://mindcraft.ing" style="color: #e09585; text-decoration: none;">mindcraft.ing</a> checkout.
+                    </p>
+                  </div>
+                </div>
+              `,
+            }).catch(() => {});
+          }
+          console.log(`Gift code generated: ${giftCode} for ${customerEmail}`);
+        } catch (giftErr) {
+          console.error("Failed to generate gift code:", giftErr);
         }
       }
 

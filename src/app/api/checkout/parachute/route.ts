@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     }
 
     const stripe = new Stripe(stripeKey);
-    const { tier, amount } = await req.json();
+    const { tier, amount, is_gift } = await req.json();
 
     const product = PRODUCTS[tier];
     if (!product) {
@@ -51,7 +51,8 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      metadata: { tier, amount_cents: String(cents), program: "parachute" },
+      metadata: { tier, amount_cents: String(cents), program: "parachute", ...(is_gift ? { is_gift: "true" } : {}) },
+      allow_promotion_codes: true,
       success_url: `${baseUrl}/parachute/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/parachute?checkout=cancelled#pricing`,
     });

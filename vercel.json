@@ -7,6 +7,10 @@
     {
       "path": "/api/email/re-engage",
       "schedule": "0 15 * * *"
+    },
+    {
+      "path": "/api/referral-rewards",
+      "schedule": "0 13 * * *"
     }
   ]
 }

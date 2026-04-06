@@ -1,16 +1,14 @@
 import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs";
+
+// NOTE: We deliberately do NOT wrap with withSentryConfig.
+// Next.js 16 uses Turbopack as the default builder, and Sentry's webpack
+// plugin (injected by withSentryConfig) is incompatible with Turbopack
+// builds. instrumentation.ts is sufficient to initialize the Sentry SDK
+// on the server — we just give up on auto source-map upload, which is
+// not needed for events to fire in Sentry.
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@anthropic-ai/sdk"],
 };
 
-export default withSentryConfig(nextConfig, {
-  // Silences the "Sentry CLI not authenticated" warning in dev
-  silent: !process.env.CI,
-  // Upload a larger set of source maps for prettier stack traces
-  // (only runs when SENTRY_AUTH_TOKEN is set in CI)
-  widenClientFileUpload: true,
-  // Tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
-});
+export default nextConfig;

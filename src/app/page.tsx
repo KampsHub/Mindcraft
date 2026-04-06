@@ -1675,11 +1675,12 @@ export default function Home() {
                             style={{
                               fontSize: 11,
                               fontFamily: body,
-                              color: "rgba(255,255,255,0.85)",
+                              color: "#ffffff",
                               lineHeight: 1,
                               padding: "5px 10px",
                               borderRadius: 20,
-                              border: `1px solid rgba(255,255,255,0.12)`,
+                              border: "1px solid rgba(255,255,255,0.25)",
+                              backgroundColor: "rgba(255,255,255,0.06)",
                               whiteSpace: "nowrap",
                             }}
                           >

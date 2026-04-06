@@ -108,12 +108,37 @@ export default function ReferPage() {
               border: `1px solid ${colors.borderDefault}`, padding: 32,
               height: "100%", display: "flex", flexDirection: "column",
             }}>
-              <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                Tell your friends about us
-              </h2>
-              <p style={{ fontFamily: body, fontSize: 14, color: colors.textSecondary, lineHeight: 1.6, marginBottom: 24 }}>
-                They receive 20% off the regular program prices. You receive a $10 Amazon Gift Card once they complete their first week as a Thank You.
-              </p>
+              {/* Visual header */}
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                <div style={{
+                  width: 64, height: 64, borderRadius: 16,
+                  background: `linear-gradient(135deg, ${colors.coral}30, ${colors.coral}10)`,
+                  border: `1px solid ${colors.coral}30`,
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                }}>
+                  <span style={{ fontFamily: display, fontSize: 22, fontWeight: 800, color: colors.coral }}>20%</span>
+                </div>
+                <div>
+                  <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, margin: "0 0 4px 0" }}>
+                    Tell your friends about us
+                  </h2>
+                  <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, margin: 0 }}>
+                    They save. You get thanked.
+                  </p>
+                </div>
+              </div>
+
+              {/* Value props */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2} strokeLinecap="round"><path d="m9 12 2 2 4-4" /><circle cx="12" cy="12" r="10" /></svg>
+                  <span style={{ fontFamily: body, fontSize: 13, color: colors.textSecondary }}>They get <strong style={{ color: colors.textPrimary }}>20% off</strong> regular program prices</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={2} strokeLinecap="round"><path d="m9 12 2 2 4-4" /><circle cx="12" cy="12" r="10" /></svg>
+                  <span style={{ fontFamily: body, fontSize: 13, color: colors.textSecondary }}>You get a <strong style={{ color: colors.textPrimary }}>$10 Amazon Gift Card</strong> after their first week</span>
+                </div>
+              </div>
 
               {!user ? (
                 <motion.button
@@ -213,11 +238,31 @@ export default function ReferPage() {
               border: `1px solid ${colors.borderDefault}`, padding: 32,
               height: "100%", display: "flex", flexDirection: "column",
             }}>
-              <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                Gift our programs
-              </h2>
-              <p style={{ fontFamily: body, fontSize: 14, color: colors.textSecondary, lineHeight: 1.6, marginBottom: 24 }}>
-                You want to provide someone with extra support? Pay for a program and receive a unique code you can send to them. They use it at checkout to enroll for free.
+              {/* Visual header */}
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                <div style={{
+                  width: 64, height: 64, borderRadius: 16,
+                  background: "linear-gradient(135deg, #8b5cf630, #8b5cf610)",
+                  border: "1px solid #8b5cf630",
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                }}>
+                  <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="8" width="18" height="12" rx="2" /><path d="M12 8V6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
+                    <path d="M12 8V6a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v2" /><line x1="12" y1="12" x2="12" y2="16" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, margin: "0 0 4px 0" }}>
+                    Gift our programs
+                  </h2>
+                  <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, margin: 0 }}>
+                    Give someone 30 days of support.
+                  </p>
+                </div>
+              </div>
+
+              <p style={{ fontFamily: body, fontSize: 13, color: colors.textSecondary, lineHeight: 1.6, marginBottom: 20 }}>
+                Pay for a program. We send you a unique code. Share it however feels right — they enroll for free.
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

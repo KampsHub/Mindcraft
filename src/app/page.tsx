@@ -2384,7 +2384,14 @@ export default function Home() {
           }}
         />
         <div
-          style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1 }}
+          style={{
+            maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1,
+            backgroundColor: "rgba(24,24,28,0.75)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            borderRadius: 20,
+            padding: "48px 40px 40px",
+          }}
         >
           <FadeIn preset="slide-up" duration={0.8}>
             <h2

@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
             max_redemptions: 1,
           });
           const giftPromo = await stripe.promotionCodes.create({
-            coupon: giftCoupon.id,
+            promotion: { type: "coupon", coupon: giftCoupon.id },
             code: giftCode,
             max_redemptions: 1,
             metadata: { type: "gift_code", gifter_email: customerEmail || "" },

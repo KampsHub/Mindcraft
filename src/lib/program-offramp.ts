@@ -91,7 +91,7 @@ export async function runOfframp(
           max_redemptions: 1,
         });
         const promo = await stripe.promotionCodes.create({
-          coupon: coupon.id,
+          promotion: { type: "coupon", coupon: coupon.id },
           code: personalCode,
           max_redemptions: 1,
           metadata: {

@@ -3,6 +3,16 @@
 
 ---
 
+## 📌 LAUNCH TRIGGERS (check these on a regular cadence)
+
+| Trigger | What launches | Status |
+|---|---|---|
+| **20 paying customers** | $50/month Amazon gift card raffle for shared stories. Architecture is built; raffle code lives dormant. To launch: insert one row into `raffle_periods`, run one UPDATE to backfill `raffle_period_id` for accumulated entries, add one cron line to `vercel.json`, verify `TREMENDOUS_API_KEY` env var. ~5 min total. | ⏳ Waiting on customer count |
+
+Until the trigger fires, the `/share` form copy says: *"We're running a $50 Amazon gift card raffle for shared stories — but we're still small enough that we want to wait until there are enough entries for it to feel like a real drawing. Your entry is locked in for the first one."* Entries accumulate in the DB with `raffle_period_id = null`, get backfilled at launch.
+
+---
+
 ## 🚨 YOU NEED TO RUN THESE (April 6 session)
 
 Priority order — top ones unblock everything else.
@@ -58,6 +68,48 @@ Priority order — top ones unblock everything else.
 - User-initiated close-early: `/api/enrollment/close-early`, wired into `/goals` progress section (always visible) and `/dashboard` (inline link, only when 2+ active enrollments)
 - Webhook: now marks `personal_promo_codes.redeemed_at` on `type=personal_reward` redemption
 - `vercel.json`: both new crons registered
+
+---
+
+## 🗂 NEXT SESSION — TESTIMONIALS, RAFFLE, WALL OF LOVE, CRITICAL FEEDBACK (queued)
+
+Locked decisions from April 6 wrap-up. This is the next focused build (~12 hours, can split into 2 sessions).
+
+### Decisions locked
+- **Raffle:** $50 Amazon gift card, monthly cadence. Architecture built and dormant. **Launch trigger: 20 paying customers** (see Launch Triggers section above).
+- **Critical feedback:** Built but completely separate from public testimonials. Surfaces inside the daily flow on **day 26** (gives a 4-day decompression before the off-ramp). Prompt: *"What's not working for you?"* Writes to a `feedback_entries` table that never touches the wall, raffle, or marketing.
+- **Wall card name format:** First name + last initial only. No link to original post by default. Optional opt-in to show a "View on LinkedIn ↗" link if user pasted a social URL.
+- **Wall filters:** Outcome-based, never program-based (no outing of layoff/PIP status). Tags: `clarity`, `confidence`, `hard_conversations`, `starting_new`. Stored as `outcome_tags text[]` on testimonials.
+- **Video hosting:** Self-hosted in Supabase Storage. Requires Supabase Pro ($25/mo) — confirm before build. Direct browser → signed URL upload (bypasses Vercel's 4.5 MB function body limit). Auto-thumbnail generation. No client-side compression for v1.
+- **Social embeds (LinkedIn, X):** Hybrid approach — store the live embed HTML AND a snapshot (text + thumbnail) at submission time, with explicit consent. Default to live embed for the first 90 days, can flip individual rows to snapshot mode if they go stale or hostile.
+- **Wall placement on homepage:** Featured + 2x2 grid, between the differentiator strip and the gifting section. Empty state: hide entirely if `<4` approved testimonials exist.
+
+### Build scope
+
+**Session A — Backend + collection (~8 hours)**
+- SQL migration: `feedback_entries`, `testimonials` (with hosted-video fields, outcome_tags, snapshot fields), `raffle_periods`
+- `/share` page with 3 tabs: paste social URL · paste video URL · upload video / write text
+- `/feedback` page (private, day-26 prompt placement separate)
+- API routes: `POST /api/feedback`, `POST /api/testimonials/social`, `POST /api/testimonials/direct`, `POST /api/testimonials/upload-url` (signed URL endpoint, generic for reuse)
+- `/api/cron/draw-raffle` route — full code, NOT yet registered in vercel.json
+- Updated completion email to lead with the share CTA + "raffle launching soon" copy
+- Updated `/insights/final` to surface the share CTAs prominently
+- Day-26 prompt insertion into daily flow (need to look at `daily_sessions` / `program_days` schema for cleanest insertion point)
+
+**Session B — Display + wall (~6 hours)**
+- `<TestimonialCard>` component (handles LinkedIn embed / Twitter embed / hosted video / Loom embed / direct text via discriminator)
+- Embed utilities (LinkedIn URL → iframe, Twitter oEmbed, Loom URL → iframe, YouTube URL → iframe)
+- `<WallSection>` homescreen widget (featured + 2x2 grid layout)
+- `/wall` dedicated page with outcome-tag filter row, pagination, "Submit yours" CTA at the bottom
+- Auto-thumbnail generation for hosted videos (Supabase Edge Function)
+- Empty state guards (hide if <4 approved testimonials)
+- Manual seed instructions for the first 4–6 testimonials before launch
+- Add testimonial-video deletion to existing `/account/delete` flow
+
+### Pre-build checklist
+- [ ] Confirm Supabase plan — upgrade to Pro ($25/mo) if currently on Free
+- [ ] Verify `TREMENDOUS_API_KEY` is set in Vercel env (already needed for referral-rewards cron)
+- [ ] Decide on the 4–6 seed testimonials to ask for via direct outreach before launching the wall
 
 ---
 
@@ -118,12 +170,6 @@ Go to Vercel → Settings → Environment Variables. Check these two:
 - `STRIPE_WEBHOOK_SECRET` — must match the webhook endpoint configured for your live Stripe account (not the test one). Check Stripe Dashboard → Developers → Webhooks → your endpoint → Signing secret.
 
 Check coach dashboard
-
-**2. Sentry — Activate error monitoring (5 min)**
-Go to sentry.io → your Mindcraft project → Settings → Client Keys (DSN). Copy the DSN string. Then:
-- Vercel → Settings → Environment Variables → Add `NEXT_PUBLIC_SENTRY_DSN` with the DSN value
-- Push any change (or empty commit) to trigger a redeploy
-- After deploy, go to sentry.io — you should see a "first event" confirmation. From then on, production errors show up automatically.
 
 **6. GA4 funnel (30 min)**
 Go to GA4 → Explore → Create new Exploration → Funnel.

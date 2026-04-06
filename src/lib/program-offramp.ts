@@ -172,6 +172,7 @@ export async function runOfframp(
             referUrl,
             personalCode,
             appUrl,
+            coachingUrl: `${appUrl}/contact?topic=coaching`,
           }),
         });
       }
@@ -195,8 +196,9 @@ function offrampEmailHtml(opts: {
   referUrl: string;
   personalCode: string;
   appUrl: string;
+  coachingUrl: string;
 }): string {
-  const { programName, currentDay, reason, insightsUrl, deleteUrl, referUrl, personalCode, appUrl } = opts;
+  const { programName, currentDay, reason, insightsUrl, deleteUrl, referUrl, personalCode, appUrl, coachingUrl } = opts;
 
   const headline = reason === "closed_early"
     ? `You closed ${escapeHtml(programName)} on day ${currentDay}.`
@@ -264,6 +266,25 @@ function offrampEmailHtml(opts: {
       <p style="color:#a0a0a8;font-size:12px;line-height:1.5;margin:0;">
         Single-use. Works at checkout on any program page.
       </p>
+    </div>
+
+    <!-- 1:1 coaching upsell -->
+    <div style="background-color:#26262c;border:1px solid #44444c;border-radius:12px;padding:22px 24px;margin:24px 0;">
+      <p style="color:#7B9AAD;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin:0 0 8px 0;">
+        Want to go deeper?
+      </p>
+      <p style="color:#f0ede6;font-size:15px;font-weight:700;margin:0 0 8px 0;">
+        Work 1:1 with a Mindcraft coach
+      </p>
+      <p style="color:#d0ccc6;font-size:13px;line-height:1.6;margin:0 0 16px 0;">
+        Some shifts need a thought partner, not just a program. If you want to keep
+        building on what surfaced over the last ${currentDay} day${currentDay === 1 ? "" : "s"}
+        with a dedicated coach, that&rsquo;s what our continuing intensive is for &mdash; one
+        person, paying full attention, for as long as it takes.
+      </p>
+      <a href="${coachingUrl}" style="display:inline-block;padding:12px 22px;background-color:transparent;border:1.5px solid #7B9AAD;color:#7B9AAD;font-weight:700;font-size:14px;text-decoration:none;border-radius:999px;">
+        Talk to us about 1:1 coaching →
+      </a>
     </div>
 
     <div style="margin:28px 0;">

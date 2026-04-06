@@ -12,13 +12,13 @@
 
 ## User-Facing Emails
 
-| Email | File | Trigger | From |
-|-------|------|---------|------|
-| **Welcome** | `api/welcome-email/route.ts` | First login/signup | stefanie@ |
-| **Daily Reminder** | `api/email/daily-reminder/route.ts` | Cron daily 2 PM PT | noreply@ |
-| **Day Complete** | `api/email/day-complete/route.ts` | User completes a day | noreply@ |
+| Email                | File                                  | Trigger               | From      |
+| -------------------- | ------------------------------------- | --------------------- | --------- |
+| **Welcome**          | `api/welcome-email/route.ts`          | First login/signup    | stefanie@ |
+| **Daily Reminder**   | `api/email/daily-reminder/route.ts`   | Cron daily 2 PM PT    | noreply@  |
+| **Day Complete**     | `api/email/day-complete/route.ts`     | User completes a day  | noreply@  |
 | **Program Complete** | `api/email/program-complete/route.ts` | User finishes 30 days | stefanie@ |
-| **Coach Notes** | `api/email/coach-notes/route.ts` | Coach leaves a note | stefanie@ |
+| **Coach Notes**      | `api/email/coach-notes/route.ts`      | Coach leaves a note   | stefanie@ |
 
 ## Inactive Reminders & Churn
 
@@ -73,3 +73,144 @@ Resend webhooks tracked in `email_events` table via `api/resend-webhook/route.ts
 ## Supabase Auth Emails
 
 Supabase handles auth emails directly (signup confirmation, password reset, magic link). Not routed through Resend. Customize via Supabase dashboard.
+
+---
+
+## Where the copy lives
+
+All email templates are **inline HTML inside each API route file**. There is no external email template service, no CMS, no Resend template editor. To change email copy, edit the route file directly.
+
+---
+
+## Email Copy (all user-facing emails)
+
+### Welcome Email
+**Subject:** Welcome to Mindcraft
+**From:** stefanie@
+
+> Hello and Welcome.
+>
+> I'm glad you're here.
+>
+> Mindcraft was built from real coaching experience — the kind of tools I wished existed when I needed them most. Over the next 30 days, you'll journal, work through exercises designed by certified coaches, and start seeing your own patterns more clearly.
+>
+> If you have questions at any point, there's a Contact button right on your dashboard. I read every message personally.
+>
+> Wishing you the best on this journey.
+>
+> **Stefanie Kamps**
+
+---
+
+### Daily Reminder
+**Subject:** Day [X] is ready
+**From:** noreply@
+
+> Your Day [X] session is ready.
+>
+> [Button: Start session]
+>
+> Reply STOP to opt out of reminders.
+
+---
+
+### Day Complete
+**Subject:** Day [X] Complete — [program name]
+**From:** noreply@
+
+> Day [X] is done.
+>
+> Today's Themes: [list]
+> Summary: [first 3 sentences]
+> Exercises Completed: [count]
+>
+> Tomorrow's Territory: [next day title]
+>
+> [Button: Start Day [X+1]]
+
+---
+
+### Program Complete
+**Subject:** You finished [program name].
+**From:** stefanie@
+
+> 30 days. Done.
+>
+> [Stats: Journal Entries | Exercises | Coaching Questions]
+>
+> Your Active Goals: [list]
+>
+> What You Can Do Next:
+> - Download your exercise guide
+> - Share your insights
+> - Book a 1:1 coaching session
+>
+> Would you share your experience? Two quick questions. Takes 30 seconds.
+>
+> [Button: Share feedback]
+>
+> This program was designed to end. The tools are yours now.
+>
+> — Stefanie
+
+---
+
+### Coach Notes
+**Subject:** A note from your coach — [program name]
+**From:** stefanie@
+
+> Your coach left you a note.
+>
+> "[note preview, max 200 chars]"
+>
+> [Button: Read the Full Note]
+>
+> Your coach reviews your progress periodically and may share observations to support your journey.
+
+---
+
+### Inactive Reminder (sent up to 3 times)
+**Subjects rotate:**
+1. "Day [X] is waiting"
+2. "Your program is still here"
+3. "Checking in — one more nudge"
+
+**From:** noreply@
+
+> You were on Day [X]. [Your last entry touched on [theme]. / You were making real progress.]
+>
+> The program doesn't judge gaps. Pick up where you left off.
+>
+> [Button: Continue Day [X]]
+>
+> Reply STOP to opt out of check-ins.
+
+---
+
+### Exit Survey (after 3 reminders + 7 days)
+**Subject:** Quick question before you go
+**From:** crew@
+
+> It looks like you stepped away from [program name].
+>
+> No judgment — life happens. But your feedback would genuinely help us make this better for the next person.
+>
+> Two questions, takes 30 seconds:
+>
+> [Button: Share quick feedback]
+>
+> Your program is still here if you want to come back. [Continue Day X →]
+>
+> Reply STOP to opt out of check-ins.
+
+---
+
+### Waitlist Confirmation
+**Subject:** You're on the list — [program]
+**From:** crew@
+
+> You're on the waitlist.
+>
+> We'll let you know as soon as the [program] program is ready. No spam, just one email when it launches.
+>
+> — The Mindcraft team

@@ -279,64 +279,78 @@ export default function ReferPage() {
           </FadeIn>
         </div>
 
-        {/* ── How it works — 3 steps ── */}
-        <FadeIn preset="slide-up" delay={0.2} triggerOnMount>
-          <div style={{ marginTop: 64, textAlign: "center" }}>
-            <h2 style={{ fontFamily: display, fontSize: 20, fontWeight: 700, marginBottom: 32, color: colors.textPrimary }}>
-              How it works
-            </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
-              {[
-                {
-                  icon: (
-                    <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
-                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                    </svg>
-                  ),
-                  title: "Share your code",
-                  desc: "Sign in and generate your personalized referral code. Share it however you like.",
-                },
-                {
-                  icon: (
-                    <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
-                      <line x1="19" y1="8" x2="19" y2="14" /><line x1="22" y1="11" x2="16" y2="11" />
-                    </svg>
-                  ),
-                  title: "They sign up",
-                  desc: "Your friend enters the code at checkout and gets 20% off the regular price.",
-                },
-                {
-                  icon: (
-                    <svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="8" width="18" height="12" rx="2" /><path d="M12 8V6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
-                      <path d="M12 8V6a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v2" /><line x1="12" y1="12" x2="12" y2="16" />
-                    </svg>
-                  ),
-                  title: "You get rewarded",
-                  desc: "After they complete their first week, you receive a $10 Amazon Gift Card.",
-                },
-              ].map((step, i) => (
-                <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                  <div style={{
-                    width: 56, height: 56, borderRadius: "50%",
-                    backgroundColor: `${colors.coral}15`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                  }}>
-                    {step.icon}
+        {/* ── How it works — two flows ── */}
+        <div style={{ marginTop: 64, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          {/* Referral flow */}
+          <FadeIn preset="slide-up" delay={0.2} triggerOnMount>
+            <div style={{
+              backgroundColor: colors.bgSurface, borderRadius: 16,
+              border: `1px solid ${colors.borderDefault}`, padding: "28px 24px",
+              textAlign: "center",
+            }}>
+              <p style={{ fontFamily: display, fontSize: 11, fontWeight: 600, color: colors.coral, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>
+                How referrals work
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                {[
+                  { num: "1", title: "Share your code", desc: "Generate your personalized code and send it to anyone." },
+                  { num: "2", title: "They get 20% off", desc: "Your friend enters the code at checkout." },
+                  { num: "3", title: "You get $10", desc: "Amazon Gift Card sent to you after their first week." },
+                ].map((step, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 14, textAlign: "left" }}>
+                    <span style={{
+                      fontFamily: display, fontSize: 13, fontWeight: 700,
+                      width: 28, height: 28, borderRadius: "50%",
+                      backgroundColor: `${colors.coral}15`, color: colors.coral,
+                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                    }}>
+                      {step.num}
+                    </span>
+                    <div>
+                      <p style={{ fontFamily: display, fontSize: 13, fontWeight: 600, color: colors.textPrimary, margin: "0 0 2px 0" }}>{step.title}</p>
+                      <p style={{ fontFamily: body, fontSize: 12, color: colors.textMuted, margin: 0, lineHeight: 1.4 }}>{step.desc}</p>
+                    </div>
                   </div>
-                  <h3 style={{ fontFamily: display, fontSize: 15, fontWeight: 700, color: colors.textPrimary, margin: 0 }}>
-                    {step.title}
-                  </h3>
-                  <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, lineHeight: 1.5, margin: 0, maxWidth: 220 }}>
-                    {step.desc}
-                  </p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </FadeIn>
+          </FadeIn>
+
+          {/* Gift flow */}
+          <FadeIn preset="slide-up" delay={0.25} triggerOnMount>
+            <div style={{
+              backgroundColor: colors.bgSurface, borderRadius: 16,
+              border: `1px solid ${colors.borderDefault}`, padding: "28px 24px",
+              textAlign: "center",
+            }}>
+              <p style={{ fontFamily: display, fontSize: 11, fontWeight: 600, color: "#8b5cf6", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>
+                How gifting works
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                {[
+                  { num: "1", title: "Pick a program", desc: "Choose Parachute, Jetstream, or Basecamp." },
+                  { num: "2", title: "Pay the full price", desc: "You pay $49. We generate a unique single-use code." },
+                  { num: "3", title: "Send the code", desc: "We email it to you. Forward it to whoever you\u2019d like \u2014 they enroll for free." },
+                ].map((step, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 14, textAlign: "left" }}>
+                    <span style={{
+                      fontFamily: display, fontSize: 13, fontWeight: 700,
+                      width: 28, height: 28, borderRadius: "50%",
+                      backgroundColor: "#8b5cf615", color: "#8b5cf6",
+                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                    }}>
+                      {step.num}
+                    </span>
+                    <div>
+                      <p style={{ fontFamily: display, fontSize: 13, fontWeight: 600, color: colors.textPrimary, margin: "0 0 2px 0" }}>{step.title}</p>
+                      <p style={{ fontFamily: body, fontSize: 12, color: colors.textMuted, margin: 0, lineHeight: 1.4 }}>{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+        </div>
 
         {/* ── Sharing History ── */}
         {user && (referrals.length > 0 || gifts.length > 0) && (

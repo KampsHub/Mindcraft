@@ -419,13 +419,15 @@ export default function ReferPage() {
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
               {[
-                { q: "Who can refer?", a: "Anyone with a Mindcraft account. You don\u2019t need to have completed a program." },
-                { q: "What discount does the referred person get?", a: "20% off any standard-priced program (Parachute, Jetstream, or Basecamp at $49). Sliding scale prices are not eligible for the referral discount." },
-                { q: "When do I get my gift card?", a: "7 days after the person you referred completes their purchase. This is our refund window \u2014 once it closes, your $10 Amazon Gift Card is sent automatically to your email." },
-                { q: "Can I refer multiple people?", a: "Yes, unlimited. Each person who signs up with your code earns you a $10 gift card." },
-                { q: "How does gifting work?", a: "You pay the full program price ($49). We generate a unique single-use code and email it to you. Send it to whoever you\u2019d like \u2014 they enter it at checkout and get the program for free." },
-                { q: "Can the gift code be used on any program?", a: "The gift code gives 100% off any program at checkout. It\u2019s single-use \u2014 one code, one person." },
-                { q: "What if my referral requests a refund?", a: "If the referred person refunds within 7 days, the gift card is automatically cancelled. You\u2019re never charged for a referral that didn\u2019t stick." },
+                { q: "How do I bring this up without overstepping?", a: "You know them. You noticed something. That\u2019s enough. You don\u2019t have to diagnose what they\u2019re going through \u2014 you can just say: \u201CI came across this and thought of you.\u201D The program meets them where they are. They decide what to do with it." },
+                { q: "Who can refer?", a: "Anyone with a Mindcraft account. You don\u2019t need to have completed a program yourself \u2014 you just need to believe it might help someone you care about." },
+                { q: "What does the person I refer get?", a: "20% off any standard-priced program ($49). It\u2019s a real discount, not a trial \u2014 they get the full 30-day experience. Sliding scale prices are already reduced and aren\u2019t eligible for the referral discount." },
+                { q: "When do I get my gift card?", a: "7 days after they purchase. We wait because that\u2019s our refund window \u2014 once it closes, your $10 Amazon Gift Card is sent to your email automatically." },
+                { q: "Can I refer more than one person?", a: "Yes, as many as you\u2019d like. Each person who signs up earns you a gift card. No cap." },
+                { q: "What if I want to gift it but I\u2019m not sure which program fits?", a: "That\u2019s okay. The gift code works at checkout for any program. You pick one when you pay, but your friend can use the code on whichever program feels right for them." },
+                { q: "Will they know I bought it?", a: "We email the gift code to you \u2014 not to them. You decide how and when to share it. If you want to send it with a personal note, you can. If you want to drop it in their inbox without a word, that works too." },
+                { q: "What if they don\u2019t use it?", a: "The code doesn\u2019t expire. It\u2019ll be there when they\u2019re ready \u2014 even if that\u2019s not right now." },
+                { q: "What if my referral requests a refund?", a: "If they refund within 7 days, your gift card is automatically cancelled. You\u2019re never out anything for a referral that didn\u2019t stick." },
               ].map((faq, i) => (
                 <details key={i} style={{ borderBottom: `1px solid ${colors.borderSubtle}` }}>
                   <summary style={{

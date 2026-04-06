@@ -36,8 +36,8 @@ export const content = {
   // ── Differentiator Strip ──
   differentiator: {
     items: [
-      "A career crisis takes your clear thinking first. The tools that could help \u2014 therapy, coaching, even a good friend \u2014 all need something from you that you don\u2019t have right now.",
-      "Mindcraft doesn\u2019t wait for you to figure it out. It reads what you write, finds the patterns you can\u2019t see, and gives you something to do about it \u2014 by week one.",
+      "A career crisis takes your clear thinking first. And the tools that could help all need something from you \u2014 the right questions, the right person, the right timing.",
+      "Mindcraft removes that barrier. It starts revealing your blind spots, reactive patterns, and buried strengths by week one. Come up with pragmatic action \u2014 fast.",
     ],
   },
 

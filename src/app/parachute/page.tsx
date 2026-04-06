@@ -7,6 +7,7 @@ import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
 import FadeIn from "@/components/FadeIn";
 import { trackEvent } from "@/components/GoogleAnalytics";
+import GiftingSection from "@/components/GiftingSection";
 
 /* ── Typography shortcuts ── */
 const display = fonts.display;
@@ -3543,6 +3544,7 @@ function ParachutePage() {
       <Founder />
       <DataPrivacy />
       <FAQ />
+      <GiftingSection />
       <FinalCTA />
       <Footer />
     </div>

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import PageShell from "@/components/PageShell";
 import PillButton from "@/components/PillButton";
 import FadeIn from "@/components/FadeIn";
@@ -54,9 +54,6 @@ export default function MyAccountPage() {
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteText, setDeleteText] = useState("");
-  const [deleting, setDeleting] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
@@ -140,20 +137,6 @@ export default function MyAccountPage() {
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.push("/login");
-  }
-
-  async function handleDelete() {
-    if (deleteText !== "DELETE") return;
-    setDeleting(true);
-    try {
-      const res = await fetch("/api/account", { method: "DELETE" });
-      if (!res.ok) throw new Error("Deletion failed");
-      await supabase.auth.signOut();
-      router.push("/");
-    } catch (err) {
-      console.error("Delete failed:", err);
-      setDeleting(false);
-    }
   }
 
   function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
@@ -506,90 +489,25 @@ export default function MyAccountPage() {
         </div>
       </FadeIn>
 
-      {/* ── Danger Zone ── */}
+      {/* ── Delete account (links to /account/delete) ── */}
       <FadeIn preset="fade" delay={0.26} triggerOnMount>
-        <div style={{
-          ...cardStyle,
-          borderColor: colors.error,
-          border: `1px solid rgba(210, 88, 88, 0.3)`,
-        }}>
+        <div style={cardStyle}>
           <h2 style={{
             fontSize: 16, fontWeight: 700, margin: "0 0 6px 0",
-            color: colors.error, fontFamily: display, letterSpacing: "-0.02em",
+            color: colors.textPrimary, fontFamily: display, letterSpacing: "-0.02em",
           }}>
-            Delete Account
+            Delete account
           </h2>
           <p style={{ fontSize: 13, color: colors.textMuted, margin: "0 0 16px 0", fontFamily: body, lineHeight: 1.5 }}>
-            Permanently delete your account and all associated data. This action cannot be undone.
+            Request account deletion. We purge everything within 30 days — you can cancel anytime during that window.
           </p>
-
-          {!showDeleteConfirm ? (
-            <PillButton
-              onClick={() => setShowDeleteConfirm(true)}
-              variant="ghost"
-              size="sm"
-              style={{ color: colors.error, borderColor: "rgba(210, 88, 88, 0.3)" }}
-            >
-              Delete all my data
-            </PillButton>
-          ) : (
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                style={{ overflow: "hidden" }}
-              >
-                <div style={{
-                  padding: 12, backgroundColor: colors.warningWash,
-                  border: `1px solid ${colors.warning}44`, borderRadius: 8,
-                  marginBottom: 12,
-                }}>
-                  <p style={{ fontSize: 13, color: colors.textPrimary, margin: 0, fontFamily: body, lineHeight: 1.5 }}>
-                    Before deleting, consider <strong>downloading your data</strong> above. Once deleted, your journal entries, exercises, and insights cannot be recovered.
-                  </p>
-                </div>
-                <p style={{ fontSize: 13, color: colors.error, margin: "0 0 12px 0", fontFamily: body, fontWeight: 600 }}>
-                  Type DELETE to confirm:
-                </p>
-                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <input
-                    type="text"
-                    value={deleteText}
-                    onChange={(e) => setDeleteText(e.target.value)}
-                    placeholder="DELETE"
-                    style={{
-                      padding: "8px 14px", fontSize: 14, fontFamily: body,
-                      color: colors.textPrimary, backgroundColor: colors.bgInput,
-                      border: `1px solid rgba(210, 88, 88, 0.3)`, borderRadius: 8,
-                      outline: "none", width: 140,
-                    }}
-                  />
-                  <PillButton
-                    onClick={handleDelete}
-                    disabled={deleteText !== "DELETE" || deleting}
-                    variant="ghost"
-                    size="sm"
-                    style={{
-                      color: deleteText === "DELETE" ? colors.error : colors.textMuted,
-                      borderColor: deleteText === "DELETE" ? colors.error : undefined,
-                    }}
-                  >
-                    {deleting ? "Deleting..." : "Confirm delete"}
-                  </PillButton>
-                  <button
-                    onClick={() => { setShowDeleteConfirm(false); setDeleteText(""); }}
-                    style={{
-                      fontSize: 13, color: colors.textMuted, background: "none",
-                      border: "none", cursor: "pointer", fontFamily: body,
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          )}
+          <PillButton
+            onClick={() => router.push("/account/delete")}
+            variant="ghost"
+            size="sm"
+          >
+            Delete my account
+          </PillButton>
         </div>
       </FadeIn>
     </PageShell>

@@ -133,48 +133,6 @@ CardSort, DialogueSequence, SplitAnnotator, WheelChart, EmotionalArc, NarrativeT
 
 ## 6. Open Product Questions
 
-**L. What happens after Day 30?**
-Currently: graduation email, nothing after. Options: (a) maintenance mode — journaling + exercises without structured arc, (b) re-enroll in different program, (c) alumni access to search/insights only, (d) transition to monthly subscription with lighter structure. Connects to offramp strategy (continued at 20% off).
-
-**M. Multiple simultaneous enrollments?**
-DB supports it. Dashboard shows multiple ProgramCards. Recommendation: allow but don't encourage — one program at a time is the intended experience.
-
-**N. Self-serve vs coach-referred GTM?**
-Product works fully without a coach. Landing page + assessment + checkout are all self-serve. Coach channel is supplementary. Primary GTM is likely self-serve.
-
-**O. Pricing model?**
-Stripe creates a subscription at $29 sliding scale. Program is 30 days (finite). No auto-cancellation at Day 30 — user keeps paying unless they cancel. Needs a decision: auto-cancel, roll into maintenance, or manual cancel prompt?
-
-**P. What does "completed" mean?**
-`completed_at` set when user clicks "Complete Day." No enforcement — can skip days. Should completion require all 30? A minimum? This affects graduation email and any certificates.
-
-**Q. First-time user onboarding tour?**
-No explanation after signup. A 3-step tooltip tour would reduce Day 1 drop-off. ~4 hours to build.
-
-**R. AI bad advice → user feedback loop?**
-Quality flagging exists but no feedback TO the user. Adding "noted, here's a replacement" toast + alternate exercise would close the loop. ~2-3 hours.
-
-**S. Voice vs text?**
-Both supported, no guidance. Could add one-time prompt suggesting when each is useful. Or let users discover naturally.
-
-**T. 350+ exercises — all used?**
-Some may never get selected if their `when_to_use` triggers never match. Can run a query to find unused frameworks and improve triggers or retire them.
-
-**U. Coaching plan vs overflow?**
-Each day has pre-designed `coaching_exercises` (structure) + AI-selected `overflow_exercises` (personalization). Both optional. Coaching plan shown first, overflow after.
-
-**V. Enneagram → exercise personalization?**
-Enneagram data already passed to Claude as context. No explicit modality weighting by type. Making it explicit (Type 4 → somatic, Type 6 → cognitive) ~2 hours.
-
-**W. Trial/freemium?**
-No way to try before buying. Options: (a) Day 1 free, (b) sample exercise page, (c) 3-day trial. For $29 targeting people who lost income, a free trial is a strong conversion lever.
-
-**X. Re-enrollment path?**
-DB supports it, no UI. Add CTA to graduation email: "Try Basecamp next." ~1 hour.
-
-**Y. User referral program?**
-Coaches can refer, users can't. "Share with a friend" could be strongest growth channel. Unique link per user + credit on signup. ~1 day for basic flow.
-
 ---
 
 ## 7. Growth & Monetization (Stefanie's roadmap)

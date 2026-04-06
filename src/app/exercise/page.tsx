@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import PageShell from "@/components/PageShell";
 import PillButton from "@/components/PillButton";
 import FadeIn from "@/components/FadeIn";
+import ExerciseFeedbackButton from "@/components/ExerciseFeedbackButton";
 import { colors, fonts } from "@/lib/theme";
 import { content as c } from "@/content/site";
 
@@ -14,6 +15,7 @@ const display = fonts.display;
 const body = fonts.bodyAlt;
 
 interface Exercise {
+  framework_id?: string;
   framework_name: string;
   title: string;
   introduction: string;
@@ -56,12 +58,16 @@ export default function ExercisePage() {
     fetchTodaysExercise();
   }, [fetchTodaysExercise]);
 
-  async function generateExercise() {
+  async function generateExercise(excludeFrameworkIds: string[] = []) {
     setGenerating(true);
     setError("");
 
     try {
-      const res = await fetch("/api/daily-exercise", { method: "POST" });
+      const res = await fetch("/api/daily-exercise", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ exclude_framework_ids: excludeFrameworkIds }),
+      });
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Failed to generate exercise");
@@ -73,6 +79,16 @@ export default function ExercisePage() {
     } finally {
       setGenerating(false);
     }
+  }
+
+  // Called after the user flags the current exercise as "doesn't fit".
+  // Excludes the flagged framework and pulls a replacement.
+  const [replacementToast, setReplacementToast] = useState<string | null>(null);
+  async function handleFlagged(frameworkId: string | undefined) {
+    setReplacementToast("Got it — finding another angle…");
+    await generateExercise(frameworkId ? [frameworkId] : []);
+    setReplacementToast("Here's another angle.");
+    setTimeout(() => setReplacementToast(null), 3500);
   }
 
   async function markComplete() {
@@ -161,6 +177,31 @@ export default function ExercisePage() {
           }}>
             {exercise.title}
           </h1>
+
+          {/* Feedback button + replacement toast */}
+          <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <ExerciseFeedbackButton
+              frameworkId={exercise.framework_id}
+              frameworkName={exercise.framework_name}
+              onFlagged={handleFlagged}
+              silent
+            />
+            <AnimatePresence>
+              {replacementToast && (
+                <motion.span
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0 }}
+                  style={{
+                    fontFamily: body, fontSize: 12,
+                    color: colors.coral,
+                  }}
+                >
+                  {replacementToast}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </FadeIn>
 

@@ -11,6 +11,14 @@
     {
       "path": "/api/referral-rewards",
       "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron/check-completions",
+      "schedule": "17 14 * * *"
+    },
+    {
+      "path": "/api/cron/process-deletions",
+      "schedule": "23 3 * * *"
     }
   ]
 }

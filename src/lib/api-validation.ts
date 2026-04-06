@@ -58,10 +58,17 @@ export const qualityFlagSchema = z.object({
     "reflection", "exercise", "summary", "themes", "plan",
     "weekly_insight", "framework_analysis", "reframe", "coaching_question",
   ]),
+  frameworkId: z.string().uuid().optional(),
   frameworkName: z.string().max(200).optional(),
   dailySessionId: sessionIdSchema.optional(),
-  flagReason: z.enum(["off_tone", "inaccurate", "unhelpful", "confusing", "inappropriate", "other"]),
+  flagReason: z.enum([
+    // Auto-detected / generic quality reasons
+    "off_tone", "inaccurate", "unhelpful", "confusing", "inappropriate", "other",
+    // User-initiated exercise-fit reasons
+    "not_relevant", "too_intense", "too_vague", "already_did",
+  ]),
   userComment: z.string().max(500).optional(),
+  userInitiated: z.boolean().optional(),
 });
 
 export const enneagramAnalyzeSchema = z.object({

@@ -91,6 +91,15 @@ export async function POST(request: NextRequest) {
               .eq("gift_code", promoCode.code);
             console.log(`Gift code redeemed — code: ${promoCode.code}`);
           }
+
+          // Track personal reward redemption (program completion 20% off)
+          if (promoCode.metadata?.type === "personal_reward") {
+            await supabase
+              .from("personal_promo_codes")
+              .update({ redeemed_at: new Date().toISOString() })
+              .eq("code", promoCode.code);
+            console.log(`Personal reward redeemed — code: ${promoCode.code}`);
+          }
         } catch (err) {
           console.error("Failed to retrieve promotion code:", err);
         }
@@ -132,7 +141,7 @@ export async function POST(request: NextRequest) {
             const { Resend } = await import("resend");
             const resend = new Resend(resendKey);
             await resend.emails.send({
-              from: "Mindcraft <noreply@allmindsondeck.org>",
+              from: "Mindcraft <crew@allmindsondeck.com>",
               to: customerEmail,
               subject: "Your Mindcraft gift code is ready",
               html: `

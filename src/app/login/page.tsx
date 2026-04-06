@@ -204,6 +204,16 @@ export default function LoginPage() {
               Continue with Google
             </button>
 
+            <p style={{
+              fontSize: 11, color: colors.textMuted,
+              margin: "8px 0 20px", textAlign: "center",
+            }}>
+              Securely hosted by{" "}
+              <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>
+                Supabase
+              </a>
+            </p>
+
             {/* Divider */}
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
               <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
@@ -331,17 +341,14 @@ export default function LoginPage() {
         )}
 
         {/* Footer */}
-        <div style={{ textAlign: "center", marginTop: 32 }}>
-          <p style={{ fontSize: 14, color: colors.textSecondary, margin: "0 0 8px" }}>
+        <div style={{ textAlign: "center", marginTop: 40 }}>
+          <p style={{ fontSize: 18, color: colors.textSecondary, margin: "0 0 12px", fontWeight: 500 }}>
             New here?{" "}
-            <a href="/#programs" style={{ color: colors.coral, fontWeight: 600, textDecoration: "none" }}>
-              Start your journey
-            </a>
-          </p>
-          <p style={{ fontSize: 11, color: colors.textMuted, margin: 0 }}>
-            Securely hosted by{" "}
-            <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>
-              Supabase
+            <a href="/#programs" style={{
+              color: colors.coral, fontWeight: 700, textDecoration: "none",
+              fontSize: 20, borderBottom: `2px solid ${colors.coral}`, paddingBottom: 2,
+            }}>
+              Start your journey →
             </a>
           </p>
         </div>

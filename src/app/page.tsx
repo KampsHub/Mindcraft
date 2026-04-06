@@ -11,6 +11,7 @@ import Logo from "@/components/Logo";
 import FadeIn from "@/components/FadeIn";
 import TextReveal from "@/components/TextReveal";
 import ComingSoonWaitlist from "@/components/ComingSoonWaitlist";
+import GiftingSection from "@/components/GiftingSection";
 import EmailNurtureSignup from "@/components/EmailNurtureSignup";
 
 /* ── Shared styles ── */
@@ -1723,6 +1724,9 @@ export default function Home() {
           <ComingSoonWaitlist />
 
         </div>
+
+        {/* ── Gifting ── */}
+        <GiftingSection />
       </section>
 
       {/* ── Pain-Point Marquee ── */}

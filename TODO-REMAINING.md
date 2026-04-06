@@ -1,5 +1,110 @@
 # Mindcraft — Todo & Action Tracker
-**Last updated:** April 5, 2026
+**Last updated:** April 6, 2026
+
+---
+
+## 🚨 YOU NEED TO RUN THESE (April 6 session)
+
+Priority order — top ones unblock everything else.
+
+### Supabase SQL Editor — run these two migrations
+- [ ] `supabase/program-completion-offramp.sql` — creates `final_insights`, `personal_promo_codes`, `deletion_requests ---- done`
+- [ ] `supabase/add-closed-early-status.sql` — allows `status = 'closed_early'` on enrollments -- done
+
+### Vercel environment variables — verify present
+- [ ] `CRON_SECRET` (any random string)
+- [ ] `SUPABASE_SERVICE_ROLE_KEY`
+- [ ] `STRIPE_SECRET_KEY`
+- [ ] `RESEND_API_KEY`
+- [ ] `NEXT_PUBLIC_APP_URL` (e.g. `https://mindcraft.allmindsondeck.com`)
+-- done
+### Assets
+- [x] Upload hiker image as `public/hiker-bg.jpg` ✅ done
+
+### Deploy & smoke test
+- [ ] Push + confirm Vercel deploy succeeds
+- [ ] Visit `/refer` — confirm marketing header, hiker section, FAQ, footer render
+- [ ] Visit `/` — confirm compact `GiftingSection` renders below waitlist cards
+- [ ] Visit `/login` — confirm "Securely hosted by Supabase" is under the Google button
+- [ ] Manually trigger `GET /api/cron/check-completions` with `Authorization: Bearer $CRON_SECRET` on a test enrollment that's been backdated ≥ 30 days — confirm final insight generates, email lands, promo code created
+
+---
+
+## ✅ SHIPPED TODAY (April 6)
+
+### /refer page redesign
+- Full rewrite: marketing header, hiker full-width section, two cards (referral + gift), 3 tips section, FAQ split into General/Referrals/Gifting with warm-white background, shared Footer. Program buttons now use "Layoff recovery / PIP navigation / New role confidence" labels with context blurbs, dynamic price from `/api/price`, and "Gift →" CTAs. Color scheme unified on ochre + navy (removed purple).
+
+### Shared components
+- `src/components/MarketingHeader.tsx` — nav for public subpages
+- `src/components/Footer.tsx` — shared footer (refer page uses it, PageShell still has its own copy)
+- `src/components/GiftingSection.tsx` — compact CTA with hiker bg, used on landing page + all 3 program pages + /insights/final
+- `src/components/CloseEarlyCard.tsx` — full variant (progress section) + inline variant (dashboard w/ 2+ enrollments)
+
+### Login page
+- Bigger "New here? Start your journey →" CTA; "Securely hosted by Supabase" moved directly under Google button
+
+### Webhook fix
+- Gift-code email now sends from `crew@allmindsondeck.com` (was `.org` which was never verified in Resend)
+
+### Program completion off-ramp (full stack)
+- SQL: `final_insights`, `personal_promo_codes`, `deletion_requests` tables with RLS
+- Shared helper: `src/lib/program-offramp.ts` — status update, Stripe promo, insight trigger, email
+- Cron: `/api/cron/check-completions` — daily, finds enrollments ≥ 30 days old, runs offramp
+- Cron: `/api/cron/process-deletions` — daily, purges data for deletion requests past their 30-day window
+- Claude-powered final insight generator: `/api/insights/final/generate` (branches prompt for `completed` vs `closed_early`)
+- In-app page: `/insights/final` (polls while generating, shows promo code, data-rights panel, GiftingSection)
+- In-app page: `/account/delete` (warm red-button flow, type-to-confirm, shows scheduled date, cancellable)
+- User-initiated close-early: `/api/enrollment/close-early`, wired into `/goals` progress section (always visible) and `/dashboard` (inline link, only when 2+ active enrollments)
+- Webhook: now marks `personal_promo_codes.redeemed_at` on `type=personal_reward` redemption
+- `vercel.json`: both new crons registered
+
+---
+
+## 📋 PRODUCT DECISIONS (April 6 — locked)
+
+Answers to the open questions M–Y. Source of truth.
+
+| # | Question | Decision |
+|---|---|---|
+| M | Multiple simultaneous enrollments? | **Allowed.** Two programs can run side by side on the dashboard. The "close early" link only appears under a ProgramCard when there are 2+ active enrollments. The progress section on `/goals` always shows the close-early card. Shipped today. |
+| N | Self-serve vs coach-referred GTM? | **Self-serve is primary.** Coach channel is supplementary. Marketing + product decisions should optimize for direct user acquisition. |
+| O | Pricing model? | **One-off payment, not a subscription.** The $29/$49 charge is a single payment for 30 days. No auto-renewal, no "maintenance tier." Confirm the Stripe checkout session uses `mode: "payment"` (it does — verified in `/api/checkout/parachute/route.ts` line 42). |
+| P | What does "completed" mean? | **All 30 days must be finished** to trigger natural completion. No certificates. The completion experience is the off-ramp we built today: final insights page + email + 20% off code + gifting/refer/share CTAs. Users who stop early can close the program manually via the "Close this program early" card — that triggers the same off-ramp with the `closed_early` branch of the Claude prompt. |
+| Q | First-time user onboarding tour? | **Not building.** Stefanie will record a video instead. |
+| R | AI bad advice → user feedback loop? | **Deferred — spec below.** Add a 👎 button next to AI-generated exercises/coaching responses → 1-line reason dropdown → inserts into `quality_flags` with `user_initiated=true` → immediately calls the matcher again (excluding the flagged framework) → swaps in a replacement with a toast "Got it — here's another angle." Closes the loop in-session and feeds the quality dashboard. ~2–3 hours when prioritized. |
+| S | Voice vs text guidance? | **Let users discover naturally.** No one-time prompt needed. |
+| T | 350+ exercises — all used? | **Query written.** Run `scripts/find-unused-frameworks.sql` in Supabase SQL Editor — returns (1) never-used frameworks, (2) rarely-used (1–3 completions), (3) usage distribution. Review results and either improve `when_to_use` triggers or retire dead frameworks. |
+| U | Coaching plan vs overflow — skip exercise? | **Need "I don't want to do this exercise" control.** Add a small "skip / replace" action on every exercise card. On skip: log to `exercise_skips` (new minimal table or reuse `quality_flags`), request a replacement from the matcher, swap in. Overlaps with R — same interaction, different reason code. Build both at once. |
+| V | Enneagram → exercise personalization? | **Deferred but worth doing.** Today Enneagram data goes to Claude as a freeform prompt blob. Make it explicit: multiply the matcher's relevance score by a per-type modality weight (Type 4 → somatic + narrative; Type 6 → grounding + cognitive; Type 9 → agency-naming + small-action; Type 5 → brief + low-intensity). Modalities are already tagged on `frameworks_library`. ~2 hours. Not urgent. |
+| W | Trial/freemium? | **No trial.** The refund window serves the same purpose and is already in the product copy. |
+| X | Re-enrollment path? | **Handled by the 20% off personal promo code** issued at off-ramp completion. No separate "try Basecamp next" email needed — the completion email already includes the code and a direct link to refer/gift/share. |
+| Y | User referral program? | **Shipped today.** `/refer` page, Stripe promo codes, webhook redemption tracking, sharing history, gift code flow all live. See the `referrals-and-gifts.sql` migration + `/api/referral/*` routes. |
+
+---
+
+## 🟡 GAPS FROM TODAY'S WORK (need follow-up but not urgent)
+
+### Existing `/my-account` vs new `/account/delete` overlap
+There's already a `/my-account` page with a DELETE button that hits `/api/account` and does an **immediate** wipe. The new `/account/delete` page uses the **30-day queued** flow via `deletion_requests`. Both are live — users could hit either. Pick one as canonical and redirect the other. Recommendation: keep the queued flow as the user-facing one (matches privacy policy language, gives users a cancel window) and delete the immediate-wipe path, OR keep the immediate one for admin/support cases and rename it.
+
+### Table-name audit on the new code
+During cleanup I fixed these but flag for re-verification after the SQL migration is run:
+- Insight generator queries `entries` (not `journal_entries`), `exercise_completions`, `weekly_reviews` — correct per existing schema
+- Process-deletions cron now uses the same table list as `/api/account/route.ts` — kept in sync by comment, but if you add new personal-data tables in future, update both places
+- Neither file has been smoke-tested against real data yet
+
+### Privacy policy needs one update
+`/privacy-policy` Section 8 (Data retention) should mention the `personal_promo_codes` table and the 30-day deletion queue behavior. Current copy is close enough but could be tightened.
+
+### `/api/price` is still single-price
+Dynamic price lookup works but returns one generic price (reads `STRIPE_PRICE_ID`). Fine for now since all 3 programs are $49. When you run per-program price tests, add `?program=slug` support that reads per-program product IDs from the existing PRODUCTS map in each checkout route.
+
+### Referral gift reward fulfillment (pre-existing, not from today)
+The `referral-rewards` cron already exists and uses Tremendous — confirmed working path. No action needed unless Tremendous API access is still pending.
+
+### Gift-purchase refund → cancel issued gift code
+You said you'll handle this manually in Stripe. Noting here so it's not forgotten: if this ever needs automation, add a `charge.refunded` listener in the webhook that finds the gift code via `session.id` and revokes the Stripe promo.
 
 ---
 
@@ -20,20 +125,6 @@ Go to sentry.io → your Mindcraft project → Settings → Client Keys (DSN). C
 - Push any change (or empty commit) to trigger a redeploy
 - After deploy, go to sentry.io — you should see a "first event" confirmation. From then on, production errors show up automatically.
 
-**3. Cron secret — Enable scheduled emails (2 min)**
-Go to Vercel → Settings → Environment Variables. Check if `CRON_SECRET` exists.
-- If missing: add it with any random string (e.g., go to randomkeygen.com, copy a 256-bit key)
-- This secures the daily inactive-reminder and re-engage email cron jobs. Without it, the crons run but accept any request — a minor security gap.
-
-**4. Run streak migration (1 min)**
-Go to Supabase → SQL Editor → paste contents of `supabase/add-streak-columns.sql` → Run. Adds `current_streak`, `best_streak`, `last_completed_date` to `program_enrollments`.
-
-**5. SQL scripts — Check if these were run (5 min)**
-Go to Supabase → SQL Editor. For each script, you can check if it was already applied:
-- `scripts/add-retrieval-exercises.sql` — Check: run `SELECT count(*) FROM exercises WHERE name LIKE '%Retrieval%'`. If 0, run the script.
-- `scripts/update-scaffolding-notes.sql` — Check: run `SELECT scaffolding_note FROM day_content WHERE day_number = 15 LIMIT 1`. If null, run the script.
-- `scripts/add-bloom-labels.sql` — Check: run `SELECT bloom_level FROM exercises LIMIT 1`. If column doesn't exist or is null, run the script.
-
 **6. GA4 funnel (30 min)**
 Go to GA4 → Explore → Create new Exploration → Funnel.
 Steps: `page_view (/)` → `homescreen_program_click` → `begin_checkout` → `login_success` → `day_completed (day 1)` → `day_completed (day 7)`
@@ -45,10 +136,6 @@ Steps: `page_view (/)` → `homescreen_program_click` → `begin_checkout` → `
 - Add to Vercel env vars: `TREMENDOUS_API_KEY`, `TREMENDOUS_FUNDING_SOURCE_ID`
 - Enable auto-reload: Funding → Auto-reload → set threshold ($50 when below $20)
 - Run SQL: `supabase/referrals-and-gifts.sql` in Supabase SQL Editor
-
-**8. Run referrals SQL migration**
-Go to Supabase → SQL Editor → paste contents of `supabase/referrals-and-gifts.sql` → Run.
-Creates `referrals`, `referral_redemptions`, and `gift_codes` tables.
 
 check admin site
 check coach dashboard

@@ -7,6 +7,7 @@ import { getAnthropicClient, buildCachedSystem, getModelForTier } from "@/lib/ap
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
+import { normalizeType, rankByType, getTypeRationale } from "@/lib/enneagram-modality";
 
 const EXERCISE_SYSTEM_PROMPT = `You are the coaching companion selecting and delivering today's exercise. You receive:
 1. Their coaching plan (goals, focus areas, current phase)
@@ -75,10 +76,19 @@ Write one sentence about what you found. No interpretation — just the physical
 
 IMPORTANT: Never use exercise jargon without explanation. If you reference "saboteur patterns", explain what a saboteur is first. If you reference "somatic mapping", explain it's about noticing physical sensations in your body. Write for someone who has never been to therapy or coaching.`;
 
-export async function POST() {
+export async function POST(request: Request) {
   const startTime = Date.now();
 
   try {
+    // Optional body — lets callers request a replacement that excludes specific frameworks
+    let excludeFrameworkIds: string[] = [];
+    try {
+      const body = await request.json();
+      if (Array.isArray(body?.exclude_framework_ids)) {
+        excludeFrameworkIds = body.exclude_framework_ids.filter((x: unknown) => typeof x === "string");
+      }
+    } catch { /* no body is fine */ }
+
     const cookieStore = await cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -156,9 +166,13 @@ export async function POST() {
       .eq("active", true)
       .contains("target_packages", [packageFilter]);
 
-    // Filter out recently used and low-rated frameworks
+    // Filter out recently used, low-rated, and caller-excluded (user-flagged) frameworks
+    const excludeSet = new Set(excludeFrameworkIds);
     const candidateFrameworks = (frameworks || []).filter(
-      (f) => !recentFrameworkIds.includes(f.id) && !lowRatedFrameworkIds.has(f.id)
+      (f) =>
+        !recentFrameworkIds.includes(f.id) &&
+        !lowRatedFrameworkIds.has(f.id) &&
+        !excludeSet.has(f.id)
     );
 
     if (!candidateFrameworks.length) {
@@ -182,6 +196,11 @@ export async function POST() {
       : null;
     const profileContext = formatProfileForPrompt(profile, "summary");
 
+    // Enneagram → modality weighting. Rank candidates by per-type preference,
+    // then take the top 20 so Claude gets a well-biased but still varied slate.
+    const enneagramType = normalizeType((profile?.enneagram as { type?: unknown } | undefined)?.type);
+    const rankedCandidates = rankByType(candidateFrameworks, enneagramType).slice(0, 20);
+
     // Build the prompt
     const userPrompt = `
 ## Client's Coaching Plan
@@ -193,9 +212,22 @@ ${(recentEntries || []).map((e) => `[${e.date}] (${e.type}) ${e.content?.substri
 ## Current Themes
 ${currentThemes.join(", ") || "None yet."}
 
-## Candidate Frameworks
-${candidateFrameworks.map((f) => `- ID: ${f.id}\n  Name: ${f.name}\n  Category: ${f.category}\n  Difficulty: ${f.difficulty_level}\n  Theme tags: ${(f.theme_tags || []).join(", ")}\n  Description: ${f.description}`).join("\n\n")}
+## Candidate Frameworks (ranked; prefer top of list when fit is otherwise equal)
+${rankedCandidates.map((f) => `- ID: ${f.id}\n  Name: ${f.name}\n  Category: ${f.category}\n  Modality: ${f.modality || "unspecified"}\n  Difficulty: ${f.difficulty_level}\n  Theme tags: ${(f.theme_tags || []).join(", ")}\n  Description: ${f.description}`).join("\n\n")}
+${enneagramType ? `
+## Enneagram modality note
+This person is Type ${enneagramType}. The candidate list above is already weighted toward modalities that tend to help this type — you don't need to re-rank, but when you deliver the exercise's "what_this_is" or introduction, weave in ONE sentence that connects the exercise's modality to how Type ${enneagramType} tends to get stuck. Type-specific rationale you can adapt (use the one matching your chosen framework's modality):
 
+${["somatic", "cognitive", "narrative", "relational", "guided"]
+  .map((m) => {
+    const r = getTypeRationale(enneagramType, m);
+    return r ? `- **${m}**: ${r}` : null;
+  })
+  .filter(Boolean)
+  .join("\n") || "(no tailored rationale available — skip this paragraph)"}
+
+Use the rationale as an anchor, not a script — rewrite in your own voice and make it specific to the chosen exercise. Do not mention the type number to the user or say "as a Type X." Just let the framing land.
+` : ""}
 Select the best framework and deliver a personalised exercise for today.`;
 
     const ac = getAnthropicClient();

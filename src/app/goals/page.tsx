@@ -11,6 +11,7 @@ import PillButton from "@/components/PillButton";
 import { colors, fonts, radii } from "@/lib/theme";
 import AnimatedStat from "@/components/AnimatedStat";
 import ProgramSwitcher from "@/components/ProgramSwitcher";
+import CloseEarlyCard from "@/components/CloseEarlyCard";
 import EnneagramUpload from "@/components/EnneagramUpload";
 import EnneagramInsights from "@/components/EnneagramInsights";
 import type { EnneagramAnalysis, EnneagramDoc } from "@/components/EnneagramUpload";
@@ -568,6 +569,15 @@ function GoalsPage() {
                 );
               })}
             </div>
+          </div>
+        </FadeIn>
+      )}
+
+      {/* ── Close early CTA (always visible under the progress grid) ── */}
+      {enrollment?.id && (
+        <FadeIn preset="fade" delay={0.12} triggerOnMount>
+          <div style={{ marginBottom: 32 }}>
+            <CloseEarlyCard enrollmentId={enrollment.id} variant="full" />
           </div>
         </FadeIn>
       )}

@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Nav from "@/components/Nav";
 import FadeIn from "@/components/FadeIn";
 import ProgramCard from "./ProgramCard";
+import CloseEarlyCard from "@/components/CloseEarlyCard";
 import UpsellSection from "./UpsellSection";
 import { colors, fonts, space, text, radii } from "@/lib/theme";
 import ExercisesSection from "@/components/ExercisesSection";
@@ -467,6 +468,10 @@ export default function DashboardPage() {
                   weekDays={ctx.weekDays}
                   weekNumber={ctx.weekNumber}
                 />
+                {/* Inline close-early link only when there are 2+ active enrollments */}
+                {enrollments.length > 1 && (
+                  <CloseEarlyCard enrollmentId={ctx.enrollment.id} variant="inline" />
+                )}
               </FadeIn>
             ))}
           </div>

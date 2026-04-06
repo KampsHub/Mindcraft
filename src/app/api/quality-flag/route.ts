@@ -55,9 +55,11 @@ export async function POST(request: Request) {
       enrollment_id: enrollment?.id || null,
       daily_session_id: data.dailySessionId || null,
       output_type: data.outputType,
+      framework_id: data.frameworkId || null,
       framework_name: data.frameworkName || null,
       flag_reason: data.flagReason,
       user_comment: data.userComment || null,
+      user_initiated: data.userInitiated ?? true,
     });
 
     if (error) {

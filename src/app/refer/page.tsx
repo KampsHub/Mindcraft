@@ -88,13 +88,13 @@ export default function ReferPage() {
             color: colors.textPrimary, textAlign: "center", marginBottom: 12,
             letterSpacing: "-0.02em",
           }}>
-            Share Mindcraft
+            May the craft be with you.
           </h1>
           <p style={{
             fontFamily: body, fontSize: 16, color: colors.textMuted,
             textAlign: "center", marginBottom: 48, maxWidth: 500, marginLeft: "auto", marginRight: "auto",
           }}>
-            Know someone navigating a career crisis? Refer them or gift them a program.
+            Know someone in the thick of a career transition? Get them the support they may need.
           </p>
         </FadeIn>
 
@@ -109,10 +109,10 @@ export default function ReferPage() {
               height: "100%", display: "flex", flexDirection: "column",
             }}>
               <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                Refer a friend
+                Tell your friends about us
               </h2>
               <p style={{ fontFamily: body, fontSize: 14, color: colors.textSecondary, lineHeight: 1.6, marginBottom: 24 }}>
-                They get 20% off any standard program. You get a $10 Amazon gift card once they complete their first week.
+                They receive 20% off the regular program prices. You receive a $10 Amazon Gift Card once they complete their first week as a Thank You.
               </p>
 
               {!user ? (
@@ -127,7 +127,7 @@ export default function ReferPage() {
                     border: "none", cursor: "pointer",
                   }}
                 >
-                  Sign in to get your code
+                  Sign in to get your personalized code
                 </motion.button>
               ) : !referralCode ? (
                 <motion.button
@@ -214,10 +214,10 @@ export default function ReferPage() {
               height: "100%", display: "flex", flexDirection: "column",
             }}>
               <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                Gift a program
+                Gift our programs
               </h2>
               <p style={{ fontFamily: body, fontSize: 14, color: colors.textSecondary, lineHeight: 1.6, marginBottom: 24 }}>
-                Pay for a program and receive a unique code to send to whoever you&rsquo;d like. They use it at checkout to enroll for free.
+                You want to provide someone with extra support? Pay for a program and receive a unique code you can send to them. They use it at checkout to enroll for free.
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -238,10 +238,10 @@ export default function ReferPage() {
                     }}
                   >
                     <div>
-                      <span style={{ fontFamily: display, fontSize: 14, fontWeight: 600, color: colors.textPrimary }}>
+                      <span style={{ fontFamily: display, fontSize: 14, fontWeight: 600, color: colors.textPrimary, display: "block" }}>
                         {prog.name}
                       </span>
-                      <span style={{ fontFamily: body, fontSize: 12, color: colors.textMuted, marginLeft: 8 }}>
+                      <span style={{ fontFamily: body, fontSize: 12, color: colors.textMuted }}>
                         {prog.desc}
                       </span>
                     </div>

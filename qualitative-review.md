@@ -44,9 +44,34 @@ Walk through the sources below in order. Skim every new row, log surprising patt
 
 [Open testimonial_surveys →](https://supabase.com/dashboard/project/rmdjglepocaswpplwgik/editor?table=testimonial_surveys&sort=created_at.desc)
 
+- This is the **private structured survey** from `/feedback/testimonial`
 - For rows where `permission_given = true`, decide which to promote to the public testimonials wall
 - To promote: copy the `describe_text` or `changed_text` into the `testimonials` table with `status='approved'`
 - Update the `promoted_to_id` on the survey row so you don't re-promote it
+
+### 3b. Public testimonials wall — review pending submissions
+
+[Open testimonials →](https://supabase.com/dashboard/project/rmdjglepocaswpplwgik/editor?table=testimonials&sort=created_at.desc)
+
+- This is the **public-facing testimonials wall** populated from `/share` (text quote / social URL / video URL)
+- Filter `status = pending` — these need approval/rejection
+- Read `body`, `attribution`, `outcome_tags`, and (for social/video) preview the linked URL
+- Mark `status = approved` to publish, or `status = rejected` if it doesn't fit
+- Approved testimonials surface on the public marketing pages
+- Cross-reference with `consent_given_at` — if missing, do NOT approve
+
+### 3c. Critical feedback (`feedback_entries`) — what's not working
+
+[Open feedback_entries →](https://supabase.com/dashboard/project/rmdjglepocaswpplwgik/editor?table=feedback_entries&sort=created_at.desc)
+
+- This is the **most important table for product improvement**
+- Holds raw critical feedback from three sources (filter by `source` column):
+  - `day_26_prompt` — auto-mirrored from journal entries on Day 26 (the "what isn't working / what should we improve" prompt) via `useStep2Journal.ts`
+  - `share_page_feedback_tab` — direct submissions from the feedback tab on `/share`
+  - `other` — anything else
+- Read every row. These are users telling you what isn't working. Tag patterns by category (UX, content, pricing, broken feature, missing feature)
+- Service-role-only RLS — only visible to the Supabase Editor when you're logged in as project owner
+- Action: turn the strongest signals into github issues or directly into code changes
 
 ### 4. Assessment quiz — what are people scoring?
 

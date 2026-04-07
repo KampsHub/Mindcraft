@@ -457,69 +457,15 @@ function WeeklyReviewPage() {
     setSaved(false);
   }
 
-  // Share the weekly summary via email
-  async function handleShareSummary(text: string, week: number) {
-    if (!summaryShareEmail || sharingSummary) return;
-    setSharingSummary(true);
-    setSummaryShareSuccess(false);
-    try {
-      const res = await fetch("/api/weekly-summary/share", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: summaryShareEmail,
-          summary: text,
-          weekNumber: week,
-          programName: enrollment?.programs?.name,
-        }),
-      });
-      if (res.ok) {
-        setSummaryShareSuccess(true);
-        setTimeout(() => { setSummaryShareSuccess(false); setShowSummaryShare(false); setSummaryShareEmail(""); }, 2000);
-      }
-    } catch (err) {
-      console.error("Share summary failed:", err);
-    } finally {
-      setSharingSummary(false);
-    }
+  // Share the weekly summary via email — DISABLED (route removed)
+  async function handleShareSummary(_text: string, _week: number) {
+    // Sharing endpoint removed. UI button is left in place but is a no-op.
+    return;
   }
 
   async function handleShareDays() {
-    if (!dayShareEmail || sharingDays || selectedDaysForShare.size === 0) return;
-    setSharingDays(true);
-    setDayShareSuccess(false);
-    try {
-      const dayPayloads = sessions
-        .filter((s) => selectedDaysForShare.has(s.day_number))
-        .map((s) => ({
-          day_number: s.day_number,
-          title: "",
-          summary: typeof s.step_2_journal === "string" ? s.step_2_journal.slice(0, 500) : "No journal entry",
-          themes: [] as string[],
-        }));
-      const res = await fetch("/api/daily-summary/share", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: dayShareEmail,
-          days: dayPayloads,
-          programName: enrollment?.programs?.name || "Mindcraft",
-        }),
-      });
-      if (res.ok) {
-        setDayShareSuccess(true);
-        setTimeout(() => {
-          setDayShareSuccess(false);
-          setShowDayShare(false);
-          setDayShareEmail("");
-          setSelectedDaysForShare(new Set());
-        }, 2000);
-      }
-    } catch (err) {
-      console.error("Share days failed:", err);
-    } finally {
-      setSharingDays(false);
-    }
+    // Sharing endpoint removed. UI button is left in place but is a no-op.
+    return;
   }
 
   function toggleDayForShare(dayNum: number) {
@@ -573,30 +519,9 @@ function WeeklyReviewPage() {
     return parts.join(" ");
   }
 
-  async function handleShareExercise(exercise: ExerciseDetail) {
-    if (!exerciseShareEmail || sendingExercise) return;
-    setSendingExercise(true);
-    setExerciseShareSuccess(false);
-    try {
-      const res = await fetch("/api/exercises/share", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: exerciseShareEmail,
-          exercise,
-          weekNumber,
-          programName: enrollment?.programs?.name,
-        }),
-      });
-      if (res.ok) {
-        setExerciseShareSuccess(true);
-        setTimeout(() => { setExerciseShareSuccess(false); setSharingExercise(null); setExerciseShareEmail(""); }, 2000);
-      }
-    } catch (err) {
-      console.error("Share exercise failed:", err);
-    } finally {
-      setSendingExercise(false);
-    }
+  async function handleShareExercise(_exercise: ExerciseDetail) {
+    // Sharing endpoint removed. UI button is left in place but is a no-op.
+    return;
   }
 
   async function handleSave() {

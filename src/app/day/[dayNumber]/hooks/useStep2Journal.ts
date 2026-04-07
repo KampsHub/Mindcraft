@@ -94,6 +94,21 @@ export function useStep2Journal({
       }).catch((err) => console.warn("Non-blocking API call failed:", err));
     }
 
+    // Day 26: mirror-write private critical feedback into feedback_entries.
+    // This is a separate, private channel — never surfaces on the public wall.
+    if (session?.day_number === 26 && journalContent.trim()) {
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: "day_26_prompt",
+          enrollmentId: session.enrollment_id,
+          dayNumber: 26,
+          body: journalContent.trim(),
+        }),
+      }).catch((err) => console.warn("day-26 feedback mirror-write failed:", err));
+    }
+
     onJournalSaved();
   }
 

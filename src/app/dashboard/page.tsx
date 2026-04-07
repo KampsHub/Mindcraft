@@ -145,14 +145,99 @@ function getGreeting(programSlug?: string, currentDay?: number): string {
   return list[dayIndex % list.length];
 }
 
-/* ── Quick-access links (3 per row) ── */
-const quickLinks = [
-  { href: "/mindful-journal", label: "Journal", desc: "Write freely", icon: "✎", accent: colors.coral },
-  { href: "/goals", label: "Plan & Progress", desc: "Goals & milestones", icon: "◎", accent: colors.coral },
-  { href: "/weekly-review", label: "Insights", desc: "Review & share", icon: "↻", accent: colors.coral },
-  { href: "/search", label: "Search", desc: "Past exercises & entries", icon: "⌕", accent: colors.coral },
-  { href: "/contact?type=coach", label: "Ask a Coach", desc: "Get human support", icon: "💬", accent: colors.coral },
-  { href: "/contact?type=bug", label: "Report a Bug", desc: "Something broken?", icon: "🐛", accent: colors.coral },
+/* ── Quick-access links — each card gets its own SVG icon + accent tint ── */
+type QuickLink = {
+  href: string;
+  label: string;
+  desc: string;
+  accent: string;       // ochre / plum / sage / coral / blue / red
+  icon: React.ReactNode;
+};
+
+const ACCENT_OCHRE = "#C4943A";  // primary — everything default
+const ACCENT_PLUM = "#7B9AAD";   // secondary — only "Ask a Coach" (human/conversational action)
+
+const quickLinks: QuickLink[] = [
+  {
+    href: "/mindful-journal",
+    label: "Journal",
+    desc: "Write freely",
+    accent: ACCENT_OCHRE,
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+      </svg>
+    ),
+  },
+  {
+    href: "/goals",
+    label: "Plan & Progress",
+    desc: "Goals & milestones",
+    accent: ACCENT_OCHRE,
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <circle cx="12" cy="12" r="6" />
+        <circle cx="12" cy="12" r="2" />
+      </svg>
+    ),
+  },
+  {
+    href: "/weekly-review",
+    label: "Insights",
+    desc: "Review & share",
+    accent: ACCENT_OCHRE,
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 3v18h18" />
+        <path d="M7 14l4-4 4 4 5-5" />
+      </svg>
+    ),
+  },
+  {
+    href: "/search",
+    label: "Search",
+    desc: "Past exercises & entries",
+    accent: ACCENT_OCHRE,
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+    ),
+  },
+  {
+    href: "/contact?type=coach",
+    label: "Ask a Coach",
+    desc: "Get human support",
+    accent: ACCENT_PLUM,
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+      </svg>
+    ),
+  },
+  {
+    href: "/contact?type=bug",
+    label: "Report a Bug",
+    desc: "Something broken?",
+    accent: ACCENT_OCHRE,
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="8" y="6" width="8" height="14" rx="4" />
+        <path d="M12 6V4" />
+        <path d="M8 10H5" />
+        <path d="M19 10h-3" />
+        <path d="M8 14H5" />
+        <path d="M19 14h-3" />
+        <path d="M8 18H5" />
+        <path d="M19 18h-3" />
+        <path d="M9 4l-1-1" />
+        <path d="M15 4l1-1" />
+      </svg>
+    ),
+  },
 ];
 
 class DashboardErrorBoundary extends React.Component<
@@ -492,59 +577,107 @@ export default function DashboardPage() {
           </FadeIn>
         )}
 
-        {/* ── Quick links (3 per row) ── */}
+        {/* ── Quick links — 3 per row, glassmorphic with per-card accent ── */}
         <FadeIn preset="fade" delay={0.15} triggerOnMount>
-          <div className="responsive-grid" style={{
+          <div className="quick-links-grid" style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
+            gridTemplateColumns: "repeat(3, 1fr)",
             gap: space[3],
             marginBottom: 28,
           }}>
             {quickLinks.map((link, i) => (
               <motion.button
                 key={link.href}
-                whileHover={{ y: -3 }}
-                transition={{ type: "spring", stiffness: 300, damping: 22, delay: i * 0.03 }}
+                whileHover={{
+                  y: -4,
+                  boxShadow: `0 18px 48px rgba(0,0,0,0.25), 0 0 0 1px ${link.accent}40`,
+                }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 320, damping: 24, delay: i * 0.04 }}
                 onClick={() => router.push(link.href)}
                 style={{
-                  ...cardStyle,
-                  padding: `${space[5]}px ${space[4]}px`,
-                  textAlign: "center",
-                  cursor: "pointer",
-                  transition: "border-color 0.2s",
                   position: "relative",
                   overflow: "hidden",
+                  padding: `${space[5]}px ${space[4]}px`,
+                  textAlign: "left",
+                  cursor: "pointer",
+                  borderRadius: 16,
+                  border: `1px solid rgba(255,255,255,0.08)`,
+                  backgroundColor: "rgba(38, 38, 44, 0.72)",
+                  backdropFilter: "blur(14px)",
+                  WebkitBackdropFilter: "blur(14px)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+                  minHeight: 148,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
                 }}
               >
-                {/* Subtle warm glow */}
+                {/* Top-right accent dot */}
                 <div style={{
                   position: "absolute",
-                  top: -20,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: 60,
-                  height: 60,
+                  top: 14,
+                  right: 14,
+                  width: 6,
+                  height: 6,
                   borderRadius: "50%",
-                  background: `radial-gradient(circle, ${link.accent}15 0%, transparent 70%)`,
+                  backgroundColor: link.accent,
+                  boxShadow: `0 0 12px ${link.accent}80`,
                   pointerEvents: "none",
                 }} />
+
+                {/* Bottom-left soft glow */}
                 <div style={{
+                  position: "absolute",
+                  bottom: -40,
+                  left: -40,
+                  width: 120,
+                  height: 120,
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, ${link.accent}22 0%, transparent 70%)`,
+                  pointerEvents: "none",
+                }} />
+
+                {/* Icon badge */}
+                <div style={{
+                  position: "relative",
+                  zIndex: 1,
+                  width: 44,
+                  height: 44,
+                  borderRadius: 12,
+                  backgroundColor: `${link.accent}1A`,
+                  border: `1px solid ${link.accent}40`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  margin: "0 auto 10px",
+                  color: link.accent,
+                  marginBottom: 14,
                 }}>
-                  <span style={{ fontSize: 22, color: link.accent }}>{link.icon}</span>
+                  {link.icon}
                 </div>
-                <p style={{
-                  ...text.secondary, fontWeight: 600,
-                  margin: "0 0 3px 0", color: colors.textPrimary,
-                }}>
-                  {link.label}
-                </p>
-                <p style={{ fontSize: 12, color: colors.textPrimary, margin: 0, fontFamily: body }}>
-                  {link.desc}
-                </p>
+
+                {/* Title + description */}
+                <div style={{ position: "relative", zIndex: 1 }}>
+                  <p style={{
+                    fontFamily: display,
+                    fontSize: 15,
+                    fontWeight: 700,
+                    margin: "0 0 4px 0",
+                    color: colors.textPrimary,
+                    letterSpacing: "-0.01em",
+                  }}>
+                    {link.label}
+                  </p>
+                  <p style={{
+                    fontSize: 12,
+                    color: colors.textMuted,
+                    margin: 0,
+                    fontFamily: body,
+                    lineHeight: 1.5,
+                  }}>
+                    {link.desc}
+                  </p>
+                </div>
               </motion.button>
             ))}
           </div>

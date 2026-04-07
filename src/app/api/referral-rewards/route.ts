@@ -1,5 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import {
+  referralRewardRecipientHtml,
+  referralRewardRecipientSubject,
+  referralRewardAdminHtml,
+  referralRewardAdminSubject,
+  referralRewardFrom,
+} from "@/lib/emails/referral-reward";
 
 export async function GET(request: Request) {
   try {
@@ -82,24 +89,10 @@ export async function GET(request: Request) {
         const { Resend } = await import("resend");
         const resend = new Resend(resendKey);
         await resend.emails.send({
-          from: "Mindcraft <noreply@allmindsondeck.org>",
+          from: referralRewardFrom,
           to: referrer.email,
-          subject: "Your $10 Amazon gift card is on its way",
-          html: `
-            <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, sans-serif;">
-              <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
-                <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
-                  Someone you referred just completed their first week on Mindcraft.
-                </p>
-                <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 16px 0;">
-                  Your $10 Amazon gift card is being sent to this email. Check your inbox (it comes from Tremendous).
-                </p>
-                <p style="color: #a0a0a8; font-size: 14px; line-height: 1.6; margin: 0;">
-                  Thank you for sharing Mindcraft with someone who needed it.
-                </p>
-              </div>
-            </div>
-          `,
+          subject: referralRewardRecipientSubject(),
+          html: referralRewardRecipientHtml(),
         }).catch(() => {});
       }
 
@@ -107,11 +100,15 @@ export async function GET(request: Request) {
       if (resendKey) {
         const { Resend } = await import("resend");
         const resend = new Resend(resendKey);
+        const adminOpts = {
+          referrerEmail: referrer.email,
+          referredEmail: redemption.referred_email || "(unknown)",
+        };
         await resend.emails.send({
-          from: "Mindcraft <noreply@allmindsondeck.org>",
+          from: referralRewardFrom,
           to: "crew@allmindsondeck.com",
-          subject: `Referral reward sent — ${referrer.email}`,
-          html: `<p>$10 Amazon gift card sent to ${referrer.email} for referring ${redemption.referred_email}.</p>`,
+          subject: referralRewardAdminSubject(adminOpts),
+          html: referralRewardAdminHtml(adminOpts),
         }).catch(() => {});
       }
 

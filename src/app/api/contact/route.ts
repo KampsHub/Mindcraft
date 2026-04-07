@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { contactAlertHtml, contactAlertSubject, contactAlertFrom } from "@/lib/emails/contact-alert";
 const CONTACT_EMAIL = "crew@allmindsondeck.com";
 
 export async function POST(req: NextRequest) {
@@ -73,19 +74,13 @@ export async function POST(req: NextRequest) {
       } else {
         const { Resend } = await import("resend");
         const resend = new Resend(process.env.RESEND_API_KEY);
+        const contactOpts = { senderName, senderEmail, issueType, message };
         await resend.emails.send({
-          from: "Mindcraft <noreply@allmindsondeck.org>",
+          from: contactAlertFrom,
           to: CONTACT_EMAIL,
           replyTo: senderEmail || undefined,
-          subject: `Mindcraft Contact: ${issueType}`,
-          html: `
-            <div style="font-family: sans-serif; max-width: 600px;">
-              <p><strong>From:</strong> ${senderName} &lt;${senderEmail}&gt;</p>
-              <p><strong>Type:</strong> ${issueType}</p>
-              <hr style="border: 1px solid #eee;" />
-              <p>${message.replace(/\n/g, "<br>")}</p>
-            </div>
-          `,
+          subject: contactAlertSubject(contactOpts),
+          html: contactAlertHtml(contactOpts),
         });
       }
     } catch (emailErr) {

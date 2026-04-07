@@ -8,7 +8,27 @@ import PageShell from "@/components/PageShell";
 import FadeIn from "@/components/FadeIn";
 import MarketingHeader from "@/components/MarketingHeader";
 import Footer from "@/components/Footer";
-import { colors, fonts, radii } from "@/lib/theme";
+import { colors as darkColors, fonts, radii } from "@/lib/theme";
+
+// ─────────────────────────────────────────────────────────────────────
+// /refer light-mode override (matches the homepage preview).
+// To roll back: restore the original `import { colors, fonts, radii }`
+// and delete this block.
+// ─────────────────────────────────────────────────────────────────────
+const colors = {
+  ...darkColors,
+  bgDeep:        "#F0EDE6",
+  bgRecessed:    "#E8E4DB",
+  bgInput:       "#FFFFFF",
+  bgSurface:     "#FFFFFF",
+  bgElevated:    "#FAF8F2",
+  textPrimary:   "#18181C",
+  textSecondary: "#3A3A40",
+  textBody:      "#3A3A40",
+  textMuted:     "#6B6B72",
+  borderSubtle:  "#EAE5D9",
+  borderDefault: "#D8D2C5",
+};
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -130,11 +150,11 @@ export default function ReferPage() {
           {/* ── LEFT: Referral ── */}
           <FadeIn preset="slide-up" delay={0.1} triggerOnMount>
             <div style={{
-              backgroundColor: "rgba(51, 51, 57, 0.82)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
+              backgroundColor: "#FFFFFF",
               borderRadius: 16,
-              border: `1px solid rgba(255,255,255,0.08)`, padding: 32,
+              border: `1px solid rgba(24,24,28,0.08)`,
+              boxShadow: "0 12px 40px rgba(24,24,28,0.18)",
+              padding: 32,
               height: "100%", display: "flex", flexDirection: "column",
             }}>
               {/* Visual header */}
@@ -148,7 +168,7 @@ export default function ReferPage() {
                   <span style={{ fontFamily: display, fontSize: 22, fontWeight: 800, color: colors.coral }}>20%</span>
                 </div>
                 <div>
-                  <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, margin: "0 0 4px 0" }}>
+                  <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, margin: "0 0 4px 0", color: colors.textPrimary }}>
                     Tell your friends about us
                   </h2>
                   <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, margin: 0 }}>
@@ -177,7 +197,7 @@ export default function ReferPage() {
                   style={{
                     fontFamily: display, fontSize: 14, fontWeight: 600,
                     padding: "12px 24px", borderRadius: radii.full,
-                    backgroundColor: colors.coral, color: colors.bgDeep,
+                    backgroundColor: colors.coral, color: "#18181C",
                     border: "none", cursor: "pointer",
                   }}
                 >
@@ -192,7 +212,7 @@ export default function ReferPage() {
                   style={{
                     fontFamily: display, fontSize: 14, fontWeight: 600,
                     padding: "12px 24px", borderRadius: radii.full,
-                    backgroundColor: colors.coral, color: colors.bgDeep,
+                    backgroundColor: colors.coral, color: "#18181C",
                     border: "none", cursor: "pointer",
                     opacity: generating ? 0.6 : 1,
                   }}
@@ -204,7 +224,7 @@ export default function ReferPage() {
                   {/* Code display */}
                   <div style={{
                     display: "flex", alignItems: "center", gap: 8, marginBottom: 16,
-                    padding: "14px 18px", backgroundColor: "rgba(255,255,255,0.04)",
+                    padding: "14px 18px", backgroundColor: "rgba(24,24,28,0.04)",
                     borderRadius: 10, border: `1px solid ${colors.borderDefault}`,
                   }}>
                     <span style={{
@@ -267,11 +287,11 @@ export default function ReferPage() {
           {/* ── RIGHT: Gift ── */}
           <FadeIn preset="slide-up" delay={0.15} triggerOnMount>
             <div style={{
-              backgroundColor: "rgba(51, 51, 57, 0.82)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
+              backgroundColor: "#FFFFFF",
               borderRadius: 16,
-              border: `1px solid rgba(255,255,255,0.08)`, padding: 32,
+              border: `1px solid rgba(24,24,28,0.08)`,
+              boxShadow: "0 12px 40px rgba(24,24,28,0.18)",
+              padding: 32,
               height: "100%", display: "flex", flexDirection: "column",
             }}>
               {/* Visual header */}
@@ -288,7 +308,7 @@ export default function ReferPage() {
                   </svg>
                 </div>
                 <div>
-                  <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, margin: "0 0 4px 0" }}>
+                  <h2 style={{ fontFamily: display, fontSize: 18, fontWeight: 700, margin: "0 0 4px 0", color: colors.textPrimary }}>
                     Gift our programs
                   </h2>
                   <p style={{ fontFamily: body, fontSize: 13, color: colors.textMuted, margin: 0 }}>
@@ -323,7 +343,7 @@ export default function ReferPage() {
                     style={{
                       display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16,
                       padding: "16px 18px", borderRadius: 12,
-                      backgroundColor: "rgba(255,255,255,0.03)",
+                      backgroundColor: "rgba(24,24,28,0.03)",
                       border: `1px solid ${colors.borderDefault}`,
                       cursor: "pointer", textAlign: "left",
                       opacity: giftLoading === prog.slug ? 0.6 : 1,

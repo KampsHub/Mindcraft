@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { accountDeletionHtml, accountDeletionSubject, accountDeletionFrom } from "@/lib/emails/account-deletion";
 
 /**
  * Daily cron: process pending deletion_requests whose scheduled_for has passed.
@@ -117,26 +118,10 @@ export async function GET(request: Request) {
           const { Resend } = await import("resend");
           const resend = new Resend(resendKey);
           await resend.emails.send({
-            from: "Mindcraft <crew@allmindsondeck.com>",
+            from: accountDeletionFrom,
             to: clientEmail,
-            subject: "Your Mindcraft data has been deleted",
-            html: `
-<div style="background-color:#18181c;padding:40px 20px;font-family:-apple-system,sans-serif;">
-  <div style="max-width:520px;margin:0 auto;background-color:#26262c;border-radius:12px;padding:36px 32px;color:#f0ede6;">
-    <h1 style="font-size:22px;font-weight:800;margin:0 0 14px 0;color:#f0ede6;">Your data has been deleted.</h1>
-    <p style="font-size:14px;line-height:1.65;color:#d0ccc6;margin:0 0 14px 0;">
-      As requested, we&rsquo;ve permanently removed your journal entries, exercise responses,
-      coaching summaries, intake data, goals, final insights, and referrals from Mindcraft.
-      Your account has been closed.
-    </p>
-    <p style="font-size:14px;line-height:1.65;color:#d0ccc6;margin:0 0 14px 0;">
-      If you ever want to return, you&rsquo;re welcome anytime &mdash; you&rsquo;d start fresh.
-    </p>
-    <p style="font-size:12px;color:#6b6b72;margin:24px 0 0 0;">
-      Sent with care by the crew at All Minds On Deck.
-    </p>
-  </div>
-</div>`,
+            subject: accountDeletionSubject(),
+            html: accountDeletionHtml(),
           });
         } catch (e) {
           console.warn("process-deletions: confirmation email failed", e);

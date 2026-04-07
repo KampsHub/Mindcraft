@@ -1,5 +1,5 @@
 # Mindcraft — Todo & Action Tracker
-**Last updated:** April 6, 2026
+**Last updated:** April 7, 2026
 
 ---
 
@@ -11,32 +11,7 @@
 
 Until the trigger fires, the `/share` form copy says: *"We're running a $50 Amazon gift card raffle for shared stories — but we're still small enough that we want to wait until there are enough entries for it to feel like a real drawing. Your entry is locked in for the first one."* Entries accumulate in the DB with `raffle_period_id = null`, get backfilled at launch.
 
----
 
-## 🚨 YOU NEED TO RUN THESE (April 6 session)
-
-Priority order — top ones unblock everything else.
-
-### Supabase SQL Editor — run these two migrations
-- [ ] `supabase/program-completion-offramp.sql` — creates `final_insights`, `personal_promo_codes`, `deletion_requests ---- done`
-- [ ] `supabase/add-closed-early-status.sql` — allows `status = 'closed_early'` on enrollments -- done
-
-### Vercel environment variables — verify present
-- [ ] `CRON_SECRET` (any random string)
-- [ ] `SUPABASE_SERVICE_ROLE_KEY`
-- [ ] `STRIPE_SECRET_KEY`
-- [ ] `RESEND_API_KEY`
-- [ ] `NEXT_PUBLIC_APP_URL` (e.g. `https://mindcraft.allmindsondeck.com`)
--- done
-### Assets
-- [x] Upload hiker image as `public/hiker-bg.jpg` ✅ done
-
-### Deploy & smoke test
-- [ ] Push + confirm Vercel deploy succeeds
-- [ ] Visit `/refer` — confirm marketing header, hiker section, FAQ, footer render
-- [ ] Visit `/` — confirm compact `GiftingSection` renders below waitlist cards
-- [ ] Visit `/login` — confirm "Securely hosted by Supabase" is under the Google button
-- [ ] Manually trigger `GET /api/cron/check-completions` with `Authorization: Bearer $CRON_SECRET` on a test enrollment that's been backdated ≥ 30 days — confirm final insight generates, email lands, promo code created
 
 ---
 
@@ -71,45 +46,51 @@ Priority order — top ones unblock everything else.
 
 ---
 
-## 🗂 NEXT SESSION — TESTIMONIALS, RAFFLE, WALL OF LOVE, CRITICAL FEEDBACK (queued)
+## 🗂 TESTIMONIALS, RAFFLE, WALL OF LOVE, CRITICAL FEEDBACK
 
-Locked decisions from April 6 wrap-up. This is the next focused build (~12 hours, can split into 2 sessions).
+### ✅ Session A + minimal wall — SHIPPED April 7
 
-### Decisions locked
-- **Raffle:** $50 Amazon gift card, monthly cadence. Architecture built and dormant. **Launch trigger: 20 paying customers** (see Launch Triggers section above).
-- **Critical feedback:** Built but completely separate from public testimonials. Surfaces inside the daily flow on **day 26** (gives a 4-day decompression before the off-ramp). Prompt: *"What's not working for you?"* Writes to a `feedback_entries` table that never touches the wall, raffle, or marketing.
-- **Wall card name format:** First name + last initial only. No link to original post by default. Optional opt-in to show a "View on LinkedIn ↗" link if user pasted a social URL.
-- **Wall filters:** Outcome-based, never program-based (no outing of layoff/PIP status). Tags: `clarity`, `confidence`, `hard_conversations`, `starting_new`. Stored as `outcome_tags text[]` on testimonials.
-- **Video hosting:** Self-hosted in Supabase Storage. Requires Supabase Pro ($25/mo) — confirm before build. Direct browser → signed URL upload (bypasses Vercel's 4.5 MB function body limit). Auto-thumbnail generation. No client-side compression for v1.
-- **Social embeds (LinkedIn, X):** Hybrid approach — store the live embed HTML AND a snapshot (text + thumbnail) at submission time, with explicit consent. Default to live embed for the first 90 days, can flip individual rows to snapshot mode if they go stale or hostile.
-- **Wall placement on homepage:** Featured + 2x2 grid, between the differentiator strip and the gifting section. Empty state: hide entirely if `<4` approved testimonials exist.
+**Database** (migration run in Supabase SQL Editor April 7):
+- `testimonials` table — public praise, moderated, with `kind` discriminator (`text` / `social_url` / `video_url`), outcome tags, snapshot fields, RLS (anon insert + anon read approved + service role full)
+- `feedback_entries` table — private critical feedback, service-role only, never public
+- `raffle_periods` table — dormant, structure only
+- 3 seed rows from `site.ts` socialProof inserted with `status='approved'`
+- Indexes on `(status, created_at desc)`, `user_id`, `(source, created_at desc)`, `(status, ends_at)`
 
-### Build scope
+**API routes:**
+- `POST /api/testimonials/direct` — text testimonial submission
+- `POST /api/testimonials/social` — LinkedIn/X/Instagram URL + text snapshot; fetches Twitter oEmbed where possible
+- `POST /api/testimonials/video` — Loom/YouTube/Vimeo URL + caption
+- `GET  /api/testimonials/list` — public list of approved testimonials
+- `POST /api/feedback` — private critical feedback to `feedback_entries` (service-role insert)
+- `GET  /api/cron/draw-raffle` — dormant raffle drawing cron. **Not registered in `vercel.json`.** Safe to hit while dormant (no-op when no open periods). To activate: add to `vercel.json` and create an open `raffle_periods` row.
 
-**Session A — Backend + collection (~8 hours)**
-- SQL migration: `feedback_entries`, `testimonials` (with hosted-video fields, outcome_tags, snapshot fields), `raffle_periods`
-- `/share` page with 3 tabs: paste social URL · paste video URL · upload video / write text
-- `/feedback` page (private, day-26 prompt placement separate)
-- API routes: `POST /api/feedback`, `POST /api/testimonials/social`, `POST /api/testimonials/direct`, `POST /api/testimonials/upload-url` (signed URL endpoint, generic for reuse)
-- `/api/cron/draw-raffle` route — full code, NOT yet registered in vercel.json
-- Updated completion email to lead with the share CTA + "raffle launching soon" copy
-- Updated `/insights/final` to surface the share CTAs prominently
-- Day-26 prompt insertion into daily flow (need to look at `daily_sessions` / `program_days` schema for cleanest insertion point)
+**UI:**
+- `/share` page — three-tab collection UI (Write / Social / Video), outcome tag chips, name + email + consent, success state
+- `<TestimonialCard>` component — discriminated rendering (text / social URL with optional "View original ↗" / video URL with YouTube/Loom/Vimeo iframe embed)
+- Homepage `SocialProof()` — now fetches from DB, **hides entirely if `<4` approved testimonials**. Currently hidden (3 seeds < 4).
+- `/insights/final` — "Share your story" CTA card added above the promo code block
+- Completion email (`src/lib/program-offramp.ts`) — leads with share CTA + $50 raffle teaser
 
-**Session B — Display + wall (~6 hours)**
-- `<TestimonialCard>` component (handles LinkedIn embed / Twitter embed / hosted video / Loom embed / direct text via discriminator)
-- Embed utilities (LinkedIn URL → iframe, Twitter oEmbed, Loom URL → iframe, YouTube URL → iframe)
-- `<WallSection>` homescreen widget (featured + 2x2 grid layout)
-- `/wall` dedicated page with outcome-tag filter row, pagination, "Submit yours" CTA at the bottom
-- Auto-thumbnail generation for hosted videos (Supabase Edge Function)
-- Empty state guards (hide if <4 approved testimonials)
-- Manual seed instructions for the first 4–6 testimonials before launch
-- Add testimonial-video deletion to existing `/account/delete` flow
+**Day-26 critical feedback:**
+- `useStep2Journal.ts` — mirror-writes the journal content to `feedback_entries` with `source='day_26_prompt'` whenever a user saves their journal on day 26. Primary `daily_sessions` write still happens normally. Never surfaces on the public wall.
 
-### Pre-build checklist
-- [ ] Confirm Supabase plan — upgrade to Pro ($25/mo) if currently on Free
-- [ ] Verify `TREMENDOUS_API_KEY` is set in Vercel env (already needed for referral-rewards cron)
-- [ ] Decide on the 4–6 seed testimonials to ask for via direct outreach before launching the wall
+### Pre-flight / env vars
+
+- [x] SQL migration run in Supabase SQL Editor (April 7)
+- [x] `TREMENDOUS_API_KEY` set in Vercel (prod key approved April 7)
+- [ ] **`TREMENDOUS_FUNDING_SOURCE_ID` still missing in Vercel** — needed for both the existing `/api/referral-rewards` cron *and* the dormant `/api/cron/draw-raffle`. Find it in the Tremendous dashboard → Funding sources → copy the ID (format `CAMPAIGN_...` or similar). Add to Vercel env (Production + Preview). Redeploy with an empty commit.
+
+### Deferred to the next session
+
+- **Direct video upload to Supabase Storage** — requires Supabase Pro ($25/mo). Currently on Free. Users can paste Loom / YouTube / Vimeo URLs as a workaround.
+- **`/wall` dedicated page** with outcome-tag filter chips, pagination, "Submit yours" CTA
+- **Featured + 2×2 grid layout** on the homepage (keeping existing 3-col for v1)
+- **Auto-thumbnail generation** for hosted videos (Supabase Edge Function)
+- **Register `/api/cron/draw-raffle` in `vercel.json`** when the 20-paying-customer trigger fires
+- **Decide on 4–6 real seed testimonials** to ask for via direct outreach (the 3 hardcoded ones from `site.ts` live in the DB as seeds but the wall stays hidden until a 4th real submission is approved)
+- **Add day-26 `program_days` seed rows** for parachute/jetstream/basecamp with a specific "What's not working for you?" prompt (the mirror-write already fires on any day 26 save, this is just content)
+- **Testimonial-video deletion** in `/account/delete` flow (only matters once hosted video lands)
 
 ---
 
@@ -136,15 +117,6 @@ Answers to the open questions M–Y. Source of truth.
 ---
 
 ## 🟡 GAPS FROM TODAY'S WORK (need follow-up but not urgent)
-
-### Existing `/my-account` vs new `/account/delete` overlap
-There's already a `/my-account` page with a DELETE button that hits `/api/account` and does an **immediate** wipe. The new `/account/delete` page uses the **30-day queued** flow via `deletion_requests`. Both are live — users could hit either. Pick one as canonical and redirect the other. Recommendation: keep the queued flow as the user-facing one (matches privacy policy language, gives users a cancel window) and delete the immediate-wipe path, OR keep the immediate one for admin/support cases and rename it.
-
-### Table-name audit on the new code
-During cleanup I fixed these but flag for re-verification after the SQL migration is run:
-- Insight generator queries `entries` (not `journal_entries`), `exercise_completions`, `weekly_reviews` — correct per existing schema
-- Process-deletions cron now uses the same table list as `/api/account/route.ts` — kept in sync by comment, but if you add new personal-data tables in future, update both places
-- Neither file has been smoke-tested against real data yet
 
 ### Privacy policy needs one update
 `/privacy-policy` Section 8 (Data retention) should mention the `personal_promo_codes` table and the 30-day deletion queue behavior. Current copy is close enough but could be tightened.
@@ -206,19 +178,19 @@ check coach dashboard
 
 ## NEW PAGES BUILT (verify live after deploy)
 
-| URL | What | Status |
-|-----|------|--------|
-| `/assessment` | Free 7 Disruptions Self-Assessment lead magnet | Live |
-| `/blog` | Blog with 9 coming-soon topic cards + email signup | Live |
-| `/admin` | Admin monitoring dashboard (restricted to admin emails) | Live |
-| `/feedback/exit` | Exit survey (why they stopped, what would bring them back) | Live |
-| `/feedback/testimonial` | Testimonial survey (describe to a friend, what changed, permission) | Live |
+| URL                     | What                                                                | Status |
+| ----------------------- | ------------------------------------------------------------------- | ------ |
+| `/assessment`           | Free 7 Disruptions Self-Assessment lead magnet                      | Live   |
+| `/blog`                 | Blog with 9 coming-soon topic cards + email signup                  | Live   |
+| `/admin`                | Admin monitoring dashboard (restricted to admin emails)             | Live   |
+| `/feedback/exit`        | Exit survey (why they stopped, what would bring them back)          | Live   |
+| `/feedback/testimonial` | Testimonial survey (describe to a friend, what changed, permission) | Live   |
 
 ### Read
 - [x] GDPR rights implementation doc (`GDPR-RIGHTS-IMPLEMENTATION.md`)
 - [x] Legal hangups analysis — 36 risks (`LEGAL-HANGUPS.md`)
 - [x] CoachBot privacy policy review
-- [x] PRD data storage map updated
+- [x] wPRD data storage map updated
 - [x] Rate limiting threshold answered
 
 ---

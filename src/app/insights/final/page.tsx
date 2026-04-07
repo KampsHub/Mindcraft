@@ -188,6 +188,54 @@ function FinalInsightsView() {
             ))}
           </div>
 
+          {/* Share your story CTA */}
+          <div style={{
+            background: `linear-gradient(135deg, ${colors.coral}28, ${colors.coral}0A)`,
+            border: `1px solid ${colors.coral}55`,
+            borderRadius: 14,
+            padding: "28px 32px",
+            marginBottom: 32,
+          }}>
+            <p style={{
+              fontFamily: display, fontSize: 10, fontWeight: 700,
+              color: colors.coral, textTransform: "uppercase",
+              letterSpacing: "0.14em", margin: "0 0 8px 0",
+            }}>
+              One ask
+            </p>
+            <p style={{
+              fontFamily: display, fontSize: 20, fontWeight: 700,
+              color: colors.textPrimary, margin: "0 0 8px 0", letterSpacing: "-0.01em",
+            }}>
+              Tell us what changed.
+            </p>
+            <p style={{
+              fontFamily: body, fontSize: 14, lineHeight: 1.65,
+              color: colors.textMuted, margin: "0 0 18px 0",
+            }}>
+              Your words will help the next person who&rsquo;s where you were a month ago. A quote, a LinkedIn post link, or a Loom — whatever feels right.
+            </p>
+            <a href="/share" style={{
+              display: "inline-block",
+              padding: "12px 22px",
+              backgroundColor: colors.coral,
+              color: "#18181C",
+              fontFamily: display,
+              fontWeight: 700,
+              fontSize: 14,
+              textDecoration: "none",
+              borderRadius: 999,
+            }}>
+              Share your story →
+            </a>
+            <p style={{
+              fontFamily: body, fontSize: 11, lineHeight: 1.5,
+              color: colors.textMuted, margin: "12px 0 0 0",
+            }}>
+              P.S. A $50 Amazon raffle is launching once we hit 20 alumni. Your share counts as an entry.
+            </p>
+          </div>
+
           {/* Personal promo */}
           {promo && !promo.redeemed_at && (
             <div style={{

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
+import {
+  waitlistUserConfirmationSubject,
+  waitlistUserConfirmationHtml,
+  waitlistFrom,
+} from "@/lib/emails/waitlist";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,36 +38,15 @@ export async function POST(req: NextRequest) {
       { onConflict: "email,program" }
     );
 
-    // Send notification to team + confirmation to user
+    // Send confirmation to user only (team alert removed)
     const resend = new Resend(process.env.RESEND_API_KEY);
-
-    await Promise.all([
-      // Notify team
-      resend.emails.send({
-        from: "Mindcraft <crew@allmindsondeck.com>",
-        to: "crew@allmindsondeck.com",
-        subject: `Waitlist signup: ${program}`,
-        text: `New waitlist signup:\n\nEmail: ${email}\nProgram: ${program}\nDate: ${new Date().toISOString()}`,
-      }),
-      // Confirm to user
-      resend.emails.send({
-        from: "Mindcraft <crew@allmindsondeck.com>",
-        to: email,
-        subject: `You're on the list — ${program}`,
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
-            <h2 style="color: #1a1a1a; margin-bottom: 16px;">You're on the waitlist.</h2>
-            <p style="color: #333; line-height: 1.6;">
-              We'll let you know as soon as the <strong>${program}</strong> program is ready.
-              No spam, just one email when it launches.
-            </p>
-            <p style="color: #666; font-size: 14px; margin-top: 32px;">
-              — The Mindcraft team
-            </p>
-          </div>
-        `,
-      }),
-    ]);
+    const waitlistOpts = { email, program };
+    await resend.emails.send({
+      from: waitlistFrom,
+      to: email,
+      subject: waitlistUserConfirmationSubject(waitlistOpts),
+      html: waitlistUserConfirmationHtml(waitlistOpts),
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

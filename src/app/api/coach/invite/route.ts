@@ -84,36 +84,9 @@ export async function POST(request: Request) {
       status: "pending",
     });
 
-    // Send notification email if client exists
-    if (clientUser) {
-      const resendKey = process.env.RESEND_API_KEY;
-      if (resendKey) {
-        const { Resend } = await import("resend");
-        const resend = new Resend(resendKey);
-        await resend.emails.send({
-          from: "Mindcraft <noreply@allmindsondeck.org>",
-          to: email,
-          subject: "A coach wants to follow your progress",
-          html: `
-            <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, sans-serif;">
-              <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
-                <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
-                  A coach has requested access to follow your program progress on Mindcraft.
-                </p>
-                <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
-                  They&rsquo;ll be able to see your goals, program day, and any insights you choose to share. You can accept or decline from your dashboard.
-                </p>
-                <div style="text-align: center; margin: 32px 0;">
-                  <a href="https://mindcraft.ing/dashboard" style="display: inline-block; padding: 14px 32px; background-color: #e09585; color: #18181c; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 100px;">
-                    Review request
-                  </a>
-                </div>
-              </div>
-            </div>
-          `,
-        }).catch(() => {});
-      }
-    }
+    // Email notification removed — coach invite still creates the coach_clients
+    // row above, but no email goes out to the client. They'll see the pending
+    // invite when they next visit their dashboard.
 
     return NextResponse.json({ status: "invited" });
   } catch (error) {

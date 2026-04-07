@@ -1,7 +1,34 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import {
+  reEngageNudge1Html,
+  reEngageNudge1Subject,
+  reEngageNudge2Html,
+  reEngageNudge2Subject,
+  reEngageNudge3Html,
+  reEngageNudge3Subject,
+  reEngageNudgeFrom,
+  reEngageExitSurveyHtml,
+  reEngageExitSurveySubject,
+  reEngageExitSurveyFrom,
+} from "@/lib/emails/re-engage";
 
-const MAX_REMINDERS = 3;
+/**
+ * Re-engagement cron — runs daily at 3pm PT.
+ *
+ * Trigger: auth.users.last_sign_in_at
+ *
+ * Cadence — each nudge fires at most ONCE per enrollment lifetime:
+ *   Day 3+ since last_sign_in  → Nudge 1 (only if 0 nudges sent yet)
+ *   Day 6+ since last_sign_in  → Nudge 2 (only if exactly 1 nudge sent ever)
+ *   Day 9+ since last_sign_in  → Nudge 3 (only if exactly 2 nudges sent ever)
+ *   Day 14+ since last_sign_in → Exit survey (only if 3 nudges sent + no exit survey yet)
+ *
+ * No reset on sign-in. If a user receives nudge 1, signs back in, then lapses again
+ * for 3+ days, the cron will NOT re-send nudge 1 — it will wait for the next absence
+ * gap that satisfies the day threshold for nudge 2 (6+ days). The progression is
+ * one-way: a customer hears each message at most once.
+ */
 
 // GET handler for Vercel cron
 export async function GET(request: Request) {
@@ -14,6 +41,11 @@ export async function POST(request: Request) {
   const { dryRun } = body as { dryRun?: boolean };
   return handleReEngage(request, !!dryRun);
 }
+
+const NUDGE_1_DAYS = 3;
+const NUDGE_2_DAYS = 6;
+const NUDGE_3_DAYS = 9;
+const EXIT_SURVEY_DAYS = 14;
 
 async function handleReEngage(request: Request, dryRun: boolean) {
   try {
@@ -29,12 +61,9 @@ async function handleReEngage(request: Request, dryRun: boolean) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
     const { data: enrollments, error: enrollError } = await supabase
       .from("program_enrollments")
-      .select("id, client_id, current_day, programs(name)")
+      .select("id, client_id, programs(name)")
       .eq("status", "active");
 
     if (enrollError) {
@@ -46,77 +75,30 @@ async function handleReEngage(request: Request, dryRun: boolean) {
       return NextResponse.json({ emailed: [], count: 0 });
     }
 
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mindcraft.ing";
+    const exitSurveyUrl = process.env.EXIT_SURVEY_URL || `${appUrl}/feedback/exit`;
+    const now = Date.now();
+
     const results: Array<{
       userId: string;
       email: string;
-      currentDay: number;
+      daysSinceLastLogin: number;
       programName: string;
       emailType: string;
-      reminderCount: number;
     }> = [];
 
     for (const enrollment of enrollments) {
-      // Check last session
-      const { data: latestSession } = await supabase
-        .from("daily_sessions")
-        .select("created_at")
-        .eq("enrollment_id", enrollment.id)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
-
-      // Skip if active in last 2 days
-      if (latestSession && latestSession.created_at > twoDaysAgo) {
-        continue;
-      }
-
-      // Count how many inactive_reminder emails we've already sent for this enrollment
-      const { count: reminderCount } = await supabase
-        .from("email_events")
-        .select("id", { count: "exact", head: true })
-        .eq("enrollment_id", enrollment.id)
-        .eq("event_type", "inactive_reminder");
-
-      const sentCount = reminderCount || 0;
-
-      // Determine email type
-      const isExitSurveyCandidate = sentCount >= MAX_REMINDERS && latestSession
-        ? latestSession.created_at < sevenDaysAgo
-        : false;
-
-      // If we've sent all 3 reminders AND already sent exit survey, skip entirely
-      if (sentCount >= MAX_REMINDERS) {
-        // Check if exit survey already sent
-        const { data: exitSent } = await supabase
-          .from("email_events")
-          .select("id")
-          .eq("enrollment_id", enrollment.id)
-          .eq("event_type", "exit_survey")
-          .limit(1)
-          .single();
-
-        if (exitSent) continue; // All done for this user
-        if (!isExitSurveyCandidate) continue; // Not yet 7 days, wait
-      }
-
-      // Cooldown: don't email same user within 2 days
-      const cooldownCheck = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
-      const { data: recentEmail } = await supabase
-        .from("email_events")
-        .select("id")
-        .eq("enrollment_id", enrollment.id)
-        .in("event_type", ["inactive_reminder", "exit_survey"])
-        .gte("created_at", cooldownCheck)
-        .limit(1)
-        .single();
-
-      if (recentEmail) continue;
-
-      // Fetch user email
+      // ── 1. Get user's auth row to read last_sign_in_at ──
       const { data: { user } } = await supabase.auth.admin.getUserById(enrollment.client_id);
-      if (!user?.email) continue;
+      if (!user?.email || !user?.last_sign_in_at) continue;
 
-      // Check email preferences — skip if user opted out
+      const lastSignInAt = new Date(user.last_sign_in_at).getTime();
+      const daysSinceLastLogin = Math.floor((now - lastSignInAt) / (1000 * 60 * 60 * 24));
+
+      // Skip if active in last 3 days
+      if (daysSinceLastLogin < NUDGE_1_DAYS) continue;
+
+      // ── 2. Email preferences ──
       const { data: prefs } = await supabase
         .from("consent_settings")
         .select("inactive_reminders")
@@ -124,123 +106,106 @@ async function handleReEngage(request: Request, dryRun: boolean) {
         .single();
       if (prefs && prefs.inactive_reminders === false) continue;
 
-      // Get last themes for personalization
-      const { data: lastThemes } = await supabase
-        .from("daily_sessions")
-        .select("themes")
+      // ── 3. Count nudges sent for this enrollment EVER ──
+      // No reset on sign-in: each nudge fires at most once per enrollment lifetime.
+      // If a user signs in and lapses again, the next nudge in the sequence fires —
+      // not nudge 1 again.
+      const { count: totalNudgesSent } = await supabase
+        .from("email_events")
+        .select("id", { count: "exact", head: true })
         .eq("enrollment_id", enrollment.id)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
+        .eq("event_type", "inactive_reminder");
+
+      const { count: totalExitSurveys } = await supabase
+        .from("email_events")
+        .select("id", { count: "exact", head: true })
+        .eq("enrollment_id", enrollment.id)
+        .eq("event_type", "exit_survey");
+
+      const sentCount = totalNudgesSent || 0;
+      const exitSent = (totalExitSurveys || 0) > 0;
+
+      // ── 4. Decide which email to send ──
+      let emailType: "nudge_1" | "nudge_2" | "nudge_3" | "exit_survey" | null = null;
+
+      if (daysSinceLastLogin >= EXIT_SURVEY_DAYS && sentCount >= 3 && !exitSent) {
+        emailType = "exit_survey";
+      } else if (daysSinceLastLogin >= NUDGE_3_DAYS && sentCount === 2) {
+        emailType = "nudge_3";
+      } else if (daysSinceLastLogin >= NUDGE_2_DAYS && sentCount === 1) {
+        emailType = "nudge_2";
+      } else if (daysSinceLastLogin >= NUDGE_1_DAYS && sentCount === 0) {
+        emailType = "nudge_1";
+      }
+
+      if (!emailType) continue;
 
       const programName = (enrollment.programs as unknown as { name: string })?.name || "Mindcraft";
-      const currentDay = enrollment.current_day || 1;
-      const themes: string[] = lastThemes?.themes || [];
-      const lastTheme = themes.length > 0 ? themes[0] : null;
-      const emailType = isExitSurveyCandidate ? "exit_survey" : "inactive_reminder";
 
       results.push({
         userId: enrollment.client_id,
         email: user.email,
-        currentDay,
+        daysSinceLastLogin,
         programName,
         emailType,
-        reminderCount: sentCount,
       });
 
-      if (!dryRun) {
-        const resendKey = process.env.RESEND_API_KEY;
-        if (!resendKey) {
-          console.warn("RESEND_API_KEY not set, skipping emails");
-          return NextResponse.json({ skipped: true, reason: "no_api_key" });
-        }
+      if (dryRun) continue;
 
-        const { Resend } = await import("resend");
-        const resend = new Resend(resendKey);
-
-        if (isExitSurveyCandidate) {
-          // Exit survey — after 3 reminders and 7+ days inactive
-          const exitSurveyUrl = process.env.EXIT_SURVEY_URL || "https://mindcraft.ing/feedback/exit";
-          await resend.emails.send({
-            from: "Mindcraft <crew@allmindsondeck.com>",
-            to: user.email,
-            subject: "Quick question before you go",
-            html: `
-              <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, -apple-system, sans-serif;">
-                <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
-                  <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
-                    It looks like you stepped away from ${programName}.
-                  </p>
-                  <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 12px 0;">
-                    No judgment &mdash; life happens. But your feedback would genuinely help us make this better for the next person.
-                  </p>
-                  <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
-                    Two questions, takes 30 seconds:
-                  </p>
-                  <div style="text-align: center; margin: 32px 0;">
-                    <a href="${exitSurveyUrl}" style="display: inline-block; padding: 14px 32px; background-color: #e09585; color: #18181c; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 100px;">
-                      Share quick feedback
-                    </a>
-                  </div>
-                  <p style="color: #a0a0a8; font-size: 14px; line-height: 1.6; margin: 24px 0 0 0; text-align: center;">
-                    Your program is still here if you want to come back. <a href="https://mindcraft.ing/dashboard" style="color: #e09585; text-decoration: none;">Continue Day ${currentDay} &rarr;</a>
-                  </p>
-                  <p style="font-size: 12px; color: #666; line-height: 1.5; margin: 20px 0 0 0; text-align: center;">
-                    Reply STOP to opt out of check-ins.
-                  </p>
-                </div>
-              </div>
-            `,
-          });
-        } else {
-          // Inactive reminder — 2+ days, up to 3 times
-          const themeReference = lastTheme
-            ? `Your last entry touched on ${lastTheme}.`
-            : "You were making real progress.";
-
-          const reminderSubjects = [
-            `Day ${currentDay} is waiting`,
-            "Your program is still here",
-            "Checking in \u2014 one more nudge",
-          ];
-          const subject = reminderSubjects[Math.min(sentCount, reminderSubjects.length - 1)];
-
-          await resend.emails.send({
-            from: "Mindcraft <noreply@allmindsondeck.org>",
-            to: user.email,
-            subject,
-            html: `
-              <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, -apple-system, sans-serif;">
-                <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
-                  <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
-                    You were on Day ${currentDay}. ${themeReference}
-                  </p>
-                  <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 28px 0;">
-                    The program doesn&rsquo;t judge gaps. Pick up where you left off.
-                  </p>
-                  <div style="text-align: center; margin: 32px 0;">
-                    <a href="https://mindcraft.ing/dashboard" style="display: inline-block; padding: 14px 32px; background-color: #e09585; color: #18181c; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 100px;">
-                      Continue Day ${currentDay}
-                    </a>
-                  </div>
-                  <p style="font-size: 12px; color: #a0a0a8; line-height: 1.5; margin: 24px 0 0 0; text-align: center;">
-                    Reply STOP to opt out of check-ins.
-                  </p>
-                </div>
-              </div>
-            `,
-          });
-        }
-
-        // Log for tracking + cooldown
-        await supabase.from("email_events").insert({
-          user_id: enrollment.client_id,
-          event_type: emailType,
-          enrollment_id: enrollment.id,
-          resend_email_id: `outbound_${Date.now()}`,
-          timestamp: new Date().toISOString(),
-        });
+      // ── 5. Send the email ──
+      const resendKey = process.env.RESEND_API_KEY;
+      if (!resendKey) {
+        console.warn("RESEND_API_KEY not set, skipping emails");
+        continue;
       }
+
+      const { Resend } = await import("resend");
+      const resend = new Resend(resendKey);
+
+      try {
+        if (emailType === "nudge_1") {
+          await resend.emails.send({
+            from: reEngageNudgeFrom,
+            to: user.email,
+            subject: reEngageNudge1Subject(),
+            html: reEngageNudge1Html({ appUrl }),
+          });
+        } else if (emailType === "nudge_2") {
+          await resend.emails.send({
+            from: reEngageNudgeFrom,
+            to: user.email,
+            subject: reEngageNudge2Subject(),
+            html: reEngageNudge2Html({ appUrl }),
+          });
+        } else if (emailType === "nudge_3") {
+          await resend.emails.send({
+            from: reEngageNudgeFrom,
+            to: user.email,
+            subject: reEngageNudge3Subject(),
+            html: reEngageNudge3Html({ appUrl }),
+          });
+        } else if (emailType === "exit_survey") {
+          await resend.emails.send({
+            from: reEngageExitSurveyFrom,
+            to: user.email,
+            subject: reEngageExitSurveySubject(),
+            html: reEngageExitSurveyHtml({ appUrl, exitSurveyUrl }),
+          });
+        }
+      } catch (sendErr) {
+        console.error(`[re-engage] send failed for ${user.email}:`, sendErr);
+        continue;
+      }
+
+      // ── 6. Log the event for cadence tracking ──
+      const eventType = emailType === "exit_survey" ? "exit_survey" : "inactive_reminder";
+      await supabase.from("email_events").insert({
+        user_id: enrollment.client_id,
+        event_type: eventType,
+        enrollment_id: enrollment.id,
+        resend_email_id: `outbound_${Date.now()}`,
+        timestamp: new Date().toISOString(),
+      });
     }
 
     return NextResponse.json({

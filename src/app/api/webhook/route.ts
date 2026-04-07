@@ -140,30 +140,12 @@ export async function POST(request: NextRequest) {
           if (resendKey && customerEmail) {
             const { Resend } = await import("resend");
             const resend = new Resend(resendKey);
+            const { giftCodeHtml, giftCodeSubject, giftCodeFrom } = await import("@/lib/emails/gift-code");
             await resend.emails.send({
-              from: "Mindcraft <crew@allmindsondeck.com>",
+              from: giftCodeFrom,
               to: customerEmail,
-              subject: "Your Mindcraft gift code is ready",
-              html: `
-                <div style="background-color: #18181c; padding: 40px 20px; font-family: system-ui, sans-serif;">
-                  <div style="max-width: 560px; margin: 0 auto; background-color: #2a2a30; border-radius: 12px; padding: 40px 32px;">
-                    <p style="color: #ffffff; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
-                      Your gift is ready.
-                    </p>
-                    <p style="color: #a0a0a8; font-size: 15px; line-height: 1.7; margin: 0 0 24px 0;">
-                      Send this code to the person you&rsquo;d like to gift a Mindcraft program to. They&rsquo;ll use it at checkout to enroll for free.
-                    </p>
-                    <div style="text-align: center; margin: 28px 0; padding: 20px; background-color: rgba(255,255,255,0.06); border-radius: 10px;">
-                      <p style="font-size: 28px; font-weight: 700; color: #e09585; margin: 0; letter-spacing: 0.08em;">
-                        ${giftCode}
-                      </p>
-                    </div>
-                    <p style="color: #a0a0a8; font-size: 14px; line-height: 1.6; margin: 0; text-align: center;">
-                      This code is single-use and works at <a href="https://mindcraft.ing" style="color: #e09585; text-decoration: none;">mindcraft.ing</a> checkout.
-                    </p>
-                  </div>
-                </div>
-              `,
+              subject: giftCodeSubject(),
+              html: giftCodeHtml({ giftCode }),
             }).catch(() => {});
           }
           console.log(`Gift code generated: ${giftCode} for ${customerEmail}`);
@@ -226,26 +208,23 @@ export async function POST(request: NextRequest) {
             const { Resend } = await import("resend");
             const resend = new Resend(resendKey);
             const amountCents = session.metadata?.amount_cents || "0";
+            const {
+              enneagramPurchaseWebhookHtml,
+              enneagramPurchaseWebhookSubject,
+              enneagramPurchaseWebhookFrom,
+            } = await import("@/lib/emails/enneagram-purchase-webhook");
+            const ennOpts = {
+              customerEmail,
+              tier,
+              program,
+              amountCents,
+              stripeCustomerId,
+            };
             await resend.emails.send({
-              from: "Mindcraft <crew@allmindsondeck.com>",
+              from: enneagramPurchaseWebhookFrom,
               to: "crew@allmindsondeck.com",
-              subject: `🎯 New Enneagram Purchase — ${customerEmail || "Unknown"}`,
-              html: `
-                <div style="font-family: -apple-system, sans-serif; max-width: 520px; padding: 24px;">
-                  <h2 style="margin: 0 0 16px;">New Enneagram Purchase</h2>
-                  <table style="border-collapse: collapse; width: 100%;">
-                    <tr><td style="padding: 8px 0; color: #666;">Customer</td><td style="padding: 8px 0; font-weight: 600;">${customerEmail || "Not provided"}</td></tr>
-                    <tr><td style="padding: 8px 0; color: #666;">Tier</td><td style="padding: 8px 0; font-weight: 600;">${tier}</td></tr>
-                    <tr><td style="padding: 8px 0; color: #666;">Program</td><td style="padding: 8px 0; font-weight: 600;">${program || "standalone"}</td></tr>
-                    <tr><td style="padding: 8px 0; color: #666;">Amount</td><td style="padding: 8px 0; font-weight: 600;">$${(Number(amountCents) / 100).toFixed(2)}</td></tr>
-                    <tr><td style="padding: 8px 0; color: #666;">Stripe Customer</td><td style="padding: 8px 0;">${stripeCustomerId}</td></tr>
-                  </table>
-                  <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;" />
-                  <p style="color: #666; font-size: 14px;">
-                    <strong>Action needed:</strong> Order IEQ9 assessment for this customer and coordinate debrief scheduling.
-                  </p>
-                </div>
-              `,
+              subject: enneagramPurchaseWebhookSubject(ennOpts),
+              html: enneagramPurchaseWebhookHtml(ennOpts),
             });
             console.log(`Enneagram purchase notification sent for ${customerEmail}`);
           } catch (emailErr) {

@@ -9,7 +9,11 @@ const display = fonts.display;
 const body = fonts.bodyAlt;
 
 // Admin emails that can access this page
-const ADMIN_EMAILS = ["stefanie@allmindsondeck.com", "crew@allmindsondeck.com"];
+const ADMIN_EMAILS = [
+  "stefanie@allmindsondeck.com",
+  "crew@allmindsondeck.com",
+  "stefanie.kamps@gmail.com",
+];
 
 interface TokenCostData {
   period: string;
@@ -53,7 +57,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function checkAuth() {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user?.email || !ADMIN_EMAILS.includes(user.email)) {
+      const userEmail = user?.email?.toLowerCase().trim();
+      if (!userEmail || !ADMIN_EMAILS.includes(userEmail)) {
         router.push("/dashboard");
         return;
       }

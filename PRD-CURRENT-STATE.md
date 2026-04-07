@@ -1,5 +1,5 @@
 # Mindcraft Product Requirements Document — Current State
-**Last Updated:** 2026-04-05
+**Last Updated:** 2026-04-07
 **Status:** Production (mindcraft.ing)
 
 ---

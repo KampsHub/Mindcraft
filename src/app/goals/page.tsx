@@ -449,129 +449,7 @@ function GoalsPage() {
         )}
       </FadeIn>
 
-      {/* ── Program Progress — Horizontal Steps ── */}
-      {enrollment.programs?.weekly_themes?.length > 0 && (
-        <FadeIn preset="fade" delay={0.08} triggerOnMount>
-          <div style={{ marginBottom: 32 }}>
-            <h2 style={{
-              fontFamily: display, fontSize: 18, fontWeight: 700,
-              color: colors.textPrimary, margin: "0 0 14px 0", letterSpacing: "-0.02em",
-            }}>
-              Program progress
-            </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, position: "relative" }}>
-              {(enrollment.programs?.weekly_themes || []).map((wt: WeekTheme, idx: number) => {
-                const weekStartDay = (wt.week - 1) * 7 + 1;
-                const weekEndDay = wt.week * 7;
-                const isCompleted = enrollment.current_day > weekEndDay;
-                const isCurrent = enrollment.current_day >= weekStartDay && enrollment.current_day <= weekEndDay;
-                const isViewWeek = wt.week === weekNumber;
-                const themes = enrollment.programs?.weekly_themes || [];
-                return (
-                  <motion.div
-                    key={wt.week}
-                    whileHover={!isViewWeek ? { y: -2 } : {}}
-                    onClick={() => {
-                      if (wt.week !== weekNumber) {
-                        setWeekNumber(wt.week);
-                        setWeekTheme(wt);
-                        const sd = (wt.week - 1) * 7 + 1;
-                        const ed = wt.week * 7;
-                        supabase
-                          .from("daily_sessions")
-                          .select("id, day_number, completed_at")
-                          .eq("enrollment_id", enrollment.id)
-                          .gte("day_number", sd)
-                          .lte("day_number", ed)
-                          .order("day_number", { ascending: true })
-                          .then(({ data: ws }) => {
-                            if (ws) setSessions(ws);
-                            const sIds = ws?.map((s: DailySession) => s.id) || [];
-                            if (sIds.length > 0) {
-                              supabase
-                                .from("exercise_completions")
-                                .select("id", { count: "exact", head: true })
-                                .in("daily_session_id", sIds)
-                                .then(({ count }) => {
-                                  if (count !== null) setExerciseCount(count);
-                                });
-                            } else {
-                              setExerciseCount(0);
-                            }
-                          });
-                      }
-                    }}
-                    style={{
-                      backgroundColor: colors.bgSurface,
-                      borderRadius: 12,
-                      border: isViewWeek
-                        ? `1.5px solid ${colors.coralWash}`
-                        : `1px solid ${colors.borderDefault}`,
-                      padding: "14px 10px",
-                      display: "flex", flexDirection: "column", alignItems: "center",
-                      textAlign: "center", gap: 8,
-                      cursor: isViewWeek ? "default" : "pointer",
-                      transition: "border-color 0.2s, transform 0.2s",
-                      background: isViewWeek
-                        ? `linear-gradient(135deg, ${colors.bgSurface} 0%, ${colors.coralWash} 100%)`
-                        : colors.bgSurface,
-                    }}
-                  >
-                    <div style={{
-                      width: 28, height: 28, borderRadius: "50%",
-                      backgroundColor: (isCompleted || isCurrent) ? colors.coral : colors.bgElevated,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      color: (isCompleted || isCurrent) ? colors.bgDeep : colors.textMuted,
-                      fontSize: 12, fontWeight: 700, fontFamily: display,
-                    }}>
-                      {isCompleted ? (
-                        <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-                          <motion.path d="M20 6L9 17l-5-5" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5, delay: 0.2 }} />
-                        </svg>
-                      ) : wt.week}
-                    </div>
-                    <p style={{
-                      fontSize: 12, fontWeight: 700, color: colors.textPrimary,
-                      margin: 0, fontFamily: display, textTransform: "uppercase",
-                      letterSpacing: "0.04em", lineHeight: 1.2,
-                    }}>
-                      {wt.name.charAt(0) + wt.name.slice(1).toLowerCase()}
-                    </p>
-                    <p style={{
-                      fontSize: 11, color: colors.textMuted, margin: 0,
-                      fontFamily: body, lineHeight: 1.3,
-                      display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const,
-                      overflow: "hidden", minHeight: 28,
-                    }}>
-                      {wt.title}
-                    </p>
-                    <span style={{
-                      fontSize: 9, fontWeight: 700, fontFamily: display,
-                      textTransform: "uppercase", letterSpacing: "0.08em",
-                      padding: "2px 8px", borderRadius: 100,
-                      backgroundColor: (isCompleted || isCurrent) ? colors.coralWash : colors.bgElevated,
-                      color: (isCompleted || isCurrent) ? colors.coral : colors.textMuted,
-                    }}>
-                      {isCompleted ? "Done" : isCurrent ? "Current" : "Upcoming"}
-                    </span>
-                    {idx < themes.length - 1 && (
-                      <div style={{
-                        position: "absolute",
-                        top: "50%", transform: "translateY(-50%)",
-                        left: `${((idx + 1) / themes.length) * 100}%`,
-                        marginLeft: -5,
-                        color: colors.textMuted, fontSize: 10, zIndex: 2, pointerEvents: "none",
-                      }}>
-                        ›
-                      </div>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </FadeIn>
-      )}
+      {/* Old "Program progress" section removed — replaced by the integrated 5-row layout below */}
 
       {/* ── Close early CTA (always visible under the progress grid) ── */}
       {enrollment?.id && (
@@ -607,57 +485,189 @@ function GoalsPage() {
         </div>
       </FadeIn>
 
-      {/* ── 30-Day Calendar ── */}
-      {allSessions.length > 0 && enrollment && (
+      {/* ── 30-Day journey, week-by-week (replaces both the old calendar and program-progress) ── */}
+      {allSessions.length > 0 && enrollment && enrollment.programs?.weekly_themes?.length > 0 && (
         <FadeIn preset="fade" delay={0.12} triggerOnMount>
           <div style={{ marginBottom: 32 }}>
             <h2 style={{
-              fontFamily: display, fontSize: 16, fontWeight: 700,
-              color: colors.textPrimary, margin: "0 0 14px 0", letterSpacing: "-0.02em",
+              fontFamily: display, fontSize: 14, fontWeight: 700,
+              color: colors.textMuted, margin: "0 0 12px 0", letterSpacing: "0.06em",
+              textTransform: "uppercase",
             }}>
               Your 30 days
             </h2>
             <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(7, 1fr)",
-              gap: 4,
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
             }}>
-              {Array.from({ length: 30 }, (_, i) => {
-                const dayNum = i + 1;
-                const session = allSessions.find(s => s.day_number === dayNum);
-                const isCompleted = session?.completed_at != null;
-                const isStarted = !!session && !isCompleted;
-                const isCurrent = dayNum === enrollment.current_day;
-                const isFuture = dayNum > enrollment.current_day;
+              {(() => {
+                // Build the 5-row layout: 4 weekly themes (capped at day 28) + Integration Phase (29-30)
+                type Row = {
+                  key: string;
+                  label: string;        // "Week 1 · UNRAVEL" or "Integration Phase"
+                  title: string;        // theme title or "The wind-down"
+                  weekStart: number;
+                  weekEnd: number;
+                };
 
-                return (
-                  <div
-                    key={dayNum}
-                    style={{
-                      aspectRatio: "1",
-                      borderRadius: 6,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 11,
-                      fontFamily: display,
-                      fontWeight: isCurrent ? 700 : 500,
-                      color: isCompleted ? colors.bgDeep : isCurrent ? colors.coral : isFuture ? colors.textMuted : colors.textSecondary,
-                      backgroundColor: isCompleted
-                        ? colors.coral
-                        : isCurrent
-                          ? `${colors.coral}20`
-                          : isStarted
-                            ? `${colors.coral}10`
-                            : colors.bgElevated,
-                      border: isCurrent ? `1.5px solid ${colors.coral}` : "1px solid transparent",
-                      opacity: isFuture ? 0.4 : 1,
-                    }}
-                  >
-                    {dayNum}
-                  </div>
-                );
-              })}
+                const themes = enrollment.programs?.weekly_themes || [];
+                const rows: Row[] = themes.map((wt: WeekTheme) => {
+                  const start = (wt.week - 1) * 7 + 1;
+                  // Cap week 4 at day 28 instead of 30 — days 29-30 belong to the integration phase
+                  const end = wt.week === 4 ? 28 : wt.week * 7;
+                  return {
+                    key: `week-${wt.week}`,
+                    label: `Week ${wt.week} · ${wt.name}`,
+                    title: wt.title,
+                    weekStart: start,
+                    weekEnd: end,
+                  };
+                });
+
+                // Append the synthetic 5th row
+                rows.push({
+                  key: "integration",
+                  label: "Integration Phase",
+                  title: "Wind-down. Reflect on what shifted, what to carry forward.",
+                  weekStart: 29,
+                  weekEnd: 30,
+                });
+
+                return rows.map((row) => {
+                  const weekDays = Array.from(
+                    { length: row.weekEnd - row.weekStart + 1 },
+                    (_, i) => row.weekStart + i
+                  );
+
+                  const isWeekCurrent =
+                    enrollment.current_day >= row.weekStart && enrollment.current_day <= row.weekEnd;
+                  const isWeekDone = enrollment.current_day > row.weekEnd;
+                  const isIntegration = row.key === "integration";
+
+                  return (
+                    <div
+                      key={row.key}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "minmax(120px, 160px) 1fr",
+                        gap: 14,
+                        alignItems: "center",
+                        padding: "8px 12px",
+                        borderRadius: 10,
+                        backgroundColor: isWeekCurrent
+                          ? `${colors.coral}10`
+                          : "transparent",
+                        border: isWeekCurrent
+                          ? `1px solid ${colors.coral}30`
+                          : isIntegration
+                            ? `1px dashed ${colors.borderSubtle}`
+                            : `1px solid transparent`,
+                      }}
+                    >
+                      {/* Week label (left) */}
+                      <div style={{ minWidth: 0 }}>
+                        <p style={{
+                          fontFamily: display,
+                          fontSize: 9,
+                          fontWeight: 700,
+                          color: isWeekCurrent ? colors.coral : colors.textMuted,
+                          margin: 0,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.1em",
+                          lineHeight: 1.2,
+                        }}>
+                          {row.label}
+                        </p>
+                        <p style={{
+                          fontFamily: body,
+                          fontSize: 11,
+                          color: isWeekCurrent ? colors.textPrimary : colors.textSecondary,
+                          margin: "2px 0 0 0",
+                          lineHeight: 1.35,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical" as const,
+                          overflow: "hidden",
+                        }}>
+                          {row.title}
+                        </p>
+                      </div>
+
+                      {/* Day dots (right) */}
+                      <div style={{
+                        display: "flex",
+                        gap: 4,
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                      }}>
+                        {weekDays.map((dayNum) => {
+                          const session = allSessions.find(s => s.day_number === dayNum);
+                          const isCompleted = session?.completed_at != null;
+                          const isStarted = !!session && !isCompleted;
+                          const isCurrent = dayNum === enrollment.current_day;
+                          const isFuture = dayNum > enrollment.current_day;
+
+                          return (
+                            <div
+                              key={dayNum}
+                              title={`Day ${dayNum}${isCompleted ? " · done" : isCurrent ? " · today" : isFuture ? " · upcoming" : ""}`}
+                              style={{
+                                width: 22,
+                                height: 22,
+                                borderRadius: 5,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: 9,
+                                fontFamily: display,
+                                fontWeight: isCurrent ? 700 : 500,
+                                color: isCompleted
+                                  ? colors.bgDeep
+                                  : isCurrent
+                                    ? colors.coral
+                                    : isFuture
+                                      ? colors.textMuted
+                                      : colors.textSecondary,
+                                backgroundColor: isCompleted
+                                  ? colors.coral
+                                  : isCurrent
+                                    ? `${colors.coral}20`
+                                    : isStarted
+                                      ? `${colors.coral}10`
+                                      : `${colors.bgElevated}80`,
+                                border: isCurrent ? `1.5px solid ${colors.coral}` : "1px solid transparent",
+                                opacity: isFuture ? 0.45 : 1,
+                                flexShrink: 0,
+                              }}
+                            >
+                              {dayNum}
+                            </div>
+                          );
+                        })}
+
+                        {/* Status badge at end of row */}
+                        {(isWeekCurrent || isWeekDone) && (
+                          <span style={{
+                            marginLeft: 6,
+                            fontSize: 8,
+                            fontWeight: 700,
+                            fontFamily: display,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.08em",
+                            padding: "2px 6px",
+                            borderRadius: 100,
+                            backgroundColor: isWeekCurrent ? colors.coralWash : `${colors.coral}30`,
+                            color: colors.coral,
+                          }}>
+                            {isWeekDone ? "Done" : "Now"}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
             </div>
           </div>
         </FadeIn>

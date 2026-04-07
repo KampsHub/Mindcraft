@@ -3,9 +3,25 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
-import { colors, fonts } from "@/lib/theme";
+import { colors as darkColors, fonts } from "@/lib/theme";
 import { trackEvent } from "@/components/GoogleAnalytics";
 import Logo from "@/components/Logo";
+
+// Light-mode override (matches homepage, /refer, /share)
+const colors = {
+  ...darkColors,
+  bgDeep:        "#F0EDE6",
+  bgRecessed:    "#E8E4DB",
+  bgInput:       "#FFFFFF",
+  bgSurface:     "#FFFFFF",
+  bgElevated:    "#FAF8F2",
+  textPrimary:   "#18181C",
+  textSecondary: "#3A3A40",
+  textBody:      "#3A3A40",
+  textMuted:     "#6B6B72",
+  borderSubtle:  "#EAE5D9",
+  borderDefault: "#D8D2C5",
+};
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -19,6 +35,8 @@ export default function LoginPage() {
   const [magicLinkLoading, setMagicLinkLoading] = useState(false);
   const [mode, setMode] = useState<"magic" | "password">("magic");
   const [successMessage, setSuccessMessage] = useState("");
+  const [emailFocus, setEmailFocus] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
@@ -57,302 +75,393 @@ export default function LoginPage() {
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
-    if (error) setError("Google sign-in failed. Try the magic link instead.");
+    if (error) setError("Google sign-in failed. Try the email link instead.");
   }
 
-  const inputStyle: React.CSSProperties = {
+  const inputStyle = (focused: boolean): React.CSSProperties => ({
     width: "100%",
     padding: "14px 16px",
     fontSize: 15,
-    backgroundColor: colors.bgInput,
+    backgroundColor: "#FFFFFF",
     color: colors.textPrimary,
-    border: `1px solid ${colors.borderDefault}`,
-    borderRadius: 10,
+    border: `1.5px solid ${focused ? colors.coral : "rgba(24,24,28,0.12)"}`,
+    borderRadius: 12,
     boxSizing: "border-box",
     outline: "none",
     fontFamily: body,
-  };
+    transition: "border-color 0.15s, box-shadow 0.15s",
+    boxShadow: focused ? `0 0 0 4px ${colors.coralWash}` : "none",
+  });
+
+  const primaryButtonStyle = (disabled: boolean): React.CSSProperties => ({
+    width: "100%",
+    padding: "13px 16px",
+    fontSize: 15,
+    fontWeight: 700,
+    fontFamily: display,
+    letterSpacing: "0.01em",
+    color: disabled ? "rgba(24,24,28,0.4)" : "#18181C",
+    backgroundColor: disabled ? "rgba(196,148,58,0.35)" : colors.coral,
+    border: "1.5px solid transparent",
+    borderRadius: 12,
+    cursor: disabled ? "not-allowed" : "pointer",
+    transition: "transform 0.15s, box-shadow 0.15s, background-color 0.15s",
+    boxShadow: disabled ? "none" : "0 6px 18px rgba(196,148,58,0.25)",
+    boxSizing: "border-box",
+  });
 
   return (
     <div
       style={{
         minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: colors.bgDeep,
+        background: `
+          radial-gradient(circle at 20% 0%, rgba(196,148,58,0.10) 0%, transparent 45%),
+          radial-gradient(circle at 85% 15%, rgba(123,154,173,0.09) 0%, transparent 55%),
+          radial-gradient(circle at 50% 100%, rgba(196,148,58,0.06) 0%, transparent 50%),
+          ${colors.bgDeep}
+        `,
         fontFamily: body,
-        padding: 24,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div style={{ width: "100%", maxWidth: 380 }}>
-        {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{ marginBottom: 16 }}>
-            <Logo size={20} />
-          </div>
+      {/* Black sliver header with logo */}
+      <header
+        style={{
+          backgroundColor: "#18181C",
+          padding: "18px 24px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          zIndex: 2,
+        }}
+      >
+        <Logo size={22} />
+      </header>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "64px 24px 96px",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+      <div style={{ width: "100%", maxWidth: 420 }}>
+        {/* Brand */}
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          {/* Decorative little dot */}
+          <div
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              backgroundColor: colors.coral,
+              margin: "0 auto 18px",
+              boxShadow: `0 0 0 6px ${colors.coralWash}`,
+            }}
+          />
           <h1
             style={{
-              fontSize: 24,
-              fontWeight: 700,
-              margin: 0,
+              fontSize: 40,
+              fontWeight: 800,
+              margin: "0 0 10px 0",
               color: colors.textPrimary,
               fontFamily: display,
-              letterSpacing: "-0.02em",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.05,
             }}
           >
-            Sign in
+            Welcome back.
           </h1>
+          <p style={{
+            fontSize: 16,
+            color: colors.textMuted,
+            margin: 0,
+            lineHeight: 1.55,
+            fontFamily: fonts.serif,
+            fontStyle: "italic",
+          }}>
+            Sign in to continue your program.
+          </p>
         </div>
 
-        {successMessage && (
-          <div
-            style={{
-              padding: 12,
-              backgroundColor: colors.successWash,
-              border: `1px solid ${colors.success}44`,
-              borderRadius: 10,
-              color: colors.success,
-              fontSize: 14,
-              marginBottom: 20,
-              textAlign: "center",
-            }}
-          >
-            {successMessage}
-          </div>
-        )}
-
-        {/* Magic link sent state */}
-        {magicLinkSent ? (
-          <div
-            style={{
-              padding: 32,
-              backgroundColor: colors.bgSurface,
-              borderRadius: 16,
-              border: `1px solid ${colors.borderDefault}`,
-              textAlign: "center",
-            }}
-          >
+        {/* Card */}
+        <div
+          style={{
+            backgroundColor: "#FFFFFF",
+            borderRadius: 20,
+            border: `1px solid rgba(24,24,28,0.05)`,
+            boxShadow: "0 20px 60px rgba(24,24,28,0.10), 0 4px 12px rgba(24,24,28,0.04)",
+            padding: "36px 32px 32px",
+          }}
+        >
+          {successMessage && (
             <div
               style={{
-                width: 48,
-                height: 48,
-                borderRadius: "50%",
-                backgroundColor: colors.successWash,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 16px",
-              }}
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={colors.success} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
-            </div>
-            <p style={{ fontSize: 18, fontWeight: 700, color: colors.textPrimary, margin: "0 0 8px", fontFamily: display }}>
-              Check your email
-            </p>
-            <p style={{ fontSize: 14, color: colors.textSecondary, margin: "0 0 20px", lineHeight: 1.5 }}>
-              We sent a sign-in link to <strong style={{ color: colors.textPrimary }}>{email}</strong>
-            </p>
-            <button
-              onClick={() => { setMagicLinkSent(false); setEmail(""); }}
-              style={{
-                background: "none",
-                border: "none",
-                color: colors.coral,
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer",
-                fontFamily: body,
-              }}
-            >
-              Use a different email
-            </button>
-          </div>
-        ) : (
-          <>
-            {/* Google — one click, top */}
-            <button
-              type="button"
-              onClick={handleGoogle}
-              style={{
-                width: "100%",
-                padding: 14,
-                fontSize: 15,
-                fontWeight: 500,
-                color: colors.textPrimary,
-                fontFamily: body,
-                backgroundColor: colors.bgSurface,
-                border: `1px solid ${colors.borderDefault}`,
+                padding: "12px 14px",
+                backgroundColor: "rgba(139,196,138,0.12)",
+                border: "1px solid rgba(139,196,138,0.4)",
                 borderRadius: 10,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 10,
+                color: "#2E7A3A",
+                fontSize: 13,
                 marginBottom: 20,
+                textAlign: "center",
+                lineHeight: 1.5,
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 48 48">
-                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
-                <path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.01 24.01 0 0 0 0 21.56l7.98-6.19z" />
-                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-              </svg>
-              Continue with Google
-            </button>
-
-            <p style={{
-              fontSize: 11, color: colors.textMuted,
-              margin: "8px 0 20px", textAlign: "center",
-            }}>
-              Securely hosted by{" "}
-              <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>
-                Supabase
-              </a>
-            </p>
-
-            {/* Divider */}
-            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-              <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
-              <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: display, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>
-                or
-              </span>
-              <div style={{ flex: 1, height: 1, backgroundColor: colors.borderDefault }} />
+              {successMessage}
             </div>
+          )}
 
-            {/* Email input — shared between modes */}
-            <div style={{ marginBottom: 12 }}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && mode === "magic") handleMagicLink();
-                }}
-                style={inputStyle}
-              />
-            </div>
-
-            {mode === "magic" ? (
-              /* Magic link button */
-              <button
-                type="button"
-                disabled={!email || magicLinkLoading}
-                onClick={handleMagicLink}
+          {magicLinkSent ? (
+            <div style={{ textAlign: "center", padding: "8px 0 4px" }}>
+              <div
                 style={{
-                  width: "100%",
-                  padding: 14,
-                  fontSize: 15,
-                  fontWeight: 600,
-                  fontFamily: display,
-                  color: !email || magicLinkLoading ? colors.textMuted : colors.bgDeep,
-                  backgroundColor: !email || magicLinkLoading ? colors.bgElevated : colors.coral,
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: !email || magicLinkLoading ? "not-allowed" : "pointer",
-                  marginBottom: 16,
+                  width: 56,
+                  height: 56,
+                  borderRadius: "50%",
+                  backgroundColor: colors.coralWash,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 18,
                 }}
               >
-                {magicLinkLoading ? "Sending..." : "Send sign-in link"}
-              </button>
-            ) : (
-              /* Password form */
-              <form onSubmit={handleLogin}>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                  required
-                  style={{ ...inputStyle, marginBottom: 16 }}
-                />
-                <button
-                  type="submit"
-                  disabled={loading || !email}
-                  style={{
-                    width: "100%",
-                    padding: 14,
-                    fontSize: 15,
-                    fontWeight: 600,
-                    fontFamily: display,
-                    color: loading ? colors.textMuted : colors.bgDeep,
-                    backgroundColor: loading ? colors.bgElevated : colors.coral,
-                    border: "none",
-                    borderRadius: 10,
-                    cursor: loading ? "not-allowed" : "pointer",
-                    marginBottom: 8,
-                  }}
-                >
-                  {loading ? "Signing in..." : "Sign in"}
-                </button>
-                <p style={{ textAlign: "center", margin: "0 0 16px" }}>
-                  <a
-                    href="/forgot-password"
-                    style={{ fontSize: 13, color: colors.textMuted, textDecoration: "none" }}
-                  >
-                    Forgot password?
-                  </a>
-                </p>
-              </form>
-            )}
-
-            {/* Mode toggle */}
-            <p style={{ textAlign: "center", margin: 0 }}>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={colors.coral} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+              </div>
+              <p style={{ fontSize: 20, fontWeight: 700, color: colors.textPrimary, margin: "0 0 10px", fontFamily: display, letterSpacing: "-0.01em" }}>
+                Check your email
+              </p>
+              <p style={{ fontSize: 14, color: colors.textMuted, margin: "0 0 24px", lineHeight: 1.55 }}>
+                We sent a sign-in link to<br />
+                <strong style={{ color: colors.textPrimary }}>{email}</strong>
+              </p>
               <button
-                type="button"
-                onClick={() => { setMode(mode === "magic" ? "password" : "magic"); setError(""); }}
+                onClick={() => { setMagicLinkSent(false); setEmail(""); }}
                 style={{
                   background: "none",
                   border: "none",
-                  color: colors.textMuted,
+                  color: colors.coral,
                   fontSize: 13,
+                  fontWeight: 600,
                   cursor: "pointer",
                   fontFamily: body,
                   textDecoration: "underline",
                   textUnderlineOffset: 3,
                 }}
               >
-                {mode === "magic" ? "Use password instead" : "Use email link instead"}
+                Use a different email
               </button>
-            </p>
-          </>
-        )}
+            </div>
+          ) : (
+            <>
+              {/* Google — one click, top */}
+              <button
+                type="button"
+                onClick={handleGoogle}
+                style={{
+                  width: "100%",
+                  padding: "13px 16px",
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: colors.textPrimary,
+                  fontFamily: body,
+                  backgroundColor: "#FFFFFF",
+                  border: "1.5px solid rgba(24,24,28,0.12)",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 12,
+                  transition: "background-color 0.15s, border-color 0.15s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#FAF8F2"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#FFFFFF"; }}
+              >
+                <svg width="18" height="18" viewBox="0 0 48 48">
+                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                  <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                  <path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.01 24.01 0 0 0 0 21.56l7.98-6.19z" />
+                  <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                </svg>
+                Continue with Google
+              </button>
 
-        {/* Error */}
-        {error && (
-          <div
+              {/* Divider */}
+              <div style={{ display: "flex", alignItems: "center", gap: 14, margin: "24px 0" }}>
+                <div style={{ flex: 1, height: 1, backgroundColor: "rgba(24,24,28,0.08)" }} />
+                <span style={{ fontSize: 11, color: colors.textMuted, fontFamily: display, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
+                  or with email
+                </span>
+                <div style={{ flex: 1, height: 1, backgroundColor: "rgba(24,24,28,0.08)" }} />
+              </div>
+
+              {/* Email */}
+              <label style={labelStyle}>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onFocus={() => setEmailFocus(true)}
+                onBlur={() => setEmailFocus(false)}
+                placeholder="you@example.com"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && mode === "magic") handleMagicLink();
+                }}
+                style={{ ...inputStyle(emailFocus), marginBottom: mode === "password" ? 16 : 20 }}
+              />
+
+              {mode === "password" && (
+                <>
+                  <label style={labelStyle}>Password</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onFocus={() => setPasswordFocus(true)}
+                    onBlur={() => setPasswordFocus(false)}
+                    placeholder="••••••••"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && email && password) handleLogin(e as unknown as React.FormEvent);
+                    }}
+                    style={{ ...inputStyle(passwordFocus), marginBottom: 20 }}
+                  />
+                </>
+              )}
+
+              {mode === "magic" ? (
+                <button
+                  type="button"
+                  disabled={!email || magicLinkLoading}
+                  onClick={handleMagicLink}
+                  style={primaryButtonStyle(!email || magicLinkLoading)}
+                >
+                  {magicLinkLoading ? "Sending..." : "Send sign-in link"}
+                </button>
+              ) : (
+                <form onSubmit={handleLogin}>
+                  <button
+                    type="submit"
+                    disabled={loading || !email || !password}
+                    style={primaryButtonStyle(loading || !email || !password)}
+                  >
+                    {loading ? "Signing in..." : "Sign in"}
+                  </button>
+                </form>
+              )}
+
+              {mode === "password" && (
+                <p style={{ textAlign: "center", margin: "14px 0 0" }}>
+                  <a href="/forgot-password" style={{ fontSize: 13, color: colors.textMuted, textDecoration: "none" }}>
+                    Forgot password?
+                  </a>
+                </p>
+              )}
+
+              {/* Mode toggle */}
+              <div style={{ textAlign: "center", marginTop: 20, paddingTop: 20, borderTop: `1px solid ${colors.borderSubtle}` }}>
+                <button
+                  type="button"
+                  onClick={() => { setMode(mode === "magic" ? "password" : "magic"); setError(""); }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: colors.textMuted,
+                    fontSize: 13,
+                    cursor: "pointer",
+                    fontFamily: body,
+                  }}
+                >
+                  {mode === "magic" ? "Sign in with password instead" : "Sign in with email link instead"}
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* Error */}
+          {error && (
+            <div
+              style={{
+                padding: "12px 14px",
+                backgroundColor: "rgba(184,69,58,0.08)",
+                border: "1px solid rgba(184,69,58,0.3)",
+                borderRadius: 10,
+                color: "#B8453A",
+                fontSize: 13,
+                marginTop: 16,
+                textAlign: "center",
+                lineHeight: 1.5,
+              }}
+            >
+              {error}
+            </div>
+          )}
+        </div>
+
+        {/* Supabase trust note */}
+        <p style={{
+          fontSize: 11,
+          color: colors.textMuted,
+          margin: "16px 0 0",
+          textAlign: "center",
+          letterSpacing: "0.02em",
+        }}>
+          🔒 Securely hosted by{" "}
+          <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.textMuted, textDecoration: "underline" }}>
+            Supabase
+          </a>
+        </p>
+
+        {/* New user CTA */}
+        <div
+          style={{
+            marginTop: 32,
+            padding: "20px 24px",
+            backgroundColor: "rgba(196,148,58,0.08)",
+            border: `1px solid ${colors.coralWash}`,
+            borderRadius: 14,
+            textAlign: "center",
+          }}
+        >
+          <p style={{ fontSize: 14, color: colors.textSecondary, margin: "0 0 8px", lineHeight: 1.5 }}>
+            New to Mindcraft?
+          </p>
+          <a
+            href="/#programs"
             style={{
-              padding: 12,
-              backgroundColor: colors.errorWash,
-              border: `1px solid ${colors.error}44`,
-              borderRadius: 10,
-              color: colors.error,
-              fontSize: 13,
-              marginTop: 16,
-              textAlign: "center",
+              display: "inline-block",
+              color: colors.coral,
+              fontWeight: 700,
+              fontSize: 16,
+              textDecoration: "none",
+              fontFamily: display,
+              letterSpacing: "-0.005em",
             }}
           >
-            {error}
-          </div>
-        )}
-
-        {/* Footer */}
-        <div style={{ textAlign: "center", marginTop: 40 }}>
-          <p style={{ fontSize: 18, color: colors.textSecondary, margin: "0 0 12px", fontWeight: 500 }}>
-            New here?{" "}
-            <a href="/#programs" style={{
-              color: colors.coral, fontWeight: 700, textDecoration: "none",
-              fontSize: 20, borderBottom: `2px solid ${colors.coral}`, paddingBottom: 2,
-            }}>
-              Start your journey →
-            </a>
-          </p>
+            Start your journey →
+          </a>
         </div>
+      </div>
       </div>
     </div>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontFamily: display,
+  fontSize: 12,
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "0.08em",
+  color: "#6B6B72",
+  marginBottom: 8,
+};

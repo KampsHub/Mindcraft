@@ -1,216 +1,96 @@
 # Email Audit — Mindcraft
 
-## Email Provider
-**Resend** (v6.9.3) via `RESEND_API_KEY`
+**Last updated:** April 7, 2026 — regenerated from actual code.
 
-### Domains
-- `stefanie@allmindsondeck.com` — founder/personal emails
-- `crew@allmindsondeck.com` — team alerts
-- `noreply@allmindsondeck.org` — transactional/automated
+## Provider
+**Resend** (`RESEND_API_KEY`). No external templates. All email HTML is inlined inside the API route (or lib file) that sends it. To edit copy, open the file and edit the string.
+
+## Sender domains
+- `stefanie@allmindsondeck.com` — founder voice (welcome, coach notes, applications)
+- `crew@allmindsondeck.com` — team/internal + lifecycle events (gift codes, account deletion, raffle, offramp)
+- `noreply@allmindsondeck.org` — transactional triggers (daily reminder, day complete, shares, contact, referral rewards, coach invite, quality audit)
+
+## Dashboard
+
+Log in to Resend → **Emails → Logs** for per-message delivery history, opens, clicks, bounces. There is **no Templates tab for Mindcraft** — templates are not stored on Resend. The Resend dashboard only has a Templates feature for Broadcasts (marketing lists), which Mindcraft does not use.
+
+## How to preview / edit / send a test
+
+- **Preview in your inbox:** visit `/admin/emails` (admin-only, allowlist in the page) and click "Send test to me" on any email row.
+- **Edit:** click the file path on the admin page to open the file in VS Code, or open the route file listed in the table below.
+- **Preview a past send:** Resend → Emails → Logs → click any row → "View HTML".
 
 ---
 
-## User-Facing Emails
+## Complete list (20 emails)
 
-| Email                | File                                  | Trigger               | From      |
-| -------------------- | ------------------------------------- | --------------------- | --------- |
-| **Welcome**          | `api/welcome-email/route.ts`          | First login/signup    | stefanie@ |
-| **Daily Reminder**   | `api/email/daily-reminder/route.ts`   | Cron daily 2 PM PT    | noreply@  |
-| **Day Complete**     | `api/email/day-complete/route.ts`     | User completes a day  | noreply@  |
-| **Program Complete** | `api/email/program-complete/route.ts` | User finishes 30 days | stefanie@ |
-| **Coach Notes**      | `api/email/coach-notes/route.ts`      | Coach leaves a note   | stefanie@ |
+### User-facing / lifecycle
 
-## Inactive Reminders & Churn
+| Key | Subject | From | File | Trigger |
+|---|---|---|---|---|
+| `welcome` | Welcome to Mindcraft | stefanie@ | `src/app/api/welcome-email/route.ts` | First login/signup |
+| `daily-reminder` | Day {N} is ready | noreply@ | `src/app/api/email/daily-reminder/route.ts` | Cron daily 2pm PT |
+| `day-complete` | Day {N} Complete — {program} | noreply@ | `src/app/api/email/day-complete/route.ts` | User completes a day |
+| `program-complete` | You finished {program}. | stefanie@ | `src/app/api/email/program-complete/route.ts` | User finishes 30 days (legacy path — kept in sync with `program-offramp`) |
+| `program-offramp` | You finished / You closed {program}. | crew@ | `src/lib/program-offramp.ts` | Primary offramp called by `/api/cron/check-completions` + user-initiated `/api/enrollment/close-early` |
+| `coach-notes` | A note from your coach — {program} | stefanie@ | `src/app/api/email/coach-notes/route.ts` | Coach leaves a note |
+| `re-engage-nudge` | "Day {N} is waiting" / "Your program is still here" / "Checking in — one more nudge" (rotating) | noreply@ | `src/app/api/email/re-engage/route.ts` | Cron daily 3pm PT, up to 3 per enrollment |
+| `re-engage-exit-survey` | Quick question before you go | crew@ | `src/app/api/email/re-engage/route.ts` (second code path) | After 3 nudges + 7 days inactive |
 
-| Email | File | Trigger | From |
-|-------|------|---------|------|
-| **Inactive Reminder** (2+ days inactive) | `api/email/re-engage/route.ts` | Cron daily 3 PM PT | noreply@ |
-| **Exit Survey** (after 3 reminders + 7+ days) | `api/email/re-engage/route.ts` | Same cron, different path | crew@ |
+### Sharing (user-initiated)
 
-- **2-day threshold**: Sends after 2 days of no sessions
-- **Max 3 reminders** per enrollment, then stops
-- **Exit survey**: Sent once after all 3 reminders AND 7+ days inactive
-- **Cooldown**: 2-day between emails per enrollment
-- **Subjects rotate**: "Day X is waiting" → "Your program is still here" → "Checking in — one more nudge"
-- Exit survey links to `EXIT_SURVEY_URL` env var or `/feedback/exit`
-- Program complete includes testimonial survey link (`TESTIMONIAL_SURVEY_URL` or `/feedback/testimonial`)
-- **Schema requirement**: Run `supabase/extend-email-events.sql` to add `user_id`, `enrollment_id` columns
+| Key | Subject | From | File |
+|---|---|---|---|
+| `daily-summary-share` | {program} — {N} Day(s) of Insights | noreply@ | `src/app/api/daily-summary/share/route.ts` |
+| `weekly-summary-share` | Mindcraft — Week {N} Summary | noreply@ | `src/app/api/weekly-summary/share/route.ts` |
+| `weekly-insights-share` | Mindcraft — Week {N} Insights | noreply@ | `src/app/api/weekly-insights/share/route.ts` |
+| `exercise-share` | Mindcraft — {framework} (Week {N}) | noreply@ | `src/app/api/exercises/share/route.ts` |
 
-## User-Initiated Sharing
+### Referrals, gifts, raffle
 
-| Email | File | From |
-|-------|------|------|
-| **Daily Summary Share** | `api/daily-summary/share/route.ts` | noreply@ |
-| **Weekly Summary Share** | `api/weekly-summary/share/route.ts` | noreply@ |
-| **Exercise Share** | `api/exercises/share/route.ts` | noreply@ |
-| **Weekly Insights Share** | `api/weekly-insights/share/route.ts` | noreply@ |
+| Key | Subject | From | File |
+|---|---|---|---|
+| `referral-reward-recipient` | Your $10 Amazon gift card is on its way | noreply@ | `src/app/api/referral-rewards/route.ts` |
+| `referral-reward-admin` | Referral reward sent — {email} | noreply@ | `src/app/api/referral-rewards/route.ts` (second send in same cron) |
+| `gift-code` | Your Mindcraft gift code is ready | crew@ | `src/app/api/webhook/route.ts` |
+| `raffle-drawing-admin` | Raffle drawn — winner {name} | crew@ | `src/app/api/cron/draw-raffle/route.ts` (dormant until 20-customer trigger) |
 
-## Admin/Internal
+### Admin / team alerts
 
-| Email | File | Trigger | From |
-|-------|------|---------|------|
-| **Contact Form Alert** | `api/contact/route.ts` | Public form submission | noreply@ |
-| **Coaching Application** | `api/apply/route.ts` | Application form | stefanie@ |
-| **Waitlist Signup** (to team + user) | `api/waitlist/route.ts` | Waitlist form | crew@ |
-| **Enneagram Purchase** | `api/webhook/route.ts` | Stripe webhook | crew@ |
-| **Quality Audit Report** | `api/quality-audit/route.ts` | Cron Monday 4 PM PT | noreply@ |
+| Key | Subject | From | File |
+|---|---|---|---|
+| `contact-alert` | Mindcraft Contact: {type} | noreply@ | `src/app/api/contact/route.ts` |
+| `coaching-application` | Coaching Application — {name} | stefanie@ | `src/app/api/apply/route.ts` |
+| `waitlist-team-alert` | Waitlist signup: {program} | crew@ | `src/app/api/waitlist/route.ts` (first send) |
+| `waitlist-user-confirmation` | You're on the list — {program} | crew@ | `src/app/api/waitlist/route.ts` (second send) |
+| `enneagram-purchase-webhook` | 🎯 New Enneagram Purchase — {email} | crew@ | `src/app/api/webhook/route.ts` (Stripe webhook branch) |
+| `enneagram-purchase-notify` | New Enneagram Purchase | crew@ | `src/app/api/enneagram-notify/route.ts` |
+| `quality-audit-report` | Weekly Quality Audit — {score}/30 avg | noreply@ | `src/app/api/quality-audit/route.ts` |
+| `coach-invite` | A coach wants to follow your progress | noreply@ | `src/app/api/coach/invite/route.ts` |
+| `account-deletion-confirmation` | Your Mindcraft data has been deleted | crew@ | `src/app/api/cron/process-deletions/route.ts` |
 
-## Cron Schedule (vercel.json)
+**Total: 25 distinct email sends across 21 files.** Some files send multiple emails (waitlist sends two, referral rewards sends two, re-engage sends two via different branches, webhook sends two via different Stripe event types).
 
-| Job | Schedule | Route |
-|-----|----------|-------|
-| Daily Reminder | `0 14 * * *` (2 PM PT) | `/api/email/daily-reminder` |
-| Re-Engage Check | `0 15 * * *` (3 PM PT) | `/api/email/re-engage` |
-| Quality Audit | `0 16 * * 1` (Mon 4 PM PT) | `/api/quality-audit` |
+---
+
+## Cron schedule (`vercel.json`)
+
+| Cron | Schedule | Route | Emails sent |
+|---|---|---|---|
+| Daily reminder | `0 14 * * *` (2pm PT) | `/api/email/daily-reminder` | 1 per eligible enrollment |
+| Re-engage check | `0 15 * * *` (3pm PT) | `/api/email/re-engage` | nudges + exit survey |
+| Referral rewards | `0 13 * * *` (1pm PT) | `/api/referral-rewards` | reward + admin per eligible redemption |
+| Check completions | `17 14 * * *` (2:17pm PT) | `/api/cron/check-completions` | calls `runOfframp()` in `program-offramp.ts` |
+| Process deletions | `23 3 * * *` (3:23am PT) | `/api/cron/process-deletions` | account deletion confirmation |
+| Quality audit | `0 16 * * 1` (Mon 4pm PT) | `/api/quality-audit` | weekly audit report |
+| **Draw raffle (DORMANT)** | not registered | `/api/cron/draw-raffle` | admin drawing notification |
 
 All cron endpoints require `Authorization: Bearer {CRON_SECRET}`.
 
-## Email Event Tracking
+## Event tracking
 
-Resend webhooks tracked in `email_events` table via `api/resend-webhook/route.ts`:
-- sent, delivered, opened, clicked, bounced, complained, delivery_delayed
+Resend webhooks write to `email_events` table via `/api/resend-webhook/route.ts`. Events: sent, delivered, opened, clicked, bounced, complained, delivery_delayed. The admin page reads this table to show delivery stats per email key.
 
-## Supabase Auth Emails
+## Supabase Auth emails
 
-Supabase handles auth emails directly (signup confirmation, password reset, magic link). Not routed through Resend. Customize via Supabase dashboard.
-
----
-
-## Where the copy lives
-
-All email templates are **inline HTML inside each API route file**. There is no external email template service, no CMS, no Resend template editor. To change email copy, edit the route file directly.
-
----
-
-## Email Copy (all user-facing emails)
-
-### Welcome Email
-**Subject:** Welcome to Mindcraft
-**From:** stefanie@
-
-> Hello and Welcome.
->
-> I'm glad you're here.
->
-> Mindcraft was built from real coaching experience — the kind of tools I wished existed when I needed them most. Over the next 30 days, you'll journal, work through exercises designed by certified coaches, and start seeing your own patterns more clearly.
->
-> If you have questions at any point, there's a Contact button right on your dashboard. I read every message personally.
->
-> Wishing you the best on this journey.
->
-> **Stefanie Kamps**
-
----
-
-### Daily Reminder
-**Subject:** Day [X] is ready
-**From:** noreply@
-
-> Your Day [X] session is ready.
->
-> [Button: Start session]
->
-> Reply STOP to opt out of reminders.
-
----
-
-### Day Complete
-**Subject:** Day [X] Complete — [program name]
-**From:** noreply@
-
-> Day [X] is done.
->
-> Today's Themes: [list]
-> Summary: [first 3 sentences]
-> Exercises Completed: [count]
->
-> Tomorrow's Territory: [next day title]
->
-> [Button: Start Day [X+1]]
-
----
-
-### Program Complete
-**Subject:** You finished [program name].
-**From:** stefanie@
-
-> 30 days. Done.
->
-> [Stats: Journal Entries | Exercises | Coaching Questions]
->
-> Your Active Goals: [list]
->
-> What You Can Do Next:
-> - Download your exercise guide
-> - Share your insights
-> - Book a 1:1 coaching session
->
-> Would you share your experience? Two quick questions. Takes 30 seconds.
->
-> [Button: Share feedback]
->
-> This program was designed to end. The tools are yours now.
->
-> — Stefanie
-
----
-
-### Coach Notes
-**Subject:** A note from your coach — [program name]
-**From:** stefanie@
-
-> Your coach left you a note.
->
-> "[note preview, max 200 chars]"
->
-> [Button: Read the Full Note]
->
-> Your coach reviews your progress periodically and may share observations to support your journey.
-
----
-
-### Inactive Reminder (sent up to 3 times)
-**Subjects rotate:**
-1. "Day [X] is waiting"
-2. "Your program is still here"
-3. "Checking in — one more nudge"
-
-**From:** noreply@
-
-> You were on Day [X]. [Your last entry touched on [theme]. / You were making real progress.]
->
-> The program doesn't judge gaps. Pick up where you left off.
->
-> [Button: Continue Day [X]]
->
-> Reply STOP to opt out of check-ins.
-
----
-
-### Exit Survey (after 3 reminders + 7 days)
-**Subject:** Quick question before you go
-**From:** crew@
-
-> It looks like you stepped away from [program name].
->
-> No judgment — life happens. But your feedback would genuinely help us make this better for the next person.
->
-> Two questions, takes 30 seconds:
->
-> [Button: Share quick feedback]
->
-> Your program is still here if you want to come back. [Continue Day X →]
->
-> Reply STOP to opt out of check-ins.
-
----
-
-### Waitlist Confirmation
-**Subject:** You're on the list — [program]
-**From:** crew@
-
-> You're on the waitlist.
->
-> We'll let you know as soon as the [program] program is ready. No spam, just one email when it launches.
->
-> — The Mindcraft team
+Signup confirmation, password reset, and magic link emails are sent by Supabase directly — not through Resend. Customize in the Supabase dashboard → Authentication → Email Templates.

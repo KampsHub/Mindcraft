@@ -15,11 +15,14 @@ export const colors = {
   bgElevated: "#3E3E46",   // Active nav, hover states, popovers
   bgLight: "#F0EDE6",      // Light sections for contrast (warm white)
 
-  // Text
-  textPrimary: "#F0EDE6",  // Headings, primary content (warm white)
-  textSecondary: "#E0DDD8", // Subtitles, labels, nav links (near-white warm)
-  textBody: "#E0DDD8",     // Body text on cards (near-white warm)
-  textMuted: "#D0CCC6",    // Section labels, hints, metadata (warm light — visible on all dark surfaces)
+  // Text — all on the dark-first canvas. Per CLAUDE.md visual standard:
+  // "All text on authenticated pages: white (#ffffff), not grey."
+  // textMuted is intentionally close to textPrimary so even "muted" text
+  // stays legible — use opacity at the call site for explicit de-emphasis.
+  textPrimary: "#F5F2EB",  // Headings, primary content (warm white)
+  textSecondary: "#EBE8E0", // Subtitles, labels, nav links (warm near-white)
+  textBody: "#EBE8E0",     // Body text on cards (warm near-white)
+  textMuted: "#D8D4CC",    // Section labels, hints, metadata (legible warm light)
 
   // Accent: Warm Ochre
   coralLight: "#D4A84E",
@@ -91,26 +94,31 @@ export const text = {
     letterSpacing: "-0.01em",
   },
   // Body text, instructions, journal content
+  // Per CLAUDE.md: "Body text: minimum 15-16px"
   body: {
     fontFamily: fonts.bodyAlt,
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 400 as const,
     lineHeight: 1.7,
   },
   // Secondary info, subtitles, metadata
+  // Bumped from 13 → 14 per testing feedback ("some of these font
+  // sizes are too small. Make sure across the entire post login
+  // experience, that the fonts are not that small.")
   secondary: {
     fontFamily: fonts.bodyAlt,
-    fontSize: 13,
-    fontWeight: 400 as const,
-    lineHeight: 1.55,
+    fontSize: 14,
+    fontWeight: 500 as const,
+    lineHeight: 1.6,
   },
   // Small labels, badges, timestamps
+  // Bumped from 11 → 12 with bolder weight for readability.
   caption: {
     fontFamily: fonts.display,
-    fontSize: 11,
-    fontWeight: 600 as const,
+    fontSize: 12,
+    fontWeight: 700 as const,
     lineHeight: 1.4,
-    letterSpacing: "0.02em",
+    letterSpacing: "0.04em",
   },
 } as const;
 

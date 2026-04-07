@@ -1,6 +1,9 @@
 /**
  * Coaching application email — sent to stefanie@ on coaching apply form submission.
+ * Internal admin notification.
  */
+
+import { emailShell, EMAIL_COLORS, ICONS, eyebrow } from "@/lib/emails/shell";
 
 export type CoachingApplicationOpts = {
   firstName: string;
@@ -27,29 +30,51 @@ export function coachingApplicationHtml(opts: CoachingApplicationOpts): string {
   const { firstName, lastName, email, phone, company, location, situation, sixMonthGoal, funding, budget, referral, anythingElse } = opts;
 
   const row = (label: string, value?: string) =>
-    value ? `<tr><td style="padding:8px 16px 8px 0;font-weight:600;color:#333;vertical-align:top;white-space:nowrap">${label}</td><td style="padding:8px 0;color:#555">${value}</td></tr>` : "";
+    value
+      ? `<tr><td style="padding:10px 0;border-top:1px solid ${EMAIL_COLORS.borderSubtle};vertical-align:top;width:140px;">
+          <p style="color:${EMAIL_COLORS.textMuted};font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin:0;">${label}</p>
+        </td><td style="padding:10px 0;border-top:1px solid ${EMAIL_COLORS.borderSubtle};">
+          <p style="color:${EMAIL_COLORS.textPrimary};font-size:14px;line-height:1.5;margin:0;">${value}</p>
+        </td></tr>`
+      : "";
 
-  return `
-        <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;padding:40px 24px;color:#1a1a1a">
-          <p style="font-size:20px;font-weight:700;margin:0 0 24px">New Coaching Application</p>
-          <table style="border-collapse:collapse;width:100%;font-size:15px;line-height:1.6">
-            ${row("Name", `${firstName} ${lastName}`)}
-            ${row("Email", `<a href="mailto:${email}">${email}</a>`)}
+  const longField = (label: string, value: string) =>
+    `<div style="margin:18px 0;">
+      <p style="color:${EMAIL_COLORS.textMuted};font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 6px 0;">${label}</p>
+      <p style="color:${EMAIL_COLORS.textBody};font-size:14px;line-height:1.7;margin:0;">${value}</p>
+    </div>`;
+
+  const bodyHtml = `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="vertical-align:top;padding-right:14px;width:30px;">${ICONS.application}</td>
+        <td style="vertical-align:top;">
+          ${eyebrow("Coaching application")}
+          <h2 style="color:${EMAIL_COLORS.textPrimary};font-family:Georgia,'Times New Roman',serif;font-size:21px;font-weight:700;line-height:1.3;margin:0 0 18px 0;letter-spacing:-0.015em;">
+            ${firstName} ${lastName} wants to talk.
+          </h2>
+
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+            ${row("Email", `<a href="mailto:${email}" style="color:${EMAIL_COLORS.ochre};text-decoration:none;">${email}</a>`)}
             ${row("Phone", phone)}
             ${row("Company", company)}
             ${row("Location", location)}
           </table>
-          <hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0"/>
-          <p style="font-size:14px;font-weight:700;color:#333;margin:0 0 8px">What's going on right now?</p>
-          <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 20px">${situation}</p>
-          <p style="font-size:14px;font-weight:700;color:#333;margin:0 0 8px">Six-month goal</p>
-          <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 20px">${sixMonthGoal}</p>
-          <table style="border-collapse:collapse;width:100%;font-size:15px;line-height:1.6">
+
+          ${longField("What's going on right now?", situation)}
+          ${longField("Six-month goal", sixMonthGoal)}
+
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
             ${row("Funding", funding)}
             ${row("Budget", budget)}
             ${row("Referral", referral)}
           </table>
-          ${anythingElse ? `<hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0"/><p style="font-size:14px;font-weight:700;color:#333;margin:0 0 8px">Anything else</p><p style="font-size:15px;color:#555;line-height:1.7;margin:0">${anythingElse}</p>` : ""}
-        </div>
-      `;
+
+          ${anythingElse ? longField("Anything else", anythingElse) : ""}
+        </td>
+      </tr>
+    </table>
+  `;
+
+  return emailShell({ title: coachingApplicationSubject(opts), body: bodyHtml });
 }

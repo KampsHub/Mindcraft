@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
+import { sendServerEvent, syntheticClientId } from "@/lib/ga-measurement-protocol";
 
 const PRODUCT_ID = "prod_UD4pfH1qmOP8jX";
 const AMOUNT_CENTS = 30000; // $300
@@ -12,6 +13,8 @@ export async function POST(req: NextRequest) {
     }
 
     const stripe = new Stripe(stripeKey);
+    const body = await req.json().catch(() => ({}));
+    const gaClientId: string | undefined = body?.ga_client_id;
     const origin = req.headers.get("origin") || req.headers.get("referer")?.replace(/\/[^/]*$/, "") || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const baseUrl = origin.replace(/\/$/, "");
 
@@ -28,7 +31,13 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      metadata: { tier: "enneagram_standalone", amount_cents: String(AMOUNT_CENTS), program: "enneagram" },
+      metadata: {
+        tier: "enneagram_standalone",
+        amount_cents: String(AMOUNT_CENTS),
+        program: "enneagram",
+        ...(gaClientId ? { ga_client_id: String(gaClientId) } : {}),
+      },
+      expires_at: Math.floor(Date.now() / 1000) + 60 * 30,
       success_url: `${baseUrl}/enneagram/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/dashboard`,
     });
@@ -37,6 +46,13 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Error in /api/checkout/enneagram:", error);
     const message = error instanceof Error ? error.message : "Internal server error";
+    try {
+      await sendServerEvent(
+        syntheticClientId("enneagram_checkout_error"),
+        "enneagram_checkout_error",
+        { error_message: message },
+      );
+    } catch { /* no-op */ }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

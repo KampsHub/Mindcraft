@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
+import { sendServerEvent, syntheticClientId } from "@/lib/ga-measurement-protocol";
 
 const PRODUCTS: Record<string, { productId: string; min: number; max: number }> = {
   standard:  { productId: "prod_UD4mxe6Dg0FoNE",  min: 4900,  max: 4900  },
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     const stripe = new Stripe(stripeKey);
-    const { tier, amount, is_gift } = await req.json();
+    const { tier, is_gift, ga_client_id } = await req.json();
 
     const product = PRODUCTS[tier];
     if (!product) {
@@ -46,7 +47,14 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      metadata: { tier, amount_cents: String(cents), program: "basecamp", ...(is_gift ? { is_gift: "true" } : {}) },
+      metadata: {
+        tier,
+        amount_cents: String(cents),
+        program: "basecamp",
+        ...(ga_client_id ? { ga_client_id: String(ga_client_id) } : {}),
+        ...(is_gift ? { is_gift: "true" } : {}),
+      },
+      expires_at: Math.floor(Date.now() / 1000) + 60 * 30,
       allow_promotion_codes: true,
       success_url: `${baseUrl}/basecamp/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/basecamp?checkout=cancelled#pricing`,
@@ -56,6 +64,14 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Error in /api/checkout/basecamp:", error);
     const message = error instanceof Error ? error.message : "Internal server error";
+    try {
+      const body = await req.clone().json().catch(() => ({}));
+      await sendServerEvent(
+        body?.ga_client_id ?? syntheticClientId("checkout_error"),
+        "new_role_checkout_error",
+        { tier: String(body?.tier ?? "unknown"), error_message: message, program: "basecamp" },
+      );
+    } catch { /* no-op */ }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

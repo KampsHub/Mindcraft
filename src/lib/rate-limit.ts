@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sendServerEvent, syntheticClientId } from "./ga-measurement-protocol";
 
 // ── Token-bucket rate limiter (in-memory, no Redis) ──
 
@@ -47,6 +48,13 @@ export function checkRateLimit(
     // Calculate how long until 1 token is available
     const retryAfterMs = (1 - entry.tokens) / config.refillRatePerMs;
     const retryAfterSec = Math.ceil(retryAfterMs / 1000);
+
+    // Fire-and-forget analytics — do not await or block the rate-limit response
+    sendServerEvent(
+      syntheticClientId(`user.${userId}`),
+      "rate_limit_hit",
+      { bucket, retry_after_sec: retryAfterSec },
+    ).catch(() => { /* no-op */ });
 
     return NextResponse.json(
       { error: "Too many requests. Please try again later." },

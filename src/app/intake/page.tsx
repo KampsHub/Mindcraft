@@ -899,6 +899,11 @@ export default function IntakePage() {
 
   /* ── Step 4: Complete ── */
   if (step === "complete" && selectedProgram) {
+    // Pull the user's "what you want from this program" answer to anchor it
+    // as a Day-30 commitment they'll see resurface in the final summary.
+    // (Testing feedback 4.a step #1: confirmation at end of intake.)
+    const goalStatement = (answers.goal_statement as string)?.trim() || "";
+
     return (
       <Shell>
         <FadeIn preset="scale" triggerOnMount>
@@ -932,10 +937,44 @@ export default function IntakePage() {
             </p>
             <p style={{
               fontSize: 15, color: colors.textPrimary, lineHeight: 1.65,
-              maxWidth: 460, margin: "0 auto 36px", fontFamily: body,
+              maxWidth: 460, margin: "0 auto 28px", fontFamily: body,
             }}>
               The deeper work starts in the daily flow. Go at your pace.
             </p>
+
+            {goalStatement && (
+              <FadeIn preset="fade" delay={0.2} triggerOnMount>
+                <div style={{
+                  maxWidth: 520,
+                  margin: "0 auto 32px",
+                  padding: "22px 26px",
+                  borderRadius: 14,
+                  backgroundColor: colors.bgSurface,
+                  border: `1px solid ${colors.coralWash}`,
+                  textAlign: "left",
+                }}>
+                  <p style={{
+                    fontFamily: display, fontSize: 11, fontWeight: 700,
+                    color: colors.coral, margin: "0 0 8px 0",
+                    letterSpacing: "0.12em", textTransform: "uppercase",
+                  }}>
+                    What you want from this program
+                  </p>
+                  <p style={{
+                    fontFamily: body, fontSize: 16, color: colors.textPrimary,
+                    margin: "0 0 14px 0", lineHeight: 1.6, fontStyle: "italic",
+                  }}>
+                    &ldquo;{goalStatement}&rdquo;
+                  </p>
+                  <p style={{
+                    fontFamily: body, fontSize: 13, color: colors.textPrimary,
+                    margin: 0, lineHeight: 1.55, opacity: 0.8,
+                  }}>
+                    We&rsquo;ll come back to this on Day 30 and ask whether you got there.
+                  </p>
+                </div>
+              </FadeIn>
+            )}
             <motion.button
               whileHover={{ scale: 1.04, boxShadow: "0 8px 24px rgba(196,148,58,0.35)" }}
               whileTap={{ scale: 0.97 }}

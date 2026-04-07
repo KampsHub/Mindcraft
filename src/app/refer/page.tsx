@@ -201,19 +201,32 @@ export default function ReferPage() {
               </div>
 
               {!user ? (
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => router.push("/login?redirect=/refer")}
-                  style={{
-                    fontFamily: display, fontSize: 14, fontWeight: 600,
-                    padding: "12px 24px", borderRadius: radii.full,
-                    backgroundColor: colors.coral, color: "#18181C",
-                    border: "none", cursor: "pointer",
-                  }}
-                >
-                  Sign in to get your personalized code
-                </motion.button>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => router.push("/signup?next=/refer")}
+                    style={{
+                      fontFamily: display, fontSize: 14, fontWeight: 700,
+                      padding: "12px 24px", borderRadius: radii.full,
+                      backgroundColor: colors.coral, color: "#18181C",
+                      border: "none", cursor: "pointer",
+                    }}
+                  >
+                    Create a free account to get your code
+                  </motion.button>
+                  <button
+                    onClick={() => router.push("/login?next=/refer")}
+                    style={{
+                      fontFamily: body, fontSize: 13, fontWeight: 500,
+                      color: colors.textSecondary, background: "none",
+                      border: "none", cursor: "pointer", padding: 0,
+                      textDecoration: "underline",
+                    }}
+                  >
+                    Already have an account? Sign in
+                  </button>
+                </div>
               ) : !referralCode ? (
                 <motion.button
                   whileHover={{ scale: 1.03 }}

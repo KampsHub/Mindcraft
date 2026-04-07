@@ -173,13 +173,25 @@ function EnneagramCard({ program }: { program: string }) {
         color: colors.textPrimary, margin: "0 0 8px 0",
         letterSpacing: "-0.01em",
       }}>
-        Add Enneagram
+        Add the Enneagram
       </p>
       <p style={{
         fontFamily: body, fontSize: 13, color: colors.textPrimary,
-        lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
+        lineHeight: 1.6, margin: "0 0 12px 0",
       }}>
-        The IEQ9 Enneagram — the assessment professional coaches actually use. It shows you why you react the way you do under pressure and what patterns keep repeating. Includes a 1-hour live debrief. Your results shape every exercise.
+        The <strong>IEQ9</strong> from Integrative9 — a 175-question, scientifically validated Enneagram assessment used by certified coaches and Fortune 500 leadership programs. Not the free Buzzfeed-style version.
+      </p>
+      <p style={{
+        fontFamily: body, fontSize: 13, color: colors.textPrimary,
+        lineHeight: 1.6, margin: "0 0 12px 0", opacity: 0.9,
+      }}>
+        You&rsquo;ll get a 30-page report on your dominant type, your wings, your tritype, and how you shift under stress vs security. Plus a <strong>1-hour live debrief</strong> with Stefanie to walk through what it means for your specific moment.
+      </p>
+      <p style={{
+        fontFamily: body, fontSize: 13, color: colors.textPrimary,
+        lineHeight: 1.6, margin: "0 0 20px 0", opacity: 0.9, flex: 1,
+      }}>
+        Your results then shape every exercise in your daily program — the AI weights frameworks toward what your specific type needs.
       </p>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <span style={{

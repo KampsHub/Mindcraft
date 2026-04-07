@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
 import { content as c } from "@/content/site";
 
-export default function SignupPage() {
+export default function SignupPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <SignupPage />
+    </Suspense>
+  );
+}
+
+function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,13 +26,26 @@ export default function SignupPage() {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  // ?next=/refer (or any other path) routes the user to that page after auth
+  // instead of the default /dashboard. Used for referrer-only signup flow.
+  const nextPath = searchParams.get("next") || "";
+  const isReferrerSignup = nextPath === "/refer";
+  const callbackUrl = (typeof window !== "undefined")
+    ? `${window.location.origin}/auth/callback${nextPath ? `?next=${encodeURIComponent(nextPath)}` : ""}`
+    : "";
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: nextPath ? { emailRedirectTo: callbackUrl } : undefined,
+    });
     if (error) { setError(error.message); setLoading(false); }
     else { setSuccess(true); setLoading(false); }
   }
@@ -95,10 +116,12 @@ export default function SignupPage() {
             color: colors.textPrimary, fontFamily: fonts.display,
             letterSpacing: "-0.02em",
           }}>
-            {c.signup.headline}
+            {isReferrerSignup ? "Share Mindcraft" : c.signup.headline}
           </h1>
           <p style={{ fontSize: 15, color: colors.textPrimary, margin: 0 }}>
-            {c.signup.subheadline}
+            {isReferrerSignup
+              ? "Create a free account to get your referral link. No program required."
+              : c.signup.subheadline}
           </p>
         </div>
 
@@ -169,7 +192,7 @@ export default function SignupPage() {
                 setError("");
                 const { error } = await supabase.auth.signInWithOtp({
                   email,
-                  options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+                  options: { emailRedirectTo: callbackUrl },
                 });
                 setMagicLinkLoading(false);
                 if (error) setError(error.message);
@@ -207,7 +230,7 @@ export default function SignupPage() {
           onClick={async () => {
             const { error } = await supabase.auth.signInWithOAuth({
               provider: "google",
-              options: { redirectTo: `${window.location.origin}/auth/callback` },
+              options: { redirectTo: callbackUrl },
             });
             if (error) console.error("Google login error:", error);
           }}

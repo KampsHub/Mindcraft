@@ -48,6 +48,13 @@ export default function LoginPage() {
     }
   }, [searchParams]);
 
+  // ?next=/refer routes the user to that page after auth instead of /dashboard.
+  // Used by the referrer-only signup flow on the /refer page.
+  const nextPath = searchParams.get("next") || "";
+  const callbackUrl = (typeof window !== "undefined")
+    ? `${window.location.origin}/auth/callback${nextPath ? `?next=${encodeURIComponent(nextPath)}` : ""}`
+    : "";
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -58,7 +65,10 @@ export default function LoginPage() {
       setError(error.message);
       setLoading(false);
     }
-    else { trackEvent("login_success", { method: "password" }); window.location.href = "/dashboard"; }
+    else {
+      trackEvent("login_success", { method: "password" });
+      window.location.href = nextPath || "/dashboard";
+    }
   }
 
   async function handleMagicLink() {
@@ -67,7 +77,7 @@ export default function LoginPage() {
     setError("");
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: { emailRedirectTo: callbackUrl },
     });
     setMagicLinkLoading(false);
     if (error) {
@@ -82,7 +92,7 @@ export default function LoginPage() {
   async function handleGoogle() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: callbackUrl },
     });
     if (error) {
       trackEvent("auth_google_failed", { error_message: error.message });

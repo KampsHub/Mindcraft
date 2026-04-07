@@ -406,89 +406,97 @@ export default function TellTab({
       )}
     </div>
 
-    {/* Exercise follow-through from yesterday */}
+    {/* ─────── YESTERDAY BOX ───────
+        Restructured per testing feedback:
+        - One box with yesterday's pattern/exercise + mini-action checkboxes
+        - Removed: "questions to sit with", "challenges", "what came up", takeaways labels
+    */}
     {isRevealed("followthrough") && (yesterdayExercise || yesterdaySummaryTakeaways) && (
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         style={{
-          padding: "16px 18px",
-          backgroundColor: "rgba(196, 148, 58, 0.08)",
+          padding: "20px 22px",
+          backgroundColor: colors.bgSurface,
           borderRadius: 14,
-          border: `1px solid rgba(196, 148, 58, 0.15)`,
+          border: `1px solid ${colors.borderDefault}`,
           marginBottom: space[6],
         }}
       >
         <p style={{
           ...textPreset.caption, color: colors.coral,
-          margin: "0 0 8px 0",
+          margin: "0 0 10px 0",
         }}>
-          Yesterday&apos;s takeaways
+          Yesterday
         </p>
 
-        {/* Show summary takeaways from Done tab if available */}
-        {yesterdaySummaryTakeaways ? (
-          <div style={{ marginBottom: 12 }}>
-            {yesterdaySummaryTakeaways.questions_to_sit_with.length > 0 && (
-              <div style={{ marginBottom: 10 }}>
-                <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 6px 0" }}>
-                  Questions to sit with:
-                </p>
-                {yesterdaySummaryTakeaways.questions_to_sit_with.map((q, i) => (
-                  <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "4px 0", paddingLeft: 12 }}>
-                    {q}
-                  </p>
-                ))}
-              </div>
-            )}
-            {yesterdaySummaryTakeaways.challenges.length > 0 && (
-              <div style={{ marginBottom: 10 }}>
-                <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 6px 0" }}>
-                  Challenges you took on:
-                </p>
-                {yesterdaySummaryTakeaways.challenges.map((c, i) => (
-                  <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "4px 0", paddingLeft: 12 }}>
-                    &bull; {c}
-                  </p>
-                ))}
-              </div>
-            )}
-            {yesterdaySummaryTakeaways.committed_actions.length > 0 && (
-              <div style={{ marginBottom: 10 }}>
-                <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 6px 0" }}>
-                  You committed to:
-                </p>
-                {yesterdaySummaryTakeaways.committed_actions.map((a, i) => (
-                  <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "4px 0", paddingLeft: 12 }}>
-                    &bull; {a}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : yesterdayExercise ? (
-          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 6px 0", fontWeight: 600 }}>
-            {yesterdayExercise.name}
+        {/* Pattern: the exercise / framework they worked with */}
+        {yesterdayExercise && (
+          <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 14px 0" }}>
+            <strong>{yesterdayExercise.name}</strong>
           </p>
-        ) : null}
+        )}
 
-        <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: "0 0 10px 0" }}>
-          What came up from these?
-        </p>
-        <textarea
-          value={followThrough}
-          onChange={(e) => setFollowThrough(e.target.value)}
-          placeholder="Write what came up..."
-          style={{
-            width: "100%", minHeight: 60, padding: "12px",
-            ...textPreset.body,
-            borderRadius: radii.md, border: `1px solid ${colors.borderDefault}`,
-            backgroundColor: colors.bgInput, color: colors.textPrimary,
-            resize: "vertical", outline: "none",
-            boxSizing: "border-box",
-          }}
-        />
+        {/* Mini-action checklist — "did you actually do this?" */}
+        {yesterdaySummaryTakeaways && yesterdaySummaryTakeaways.committed_actions.length > 0 && (() => {
+          // Persist mini-action completion as JSON in followThrough.
+          let parsed: Record<string, boolean> = {};
+          try { parsed = JSON.parse(followThrough || "{}"); } catch { /* keep empty */ }
+          const toggle = (idx: number) => {
+            const next = { ...parsed, [idx]: !parsed[idx] };
+            setFollowThrough(JSON.stringify(next));
+          };
+          return (
+            <div>
+              <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: "0 0 8px 0" }}>
+                You committed to these. Did they happen?
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {yesterdaySummaryTakeaways.committed_actions.map((action, i) => {
+                  const done = !!parsed[i];
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => toggle(i)}
+                      style={{
+                        display: "flex", alignItems: "flex-start", gap: 12,
+                        textAlign: "left", cursor: "pointer",
+                        padding: "10px 12px",
+                        borderRadius: radii.md,
+                        border: `1px solid ${done ? colors.coral : colors.borderDefault}`,
+                        backgroundColor: done ? "rgba(196, 148, 58, 0.08)" : "transparent",
+                        transition: "all 0.18s",
+                      }}
+                    >
+                      <span style={{
+                        display: "inline-flex", alignItems: "center", justifyContent: "center",
+                        width: 22, height: 22, borderRadius: 6,
+                        border: `1.5px solid ${done ? colors.coral : colors.borderDefault}`,
+                        backgroundColor: done ? colors.coral : "transparent",
+                        flexShrink: 0,
+                        marginTop: 2,
+                      }}>
+                        {done && (
+                          <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke={colors.bgDeep} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                      </span>
+                      <span style={{
+                        ...textPreset.body, color: colors.textPrimary,
+                        textDecoration: done ? "line-through" : "none",
+                        opacity: done ? 0.75 : 1,
+                      }}>
+                        {action}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
       </motion.div>
     )}
 
@@ -604,7 +612,7 @@ export default function TellTab({
                 transition: "background-color 0.2s",
               }}
             >
-              {savingJournal ? "Saving..." : "Save & Continue"}
+              {savingJournal ? "Reading…" : "Watcha think?"}
             </motion.button>
           ) : (
             <span style={{

@@ -606,48 +606,11 @@ export default function ExerciseCard({
                     />
                   </div>
 
-                  {/* Rating question + submit row */}
-                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: space[3] }}>
-                    <div>
-                      {response.trim().length > 0 && (
-                        <>
-                          <p style={{
-                            ...textScale.secondary, color: "rgba(255,255,255,0.5)", margin: `${space[3]}px 0 ${space[2]}px 0`,
-                          }}>
-                            Was this exercise useful?
-                          </p>
-                          <div style={{ display: "flex", gap: space[2] }}>
-                            <button
-                              onClick={() => setRating(rating === 5 ? null : 5)}
-                              style={{
-                                padding: `${space[2]}px ${space[5]}px`, borderRadius: radii.full, fontSize: 13,
-                                fontWeight: 600, fontFamily: display,
-                                backgroundColor: rating === 5 ? "rgba(74, 222, 128, 0.15)" : colors.bgElevated,
-                                color: rating === 5 ? "#4ade80" : colors.textPrimary,
-                                border: rating === 5 ? "1px solid rgba(74, 222, 128, 0.3)" : `1px solid ${colors.borderDefault}`,
-                                cursor: "pointer",
-                              }}
-                            >
-                              Yes, useful
-                            </button>
-                            <button
-                              onClick={() => setRating(rating === 2 ? null : 2)}
-                              style={{
-                                padding: `${space[2]}px ${space[5]}px`, borderRadius: radii.full, fontSize: 13,
-                                fontWeight: 600, fontFamily: display,
-                                backgroundColor: rating === 2 ? "rgba(255, 255, 255, 0.08)" : colors.bgElevated,
-                                color: "rgba(255, 255, 255, 0.6)",
-                                border: `1px solid ${colors.borderDefault}`,
-                                cursor: "pointer",
-                              }}
-                            >
-                              Not for me
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
+                  {/* Submit row — binary "Was this exercise useful?" prompt
+                     removed per testing feedback N1 ("Remove this section.").
+                     The 5-star "How was this exercise?" rating below the
+                     submitted state is the canonical rating now. */}
+                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end", flexWrap: "wrap", gap: space[3] }}>
                     {/* Submit — small pill button */}
                     <motion.button
                       whileHover={canSubmit ? { scale: 1.03 } : {}}

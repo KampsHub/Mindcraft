@@ -29,17 +29,29 @@ function dayLabel(d: Date): string {
 
 function generateSlots(daysAhead = 14) {
   const slots: Array<{ id: string; date: string; time: SlotTime; dayLabel: string; timeLabel: string }> = [];
+
+  // Per Stefanie's calendar rule: no bookings within the next 72 hours.
+  // (This rule is also enforced inside her Google Calendar appointment schedule.)
+  const earliest = new Date();
+  earliest.setTime(earliest.getTime() + 72 * 60 * 60 * 1000);
+
+  // Walk forward day by day until we have `daysAhead` calendar days past the cutoff.
   const start = new Date();
   start.setHours(0, 0, 0, 0);
-  // Start one day out so we never offer same-day.
-  start.setDate(start.getDate() + 1);
 
-  for (let i = 0; i < daysAhead; i++) {
+  for (let i = 0; i < daysAhead + 5; i++) {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
     const dow = d.getDay(); // 0 = Sun, 6 = Sat
     if (dow === 0 || dow === 6) continue;
+
     for (const time of SLOT_TIMES) {
+      // Build the actual datetime for this slot in PT and skip if before the 72h cutoff.
+      const [hh, mm] = time.split(":").map(Number);
+      const slotDate = new Date(d);
+      slotDate.setHours(hh, mm, 0, 0);
+      if (slotDate.getTime() < earliest.getTime()) continue;
+
       slots.push({
         id: `${formatDate(d)}_${time}`,
         date: formatDate(d),
@@ -48,6 +60,7 @@ function generateSlots(daysAhead = 14) {
         timeLabel: SLOT_LABELS[time],
       });
     }
+    if (slots.length >= daysAhead * 3) break;
   }
   return slots;
 }

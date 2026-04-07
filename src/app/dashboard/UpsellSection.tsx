@@ -94,9 +94,10 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
         }}>
           Go deeper
         </p>
+        {/* Stacked vertically — the IEQ9 card is copy-heavy and needs full width. */}
         <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          display: "flex",
+          flexDirection: "column",
           gap: 14,
         }}>
           <EnneagramCard program={programSlug} />
@@ -158,7 +159,7 @@ function EnneagramCard({ program }: { program: string }) {
       else {
         console.error("Checkout error:", data.error);
         trackEvent("enneagram_checkout_error", { error_message: data?.error ?? "unknown" });
-        setError("Payment couldn\u2019t be started. Please try again.");
+        setError(data?.error ? `Stripe: ${data.error}` : "Payment couldn\u2019t be started. Please try again.");
       }
     } catch (err) {
       console.error("Checkout error:", err);

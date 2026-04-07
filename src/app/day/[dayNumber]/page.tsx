@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import PageShell from "@/components/PageShell";
 import FadeIn from "@/components/FadeIn";
 import PhaseIndicator from "@/components/PhaseIndicator";
+import BreathingCircle from "@/components/BreathingCircle";
 import { colors, fonts, space, text, radii } from "@/lib/theme";
 import { useDaySession } from "./useDaySession";
 import TellTab from "./TellTab";
@@ -60,7 +61,14 @@ function DailyFlowPage() {
   if (s.loading) {
     return (
       <PageShell>
-        <p style={{ color: colors.textPrimary, fontFamily: body }}>Loading your session...</p>
+        <div style={{
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+          <BreathingCircle size={104} label="Settling into today…" />
+        </div>
       </PageShell>
     );
   }

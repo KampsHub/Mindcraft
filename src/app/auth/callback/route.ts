@@ -62,7 +62,9 @@ export async function GET(request: Request) {
     });
   }
 
-  // Honor the `next` param if provided, otherwise default to journal
-  const redirectTo = next || "/mindful-journal";
+  // Honor the `next` param if provided, otherwise default to dashboard.
+  // (Was /mindful-journal — testing feedback section 1.b: Google login was
+  // landing users on the journal instead of their dashboard.)
+  const redirectTo = next || "/dashboard";
   return NextResponse.redirect(`${origin}${redirectTo}`);
 }

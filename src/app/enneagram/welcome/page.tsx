@@ -132,56 +132,141 @@ function EnneagramWelcome() {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      padding: 24,
+      padding: "48px 24px",
     }}>
-      <div style={{ textAlign: "center", maxWidth: 500 }}>
-        <motion.div {...fade(0)} style={{ marginBottom: 32 }}>
+      <div style={{ maxWidth: 620, width: "100%" }}>
+        <motion.div {...fade(0)} style={{ marginBottom: 32, textAlign: "center" }}>
           <Logo />
         </motion.div>
 
-        <motion.div {...fade(0.2)}>
+        <motion.div {...fade(0.2)} style={{ textAlign: "center" }}>
           <span style={{
             display: "inline-block",
-            fontFamily: body, fontSize: 10, fontWeight: 700,
+            fontFamily: body, fontSize: 11, fontWeight: 700,
             letterSpacing: 1.5, textTransform: "uppercase" as const,
             padding: "6px 16px", borderRadius: 6,
             backgroundColor: colors.coralWash, color: colors.coral,
             marginBottom: 20,
           }}>
-            ✓ Enneagram Assessment
+            ✓ IEQ9 Enneagram
           </span>
         </motion.div>
 
         <motion.h1 {...fade(0.4)} style={{
-          fontFamily: display, fontSize: 28, fontWeight: 700,
+          fontFamily: display, fontSize: 32, fontWeight: 700,
           color: colors.textPrimary, letterSpacing: "-0.02em",
-          margin: "0 0 16px 0",
+          margin: "0 0 16px 0", textAlign: "center",
         }}>
           You&rsquo;re in.
         </motion.h1>
 
-        <motion.p {...fade(0.6)} style={{
-          fontFamily: body, fontSize: 16, color: colors.textSecondary,
-          lineHeight: 1.7, margin: "0 0 12px 0",
+        <motion.p {...fade(0.5)} style={{
+          fontFamily: body, fontSize: 17, color: colors.textPrimary,
+          lineHeight: 1.7, margin: "0 0 32px 0", textAlign: "center",
+          maxWidth: 520, marginLeft: "auto", marginRight: "auto",
         }}>
-          I&rsquo;ll send your IEQ9 assessment link within <strong style={{ color: colors.textPrimary }}>48 hours</strong>.
+          The IEQ9 from Integrative9 — a 175-question, scientifically validated Enneagram assessment used by certified coaches and Fortune 500 leadership programs.
         </motion.p>
 
-        <motion.p {...fade(0.7)} style={{
-          fontFamily: body, fontSize: 15, color: colors.textMuted,
-          lineHeight: 1.7, margin: "0 0 36px 0",
+        {/* Step 1: Assessment link */}
+        <motion.div {...fade(0.7)} style={{
+          padding: "22px 26px",
+          marginBottom: 16,
+          borderRadius: 14,
+          backgroundColor: colors.bgSurface,
+          border: `1px solid ${colors.coralWash}`,
         }}>
-          In the meantime, you can keep working through your program &mdash; the Enneagram results will deepen every exercise once they&rsquo;re in.
-        </motion.p>
+          <p style={{
+            fontFamily: display, fontSize: 11, fontWeight: 700,
+            color: colors.coral, margin: "0 0 6px 0",
+            letterSpacing: "0.12em", textTransform: "uppercase" as const,
+          }}>
+            Step 1 · Assessment link
+          </p>
+          <p style={{
+            fontFamily: body, fontSize: 16, color: colors.textPrimary,
+            margin: "0 0 8px 0", lineHeight: 1.6,
+          }}>
+            I&rsquo;ll send your IEQ9 assessment link within <strong>48 hours</strong>. It takes about 30-40 minutes to complete and asks you to rate 175 statements.
+          </p>
+          <p style={{
+            fontFamily: body, fontSize: 14, color: colors.textPrimary,
+            margin: 0, lineHeight: 1.55, opacity: 0.85,
+          }}>
+            You&rsquo;ll get a 30+ page report covering your dominant type, your wings, your tritype, and how you shift under stress vs security.
+          </p>
+        </motion.div>
 
-        <motion.div {...fade(0.9)}>
+        {/* Step 2: Book the debrief */}
+        <motion.div {...fade(0.85)} style={{
+          padding: "22px 26px",
+          marginBottom: 16,
+          borderRadius: 14,
+          backgroundColor: colors.bgSurface,
+          border: `1px solid ${colors.coralWash}`,
+        }}>
+          <p style={{
+            fontFamily: display, fontSize: 11, fontWeight: 700,
+            color: colors.coral, margin: "0 0 6px 0",
+            letterSpacing: "0.12em", textTransform: "uppercase" as const,
+          }}>
+            Step 2 · Book your 1-hour live debrief
+          </p>
+          <p style={{
+            fontFamily: body, fontSize: 16, color: colors.textPrimary,
+            margin: "0 0 16px 0", lineHeight: 1.6,
+          }}>
+            Once you have your results, we&rsquo;ll spend an hour together walking through what they mean for <strong>your specific moment</strong>. Not generic Enneagram theory — your patterns, your triggers, your growth edges, applied to what you&rsquo;re navigating right now.
+          </p>
+          <a
+            href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1GvZttZdK4XHfuoTQ0LRKf0IVVPjxJV4XRkKLdQ7_wS5fK4WR-Wjjn95OyMp-lpcy8QtqOT-zs"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-block",
+              fontFamily: display, fontSize: 14, fontWeight: 700,
+              padding: "12px 24px", borderRadius: 100,
+              backgroundColor: colors.coral, color: colors.bgDeep,
+              border: "none", cursor: "pointer",
+              textDecoration: "none",
+              transition: "all 0.2s",
+            }}
+          >
+            Book your debrief →
+          </a>
+        </motion.div>
+
+        {/* Step 3: How it shapes your daily program */}
+        <motion.div {...fade(1.0)} style={{
+          padding: "22px 26px",
+          marginBottom: 32,
+          borderRadius: 14,
+          backgroundColor: colors.bgSurface,
+          border: `1px solid ${colors.borderSubtle}`,
+        }}>
+          <p style={{
+            fontFamily: display, fontSize: 11, fontWeight: 700,
+            color: colors.textPrimary, margin: "0 0 6px 0",
+            letterSpacing: "0.12em", textTransform: "uppercase" as const, opacity: 0.85,
+          }}>
+            And then · It shapes every exercise
+          </p>
+          <p style={{
+            fontFamily: body, fontSize: 15, color: colors.textPrimary,
+            margin: 0, lineHeight: 1.6, opacity: 0.9,
+          }}>
+            Once your results are in, the AI weights every exercise in your daily program toward what your specific type needs — somatic work for body-resistant types, structured tools for emotional types, etc. The program adapts to who you actually are, not a generic template.
+          </p>
+        </motion.div>
+
+        <motion.div {...fade(1.15)} style={{ textAlign: "center" }}>
           <button
             onClick={() => router.push("/dashboard")}
             style={{
-              fontFamily: display, fontSize: 15, fontWeight: 600,
-              padding: "14px 36px", borderRadius: 8,
-              backgroundColor: colors.coral, color: colors.textPrimary,
-              border: "none", cursor: "pointer",
+              fontFamily: display, fontSize: 14, fontWeight: 600,
+              padding: "12px 28px", borderRadius: 100,
+              backgroundColor: "transparent", color: colors.textPrimary,
+              border: `1px solid ${colors.borderDefault}`, cursor: "pointer",
               transition: "all 0.2s",
             }}
           >

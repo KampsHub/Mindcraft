@@ -1253,9 +1253,15 @@ export default function Home() {
       </motion.nav>
 
       {/* ── Hero ── */}
+      {/* Testing feedback 2.a: hero banner now uses 100dvh (dynamic viewport
+         height) so it fully fills the visible screen on mobile browsers
+         where the URL bar makes 100vh unreliable. Background image/video
+         is unchanged per Stefanie's "keep the background as it is right
+         now in production" instruction. */}
       <section
         style={{
-          minHeight: "100vh",
+          minHeight: "100dvh",
+          height: "100dvh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -2459,6 +2465,29 @@ export default function Home() {
                 {c.finalCta.primaryCta}
               </motion.a>
             </div>
+          </FadeIn>
+          <FadeIn preset="fade" delay={0.5}>
+            <p
+              style={{
+                marginTop: 24,
+                fontSize: 14,
+                color: "#ffffff",
+                fontFamily: body,
+                lineHeight: 1.55,
+              }}
+            >
+              Just want to share Mindcraft with someone?{" "}
+              <a
+                href="/signup?next=/refer"
+                style={{
+                  color: colors.coral,
+                  textDecoration: "underline",
+                  fontWeight: 600,
+                }}
+              >
+                Create a free account to get your referral link →
+              </a>
+            </p>
           </FadeIn>
         </div>
       </section>

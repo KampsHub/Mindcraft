@@ -86,4 +86,114 @@ I can implement #1 and #3 today (touches `src/app/intake/page.tsx` for #1, schem
 
 ---
 
-(More items to come as I read pages 4-19 of the doc.)
+## NEW INLINE NOTES (found 2026-04-07 second pass through doc)
+
+### N1 — "Remove this section." (Was this exercise useful? Yes / Not for me)
+
+**Status:** ✅ Will fix
+
+The "Was this exercise useful?" Yes/Not-for-me prompt that appears after exercise completion should be removed entirely. The star rating on the next screen ("How was this exercise?") is enough — the binary useful/not-useful is redundant and creates extra friction.
+
+Code location: `src/components/ExerciseCard.tsx` or wherever the post-exercise feedback dialog is rendered.
+
+### N2 — Star rating: where do users see their rating + can I see it aggregated?
+
+> "Leave this section. Where does the customer see their rating? Can I see it based on exercise in an aggregated way?"
+
+**Status:** 💬 Two-part question
+
+**Part 1: Where does the user see their own rating?**
+Currently nowhere, except in their `exercise_completions` table row which they don't see directly. Should they see it on the dashboard? In the weekly review?
+
+Proposal: Add a small "Your rating" indicator on already-completed exercises in the ExercisesSection on dashboard. Plus surface in the weekly-review summary card.
+
+**Part 2: Can Stefanie see ratings in an aggregated way?**
+The data is in `exercise_completions.star_rating`. Today there's no admin view. Two options:
+- (a) Add an admin page at `/admin/exercise-ratings` that groups by `framework_name` showing avg rating, count, distribution, and links to the lowest-rated rows for review
+- (b) Add this to the existing quality-flags admin view if there is one
+
+Recommended: option (a) — net new admin view, ~45 min.
+
+### N3 — Inner Critic exercise: factual language instead of hedged
+
+> "...already, are you not sticking to it? You are stating something like a fact 'which is often how the inner critic...' - 'which may be how the inner critic'... you see the difference? We talked about this before."
+
+**Status:** 🔥 Critical voice rule violation — needs systemic AI prompt fix
+
+Per CLAUDE.md: "Coach voice, not authority voice. Don't tell the user what happened to them or why they feel what they feel. Use language that invites rather than declares: 'it sounds like,' 'maybe,' 'could it be that,' 'you might notice,' 'this may help you...'"
+
+The AI insight currently said: "You opened with disappointment, which is often how the inner critic shows up on Day 1 — protecting you from hoping something might help."
+
+Should say: "You opened with disappointment, which **may be** how the inner critic shows up on Day 1 — and one way to read it is as protection against hoping something might help."
+
+**Where to fix:**
+- `src/app/api/process-journal/route.ts` — the SYSTEM prompt must enforce hedged language MORE strongly. Current rule is there but the AI is still drifting into declarative phrasing.
+- The same applies to exercise `whyThis` content (seed scripts).
+
+I'll add a stronger rule with explicit examples to the process-journal prompt and verify with a test journal entry.
+
+### N4 — "I thought you had a dialogue tool - doing this in journaling is more confusing."
+
+**Status:** 💬 Question — likely needs primitive selection fix on a specific exercise
+
+Stefanie is pointing out that an exercise that should use the `dialogueSequence` primitive (multi-turn back-and-forth between voices) is currently rendering as a freeform journal text area, which is confusing because the framework requires structured dialogue.
+
+This refers to the **Inner Critic Dialogue** exercise visible in the surrounding screenshots. Looking at the seed data, that exercise uses a "guided" type instead of `dialogueSequence`.
+
+Fix: Update the Inner Critic Dialogue exercise to use the dialogueSequence primitive with prePopulated speaker labels (e.g., "Inner Critic" / "You"). This is a seed data change in the program day definition, plus possibly an exercise-completion handler change.
+
+This is an **instructional design** issue, not just a UI issue — the user can't practice dialogue with a single text area. CLAUDE.md is explicit about this:
+> "If the instruction asks the user to write or reflect, there must be a place to write. The primitive must include a journal/text area for that reflection."
+
+For a dialogue exercise, that means: **the primitive must support multiple turns**, not one big textarea.
+
+### N5 — "What would make this exercise better?" / "Where do you catch this feedback? How can I see it?"
+
+**Status:** 💬 Question + 🔧 Likely two fixes
+
+The per-exercise feedback field exists (`exercise_completions.feedback` column) and is captured at the end of every exercise. Stefanie is asking where it goes and how she can see it.
+
+Today: stored in DB, not surfaced anywhere. Same gap as N2.
+
+Proposal:
+1. Add the feedback content to the same `/admin/exercise-ratings` view from N2
+2. Surface a small "💭 1 piece of feedback" indicator in the weekly_reviews admin view if any feedback was left during that week
+
+Alternative: if she wants the feedback question REMOVED entirely (because it's noise), I'll do that instead. Pending her direction.
+
+### N6 — "These are different colors. Plus they are in italics while all other fonts are normal. Update and..."
+
+**Status:** ✅ Will fix
+
+The AI-generated insight text in exercises ("Your disappointment suggests you're evaluating whether this program works before you've engaged with it...") is currently rendered in:
+- A different (lighter / muted) color than the rest of the body text
+- Italics
+- A slightly different size
+
+Stefanie wants this normalized to the same color/style as the rest of the body content.
+
+Code location: probably `src/components/exercises/InsightDisplay.tsx` or wherever the AI insight is rendered. I'll find it and remove the italic + bring color to textPrimary.
+
+---
+
+## Section 5 — Stefanie's reply on 1.a (referrer signup)
+
+You clarified after my first 1.a proposal:
+> "this is not about customers with a referral code - they can still come in by choosing a program and then redeeming the code in checkout. this is for customers who are not yet users but still want to spread the word on us. these are referrers."
+
+**Status:** ✅ Fixed in commit `99c72ca`
+
+Built `/signup?next=/refer` flow (option b from my proposal). `/login` and `/refer` both threaded for the `next` query param. Logged-out visitors to `/refer` now see "Create a free account to get your code" / "Already have an account? Sign in" instead of a dead-end "Sign in" button.
+
+Then in this batch (commit pending) added a small footer-of-final-CTA link on the homepage so referrers have an entry point too.
+
+---
+
+## Section 6 — Stefanie's unblocking direction (full batch)
+
+Direction received in chat (not doc):
+- ✅ "add" → 1.a homepage CTA. Building.
+- ✅ "Go-ahead to (a) update the final-summary AI prompt..." → 4.a #2 + #3 implementing.
+- ✅ "Explicit go-ahead to touch src/app/page.tsx" → fixed 2.a hero banner via 100dvh.
+- ✅ Stripe-Calendar booking link URL provided → wired into /enneagram/welcome.
+- ✅ "sure" Enneagram welcome expansion → done.

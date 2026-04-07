@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import { trackEvent } from "@/components/GoogleAnalytics";
 import FlagButton from "@/components/FlagButton";
-import VoiceToText from "@/components/VoiceToText";
-import GuidedExerciseFlow from "@/components/GuidedExerciseFlow";
+// VoiceToText / GuidedExerciseFlow imports removed — no audio surfaces in day flow.
 import { colors, fonts, space, text as textPreset, radii } from "@/lib/theme";
 import { useProgressiveReveal } from "@/hooks/useProgressiveReveal";
 import type { createClient } from "@/lib/supabase";
@@ -198,7 +197,7 @@ export default function TellTab({
     }
   }, [session?.step_3_analysis, dayNumber]);
 
-  const [showThoughtConversation, setShowThoughtConversation] = useState(false);
+  // showThoughtConversation removed — no walk-through/audio modal.
   const [expandedPrompts, setExpandedPrompts] = useState<Array<{ prompt: string; expanded?: string; purpose: string; context?: string }>>(
     programDay?.seed_prompts || []
   );
@@ -228,8 +227,7 @@ export default function TellTab({
       })
       .catch((err) => console.warn("Prompt expansion failed:", err));
   }, [programDay]);
-  const [followThroughListening, setFollowThroughListening] = useState(false);
-  const followThroughRecognitionRef = useRef<any>(null);
+  // followThrough voice recording state removed — text-only input.
 
   // Progressive reveal: auto-reveal based on existing data
   const initialRevealed = useMemo(() => {
@@ -400,7 +398,7 @@ export default function TellTab({
           )}
 
           {themes.carry_forward && (
-            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0, fontStyle: "italic" }}>
+            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
               {themes.carry_forward}
             </p>
           )}
@@ -438,7 +436,7 @@ export default function TellTab({
                   Questions to sit with:
                 </p>
                 {yesterdaySummaryTakeaways.questions_to_sit_with.map((q, i) => (
-                  <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "4px 0", fontStyle: "italic", paddingLeft: 12 }}>
+                  <p key={i} style={{ ...textPreset.body, color: colors.textPrimary, margin: "4px 0", paddingLeft: 12 }}>
                     {q}
                   </p>
                 ))}
@@ -478,74 +476,19 @@ export default function TellTab({
         <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: "0 0 10px 0" }}>
           What came up from these?
         </p>
-        <div style={{ position: "relative" }}>
-          <textarea
-            value={followThrough}
-            onChange={(e) => setFollowThrough(e.target.value)}
-            placeholder="Type or tap the mic to speak..."
-            style={{
-              width: "100%", minHeight: 60, padding: "12px 48px 12px 12px",
-              ...textPreset.body,
-              borderRadius: radii.md, border: `1px solid ${colors.borderDefault}`,
-              backgroundColor: colors.bgInput, color: colors.textPrimary,
-              resize: "none", outline: "none",
-              boxSizing: "border-box",
-            }}
-          />
-          <button
-            onClick={() => {
-              if (followThroughListening) {
-                if (followThroughRecognitionRef.current) {
-                  followThroughRecognitionRef.current.stop();
-                  followThroughRecognitionRef.current = null;
-                }
-                setFollowThroughListening(false);
-                return;
-              }
-              try {
-                const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-                if (!SpeechRecognition) { alert("Voice not supported in this browser"); return; }
-                const recognition = new SpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = "en-US";
-                recognition.onresult = (event: any) => {
-                  const transcript = event.results[0][0].transcript;
-                  setFollowThrough((prev) => prev ? prev + " " + transcript : transcript);
-                };
-                recognition.onend = () => {
-                  setFollowThroughListening(false);
-                  followThroughRecognitionRef.current = null;
-                };
-                followThroughRecognitionRef.current = recognition;
-                recognition.start();
-                setFollowThroughListening(true);
-              } catch { /* ignore */ }
-            }}
-            style={{
-              position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
-              width: 44, height: 44, borderRadius: "50%",
-              backgroundColor: followThroughListening ? colors.error : "transparent",
-              border: "none",
-              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: followThroughListening ? "0 0 16px rgba(210, 88, 88, 0.5)" : "none",
-              transition: "background-color 0.2s, box-shadow 0.2s",
-            }}
-            title={followThroughListening ? "Stop recording" : "Speak your response"}
-          >
-            {followThroughListening ? (
-              <svg width={14} height={14} viewBox="0 0 24 24" fill={colors.textPrimary}>
-                <rect x="6" y="6" width="12" height="12" rx="2" />
-              </svg>
-            ) : (
-              <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.textSecondary} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                <line x1="12" x2="12" y1="19" y2="22" />
-              </svg>
-            )}
-          </button>
-        </div>
+        <textarea
+          value={followThrough}
+          onChange={(e) => setFollowThrough(e.target.value)}
+          placeholder="Write what came up..."
+          style={{
+            width: "100%", minHeight: 60, padding: "12px",
+            ...textPreset.body,
+            borderRadius: radii.md, border: `1px solid ${colors.borderDefault}`,
+            backgroundColor: colors.bgInput, color: colors.textPrimary,
+            resize: "vertical", outline: "none",
+            boxSizing: "border-box",
+          }}
+        />
       </motion.div>
     )}
 
@@ -584,22 +527,8 @@ export default function TellTab({
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => setShowThoughtConversation(true)}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 5,
-                padding: "6px 14px", borderRadius: 100,
-                backgroundColor: "rgba(196, 148, 58, 0.1)",
-                border: "none", cursor: "pointer",
-                ...textPreset.secondary, fontWeight: 600, color: colors.coral,
-                marginTop: 8,
-              }}
-            >
-              <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-              ><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-              Walk through these in writing
-            </button>
+            {/* "Walk through these in writing" button removed per testing feedback —
+                no audio/voice/walk-through CTA. Users journal directly below. */}
           </div>
         )}
 
@@ -628,64 +557,31 @@ export default function TellTab({
           />
         </div>
 
-        {/* Journal input — textarea with inline mic button */}
-        <div style={{ position: "relative" }}>
-          <textarea
-            value={journalContent}
-            onChange={(e) => setJournalContent(e.target.value)}
-            disabled={journalSaved}
-            placeholder="Write freely. What's coming up? What are you noticing?"
-            style={{
-              width: "100%",
-              minHeight: 180,
-              padding: "16px 50px 16px 16px",
-              ...textPreset.body,
-              border: journalSaved
-                ? `1px solid ${colors.coral}`
-                : `1px solid ${colors.borderDefault}`,
-              borderRadius: radii.md,
-              resize: "vertical",
-              outline: "none",
-              boxSizing: "border-box",
-              color: colors.textPrimary,
-              backgroundColor: journalSaved ? "rgba(196, 148, 58, 0.08)" : colors.bgInput,
-              transition: "border-color 0.2s, background-color 0.2s",
-            }}
-            onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
-            onBlur={(e) => { if (!journalSaved) e.target.style.borderColor = colors.borderDefault; }}
-          />
-          {!journalSaved && (
-            <button
-              onClick={() => setJournalMode(journalMode === "voice" ? "type" : "voice")}
-              title={journalMode === "voice" ? "Switch to typing" : "Use voice input"}
-              style={{
-                position: "absolute",
-                right: 12,
-                bottom: 12,
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                border: "none",
-                backgroundColor: journalMode === "voice" ? colors.coral : colors.bgElevated,
-                color: journalMode === "voice" ? colors.bgDeep : colors.textSecondary,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s",
-              }}
-            >
-              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                <line x1="12" x2="12" y1="19" y2="22" />
-              </svg>
-            </button>
-          )}
-        </div>
-        {journalMode === "voice" && !journalSaved && (
-          <VoiceToText onTranscript={(text) => setJournalContent((prev) => prev ? prev + " " + text : text)} />
-        )}
+        {/* Journal input — text only (audio/voice input removed per testing feedback) */}
+        <textarea
+          value={journalContent}
+          onChange={(e) => setJournalContent(e.target.value)}
+          disabled={journalSaved}
+          placeholder="Write freely. What's coming up? What are you noticing?"
+          style={{
+            width: "100%",
+            minHeight: 180,
+            padding: "16px",
+            ...textPreset.body,
+            border: journalSaved
+              ? `1px solid ${colors.coral}`
+              : `1px solid ${colors.borderDefault}`,
+            borderRadius: radii.md,
+            resize: "vertical",
+            outline: "none",
+            boxSizing: "border-box",
+            color: colors.textPrimary,
+            backgroundColor: journalSaved ? "rgba(196, 148, 58, 0.08)" : colors.bgInput,
+            transition: "border-color 0.2s, background-color 0.2s",
+          }}
+          onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
+          onBlur={(e) => { if (!journalSaved) e.target.style.borderColor = colors.borderDefault; }}
+        />
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
           <span style={{ ...textPreset.caption, color: colors.textPrimary }}>
@@ -729,20 +625,8 @@ export default function TellTab({
       </motion.div>
     )}
 
-    <AnimatePresence>
-      {showThoughtConversation && (
-        <GuidedExerciseFlow
-          exerciseName="Thought Exploration"
-          instructions={programDay.seed_prompts.map(sp => sp.prompt).join("\n\n")}
-          whyNow="Exploring today's thought prompts in conversation"
-          onComplete={(text) => {
-            setJournalContent(prev => prev ? prev + "\n\n---\nFrom thought conversation:\n" + text : text);
-            setShowThoughtConversation(false);
-          }}
-          onClose={() => setShowThoughtConversation(false)}
-        />
-      )}
-    </AnimatePresence>
+    {/* GuidedExerciseFlow / "thought conversation" modal removed —
+        no audio/voice/walk-through surface in the day flow. */}
 
     </div>
     </FadeIn>

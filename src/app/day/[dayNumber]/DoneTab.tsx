@@ -224,7 +224,7 @@ export default function DoneTab({
             <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 8px 0" }}>
               {summaryResult.tomorrow_preview.territory}
             </p>
-            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0, fontStyle: "italic" }}>
+            <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
               {summaryResult.tomorrow_preview.connection}
             </p>
           </motion.div>
@@ -247,19 +247,32 @@ export default function DoneTab({
               }}>
                 Questions to sit with
               </p>
-              <p style={{ ...textPreset.secondary, color: colors.textSecondary, margin: "0 0 14px 0" }}>
-                Take a moment with these before moving on.
+              <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: "0 0 14px 0" }}>
+                Take a moment with these before moving on. If anything came up while reading them, write it below.
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: space[3], marginBottom: space[4] }}>
                 {summaryResult.questions_to_sit_with.map((q, i) => (
                   <p key={i} style={{
                     ...textPreset.body, color: colors.textPrimary, margin: 0,
-                    fontStyle: "italic",
                   }}>
                     {q}
                   </p>
                 ))}
               </div>
+              <textarea
+                value={dayFeedback}
+                onChange={(e) => setDayFeedback(e.target.value)}
+                placeholder="What came up while sitting with these? (optional)"
+                style={{
+                  width: "100%", minHeight: 90, padding: "12px 14px",
+                  ...textPreset.body,
+                  borderRadius: radii.md,
+                  border: `1px solid ${colors.borderDefault}`,
+                  backgroundColor: colors.bgInput, color: colors.textPrimary,
+                  resize: "vertical", outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
             </motion.div>
           )}
 

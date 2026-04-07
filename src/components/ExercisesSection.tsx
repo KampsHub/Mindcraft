@@ -216,7 +216,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
     return (
       <div style={{
         marginBottom: 28,
-        backgroundColor: "rgba(51, 51, 57, 0.5)",
+        backgroundColor: "rgba(24, 24, 28, 0.7)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         borderRadius: radii.lg,
@@ -224,7 +224,7 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
         padding: space[5],
       }}>
         <p style={{ ...text.heading, color: colors.textPrimary, margin: 0 }}>Exercises</p>
-        <p style={{ ...text.secondary, color: colors.textMuted, margin: "8px 0 0 0" }}>
+        <p style={{ ...text.body, color: colors.textPrimary, margin: "8px 0 0 0", opacity: 0.85 }}>
           Exercises from your coaching plan will appear here as you progress.
         </p>
       </div>

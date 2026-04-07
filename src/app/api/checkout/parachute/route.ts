@@ -60,7 +60,10 @@ export async function POST(req: NextRequest) {
         ...(is_gift ? { is_gift: "true" } : {}),
       },
       expires_at: Math.floor(Date.now() / 1000) + 60 * 30, // 30 min — enables checkout.session.expired webhook
-      allow_promotion_codes: true,
+      // Promotion codes only on the standard tier — sliding scale tiers
+      // (pay_what_you_can / pay_it_forward) are already discounted by user choice.
+      // Testing feedback section 3.a.
+      allow_promotion_codes: tier === "standard",
       success_url: `${baseUrl}/parachute/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/parachute?checkout=cancelled#pricing`,
     });

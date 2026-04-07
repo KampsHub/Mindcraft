@@ -581,13 +581,13 @@ export default function IntakePage() {
 
           <h1 style={{
             fontFamily: display, fontSize: 32, fontWeight: 700,
-            letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 8px 0",
+            letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 12px 0",
           }}>
             Pre-start intake
           </h1>
           <p style={{
-            fontSize: 14, color: colors.textMuted, marginBottom: 32,
-            lineHeight: 1.6, fontFamily: body,
+            fontSize: 16, color: colors.textPrimary, marginBottom: 32,
+            lineHeight: 1.65, fontFamily: body,
           }}>
             Quick context so the program can meet you where you are. 10-15 minutes.
             The deeper work happens in Days 1-3.
@@ -686,14 +686,14 @@ export default function IntakePage() {
                 {q.type === "disruptions_scale" && q.items && (
                   <div style={{ marginTop: 8 }}>
                     <p style={{
-                      fontSize: 13, color: colors.textMuted, margin: "0 0 6px 0",
+                      fontSize: 14, color: colors.textPrimary, margin: "0 0 6px 0",
                       fontFamily: body, lineHeight: 1.5,
                     }}>
                       Rate each 1-10 (10 = most intense right now)
                     </p>
                     <p style={{
-                      fontSize: 12, color: colors.textMuted, margin: "0 0 20px 0",
-                      fontFamily: body, lineHeight: 1.5, opacity: 0.7,
+                      fontSize: 13, color: colors.textPrimary, margin: "0 0 20px 0",
+                      fontFamily: body, lineHeight: 1.55, opacity: 0.85,
                     }}>
                       This helps us understand which areas need the most support so your program starts where you actually are — not where a generic program assumes you are.
                     </p>
@@ -714,15 +714,15 @@ export default function IntakePage() {
                       }}>
                         <div style={{ minWidth: 200, flex: 1 }}>
                           <span style={{
-                            fontSize: 14, color: colors.textBody,
-                            fontFamily: body, fontWeight: 500,
+                            fontSize: 15, color: colors.textPrimary,
+                            fontFamily: body, fontWeight: 600,
                           }}>
                             {item}
                           </span>
                           {descriptions[item] && (
                             <p style={{
-                              fontSize: 12, color: colors.textMuted, margin: "2px 0 0 0",
-                              fontFamily: body, lineHeight: 1.4, opacity: 0.8,
+                              fontSize: 13, color: colors.textPrimary, margin: "4px 0 0 0",
+                              fontFamily: body, lineHeight: 1.5, opacity: 0.85,
                             }}>
                               {descriptions[item]}
                             </p>
@@ -784,8 +784,6 @@ export default function IntakePage() {
 
   /* ── Step 3: Consent ── */
   if (step === "consent" && selectedProgram) {
-    const toggles = selectedProgram.intake_config?.consent_toggles || [];
-
     return (
       <Shell>
         <FadeIn preset="fade" triggerOnMount>
@@ -806,7 +804,7 @@ export default function IntakePage() {
             onClick={() => wrappedSetStep("intake")}
             style={{
               padding: "6px 16px", fontSize: 13, fontWeight: 600,
-              color: colors.textMuted, backgroundColor: colors.bgSurface,
+              color: colors.textPrimary, backgroundColor: colors.bgSurface,
               border: "none", borderRadius: 100, cursor: "pointer",
               fontFamily: display, marginBottom: 20,
             }}
@@ -816,122 +814,74 @@ export default function IntakePage() {
 
           <h1 style={{
             fontFamily: display, fontSize: 32, fontWeight: 700,
-            letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 8px 0",
+            letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 14px 0",
           }}>
-            Before we begin
+            How your data is handled
           </h1>
           <p style={{
-            fontSize: 14, color: colors.textMuted, marginBottom: 8,
-            lineHeight: 1.6, fontFamily: body,
+            fontSize: 16, color: colors.textPrimary, marginBottom: 28,
+            lineHeight: 1.65, fontFamily: body, maxWidth: 580,
           }}>
-            Your data, your terms. You can change these anytime in your account settings.
+            A few facts up front, so you know exactly what happens with what you write here.
           </p>
         </FadeIn>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-          {toggles.map((toggle, i) => {
-            const toggleDescriptions: Record<string, { description: string; whyRequired?: string }> = {
-              "ai_processing": {
-                description: "Your journal entries and exercise responses are processed by AI to personalize your daily program, generate insights, and adapt exercises to your situation.",
-                whyRequired: "This is required because the entire program is built around AI-generated personalization. Without it, we can't tailor the experience to you.",
-              },
-              "coach_sharing": {
-                description: "If you're working with a 1:1 coach, this allows them to see your journal themes, exercise patterns, and progress summaries — so sessions are more focused and informed. Your coach never sees raw journal text unless you share it directly.",
-              },
-              "aggregate_analytics": {
-                description: "We use anonymized, aggregated data (never individual responses) to improve exercises, understand which tools are most effective, and make the program better for everyone.",
-              },
-              "data_deletion": {
-                description: "You can request full deletion of your data at any time through your account settings. We'll remove everything within 30 days.",
-                whyRequired: "This is required because it's your legal right — we want you to know it exists before you start.",
-              },
-            };
-            const info = toggleDescriptions[toggle.id];
-            return (
-            <FadeIn key={toggle.id} preset="slide-up" delay={i * 0.06} triggerOnMount>
+        <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 28 }}>
+          {[
+            {
+              label: "Your journal stays yours.",
+              body: "We never train any AI on your data. Your journal entries are processed by AI only to generate the coaching responses you see — the same way Google processes your search query.",
+            },
+            {
+              label: "No one reads your journal unless you ask.",
+              body: "If you have a 1:1 coach, you'll see a clear \u201CShare with coach\u201D button on any entry you want them to see. Until you tap that, your journal text is private.",
+            },
+            {
+              label: "You can delete everything, anytime.",
+              body: (
+                <>
+                  Account → Delete data. We remove everything within 30 days. This is your legal right under GDPR/CCPA — see the{" "}
+                  <a href="/privacy-policy" style={{ color: colors.coral, textDecoration: "underline" }}>privacy policy</a> for details.
+                </>
+              ),
+            },
+            {
+              label: "Aggregated analytics, never individual responses.",
+              body: "We look at anonymized patterns across the program to improve exercises. We never look at your individual responses unless you flag something for our review.",
+            },
+          ].map((item, i) => (
+            <FadeIn key={i} preset="slide-up" delay={i * 0.08} triggerOnMount>
               <div style={{
-                display: "flex", alignItems: "flex-start", justifyContent: "space-between",
-                padding: "18px 0",
-                borderBottom: `1px solid ${colors.borderSubtle}`,
+                padding: "18px 22px",
+                borderRadius: 14,
+                backgroundColor: colors.bgSurface,
+                border: `1px solid ${colors.borderSubtle}`,
               }}>
-                <div style={{ flex: 1, paddingRight: 16 }}>
-                  <p style={{
-                    fontSize: 15, fontWeight: 500, color: colors.textPrimary,
-                    margin: 0, fontFamily: body,
-                  }}>
-                    {toggle.label}
-                    {toggle.required && (
-                      <span style={{
-                        fontSize: 10, fontWeight: 700, fontFamily: display,
-                        textTransform: "uppercase", letterSpacing: "0.08em",
-                        color: colors.textMuted, marginLeft: 8,
-                        padding: "2px 8px", borderRadius: 100,
-                        backgroundColor: colors.bgElevated,
-                      }}>
-                        Required
-                      </span>
-                    )}
-                  </p>
-                  {info && (
-                    <p style={{
-                      fontSize: 13, color: colors.textMuted, margin: "4px 0 0 0",
-                      lineHeight: 1.5, fontFamily: body,
-                    }}>
-                      {info.description}
-                    </p>
-                  )}
-                  {info?.whyRequired && toggle.required && (
-                    <p style={{
-                      fontSize: 12, color: colors.textMuted, margin: "4px 0 0 0",
-                      lineHeight: 1.4, fontFamily: body, fontStyle: "italic", opacity: 0.7,
-                    }}>
-                      {info.whyRequired}
-                    </p>
-                  )}
-                </div>
-                <label style={{
-                  position: "relative", display: "inline-block",
-                  width: 46, height: 26, flexShrink: 0,
-                  cursor: toggle.required ? "not-allowed" : "pointer",
+                <p style={{
+                  fontSize: 16, fontWeight: 700, color: colors.textPrimary,
+                  margin: "0 0 6px 0", fontFamily: display,
                 }}>
-                  <input
-                    type="checkbox"
-                    checked={consent[toggle.id] || false}
-                    disabled={toggle.required}
-                    onChange={() =>
-                      !toggle.required &&
-                      setConsent((prev) => ({ ...prev, [toggle.id]: !prev[toggle.id] }))
-                    }
-                    style={{ opacity: 0, width: 0, height: 0 }}
-                  />
-                  <span style={{
-                    position: "absolute", top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: consent[toggle.id] ? colors.coral : colors.bgElevated,
-                    borderRadius: 100, transition: "background-color 0.25s",
-                  }} />
-                  <span style={{
-                    position: "absolute", top: 3,
-                    left: consent[toggle.id] ? 23 : 3,
-                    width: 20, height: 20,
-                    backgroundColor: colors.textPrimary, borderRadius: "50%",
-                    transition: "left 0.25s ease",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
-                  }} />
-                </label>
+                  {item.label}
+                </p>
+                <p style={{
+                  fontSize: 15, color: colors.textPrimary, margin: 0,
+                  lineHeight: 1.6, fontFamily: body, opacity: 0.85,
+                }}>
+                  {item.body}
+                </p>
               </div>
             </FadeIn>
-            );
-          })}
+          ))}
         </div>
 
         <FadeIn preset="fade" delay={0.3} triggerOnMount>
           <motion.button
-            whileHover={!saving ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.12)" } : {}}
+            whileHover={!saving ? { scale: 1.04, boxShadow: "0 8px 24px rgba(196,148,58,0.35)" } : {}}
             whileTap={!saving ? { scale: 0.97 } : {}}
             onClick={handleComplete}
             disabled={saving}
             style={{
-              marginTop: 32, padding: "14px 36px", fontSize: 15, fontWeight: 600,
+              marginTop: 8, padding: "14px 36px", fontSize: 15, fontWeight: 700,
               color: colors.bgDeep,
               backgroundColor: saving ? colors.bgElevated : colors.coral,
               border: "none", borderRadius: 100,
@@ -973,7 +923,7 @@ export default function IntakePage() {
               You&apos;re in.
             </h1>
             <p style={{
-              fontSize: 15, color: colors.textMuted, lineHeight: 1.65,
+              fontSize: 16, color: colors.textPrimary, lineHeight: 1.65,
               maxWidth: 460, margin: "0 auto 8px", fontFamily: body,
             }}>
               <strong style={{ color: colors.coral }}>{selectedProgram.name}</strong> starts now. Your first three
@@ -981,18 +931,18 @@ export default function IntakePage() {
               your coaching intelligence generates your six goals.
             </p>
             <p style={{
-              fontSize: 14, color: colors.textMuted, lineHeight: 1.65,
+              fontSize: 15, color: colors.textPrimary, lineHeight: 1.65,
               maxWidth: 460, margin: "0 auto 36px", fontFamily: body,
             }}>
               The deeper work starts in the daily flow. Go at your pace.
             </p>
             <motion.button
-              whileHover={{ scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }}
+              whileHover={{ scale: 1.04, boxShadow: "0 8px 24px rgba(196,148,58,0.35)" }}
               whileTap={{ scale: 0.97 }}
               onClick={() => router.push("/dashboard")}
               style={{
-                padding: "14px 36px", fontSize: 15, fontWeight: 600,
-                color: "#ffffff", backgroundColor: colors.textPrimary,
+                padding: "14px 36px", fontSize: 15, fontWeight: 700,
+                color: colors.bgDeep, backgroundColor: colors.coral,
                 border: "none", borderRadius: 100, cursor: "pointer",
                 fontFamily: display, letterSpacing: "0.01em",
               }}

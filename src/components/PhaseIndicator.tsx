@@ -57,7 +57,7 @@ export default function PhaseIndicator({ activePhase, completedPhases, onPhaseCl
                       : "transparent",
                   border: isCompleted || isActive
                     ? "none"
-                    : `2px solid rgba(255,255,255,${isDisabled ? "0.1" : "0.25"})`,
+                    : `2px solid rgba(255,255,255,${isDisabled ? "0.25" : "0.55"})`,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.3s ease",
                 }}
@@ -80,8 +80,12 @@ export default function PhaseIndicator({ activePhase, completedPhases, onPhaseCl
                   </motion.svg>
                 ) : (
                   <span style={{
-                    fontSize: isActive ? 14 : 12, fontWeight: 700,
-                    color: isActive ? colors.bgDeep : isDisabled ? "rgba(255,255,255,0.15)" : colors.textMuted,
+                    fontSize: isActive ? 14 : 13, fontWeight: 700,
+                    color: isActive
+                      ? colors.bgDeep
+                      : isDisabled
+                        ? "rgba(255,255,255,0.35)"
+                        : "rgba(255,255,255,0.85)",
                     fontFamily: display,
                   }}>
                     {phase.key}
@@ -89,14 +93,14 @@ export default function PhaseIndicator({ activePhase, completedPhases, onPhaseCl
                 )}
               </motion.div>
               <span style={{
-                fontSize: 11, fontWeight: 600,
+                fontSize: 12, fontWeight: 700,
                 color: isActive
                   ? colors.coral
                   : isCompleted
                     ? colors.textPrimary
                     : isDisabled
-                      ? "rgba(255,255,255,0.15)"
-                      : colors.textMuted,
+                      ? "rgba(255,255,255,0.35)"
+                      : "rgba(255,255,255,0.7)",
                 fontFamily: display,
                 letterSpacing: "0.03em",
               }}>
@@ -108,7 +112,7 @@ export default function PhaseIndicator({ activePhase, completedPhases, onPhaseCl
             {i < PHASES.length - 1 && (
               <div style={{
                 width: "clamp(32px, 10vw, 60px)", height: 2, margin: "0 6px",
-                backgroundColor: "rgba(255,255,255,0.1)",
+                backgroundColor: "rgba(255,255,255,0.3)",
                 borderRadius: 1,
                 position: "relative",
                 marginBottom: 24, // offset for label below dots

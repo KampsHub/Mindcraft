@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
     const stripe = new Stripe(stripeKey);
     const body = await req.json().catch(() => ({}));
     const gaClientId: string | undefined = body?.ga_client_id;
+    const selectedSlotId: string | undefined = body?.selected_slot_id;
+    const selectedSlotLabel: string | undefined = body?.selected_slot_label;
     const origin = req.headers.get("origin") || req.headers.get("referer")?.replace(/\/[^/]*$/, "") || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const baseUrl = origin.replace(/\/$/, "");
 
@@ -36,6 +38,8 @@ export async function POST(req: NextRequest) {
         amount_cents: String(AMOUNT_CENTS),
         program: "enneagram",
         ...(gaClientId ? { ga_client_id: String(gaClientId) } : {}),
+        ...(selectedSlotId ? { selected_slot_id: String(selectedSlotId) } : {}),
+        ...(selectedSlotLabel ? { selected_slot_label: String(selectedSlotLabel) } : {}),
       },
       expires_at: Math.floor(Date.now() / 1000) + 60 * 30,
       success_url: `${baseUrl}/enneagram/welcome?session_id={CHECKOUT_SESSION_ID}`,

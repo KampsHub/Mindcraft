@@ -107,21 +107,51 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
   );
 }
 
+type CoachSlot = {
+  id: string;
+  date: string;
+  time: string;
+  dayLabel: string;
+  timeLabel: string;
+};
+
 function EnneagramCard({ program }: { program: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [slots, setSlots] = useState<CoachSlot[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(true);
+  const [selectedSlot, setSelectedSlot] = useState<CoachSlot | null>(null);
+
+  // Fetch real available debrief slots from the coach availability route.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/coach/slots")
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        setSlots(Array.isArray(data?.slots) ? data.slots : []);
+      })
+      .catch(() => { if (!cancelled) setSlots([]); })
+      .finally(() => { if (!cancelled) setSlotsLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
   async function handleCheckout() {
+    if (!selectedSlot) return;
     setLoading(true);
     setError(null);
-    trackEvent("enneagram_upsell_click", { program });
-    trackEvent("enneagram_standalone_begin_checkout", {});
+    trackEvent("enneagram_upsell_click", { program, slot_id: selectedSlot.id });
+    trackEvent("enneagram_standalone_begin_checkout", { slot_id: selectedSlot.id });
     try {
       const gaClientId = await getGaClientId();
       const res = await fetch("/api/checkout/enneagram", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ga_client_id: gaClientId }),
+        body: JSON.stringify({
+          ga_client_id: gaClientId,
+          selected_slot_id: selectedSlot.id,
+          selected_slot_label: `${selectedSlot.dayLabel} · ${selectedSlot.timeLabel}`,
+        }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
@@ -170,30 +200,92 @@ function EnneagramCard({ program }: { program: string }) {
       </span>
       <p style={{
         fontFamily: display, fontSize: 18, fontWeight: 700,
-        color: colors.textPrimary, margin: "0 0 8px 0",
+        color: colors.textPrimary, margin: "0 0 10px 0",
         letterSpacing: "-0.01em",
       }}>
         Add the Enneagram
       </p>
       <p style={{
-        fontFamily: body, fontSize: 13, color: colors.textPrimary,
-        lineHeight: 1.6, margin: "0 0 12px 0",
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 12px 0",
       }}>
-        The <strong>IEQ9</strong> from Integrative9 — a 175-question, scientifically validated Enneagram assessment used by certified coaches and Fortune 500 leadership programs. Not the free Buzzfeed-style version.
+        The Enneagram is a personality model that maps nine cognitive and emotional patterns. Where Myers-Briggs sorts you by preference, the Enneagram looks at what motivates you under pressure — and what your blind spots cost you when the stakes are high.
       </p>
       <p style={{
-        fontFamily: body, fontSize: 13, color: colors.textPrimary,
-        lineHeight: 1.6, margin: "0 0 12px 0", opacity: 0.9,
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 12px 0",
       }}>
-        You&rsquo;ll get a 30-page report on your dominant type, your wings, your tritype, and how you shift under stress vs security. Plus a <strong>1-hour live debrief</strong> with Stefanie to walk through what it means for your specific moment.
+        The <strong>IEQ9</strong> from Integrative9 is the only Enneagram assessment that meets standard psychometric validity criteria — 175 questions, internal consistency above 0.85 across all nine type scales, validated across 100,000+ administrations. It&rsquo;s used by ICF-credentialed coaches and Fortune 500 leadership development programs.
       </p>
-      <p style={{
-        fontFamily: body, fontSize: 13, color: colors.textPrimary,
-        lineHeight: 1.6, margin: "0 0 20px 0", opacity: 0.9, flex: 1,
+      <ul style={{
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 16px 18px", padding: 0,
       }}>
-        Your results then shape every exercise in your daily program — the AI weights frameworks toward what your specific type needs.
-      </p>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <li>A 30-page report on your dominant type, your two wings, your tritype, and how you shift under stress vs security</li>
+        <li>A 1-hour live debrief with Stefanie to translate the report into something specific to where you are right now</li>
+        <li>Your results then weight every exercise in your daily program toward what your type actually needs</li>
+      </ul>
+
+      {/* Slot picker — pick your debrief time before paying */}
+      <div style={{ marginBottom: 16 }}>
+        <p style={{
+          fontFamily: body, fontSize: 11, fontWeight: 700,
+          letterSpacing: 1.2, textTransform: "uppercase",
+          color: colors.coral, margin: "0 0 8px 0",
+        }}>
+          Pick your debrief time
+        </p>
+        {slotsLoading ? (
+          <p style={{ fontFamily: body, fontSize: 13, color: colors.textPrimary, opacity: 0.8, margin: 0 }}>
+            Loading available times…
+          </p>
+        ) : slots.length === 0 ? (
+          <p style={{ fontFamily: body, fontSize: 13, color: colors.textPrimary, opacity: 0.8, margin: 0 }}>
+            No times available right now. Please check back tomorrow.
+          </p>
+        ) : (
+          <div
+            style={{
+              display: "flex", gap: 8, overflowX: "auto",
+              paddingBottom: 8, scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
+            {slots.map((slot) => {
+              const isSelected = selectedSlot?.id === slot.id;
+              return (
+                <button
+                  key={slot.id}
+                  onClick={() => setSelectedSlot(slot)}
+                  style={{
+                    flex: "0 0 auto",
+                    scrollSnapAlign: "start",
+                    minWidth: 110,
+                    padding: "10px 14px",
+                    borderRadius: 12,
+                    border: `1.5px solid ${isSelected ? colors.coral : "rgba(255,255,255,0.18)"}`,
+                    backgroundColor: isSelected ? colors.coralWash : "transparent",
+                    color: colors.textPrimary,
+                    cursor: "pointer",
+                    fontFamily: body,
+                    textAlign: "left",
+                    transition: "all 0.18s",
+                  }}
+                >
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2, color: isSelected ? colors.coral : colors.textPrimary }}>
+                    {slot.dayLabel}
+                  </div>
+                  <div style={{ fontSize: 12, opacity: 0.85 }}>
+                    {slot.timeLabel}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <span style={{
           fontFamily: display, fontSize: 15, fontWeight: 600,
           color: colors.coral,
@@ -201,24 +293,30 @@ function EnneagramCard({ program }: { program: string }) {
           $300
         </span>
         <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.97 }}
+          whileHover={selectedSlot && !loading ? { scale: 1.04 } : {}}
+          whileTap={selectedSlot && !loading ? { scale: 0.97 } : {}}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           onClick={handleCheckout}
-          disabled={loading}
+          disabled={loading || !selectedSlot}
           style={{
             fontFamily: display, fontSize: 13, fontWeight: 600,
-            padding: "10px 24px", borderRadius: 100,
-            backgroundColor: colors.coral, color: colors.bgDeep,
-            border: "none", cursor: loading ? "default" : "pointer",
+            padding: "10px 22px", borderRadius: 100,
+            backgroundColor: selectedSlot ? colors.coral : "rgba(255,255,255,0.12)",
+            color: selectedSlot ? colors.bgDeep : colors.textPrimary,
+            border: "none",
+            cursor: loading || !selectedSlot ? "default" : "pointer",
             letterSpacing: "0.01em",
             opacity: loading ? 0.7 : 1,
           }}
         >
-          {loading ? "Redirecting…" : "Add now"}
+          {loading
+            ? "Redirecting…"
+            : selectedSlot
+              ? `Pay & book ${selectedSlot.dayLabel}`
+              : "Pick a time first"}
         </motion.button>
         {error && (
-          <p style={{ fontSize: 12, color: "#E08585", textAlign: "center", marginTop: 8, fontFamily: display }}>
+          <p style={{ fontSize: 12, color: "#E08585", textAlign: "center", marginTop: 8, fontFamily: display, width: "100%" }}>
             {error}
           </p>
         )}

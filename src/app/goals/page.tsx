@@ -15,6 +15,7 @@ import CloseEarlyCard from "@/components/CloseEarlyCard";
 import EnneagramUpload from "@/components/EnneagramUpload";
 import EnneagramInsights from "@/components/EnneagramInsights";
 import type { EnneagramAnalysis, EnneagramDoc } from "@/components/EnneagramUpload";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 /* ── Design tokens ── */
 const display = fonts.display;
@@ -254,6 +255,10 @@ function GoalsPage() {
       setErrorMsg(null);
       const data = await res.json();
       setGoals(data.goals);
+      trackEvent("goal_created", {
+        program: enrollment?.programs?.slug ?? "unknown",
+        goal_count: Array.isArray(data.goals) ? data.goals.length : 0,
+      });
       if (user) await loadData(user.id);
     } catch (err) {
       console.error("Goal generation failed:", err);
@@ -291,6 +296,10 @@ function GoalsPage() {
       .from("program_enrollments")
       .update({ goals_approved: true, status: "active", current_day: Math.max(enrollment.current_day, 4) })
       .eq("id", enrollment.id);
+    trackEvent("goals_approved", {
+      program: enrollment.programs?.slug ?? "unknown",
+      goal_count: goals.length,
+    });
     setApproving(false);
     router.push("/dashboard");
   }

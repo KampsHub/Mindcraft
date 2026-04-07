@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageShell from "@/components/PageShell";
 import FadeIn from "@/components/FadeIn";
@@ -10,6 +10,7 @@ import { useDaySession } from "./useDaySession";
 import TellTab from "./TellTab";
 import DoTab from "./DoTab";
 import DoneTab from "./DoneTab";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -24,6 +25,36 @@ export default function DailyFlowPageWrapper() {
 
 function DailyFlowPage() {
   const s = useDaySession();
+
+  // Analytics: day_started (fires once per mount), day_1_started (once ever per enrollment),
+  // day_mid_abandon on unmount if user left without completing.
+  const dayStartedFired = useRef(false);
+  const wasCompletedAtMount = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (s.loading || !s.enrollment || !s.programDay || dayStartedFired.current) return;
+    dayStartedFired.current = true;
+    const program = s.enrollment.programs?.slug ?? "unknown";
+    const dayNumber = s.programDay.day_number;
+    wasCompletedAtMount.current = Boolean(s.session?.completed_at);
+
+    trackEvent("day_started", { program, day_number: dayNumber });
+    if (dayNumber === 1 && !wasCompletedAtMount.current) {
+      try {
+        const key = `mc-day-1-started-${s.enrollment.id}`;
+        if (typeof window !== "undefined" && !localStorage.getItem(key)) {
+          localStorage.setItem(key, new Date().toISOString());
+          trackEvent("day_1_started", { program });
+        }
+      } catch { /* no-op */ }
+    }
+    return () => {
+      // day_mid_abandon: mount saw no completion and unmount still sees none → user left mid-flow
+      if (!wasCompletedAtMount.current && !s.session?.completed_at) {
+        trackEvent("day_mid_abandon", { program, day_number: dayNumber });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s.loading, s.enrollment?.id, s.programDay?.day_number]);
 
   // ── Loading ──
   if (s.loading) {

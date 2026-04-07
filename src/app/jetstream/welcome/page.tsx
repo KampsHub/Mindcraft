@@ -44,6 +44,11 @@ function JetstreamWelcome() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  /* ── Analytics: welcome_page_view ── */
+  useEffect(() => {
+    trackEvent("welcome_page_view", { program: "jetstream" });
+  }, []);
+
   /* ── Verify Stripe session on mount ── */
   useEffect(() => {
     const sessionId = searchParams.get("session_id");
@@ -100,6 +105,7 @@ function JetstreamWelcome() {
 
     if (enrollError) {
       console.error("Failed to create enrollment:", enrollError);
+      trackEvent("enrollment_creation_failed", { program: "jetstream", stage: "insert", error_message: enrollError.message });
       await fetch("/api/create-enrollment", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ program: "jetstream" }),
@@ -121,12 +127,16 @@ function JetstreamWelcome() {
     });
 
     if (error) {
+      trackEvent("auth_signup_failed", { program: "jetstream", error_message: error.message });
       if (error.message.toLowerCase().includes("already") || error.message.toLowerCase().includes("registered")) {
         const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ email, password });
         if (!signInError && signInData.user) {
           await createEnrollmentIfNeeded(signInData.user.id, signInData.user.email || email);
           window.location.href = "/intake?program=jetstream";
           return;
+        }
+        if (signInError) {
+          trackEvent("auth_signin_failed", { program: "jetstream", source: "welcome_signup_fallback", error_message: signInError.message });
         }
         setError("An account with this email already exists. Switch to the \"I have an account\" tab to sign in.");
       } else {
@@ -138,6 +148,7 @@ function JetstreamWelcome() {
 
     if (data.session && data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
+      trackEvent("signup_complete_post_purchase", { program: "jetstream" });
       window.location.href = "/intake?program=jetstream";
       return;
     }
@@ -154,6 +165,7 @@ function JetstreamWelcome() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
+      trackEvent("auth_signin_failed", { program: "jetstream", source: "welcome", error_message: error.message });
       setError(error.message);
       setLoading(false);
       return;

@@ -8,6 +8,7 @@ import PageShell from "@/components/PageShell";
 import FadeIn from "@/components/FadeIn";
 import GiftingSection from "@/components/GiftingSection";
 import { colors, fonts, radii } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -36,6 +37,10 @@ function FinalInsightsView() {
   const [promo, setPromo] = useState<PersonalPromo | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    trackEvent("final_insights_view", { enrollment_id: enrollmentParam ?? "none" });
+  }, [enrollmentParam]);
 
   useEffect(() => {
     async function load() {

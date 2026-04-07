@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { colors, fonts } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -15,6 +16,11 @@ export default function DayError({
 }) {
   useEffect(() => {
     console.error("Day page error:", error);
+    trackEvent("error_boundary_caught", {
+      page: "day",
+      error_message: error.message || "unknown",
+      digest: error.digest || "",
+    });
   }, [error]);
 
   return (
@@ -43,7 +49,7 @@ export default function DayError({
       </p>
       <div style={{ display: "flex", gap: 10 }}>
         <button
-          onClick={reset}
+          onClick={() => { trackEvent("error_retry_attempted", { page: "day" }); reset(); }}
           style={{
             padding: "10px 24px", borderRadius: 100, fontSize: 14, fontWeight: 600,
             backgroundColor: colors.coral, color: colors.bgDeep,

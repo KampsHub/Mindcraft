@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -57,6 +58,10 @@ export default function SharePage() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    trackEvent("share_page_view", {});
+  }, []);
+
   // Shared fields
   const [body_, setBody_] = useState("");
   const [submitterName, setSubmitterName] = useState("");
@@ -106,11 +111,14 @@ export default function SharePage() {
       });
       const data = await res.json();
       if (!res.ok) {
+        trackEvent("testimonial_submission_failed", { kind: tab, status: res.status, error_message: data?.error ?? "unknown" });
         setError(data?.error || "Could not save. Please try again.");
         return;
       }
+      trackEvent("testimonial_submitted", { kind: tab, has_attribution: attribution.length > 0, tag_count: tags.length });
       setDone(true);
-    } catch {
+    } catch (err) {
+      trackEvent("testimonial_submission_failed", { kind: tab, error_message: err instanceof Error ? err.message : "network" });
       setError("Network error. Please try again.");
     } finally {
       setSubmitting(false);

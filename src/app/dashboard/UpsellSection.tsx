@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import { colors, fonts } from "@/lib/theme";
-import { trackEvent } from "@/components/GoogleAnalytics";
+import { trackEvent, getGaClientId } from "@/components/GoogleAnalytics";
+import ScrollTracker from "@/components/ScrollTracker";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -24,6 +25,15 @@ interface UpsellSectionProps {
 }
 
 export default function UpsellSection({ showEnneagram, programSlug, onNavigate }: UpsellSectionProps) {
+  // Fire upsell_state_shown once per mount so we can compare conversion rates
+  // between the two rendered states.
+  useEffect(() => {
+    trackEvent("upsell_state_shown", {
+      state: showEnneagram ? "enneagram_and_coaching" : "coaching_only",
+      program: programSlug,
+    });
+  }, [showEnneagram, programSlug]);
+
   if (!showEnneagram) {
     // Enneagram purchased — show confirmation + coaching upsell
     return (
@@ -31,7 +41,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
         <div style={{ marginTop: 36 }}>
           <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 24 }} />
 
-          {/* Enneagram confirmation */}
+          {/* Enneagram confirmation (shown in "coaching_only" state) */}
           <div style={{
             display: "flex", alignItems: "center", gap: 10,
             padding: "14px 18px", borderRadius: 12,
@@ -67,7 +77,7 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
           }}>
             Go deeper
           </p>
-          <CoachingCard onNavigate={onNavigate} />
+          <CoachingCard onNavigate={onNavigate} program={programSlug} context="post_enneagram" />
         </div>
       </FadeIn>
     );
@@ -89,35 +99,40 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: 14,
         }}>
-          <EnneagramCard />
-          <CoachingCard onNavigate={onNavigate} />
+          <EnneagramCard program={programSlug} />
+          <CoachingCard onNavigate={onNavigate} program={programSlug} context="dashboard" />
         </div>
       </div>
     </FadeIn>
   );
 }
 
-function EnneagramCard() {
+function EnneagramCard({ program }: { program: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleCheckout() {
     setLoading(true);
     setError(null);
+    trackEvent("enneagram_upsell_click", { program });
     trackEvent("enneagram_standalone_begin_checkout", {});
     try {
+      const gaClientId = await getGaClientId();
       const res = await fetch("/api/checkout/enneagram", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ga_client_id: gaClientId }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
       else {
         console.error("Checkout error:", data.error);
+        trackEvent("enneagram_checkout_error", { error_message: data?.error ?? "unknown" });
         setError("Payment couldn\u2019t be started. Please try again.");
       }
     } catch (err) {
       console.error("Checkout error:", err);
+      trackEvent("enneagram_checkout_error", { error_message: err instanceof Error ? err.message : "network" });
       setError("Connection issue. Check your internet and try again.");
     } finally {
       setLoading(false);
@@ -125,6 +140,7 @@ function EnneagramCard() {
   }
 
   return (
+    <ScrollTracker event="enneagram_upsell_view" params={{ program }}>
     <motion.div
       whileHover={{ y: -3 }}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
@@ -196,11 +212,21 @@ function EnneagramCard() {
         )}
       </div>
     </motion.div>
+    </ScrollTracker>
   );
 }
 
-function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
+function CoachingCard({
+  onNavigate,
+  program,
+  context,
+}: {
+  onNavigate: (path: string) => void;
+  program: string;
+  context: "dashboard" | "post_enneagram" | "weekly_review";
+}) {
   return (
+    <ScrollTracker event="coaching_upsell_view" params={{ program, context }}>
     <motion.div
       whileHover={{ y: -3 }}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
@@ -246,7 +272,10 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          onClick={() => onNavigate("/apply")}
+          onClick={() => {
+            trackEvent("coaching_upsell_click", { program, context });
+            onNavigate("/apply");
+          }}
           style={{
             fontFamily: display, fontSize: 13, fontWeight: 600,
             padding: "10px 24px", borderRadius: 100,
@@ -259,5 +288,6 @@ function CoachingCard({ onNavigate }: { onNavigate: (path: string) => void }) {
         </motion.button>
       </div>
     </motion.div>
+    </ScrollTracker>
   );
 }

@@ -13,6 +13,8 @@ import UpsellSection from "./UpsellSection";
 import { colors, fonts, space, text, radii } from "@/lib/theme";
 import ExercisesSection from "@/components/ExercisesSection";
 import BottomNav from "@/components/BottomNav";
+import AnalyticsSessionBoundary from "@/components/AnalyticsSessionBoundary";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 /* ── Design tokens ── */
 const display = fonts.display;
@@ -283,11 +285,24 @@ class DashboardErrorBoundary extends React.Component<
   }
 }
 
+type AnalyticsEnrollment = {
+  id: string;
+  status: string;
+  current_day: number | null;
+  started_at: string | null;
+  last_active_at: string | null;
+  had_3d_gap?: boolean | null;
+  had_7d_gap?: boolean | null;
+  programs?: { slug?: string | null } | null;
+};
+
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [enrollments, setEnrollments] = useState<EnrollmentWithContext[]>([]);
   const [hasEnneagram, setHasEnneagram] = useState(true); // default true to hide upsell until checked
   const [coachInvitations, setCoachInvitations] = useState<{ id: string; coach_id: string; status: string }[]>([]);
+  const [analyticsEnrollment, setAnalyticsEnrollment] = useState<AnalyticsEnrollment | null>(null);
+  const [programsCompletedCount, setProgramsCompletedCount] = useState(0);
   const supabase = createClient();
   const router = useRouter();
 
@@ -295,10 +310,37 @@ export default function DashboardPage() {
     try {
       const { data: rawEnrollments } = await supabase
         .from("program_enrollments")
-        .select("id, program_id, current_day, status, goals_approved, created_at, current_streak, best_streak, programs(name, slug)")
+        .select("id, program_id, current_day, status, goals_approved, created_at, started_at, last_active_at, had_3d_gap, had_7d_gap, current_streak, best_streak, programs(name, slug)")
         .eq("client_id", userId)
-        .in("status", ["active", "onboarding", "awaiting_goals", "pre_start", "completed", "paused"])
+        .in("status", ["active", "onboarding", "awaiting_goals", "pre_start", "completed", "paused", "lapsed"])
         .order("created_at", { ascending: false });
+
+      // Count completed programs across all enrollments (for user_property programs_completed_count)
+      const completedCount = (rawEnrollments || []).filter(
+        (e) => e.status === "completed",
+      ).length;
+      setProgramsCompletedCount(completedCount);
+
+      // Pick the "active" enrollment for analytics session boundary:
+      // prefer non-terminal, most recent.
+      const activeForAnalytics = (rawEnrollments || []).find(
+        (e) => !["completed", "closed_early"].includes(e.status),
+      ) || (rawEnrollments || [])[0];
+      if (activeForAnalytics) {
+        const programsField = Array.isArray(activeForAnalytics.programs)
+          ? activeForAnalytics.programs[0]
+          : activeForAnalytics.programs;
+        setAnalyticsEnrollment({
+          id: activeForAnalytics.id,
+          status: activeForAnalytics.status,
+          current_day: activeForAnalytics.current_day,
+          started_at: activeForAnalytics.started_at ?? null,
+          last_active_at: activeForAnalytics.last_active_at ?? null,
+          had_3d_gap: activeForAnalytics.had_3d_gap ?? false,
+          had_7d_gap: activeForAnalytics.had_7d_gap ?? false,
+          programs: programsField ? { slug: programsField.slug ?? null } : null,
+        });
+      }
 
       if (rawEnrollments && rawEnrollments.length > 0) {
         const enriched = await Promise.all(
@@ -381,6 +423,13 @@ export default function DashboardPage() {
       if (!user) { router.push("/login"); return; }
       setUser(user);
       fetchDashboardData(user.id);
+      // Fire dashboard_first_view once per device after purchase.
+      try {
+        if (typeof window !== "undefined" && !localStorage.getItem("mc-dashboard-first-view")) {
+          localStorage.setItem("mc-dashboard-first-view", new Date().toISOString());
+          trackEvent("dashboard_first_view", {});
+        }
+      } catch { /* localStorage unavailable */ }
       fetch("/api/link-subscription", { method: "POST" }).catch(() => {});
       // Check for pending coach invitations
       supabase.from("coach_clients").select("id, coach_id, status").eq("client_email", user.email || "").eq("status", "pending").then(({ data }) => {
@@ -410,6 +459,11 @@ export default function DashboardPage() {
 
   return (
     <DashboardErrorBoundary>
+    <AnalyticsSessionBoundary
+      userId={user?.id ?? null}
+      enrollment={analyticsEnrollment}
+      programsCompletedCount={programsCompletedCount}
+    />
     <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative", overflow: "hidden" }}>
       {/* Background image — program-aware */}
       <DashboardBgImage programSlug={enrollments[0]?.enrollment?.programs?.slug} />

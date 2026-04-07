@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
 import StaggerContainer, { staggerChildVariants } from "@/components/StaggerContainer";
 import ExerciseCard from "@/components/ExerciseCard";
+import { trackEvent } from "@/components/GoogleAnalytics";
 import FlagButton from "@/components/FlagButton";
 import CrisisBanner from "@/components/CrisisBanner";
 import ChatCoach from "@/components/ChatCoach";
@@ -126,6 +127,101 @@ export default function DoTab({
   crisisDismissedStep3,
   setCrisisDismissedStep3,
 }: DoTabProps) {
+  // Analytics: fire exercise_started once per unique exercise shown,
+  // and wrap handleExerciseComplete to fire exercise_completed / exercise_star_rating.
+  const exerciseStartedFired = useRef<Set<string>>(new Set());
+  const exerciseStartTimes = useRef<Map<string, number>>(new Map());
+  const program = enrollment?.programs?.slug ?? "unknown";
+
+  useEffect(() => {
+    const shown: Array<{ name: string; type: string }> = [];
+    programDay?.coaching_exercises?.forEach((e) =>
+      shown.push({ name: e.name, type: "coaching_plan" }),
+    );
+    overflowExercises?.forEach((e) =>
+      shown.push({ name: e.framework_name, type: "overflow" }),
+    );
+    if (frameworkAnalysis?.framework_name) {
+      shown.push({
+        name: `Reflect: ${frameworkAnalysis.framework_name}`,
+        type: "framework_analysis",
+      });
+    }
+    for (const ex of shown) {
+      const key = `${ex.type}:${ex.name}`;
+      if (!exerciseStartedFired.current.has(key)) {
+        exerciseStartedFired.current.add(key);
+        exerciseStartTimes.current.set(key, Date.now());
+        trackEvent("exercise_started", {
+          framework_name: ex.name,
+          exercise_type: ex.type,
+          day_number: dayNumber,
+          program,
+        });
+      }
+    }
+  }, [programDay, overflowExercises, frameworkAnalysis, dayNumber, program]);
+
+  // Fire exercise_abandoned on unmount for exercises started but never completed.
+  useEffect(() => {
+    return () => {
+      exerciseStartedFired.current.forEach((key) => {
+        const name = key.split(":").slice(1).join(":");
+        if (!completedExercises.has(name)) {
+          trackEvent("exercise_abandoned", {
+            framework_name: name,
+            day_number: dayNumber,
+            program,
+          });
+        }
+      });
+    };
+    // Intentionally only on unmount — completedExercises snapshot at unmount time
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleExerciseCompleteTracked = async (
+    name: string,
+    type: "coaching_plan" | "overflow" | "framework_analysis",
+    modality: string | undefined,
+    responses: Record<string, string>,
+    rating: number | null,
+    customFraming?: string,
+    frameworkId?: string,
+  ) => {
+    const key = `${type}:${name}`;
+    const startTime = exerciseStartTimes.current.get(key);
+    const timeSpentSec = startTime ? Math.round((Date.now() - startTime) / 1000) : 0;
+    trackEvent("exercise_completed", {
+      framework_name: name,
+      exercise_type: type,
+      modality: modality ?? "unknown",
+      day_number: dayNumber,
+      program,
+      time_spent_sec: timeSpentSec,
+      has_rating: rating !== null,
+    });
+    if (rating !== null) {
+      trackEvent("exercise_star_rating", {
+        framework_name: name,
+        rating,
+        day_number: dayNumber,
+        program,
+      });
+    }
+    const hasFeedback = Object.values(responses ?? {}).some(
+      (v) => typeof v === "string" && v.trim().length > 0,
+    );
+    if (hasFeedback) {
+      trackEvent("exercise_feedback_submitted", {
+        framework_name: name,
+        day_number: dayNumber,
+        program,
+      });
+    }
+    return handleExerciseComplete(name, type, modality, responses, rating, customFraming, frameworkId);
+  };
+
   // Progressive reveal: sections appear as data becomes available
   const initialRevealed = useMemo(() => {
     const keys: string[] = [];
@@ -538,10 +634,10 @@ export default function DoTab({
                 dailySessionId={session?.id}
                 dayNumber={dayNumber}
                 onComplete={async (responses, rating) =>
-                  await handleExerciseComplete(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
+                  await handleExerciseCompleteTracked(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
                 }
                 onPark={() => {}}
-                onSkip={() => handleExerciseComplete(ex.name, "coaching_plan", undefined, { _skipped: "true" }, null, ex.custom_framing)}
+                onSkip={() => handleExerciseCompleteTracked(ex.name, "coaching_plan", undefined, { _skipped: "true" }, null, ex.custom_framing)}
               />
               </motion.div>
             ))}
@@ -576,13 +672,13 @@ export default function DoTab({
                 dailySessionId={session?.id}
                 dayNumber={dayNumber}
                 onComplete={async (responses, rating) =>
-                  await handleExerciseComplete(
+                  await handleExerciseCompleteTracked(
                     ex.framework_name, "overflow", ex.modality,
                     responses, rating, ex.custom_framing, ex.framework_id
                   )
                 }
                 onPark={() => {}}
-                onSkip={() => handleExerciseComplete(ex.framework_name, "overflow", ex.modality, { _skipped: "true" }, null, ex.custom_framing, ex.framework_id)}
+                onSkip={() => handleExerciseCompleteTracked(ex.framework_name, "overflow", ex.modality, { _skipped: "true" }, null, ex.custom_framing, ex.framework_id)}
               />
               </motion.div>
             ))}
@@ -654,13 +750,13 @@ export default function DoTab({
                 dailySessionId={session?.id}
                 dayNumber={dayNumber}
                 onComplete={async (responses, rating) =>
-                  await handleExerciseComplete(
+                  await handleExerciseCompleteTracked(
                     `Reflect: ${frameworkAnalysis.framework_name}`,
                     "framework_analysis", undefined,
                     responses, rating, undefined, frameworkAnalysis.framework_id
                   )
                 }
-                onSkip={() => handleExerciseComplete(`Reflect: ${frameworkAnalysis.framework_name}`, "framework_analysis", undefined, { _skipped: "true" }, null, undefined, frameworkAnalysis.framework_id)}
+                onSkip={() => handleExerciseCompleteTracked(`Reflect: ${frameworkAnalysis.framework_name}`, "framework_analysis", undefined, { _skipped: "true" }, null, undefined, frameworkAnalysis.framework_id)}
               />
             </div>
           </div>

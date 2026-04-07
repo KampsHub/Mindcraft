@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts, radii } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -26,9 +27,15 @@ export default function CloseEarlyCard({ enrollmentId, variant = "full", heading
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Fire close_early_viewed once per mount when the card is first visible.
+  useEffect(() => {
+    trackEvent("close_early_viewed", { enrollment_id: enrollmentId, variant });
+  }, [enrollmentId, variant]);
+
   async function submit() {
     setSubmitting(true);
     setError(null);
+    trackEvent("close_early_confirmed", { enrollment_id: enrollmentId });
     try {
       const res = await fetch("/api/enrollment/close-early", {
         method: "POST",
@@ -36,13 +43,19 @@ export default function CloseEarlyCard({ enrollmentId, variant = "full", heading
         body: JSON.stringify({ enrollment_id: enrollmentId }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not close the program");
+      if (!res.ok) {
+        trackEvent("close_early_error", { enrollment_id: enrollmentId, status: res.status, error_message: data?.error ?? "unknown" });
+        throw new Error(data.error || "Could not close the program");
+      }
       setDone(true);
       // Give the toast a beat, then hop to the insights page
       setTimeout(() => {
         window.location.href = data.insights_url || "/insights/final";
       }, 1200);
     } catch (e) {
+      if (!(e instanceof Error && e.message)) {
+        trackEvent("close_early_error", { enrollment_id: enrollmentId, error_message: "network" });
+      }
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {
       setSubmitting(false);
@@ -77,7 +90,7 @@ export default function CloseEarlyCard({ enrollmentId, variant = "full", heading
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setConfirming(true)}
+              onClick={() => { trackEvent("close_early_clicked", { enrollment_id: enrollmentId, variant }); setConfirming(true); }}
               style={{
                 fontFamily: display, fontSize: 12, fontWeight: 500,
                 color: colors.textMuted,
@@ -180,7 +193,7 @@ export default function CloseEarlyCard({ enrollmentId, variant = "full", heading
             exit={{ opacity: 0 }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => setConfirming(true)}
+            onClick={() => { trackEvent("close_early_clicked", { enrollment_id: enrollmentId, variant }); setConfirming(true); }}
             style={{
               fontFamily: display, fontSize: 13, fontWeight: 600,
               padding: "10px 20px", borderRadius: radii.full,

@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { sendServerEvent, syntheticClientId } from "@/lib/ga-measurement-protocol";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -26,7 +27,16 @@ export async function GET(request: Request) {
       }
     );
 
-    const { data } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+    if (exchangeError) {
+      // Fire silent failure signal so we can detect broken OAuth round-trips.
+      await sendServerEvent(
+        syntheticClientId(`auth_callback.${Date.now()}`),
+        "auth_callback_failed",
+        { error_message: exchangeError.message },
+      );
+      return NextResponse.redirect(`${origin}/login?error=callback_failed`);
+    }
 
     // If this is a password recovery flow, redirect to reset page
     // Use AMR claim (most reliable), fall back to next param or recovery_sent_at

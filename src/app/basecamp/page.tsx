@@ -6,7 +6,9 @@ import { motion, AnimatePresence, useInView, useMotionValue, useTransform, useSc
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
 import FadeIn from "@/components/FadeIn";
-import { trackEvent } from "@/components/GoogleAnalytics";
+import { trackEvent, getGaClientId } from "@/components/GoogleAnalytics";
+import ScrollDepth from "@/components/ScrollDepth";
+import ScrollTracker from "@/components/ScrollTracker";
 import GiftingSection from "@/components/GiftingSection";
 
 /* ── Typography shortcuts ── */
@@ -1291,19 +1293,22 @@ function Pricing() {
     trackEvent("new_role_begin_checkout", { tier });
     trackEvent("begin_checkout", { package: "basecamp", tier });
     try {
+      const gaClientId = await getGaClientId();
       const res = await fetch("/api/checkout/basecamp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier, amount: tier === "standard" ? 49 : undefined }),
+        body: JSON.stringify({ tier, amount: tier === "standard" ? 49 : undefined, ga_client_id: gaClientId }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
       else {
         console.error("Checkout error:", data.error);
+        trackEvent("new_role_checkout_error", { tier, error_message: data?.error ?? "unknown" });
         setCheckoutError("Payment couldn\u2019t be started. Please try again or contact crew@allmindsondeck.com.");
       }
     } catch (err) {
       console.error("Checkout error:", err);
+      trackEvent("new_role_checkout_error", { tier, error_message: err instanceof Error ? err.message : "network" });
       setCheckoutError("Connection issue. Check your internet and try again.");
     } finally {
       setCheckoutLoading(null);
@@ -2321,9 +2326,17 @@ function FAQ() {
                   question={item.q}
                   answer={item.a}
                   isOpen={openIndex === i}
-                  onToggle={() =>
-                    setOpenIndex(openIndex === i ? null : i)
-                  }
+                  onToggle={() => {
+                    const willOpen = openIndex !== i;
+                    setOpenIndex(willOpen ? i : null);
+                    if (willOpen) {
+                      trackEvent("new_role_faq_expand", {
+                        topic: activeTopic,
+                        question_index: i,
+                        question: item.q,
+                      });
+                    }
+                  }}
                 />
               ))}
             </div>
@@ -2529,17 +2542,26 @@ function BasecampPage() {
         minHeight: "100vh",
       }}
     >
+      <ScrollDepth event="new_role" params={{ program: "basecamp" }} />
       <ResponsiveStyles />
       <Nav />
       <Hero />
       <ProofBar />
       <Problem />
-      <HowItWorks />
-      <Suspense><Pricing /></Suspense>
-      <Outcomes />
+      <ScrollTracker event="new_role_section_view" params={{ section: "how_it_works", program: "basecamp" }}>
+        <HowItWorks />
+      </ScrollTracker>
+      <ScrollTracker event="new_role_pricing_reached" params={{ program: "basecamp" }}>
+        <Suspense><Pricing /></Suspense>
+      </ScrollTracker>
+      <ScrollTracker event="new_role_section_view" params={{ section: "outcomes", program: "basecamp" }}>
+        <Outcomes />
+      </ScrollTracker>
       <Guarantee />
       <DataPrivacy />
-      <FAQ />
+      <ScrollTracker event="new_role_section_view" params={{ section: "faq", program: "basecamp" }}>
+        <FAQ />
+      </ScrollTracker>
       <GiftingSection />
       <FinalCTA />
       <Footer />

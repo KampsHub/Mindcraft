@@ -7,20 +7,20 @@ import { colors as darkColors, fonts } from "@/lib/theme";
 import { trackEvent } from "@/components/GoogleAnalytics";
 import Logo from "@/components/Logo";
 
-// Light-mode override (matches homepage, /refer, /share)
+// Dark-mode palette for the login page — high-contrast text on near-black bg
 const colors = {
   ...darkColors,
-  bgDeep:        "#F0EDE6",
-  bgRecessed:    "#E8E4DB",
-  bgInput:       "#FFFFFF",
-  bgSurface:     "#FFFFFF",
-  bgElevated:    "#FAF8F2",
-  textPrimary:   "#18181C",
-  textSecondary: "#3A3A40",
-  textBody:      "#3A3A40",
-  textMuted:     "#6B6B72",
-  borderSubtle:  "#EAE5D9",
-  borderDefault: "#D8D2C5",
+  bgDeep:        "#0E0E11",   // outer page bg — near black, slightly warm
+  bgRecessed:    "#16161A",
+  bgInput:       "#1F1F25",   // form field bg
+  bgSurface:     "#1A1A1F",   // card bg
+  bgElevated:    "#2A2A30",
+  textPrimary:   "#FFFFFF",   // pure white for max contrast
+  textSecondary: "#EBE8E0",   // near-white for body text
+  textBody:      "#DAD7D0",
+  textMuted:     "#B5B5BC",   // bumped from #8A8A92 for legibility
+  borderSubtle:  "rgba(255,255,255,0.10)",
+  borderDefault: "rgba(255,255,255,0.18)",
 };
 
 const display = fonts.display;
@@ -53,7 +53,11 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) { setError(error.message); setLoading(false); }
+    if (error) {
+      trackEvent("auth_login_failed", { method: "password", error_message: error.message });
+      setError(error.message);
+      setLoading(false);
+    }
     else { trackEvent("login_success", { method: "password" }); window.location.href = "/dashboard"; }
   }
 
@@ -66,8 +70,13 @@ export default function LoginPage() {
       options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
     });
     setMagicLinkLoading(false);
-    if (error) setError(error.message);
-    else setMagicLinkSent(true);
+    if (error) {
+      trackEvent("auth_magic_link_failed", { error_message: error.message });
+      setError(error.message);
+    } else {
+      trackEvent("auth_magic_link_sent", {});
+      setMagicLinkSent(true);
+    }
   }
 
   async function handleGoogle() {
@@ -75,22 +84,25 @@ export default function LoginPage() {
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
-    if (error) setError("Google sign-in failed. Try the email link instead.");
+    if (error) {
+      trackEvent("auth_google_failed", { error_message: error.message });
+      setError("Google sign-in failed. Try the email link instead.");
+    }
   }
 
   const inputStyle = (focused: boolean): React.CSSProperties => ({
     width: "100%",
     padding: "14px 16px",
     fontSize: 15,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.bgInput,
     color: colors.textPrimary,
-    border: `1.5px solid ${focused ? colors.coral : "rgba(24,24,28,0.12)"}`,
+    border: `1.5px solid ${focused ? colors.coral : "rgba(255,255,255,0.10)"}`,
     borderRadius: 12,
     boxSizing: "border-box",
     outline: "none",
     fontFamily: body,
-    transition: "border-color 0.15s, box-shadow 0.15s",
-    boxShadow: focused ? `0 0 0 4px ${colors.coralWash}` : "none",
+    transition: "border-color 0.15s, box-shadow 0.15s, background-color 0.15s",
+    boxShadow: focused ? `0 0 0 4px rgba(196,148,58,0.18)` : "none",
   });
 
   const primaryButtonStyle = (disabled: boolean): React.CSSProperties => ({
@@ -100,13 +112,13 @@ export default function LoginPage() {
     fontWeight: 700,
     fontFamily: display,
     letterSpacing: "0.01em",
-    color: disabled ? "rgba(24,24,28,0.4)" : "#18181C",
-    backgroundColor: disabled ? "rgba(196,148,58,0.35)" : colors.coral,
-    border: "1.5px solid transparent",
+    color: disabled ? "rgba(255,255,255,0.55)" : "#18181C",
+    backgroundColor: disabled ? "rgba(196,148,58,0.20)" : colors.coral,
+    border: disabled ? "1.5px solid rgba(196,148,58,0.4)" : "1.5px solid transparent",
     borderRadius: 12,
     cursor: disabled ? "not-allowed" : "pointer",
     transition: "transform 0.15s, box-shadow 0.15s, background-color 0.15s",
-    boxShadow: disabled ? "none" : "0 6px 18px rgba(196,148,58,0.25)",
+    boxShadow: disabled ? "none" : "0 8px 24px rgba(196,148,58,0.35)",
     boxSizing: "border-box",
   });
 
@@ -115,26 +127,30 @@ export default function LoginPage() {
       style={{
         minHeight: "100vh",
         background: `
-          radial-gradient(circle at 20% 0%, rgba(196,148,58,0.10) 0%, transparent 45%),
-          radial-gradient(circle at 85% 15%, rgba(123,154,173,0.09) 0%, transparent 55%),
-          radial-gradient(circle at 50% 100%, rgba(196,148,58,0.06) 0%, transparent 50%),
+          radial-gradient(circle at 20% 0%, rgba(196,148,58,0.14) 0%, transparent 45%),
+          radial-gradient(circle at 85% 15%, rgba(123,154,173,0.10) 0%, transparent 55%),
+          radial-gradient(circle at 50% 100%, rgba(196,148,58,0.08) 0%, transparent 50%),
           ${colors.bgDeep}
         `,
         fontFamily: body,
         position: "relative",
         overflow: "hidden",
+        color: colors.textPrimary,
       }}
     >
-      {/* Black sliver header with logo */}
+      {/* Brand sliver header with logo */}
       <header
         style={{
-          backgroundColor: "#18181C",
+          backgroundColor: "rgba(0,0,0,0.4)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
           padding: "18px 24px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           position: "relative",
           zIndex: 2,
+          borderBottom: `1px solid rgba(255,255,255,0.05)`,
         }}
       >
         <Logo size={22} />
@@ -153,7 +169,7 @@ export default function LoginPage() {
       <div style={{ width: "100%", maxWidth: 420 }}>
         {/* Brand */}
         <div style={{ textAlign: "center", marginBottom: 36 }}>
-          {/* Decorative little dot */}
+          {/* Decorative little dot with glow */}
           <div
             style={{
               width: 8,
@@ -161,7 +177,7 @@ export default function LoginPage() {
               borderRadius: "50%",
               backgroundColor: colors.coral,
               margin: "0 auto 18px",
-              boxShadow: `0 0 0 6px ${colors.coralWash}`,
+              boxShadow: `0 0 0 6px rgba(196,148,58,0.18), 0 0 24px rgba(196,148,58,0.6)`,
             }}
           />
           <h1
@@ -192,10 +208,10 @@ export default function LoginPage() {
         {/* Card */}
         <div
           style={{
-            backgroundColor: "#FFFFFF",
+            backgroundColor: colors.bgSurface,
             borderRadius: 20,
-            border: `1px solid rgba(24,24,28,0.05)`,
-            boxShadow: "0 20px 60px rgba(24,24,28,0.10), 0 4px 12px rgba(24,24,28,0.04)",
+            border: `1px solid rgba(255,255,255,0.06)`,
+            boxShadow: "0 30px 80px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)",
             padding: "36px 32px 32px",
           }}
         >
@@ -203,10 +219,10 @@ export default function LoginPage() {
             <div
               style={{
                 padding: "12px 14px",
-                backgroundColor: "rgba(139,196,138,0.12)",
+                backgroundColor: "rgba(139,196,138,0.15)",
                 border: "1px solid rgba(139,196,138,0.4)",
                 borderRadius: 10,
-                color: "#2E7A3A",
+                color: "#9DD89A",
                 fontSize: 13,
                 marginBottom: 20,
                 textAlign: "center",
@@ -224,7 +240,8 @@ export default function LoginPage() {
                   width: 56,
                   height: 56,
                   borderRadius: "50%",
-                  backgroundColor: colors.coralWash,
+                  backgroundColor: "rgba(196,148,58,0.15)",
+                  border: "1px solid rgba(196,148,58,0.35)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -273,8 +290,8 @@ export default function LoginPage() {
                   fontWeight: 600,
                   color: colors.textPrimary,
                   fontFamily: body,
-                  backgroundColor: "#FFFFFF",
-                  border: "1.5px solid rgba(24,24,28,0.12)",
+                  backgroundColor: colors.bgInput,
+                  border: "1.5px solid rgba(255,255,255,0.10)",
                   borderRadius: 12,
                   cursor: "pointer",
                   display: "flex",
@@ -283,8 +300,14 @@ export default function LoginPage() {
                   gap: 12,
                   transition: "background-color 0.15s, border-color 0.15s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#FAF8F2"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#FFFFFF"; }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.bgElevated;
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.bgInput;
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)";
+                }}
               >
                 <svg width="18" height="18" viewBox="0 0 48 48">
                   <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
@@ -297,11 +320,11 @@ export default function LoginPage() {
 
               {/* Divider */}
               <div style={{ display: "flex", alignItems: "center", gap: 14, margin: "24px 0" }}>
-                <div style={{ flex: 1, height: 1, backgroundColor: "rgba(24,24,28,0.08)" }} />
+                <div style={{ flex: 1, height: 1, backgroundColor: "rgba(255,255,255,0.10)" }} />
                 <span style={{ fontSize: 11, color: colors.textMuted, fontFamily: display, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
                   or with email
                 </span>
-                <div style={{ flex: 1, height: 1, backgroundColor: "rgba(24,24,28,0.08)" }} />
+                <div style={{ flex: 1, height: 1, backgroundColor: "rgba(255,255,255,0.10)" }} />
               </div>
 
               {/* Email */}
@@ -391,10 +414,10 @@ export default function LoginPage() {
             <div
               style={{
                 padding: "12px 14px",
-                backgroundColor: "rgba(184,69,58,0.08)",
-                border: "1px solid rgba(184,69,58,0.3)",
+                backgroundColor: "rgba(184,69,58,0.15)",
+                border: "1px solid rgba(184,69,58,0.4)",
                 borderRadius: 10,
-                color: "#B8453A",
+                color: "#E89086",
                 fontSize: 13,
                 marginTop: 16,
                 textAlign: "center",
@@ -425,8 +448,8 @@ export default function LoginPage() {
           style={{
             marginTop: 32,
             padding: "20px 24px",
-            backgroundColor: "rgba(196,148,58,0.08)",
-            border: `1px solid ${colors.coralWash}`,
+            backgroundColor: "rgba(196,148,58,0.10)",
+            border: `1px solid rgba(196,148,58,0.25)`,
             borderRadius: 14,
             textAlign: "center",
           }}
@@ -458,10 +481,10 @@ export default function LoginPage() {
 const labelStyle: React.CSSProperties = {
   display: "block",
   fontFamily: display,
-  fontSize: 12,
+  fontSize: 11,
   fontWeight: 700,
   textTransform: "uppercase",
-  letterSpacing: "0.08em",
-  color: "#6B6B72",
+  letterSpacing: "0.12em",
+  color: "#C5C0BA",
   marginBottom: 8,
 };

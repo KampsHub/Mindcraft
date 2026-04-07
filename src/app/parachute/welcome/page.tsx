@@ -44,6 +44,11 @@ function ParachuteWelcome() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  /* ── Analytics: welcome_page_view fires once per mount ── */
+  useEffect(() => {
+    trackEvent("welcome_page_view", { program: "parachute" });
+  }, []);
+
   /* ── Verify Stripe session on mount ── */
   useEffect(() => {
     const sessionId = searchParams.get("session_id");
@@ -126,6 +131,7 @@ function ParachuteWelcome() {
 
     if (enrollError) {
       console.error("Failed to create enrollment:", enrollError);
+      trackEvent("enrollment_creation_failed", { program: "parachute", stage: "insert", error_message: enrollError.message });
       // Try via API as fallback
       await fetch("/api/create-enrollment", {
         method: "POST",
@@ -149,6 +155,7 @@ function ParachuteWelcome() {
     });
 
     if (error) {
+      trackEvent("auth_signup_failed", { program: "parachute", error_message: error.message });
       // If user already exists, try signing them in directly
       if (error.message.toLowerCase().includes("already") || error.message.toLowerCase().includes("registered")) {
         const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ email, password });
@@ -156,6 +163,9 @@ function ParachuteWelcome() {
           await createEnrollmentIfNeeded(signInData.user.id, signInData.user.email || email);
           window.location.href = "/intake?program=parachute";
           return;
+        }
+        if (signInError) {
+          trackEvent("auth_signin_failed", { program: "parachute", source: "welcome_signup_fallback", error_message: signInError.message });
         }
         setError("An account with this email already exists. Switch to the \"I have an account\" tab to sign in.");
       } else {
@@ -168,6 +178,7 @@ function ParachuteWelcome() {
     // If email confirmation is off, user is auto-authenticated → go to intake
     if (data.session && data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
+      trackEvent("signup_complete_post_purchase", { program: "parachute" });
       window.location.href = "/intake?program=parachute";
       return;
     }
@@ -185,6 +196,7 @@ function ParachuteWelcome() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
+      trackEvent("auth_signin_failed", { program: "parachute", source: "welcome", error_message: error.message });
       setError(error.message);
       setLoading(false);
       return;

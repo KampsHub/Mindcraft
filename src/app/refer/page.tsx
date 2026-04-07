@@ -9,6 +9,7 @@ import FadeIn from "@/components/FadeIn";
 import MarketingHeader from "@/components/MarketingHeader";
 import Footer from "@/components/Footer";
 import { colors as darkColors, fonts, radii } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 // ─────────────────────────────────────────────────────────────────────
 // /refer light-mode override (matches the homepage preview).
@@ -64,6 +65,7 @@ export default function ReferPage() {
   const router = useRouter();
 
   useEffect(() => {
+    trackEvent("referral_page_view", {});
     fetch("/api/price")
       .then(r => r.json())
       .then(d => { if (d?.formatted) setGiftPrice(d.formatted); })
@@ -86,20 +88,29 @@ export default function ReferPage() {
     try {
       const res = await fetch("/api/referral/generate", { method: "POST" });
       const data = await res.json();
-      if (data.code) setReferralCode(data.code);
-    } catch {}
+      if (data.code) {
+        setReferralCode(data.code);
+        trackEvent("referral_code_generated", {});
+      } else {
+        trackEvent("referral_code_generation_failed", { error_message: data?.error ?? "unknown" });
+      }
+    } catch (err) {
+      trackEvent("referral_code_generation_failed", { error_message: err instanceof Error ? err.message : "network" });
+    }
     setGenerating(false);
   }
 
   function copyCode() {
     if (!referralCode) return;
     navigator.clipboard.writeText(referralCode);
+    trackEvent("referral_code_copied", {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
 
   function handleGiftCheckout(program: typeof PROGRAMS[0]) {
     setGiftLoading(program.slug);
+    trackEvent("gift_begin_checkout", { program: program.slug });
     // Navigate to the program page with gift pre-selected. The program page's
     // pricing section reads ?gift=1 and pre-checks its "This is a gift" checkbox.
     window.location.href = `/${program.slug}?gift=1#pricing`;

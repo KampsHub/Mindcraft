@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -14,6 +15,10 @@ export default function ContactPage() {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    trackEvent("contact_page_view", {});
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,11 +34,16 @@ export default function ContactPage() {
 
       if (!res.ok) {
         const data = await res.json();
+        trackEvent("contact_form_failed", { status: res.status, error_message: data?.error ?? "unknown" });
         throw new Error(data.error || "Failed to send message");
       }
 
+      trackEvent("contact_form_submitted", { message_length: message.length });
       setSent(true);
     } catch (err) {
+      if (!(err instanceof Error && err.message)) {
+        trackEvent("contact_form_failed", { error_message: "network" });
+      }
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setSending(false);

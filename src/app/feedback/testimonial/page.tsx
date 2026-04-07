@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -34,19 +35,35 @@ export default function TestimonialSurveyPage() {
   const [done, setDone] = useState(false);
   const [direction, setDirection] = useState(1);
 
+  useEffect(() => {
+    trackEvent("testimonial_survey_view", {});
+  }, []);
+
   async function submit() {
     setSubmitting(true);
+    trackEvent("testimonial_survey_submitted", { has_permission: permission, describe_length: describe.length, changed_length: changed.length });
     try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "Testimonial Survey",
-          email: "anonymous@survey.mindcraft.ing",
-          issueType: "Testimonial",
-          message: `How they'd describe Mindcraft:\n${describe}\n\nWhat changed:\n${changed}\n\nPermission to use (anonymized): ${permission ? "YES" : "NO"}`,
+      await Promise.all([
+        fetch("/api/testimonial-survey", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            describe_text: describe,
+            changed_text: changed,
+            permission_given: permission,
+          }),
         }),
-      });
+        fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: "Testimonial Survey",
+            email: "anonymous@survey.mindcraft.ing",
+            issueType: "Testimonial",
+            message: `How they'd describe Mindcraft:\n${describe}\n\nWhat changed:\n${changed}\n\nPermission to use (anonymized): ${permission ? "YES" : "NO"}`,
+          }),
+        }),
+      ]);
       setDone(true);
     } catch {
       setDone(true);

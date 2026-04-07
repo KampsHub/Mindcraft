@@ -33,6 +33,10 @@ function EnneagramWelcome() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    trackEvent("welcome_page_view", { program: "enneagram" });
+  }, []);
+
+  useEffect(() => {
     const sessionId = searchParams.get("session_id");
     if (!sessionId) {
       setVerified(false);

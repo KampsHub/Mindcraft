@@ -11,6 +11,7 @@ import FadeIn from "@/components/FadeIn";
 import { motion } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import { content as c } from "@/content/site";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 
@@ -57,6 +58,10 @@ export default function MonthlySummaryPage() {
   const [shareable, setShareable] = useState(false);
   const supabase = createClient();
   const router = useRouter();
+
+  useEffect(() => {
+    trackEvent("monthly_summary_view", {});
+  }, []);
 
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];

@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -66,9 +67,11 @@ export default function ResetPasswordPage() {
     const { error } = await supabase.auth.updateUser({ password });
 
     if (error) {
+      trackEvent("password_reset_completion_failed", { error_message: error.message });
       setError(error.message);
       setLoading(false);
     } else {
+      trackEvent("password_reset_completed", {});
       router.push("/login?message=password-updated");
     }
   }

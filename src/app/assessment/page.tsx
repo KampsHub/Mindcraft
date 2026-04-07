@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
 import FadeIn from "@/components/FadeIn";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -104,8 +105,13 @@ export default function AssessmentPage() {
   const [submitting, setSubmitting] = useState(false);
   const [showInsight, setShowInsight] = useState(false);
 
+  useEffect(() => {
+    trackEvent("assessment_page_view", {});
+  }, []);
+
   const handleScore = (id: string, score: number) => {
     setScores((prev) => ({ ...prev, [id]: score }));
+    trackEvent("assessment_disruption_scored", { disruption_id: id, score });
     setShowInsight(true);
   };
 
@@ -114,6 +120,25 @@ export default function AssessmentPage() {
     if (currentIdx < DISRUPTIONS.length - 1) {
       setCurrentIdx((prev) => prev + 1);
     } else {
+      const avg = Object.values(scores).length > 0
+        ? Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length
+        : 0;
+      const top3 = Object.entries(scores)
+        .sort(([, a], [, b]) => a - b)
+        .slice(0, 3)
+        .map(([id]) => id)
+        .join(",");
+      trackEvent("assessment_complete", { avg_score: Number(avg.toFixed(2)), top_3_disruptions: top3, total_scored: Object.keys(scores).length });
+      // Persist anonymous completion to assessment_responses (no email yet).
+      // This captures the quiz attempt regardless of whether the user opts in to the email capture.
+      fetch("/api/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          scores,
+          source: typeof document !== "undefined" ? document.referrer || "direct" : "direct",
+        }),
+      }).catch(() => { /* fire-and-forget */ });
       setStep("results");
     }
   };
@@ -131,17 +156,32 @@ export default function AssessmentPage() {
     if (!email.trim()) return;
     setSubmitting(true);
     try {
-      await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          program: `Assessment | Situation: ${situation || "not specified"} | Avg: ${avgScore.toFixed(1)} | Top: ${topDisruptions.map((d) => d.label).join(", ")} | Challenge: ${challenge || "not provided"}`,
+      // Persist structured row to assessment_responses (with email) AND keep waitlist write for backwards compat.
+      await Promise.all([
+        fetch("/api/assessment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            scores,
+            situation,
+            challenge,
+            source: typeof document !== "undefined" ? document.referrer || "direct" : "direct",
+          }),
         }),
-      });
+        fetch("/api/waitlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            program: `Assessment | Situation: ${situation || "not specified"} | Avg: ${avgScore.toFixed(1)} | Top: ${topDisruptions.map((d) => d.label).join(", ")} | Challenge: ${challenge || "not provided"}`,
+          }),
+        }),
+      ]);
+      trackEvent("assessment_email_captured", { avg_score: Number(avgScore.toFixed(2)) });
       setSubmitted(true);
-    } catch {
-      // Non-blocking
+    } catch (err) {
+      trackEvent("assessment_email_capture_failed", { error_message: err instanceof Error ? err.message : "network" });
     } finally {
       setSubmitting(false);
     }

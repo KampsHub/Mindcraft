@@ -7,6 +7,7 @@ import { parseAIResponse } from "@/lib/parse-ai-response";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { extractMemories, getRelevantMemories, formatMemoriesForPrompt } from "@/lib/coaching-memory";
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
+import { sendServerEvent, syntheticClientId } from "@/lib/ga-measurement-protocol";
 
 const PROCESS_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive:
 1. Today's free-flow journal entry
@@ -320,12 +321,39 @@ Analyze the journal content and select the best overflow exercises for this clie
     const memories = await getRelevantMemories(user.id, 10);
     const memoryContext = formatMemoriesForPrompt(memories);
 
-    const message = await anthropic.messages.create({
-      model: getModelForTier("standard"),
-      max_tokens: 2000,
-      system: buildCachedSystem(STANDARD_VOICE, systemPrompt),
-      messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
-    });
+    // Lookup the ga_client_id for this enrollment so quality-signal events fire against the right GA user.
+    const { data: enrollmentRow } = await supabase
+      .from("program_enrollments")
+      .select("ga_client_id")
+      .eq("id", enrollmentId)
+      .maybeSingle();
+    const mpClientId =
+      (enrollmentRow?.ga_client_id as string | null) ||
+      syntheticClientId(`process_journal.${enrollmentId}`);
+
+    const aiStart = Date.now();
+    let message;
+    try {
+      message = await anthropic.messages.create({
+        model: getModelForTier("standard"),
+        max_tokens: 2000,
+        system: buildCachedSystem(STANDARD_VOICE, systemPrompt),
+        messages: [{ role: "user", content: memoryContext + profileContext + userPrompt }],
+      });
+    } catch (aiErr) {
+      await sendServerEvent(mpClientId, "ai_generation_failed", {
+        endpoint: "process-journal",
+        error_message: aiErr instanceof Error ? aiErr.message : String(aiErr),
+      });
+      throw aiErr;
+    }
+    const aiElapsedSec = Math.round((Date.now() - aiStart) / 1000);
+    if (aiElapsedSec > 10) {
+      await sendServerEvent(mpClientId, "ai_generation_slow", {
+        endpoint: "process-journal",
+        elapsed_sec: aiElapsedSec,
+      });
+    }
 
     const textBlock = message.content.find((b) => b.type === "text");
     if (!textBlock || textBlock.type !== "text") {
@@ -345,6 +373,20 @@ Analyze the journal content and select the best overflow exercises for this clie
 
     // Extract memories from this session (non-blocking, uses Haiku)
     extractMemories(user.id, enrollmentId, dayNumber, journalContent, textBlock.text).catch((err) => console.warn("Memory extraction failed:", err));
+
+    // crisis_detected — fire when the model reports high urgency.
+    try {
+      const urgency = (result as { state_analysis?: { urgency_level?: string } })
+        ?.state_analysis?.urgency_level;
+      if (urgency === "high") {
+        await sendServerEvent(mpClientId, "crisis_detected", {
+          enrollment_id: enrollmentId,
+          day_number: dayNumber,
+        });
+      }
+    } catch {
+      // no-op
+    }
 
     return NextResponse.json({
       ...result,

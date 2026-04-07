@@ -6,7 +6,9 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
 import FadeIn from "@/components/FadeIn";
-import { trackEvent } from "@/components/GoogleAnalytics";
+import { trackEvent, getGaClientId } from "@/components/GoogleAnalytics";
+import ScrollDepth from "@/components/ScrollDepth";
+import ScrollTracker from "@/components/ScrollTracker";
 import GiftingSection from "@/components/GiftingSection";
 
 /* ── Typography shortcuts ── */
@@ -1874,19 +1876,22 @@ function Pricing() {
     trackEvent(`parachute_${tierLabel}_begin_checkout`, { tier, price: amount ? `$${amount}` : tier });
     trackEvent("begin_checkout", { package: "parachute", tier, price: amount ? `$${amount}` : tier });
     try {
+      const gaClientId = await getGaClientId();
       const res = await fetch("/api/checkout/parachute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier, amount }),
+        body: JSON.stringify({ tier, amount, ga_client_id: gaClientId }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
       else {
         console.error("Checkout error:", data.error);
+        trackEvent("layoff_checkout_error", { tier, error_message: data?.error ?? "unknown" });
         setCheckoutError("Payment couldn\u2019t be started. Please try again or contact crew@allmindsondeck.com.");
       }
     } catch (err) {
       console.error("Checkout error:", err);
+      trackEvent("layoff_checkout_error", { tier, error_message: err instanceof Error ? err.message : "network" });
       setCheckoutError("Connection issue. Check your internet and try again.");
     } finally {
       setCheckoutLoading(null);
@@ -2898,9 +2903,17 @@ function FAQ() {
                   question={item.q}
                   answer={item.a}
                   isOpen={openIndex === i}
-                  onToggle={() =>
-                    setOpenIndex(openIndex === i ? null : i)
-                  }
+                  onToggle={() => {
+                    const willOpen = openIndex !== i;
+                    setOpenIndex(willOpen ? i : null);
+                    if (willOpen) {
+                      trackEvent("layoff_faq_expand", {
+                        topic: activeTopic,
+                        question_index: i,
+                        question: item.q,
+                      });
+                    }
+                  }}
                 />
               ))}
             </div>
@@ -3532,18 +3545,27 @@ function ParachutePage() {
         minHeight: "100vh",
       }}
     >
+      <ScrollDepth event="layoff" params={{ program: "parachute" }} />
       <ResponsiveStyles />
       <Nav />
       <Hero />
       <ProofBar />
       <Problem />
-      <HowItWorks />
-      <Suspense><Pricing /></Suspense>
-      <Outcomes />
+      <ScrollTracker event="layoff_section_view" params={{ section: "how_it_works", program: "parachute" }}>
+        <HowItWorks />
+      </ScrollTracker>
+      <ScrollTracker event="layoff_pricing_reached" params={{ program: "parachute" }}>
+        <Suspense><Pricing /></Suspense>
+      </ScrollTracker>
+      <ScrollTracker event="layoff_section_view" params={{ section: "outcomes", program: "parachute" }}>
+        <Outcomes />
+      </ScrollTracker>
       <Guarantee />
       <Founder />
       <DataPrivacy />
-      <FAQ />
+      <ScrollTracker event="layoff_section_view" params={{ section: "faq", program: "parachute" }}>
+        <FAQ />
+      </ScrollTracker>
       <GiftingSection />
       <FinalCTA />
       <Footer />

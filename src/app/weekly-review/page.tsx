@@ -14,6 +14,7 @@ import ProgramSwitcher from "@/components/ProgramSwitcher";
 import UpsellSection from "@/app/dashboard/UpsellSection";
 import NPSPrompt from "@/components/NPSPrompt";
 import ThenVsNowCard from "@/components/ThenVsNowCard";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 /* ── Design tokens (matches dashboard/landing page) ── */
 const display = fonts.display;
@@ -402,6 +403,17 @@ function WeeklyReviewPage() {
     });
   }, [supabase.auth, router, loadData]);
 
+  // weekly_review_started fires once when the enrollment + week_number are known.
+  useEffect(() => {
+    if (enrollment && weekNumber) {
+      trackEvent("weekly_review_started", {
+        program: enrollment.programs?.slug ?? "unknown",
+        week_number: weekNumber,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enrollment?.id, weekNumber]);
+
   function getWeekStart(): string {
     const now = new Date();
     const day = now.getDay();
@@ -527,6 +539,10 @@ function WeeklyReviewPage() {
   async function handleSave() {
     if (!user || !enrollment) return;
     setSaving(true);
+    trackEvent("weekly_review_completed", {
+      program: enrollment.programs?.slug ?? "unknown",
+      week_number: weekNumber,
+    });
 
     const completedSess = sessions.filter((s) => s.completed_at);
 

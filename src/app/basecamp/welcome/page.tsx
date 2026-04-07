@@ -44,6 +44,11 @@ function BasecampWelcome() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  /* ── Analytics: welcome_page_view ── */
+  useEffect(() => {
+    trackEvent("welcome_page_view", { program: "basecamp" });
+  }, []);
+
   /* ── Verify Stripe session on mount ── */
   useEffect(() => {
     const sessionId = searchParams.get("session_id");
@@ -96,6 +101,7 @@ function BasecampWelcome() {
 
     if (enrollError) {
       console.error("Failed to create enrollment:", enrollError);
+      trackEvent("enrollment_creation_failed", { program: "basecamp", stage: "insert", error_message: enrollError.message });
       await fetch("/api/create-enrollment", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ program: "basecamp" }),
@@ -117,12 +123,16 @@ function BasecampWelcome() {
     });
 
     if (error) {
+      trackEvent("auth_signup_failed", { program: "basecamp", error_message: error.message });
       if (error.message.toLowerCase().includes("already") || error.message.toLowerCase().includes("registered")) {
         const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ email, password });
         if (!signInError && signInData.user) {
           await createEnrollmentIfNeeded(signInData.user.id, signInData.user.email || email);
           window.location.href = "/intake?program=basecamp";
           return;
+        }
+        if (signInError) {
+          trackEvent("auth_signin_failed", { program: "basecamp", source: "welcome_signup_fallback", error_message: signInError.message });
         }
         setError("An account with this email already exists. Switch to the \"I have an account\" tab to sign in.");
       } else {
@@ -134,6 +144,7 @@ function BasecampWelcome() {
 
     if (data.session && data.user) {
       await createEnrollmentIfNeeded(data.user.id, data.user.email || email);
+      trackEvent("signup_complete_post_purchase", { program: "basecamp" });
       window.location.href = "/intake?program=basecamp";
       return;
     }
@@ -150,6 +161,7 @@ function BasecampWelcome() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
+      trackEvent("auth_signin_failed", { program: "basecamp", source: "welcome", error_message: error.message });
       setError(error.message);
       setLoading(false);
       return;

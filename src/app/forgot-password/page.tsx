@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -22,9 +23,11 @@ export default function ForgotPasswordPage() {
     });
 
     if (error) {
+      trackEvent("password_reset_request_failed", { error_message: error.message });
       setError(error.message);
       setLoading(false);
     } else {
+      trackEvent("password_reset_request_sent", {});
       setSuccess(true);
       setLoading(false);
     }

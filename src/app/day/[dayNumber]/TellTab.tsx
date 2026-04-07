@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FadeIn from "@/components/FadeIn";
+import { trackEvent } from "@/components/GoogleAnalytics";
 import FlagButton from "@/components/FlagButton";
 import VoiceToText from "@/components/VoiceToText";
 import GuidedExerciseFlow from "@/components/GuidedExerciseFlow";
@@ -166,6 +167,37 @@ export default function TellTab({
   setFreeFlowText,
   activeTab,
 }: TellTabProps) {
+  // Analytics: fire journal_entry_started on first keystroke (once per day)
+  const journalStartedFired = useRef(false);
+  useEffect(() => {
+    if (!journalStartedFired.current && journalContent.trim().length > 0 && !journalSaved) {
+      journalStartedFired.current = true;
+      trackEvent("journal_entry_started", { day_number: dayNumber });
+    }
+  }, [journalContent, journalSaved, dayNumber]);
+
+  // Wrap saveJournal to fire journal_entry_saved + journal_entry_short (quality signal)
+  const handleSaveJournalTracked = async () => {
+    const wordCount = journalContent.trim().split(/\s+/).filter(Boolean).length;
+    trackEvent("journal_entry_saved", { day_number: dayNumber, word_count: wordCount });
+    if (wordCount > 0 && wordCount < 30) {
+      trackEvent("journal_entry_short", { day_number: dayNumber, word_count: wordCount });
+    }
+    await saveJournal();
+    // journal_processed fires once the parent's processJournal flow finishes.
+    // We surface it from here by watching the session.step_3_analysis side-effect below.
+  };
+
+  // Fire journal_processed when the analysis payload populates (indicates API returned).
+  const journalProcessedFired = useRef(false);
+  useEffect(() => {
+    const analysis = session?.step_3_analysis;
+    if (!journalProcessedFired.current && analysis && Object.keys(analysis).length > 0) {
+      journalProcessedFired.current = true;
+      trackEvent("journal_processed", { day_number: dayNumber });
+    }
+  }, [session?.step_3_analysis, dayNumber]);
+
   const [showThoughtConversation, setShowThoughtConversation] = useState(false);
   const [expandedPrompts, setExpandedPrompts] = useState<Array<{ prompt: string; expanded?: string; purpose: string; context?: string }>>(
     programDay?.seed_prompts || []
@@ -664,7 +696,7 @@ export default function TellTab({
             <motion.button
               whileHover={journalContent.trim() && !savingJournal ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
               whileTap={journalContent.trim() && !savingJournal ? { scale: 0.97 } : {}}
-              onClick={saveJournal}
+              onClick={handleSaveJournalTracked}
               disabled={!journalContent.trim() || savingJournal}
               style={{
                 padding: "12px 28px", fontSize: 14, fontWeight: 600,

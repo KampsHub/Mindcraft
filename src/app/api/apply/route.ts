@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import {
   coachingApplicationHtml,
   coachingApplicationSubject,
@@ -9,10 +10,36 @@ import {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const { firstName, lastName, email, phone, company, location, situation, sixMonthGoal, funding, budget, referral, anythingElse } = data;
+    const { firstName, lastName, email, phone, company, location, situation, sixMonthGoal, funding, budget, referral, anythingElse, source } = data;
 
     if (!firstName || !lastName || !email || !situation || !sixMonthGoal) {
       return NextResponse.json({ error: "Required fields missing" }, { status: 400 });
+    }
+
+    // Persist to coaching_applications table (best-effort — never block the email)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (supabaseUrl && serviceKey) {
+      try {
+        const db = createClient(supabaseUrl, serviceKey);
+        await db.from("coaching_applications").insert({
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          phone,
+          company,
+          location,
+          situation,
+          six_month_goal: sixMonthGoal,
+          funding,
+          budget,
+          referral,
+          anything_else: anythingElse,
+          source,
+        });
+      } catch (err) {
+        console.error("Apply: failed to persist to coaching_applications:", err);
+      }
     }
 
     const resendKey = process.env.RESEND_API_KEY;

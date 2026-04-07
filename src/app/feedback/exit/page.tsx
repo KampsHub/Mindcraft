@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import Logo from "@/components/Logo";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -46,19 +47,37 @@ export default function ExitSurveyPage() {
   const [done, setDone] = useState(false);
   const [direction, setDirection] = useState(1);
 
+  useEffect(() => {
+    trackEvent("exit_survey_page_view", {});
+  }, []);
+
   async function submit() {
     setSubmitting(true);
+    const finalReason = reason === "Other" ? otherReason : reason;
+    trackEvent("exit_survey_submitted", { reason: finalReason || "unspecified", has_comeback_text: comeback.length > 0 });
     try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "Exit Survey",
-          email: "anonymous@survey.mindcraft.ing",
-          issueType: "Exit Survey",
-          message: `Reason: ${reason === "Other" ? otherReason : reason}\n\nWhat would bring them back: ${comeback}`,
+      // Persist structured row + send email triage in parallel
+      await Promise.all([
+        fetch("/api/exit-survey", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            reason: reason === "Other" ? null : reason,
+            reason_other: reason === "Other" ? otherReason : null,
+            comeback_text: comeback,
+          }),
         }),
-      });
+        fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: "Exit Survey",
+            email: "anonymous@survey.mindcraft.ing",
+            issueType: "Exit Survey",
+            message: `Reason: ${finalReason}\n\nWhat would bring them back: ${comeback}`,
+          }),
+        }),
+      ]);
       setDone(true);
     } catch {
       setDone(true); // still show thank you
@@ -68,6 +87,9 @@ export default function ExitSurveyPage() {
   }
 
   function next() {
+    if (screen === 0 && reason) {
+      trackEvent("exit_survey_reason_selected", { reason: reason === "Other" ? "Other" : reason });
+    }
     setDirection(1);
     setScreen((s) => s + 1);
   }

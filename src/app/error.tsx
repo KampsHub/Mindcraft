@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { colors, fonts, layout } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 export default function Error({
   error,
@@ -9,6 +11,13 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    trackEvent("error_boundary_caught", {
+      page: "global",
+      error_message: error.message || "unknown",
+      digest: error.digest || "",
+    });
+  }, [error]);
   return (
     <div
       style={{
@@ -64,7 +73,7 @@ export default function Error({
 
       <div style={{ display: "flex", gap: 12 }}>
         <button
-          onClick={reset}
+          onClick={() => { trackEvent("error_retry_attempted", { page: "global" }); reset(); }}
           style={{
             padding: "12px 28px",
             fontSize: 15,

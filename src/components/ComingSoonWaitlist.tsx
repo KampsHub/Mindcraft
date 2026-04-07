@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
+import ScrollTracker from "@/components/ScrollTracker";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -33,6 +35,14 @@ export default function ComingSoonWaitlist() {
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [emails, setEmails] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const focusedFired = useRef<Set<string>>(new Set());
+
+  const handleEmailFocus = (programId: string) => {
+    if (!focusedFired.current.has(programId)) {
+      focusedFired.current.add(programId);
+      trackEvent("waitlist_email_focused", { program: programId });
+    }
+  };
 
   const handleSubmit = async (programId: string, programTag: string) => {
     const email = emails[programId]?.trim();
@@ -53,9 +63,11 @@ export default function ComingSoonWaitlist() {
 
       if (!res.ok) {
         const data = await res.json();
+        trackEvent("waitlist_failed", { program: programId, error_message: data?.error ?? `http_${res.status}` });
         throw new Error(data.error || "Something went wrong");
       }
 
+      trackEvent("waitlist_submitted", { program: programId });
       setSubmitted((prev) => ({ ...prev, [programId]: true }));
     } catch (err) {
       setErrors((prev) => ({
@@ -68,6 +80,7 @@ export default function ComingSoonWaitlist() {
   };
 
   return (
+    <ScrollTracker event="waitlist_view" params={{ source: "homepage" }}>
     <div style={{ marginTop: 8 }}>
 
       <div
@@ -180,6 +193,7 @@ export default function ComingSoonWaitlist() {
                     type="email"
                     placeholder="your@email.com"
                     value={emails[program.id] || ""}
+                    onFocus={() => handleEmailFocus(program.id)}
                     onChange={(e) =>
                       setEmails((prev) => ({ ...prev, [program.id]: e.target.value }))
                     }
@@ -252,5 +266,6 @@ export default function ComingSoonWaitlist() {
         ))}
       </div>
     </div>
+    </ScrollTracker>
   );
 }

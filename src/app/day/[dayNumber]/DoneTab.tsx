@@ -384,7 +384,11 @@ export default function DoneTab({
               whileTap={{ scale: 0.97 }}
               onClick={async () => {
                 fireDayCompleteConfetti();
-                trackEvent("day_completed", { day_number: dayNumber, program: "parachute" });
+                const program = enrollment?.programs?.slug ?? "unknown";
+                trackEvent("day_completed", { day_number: dayNumber, program });
+                if (dayNumber === 1) {
+                  trackEvent("day_1_completed", { program });
+                }
                 await completeDay();
               }}
               style={{

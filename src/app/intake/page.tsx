@@ -80,6 +80,15 @@ const Shell = ({ children }: { children: React.ReactNode }) => (
 export default function IntakePage() {
   const searchParams = useSearchParams();
   const [step, setStep] = useState<Step>("attribution");
+  // Analytics: intake_start fires once on mount, intake_step_complete on every step transition.
+  useEffect(() => {
+    trackEvent("intake_start", {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const wrappedSetStep = (next: Step) => {
+    trackEvent("intake_step_complete", { from: step, to: next });
+    setStep(next);
+  };
   const [programs, setPrograms] = useState<Program[]>([]);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
   const [attribution, setAttribution] = useState<string>("");
@@ -225,7 +234,7 @@ export default function IntakePage() {
     });
 
     trackEvent("intake_complete", { program: selectedProgram.slug, program_name: selectedProgram.name });
-    setStep("complete");
+    wrappedSetStep("complete");
     setSaving(false);
   }
 
@@ -370,7 +379,7 @@ export default function IntakePage() {
                   if (attribution === "other") eventParams.freeform_text = attributionOther;
                   trackEvent("attribution_source", eventParams);
                   // Skip program selection — we already know from the URL param or purchase
-                  setStep(selectedProgram ? "intake" : "program");
+                  wrappedSetStep(selectedProgram ? "intake" : "program");
                 }
               }}
               disabled={!attribution}
@@ -389,7 +398,7 @@ export default function IntakePage() {
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => setStep("program")}
+              onClick={() => wrappedSetStep("program")}
               style={{
                 padding: "14px 24px", fontSize: 14, fontWeight: 500,
                 color: colors.textMuted, backgroundColor: "transparent",
@@ -510,7 +519,7 @@ export default function IntakePage() {
           <motion.button
             whileHover={selectedProgram ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.12)" } : {}}
             whileTap={selectedProgram ? { scale: 0.97 } : {}}
-            onClick={() => selectedProgram && setStep("intake")}
+            onClick={() => selectedProgram && wrappedSetStep("intake")}
             disabled={!selectedProgram}
             style={{
               marginTop: 24, padding: "14px 36px", fontSize: 15, fontWeight: 600,
@@ -550,7 +559,7 @@ export default function IntakePage() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => setStep(searchParams.get("program") ? "attribution" : "program")}
+            onClick={() => wrappedSetStep(searchParams.get("program") ? "attribution" : "program")}
             style={{
               padding: "6px 16px", fontSize: 13, fontWeight: 600,
               color: colors.textMuted, backgroundColor: colors.bgSurface,
@@ -758,7 +767,7 @@ export default function IntakePage() {
           <motion.button
             whileHover={{ scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => setStep("consent")}
+            onClick={() => wrappedSetStep("consent")}
             style={{
               marginTop: 28, padding: "14px 36px", fontSize: 15, fontWeight: 600,
               color: colors.bgDeep, backgroundColor: colors.coral,
@@ -794,7 +803,7 @@ export default function IntakePage() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => setStep("intake")}
+            onClick={() => wrappedSetStep("intake")}
             style={{
               padding: "6px 16px", fontSize: 13, fontWeight: 600,
               color: colors.textMuted, backgroundColor: colors.bgSurface,

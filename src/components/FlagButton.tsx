@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
+import { trackEvent } from "@/components/GoogleAnalytics";
 
 const display = fonts.display;
 const body = fonts.bodyAlt;
@@ -36,6 +37,12 @@ export default function FlagButton({
   async function handleSubmit() {
     if (!selectedReason) return;
     setSubmitting(true);
+    trackEvent("quality_flag_submitted", {
+      output_type: outputType,
+      flag_reason: selectedReason,
+      framework_name: frameworkName ?? "none",
+      has_comment: comment.trim().length > 0,
+    });
 
     try {
       await fetch("/api/quality-flag", {
@@ -78,7 +85,12 @@ export default function FlagButton({
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          if (!open) {
+            trackEvent("quality_flag_opened", { output_type: outputType, framework_name: frameworkName ?? "none" });
+          }
+          setOpen(!open);
+        }}
         title="Flag this output"
         style={{
           width: 28,

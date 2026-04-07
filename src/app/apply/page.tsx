@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { colors, fonts } from "@/lib/theme";
 import { trackEvent } from "@/components/GoogleAnalytics";
@@ -96,7 +96,52 @@ export default function ApplyPage() {
   const [error, setError] = useState<string | null>(null);
   const [direction, setDirection] = useState(1);
 
+  // Analytics: apply_page_view once, apply_form_start on first input, apply_form_abandoned on unload.
+  const startedAt = useRef<number>(Date.now());
+  const formStartedFired = useRef(false);
+  const submittedRef = useRef(false);
+  useEffect(() => {
+    // Infer source from query string first, fall back to document.referrer.
+    let source = "direct";
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const qSource = params.get("source");
+      if (qSource) {
+        source = qSource;
+      } else if (document.referrer) {
+        const ref = new URL(document.referrer);
+        if (ref.origin === window.location.origin) {
+          // Internal referrer — extract program from path if present
+          const pathProgram = ref.pathname.split("/").filter(Boolean)[0];
+          if (["parachute", "jetstream", "basecamp", "dashboard", "weekly-review"].includes(pathProgram)) {
+            source = pathProgram;
+          } else {
+            source = ref.pathname || "internal";
+          }
+        } else {
+          source = ref.hostname;
+        }
+      }
+    } catch { /* no-op */ }
+    trackEvent("apply_page_view", { source });
+    const handler = () => {
+      if (formStartedFired.current && !submittedRef.current) {
+        trackEvent("apply_form_abandoned", { last_screen: screen });
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const markFormStarted = () => {
+    if (!formStartedFired.current) {
+      formStartedFired.current = true;
+      trackEvent("apply_form_start", {});
+    }
+  };
+
   function set<K extends keyof FormData>(key: K, value: string) {
+    markFormStarted();
     setForm((f) => ({ ...f, [key]: value }));
   }
 
@@ -109,11 +154,13 @@ export default function ApplyPage() {
 
   function next() {
     if (!canAdvance()) return;
+    trackEvent("apply_screen_complete", { screen_index: screen });
     setDirection(1);
     setScreen((s) => Math.min(s + 1, TOTAL_SCREENS));
   }
 
   function prev() {
+    trackEvent("apply_back_clicked", { from_screen: screen });
     setDirection(-1);
     setScreen((s) => Math.max(s - 1, 0));
   }
@@ -121,6 +168,7 @@ export default function ApplyPage() {
   function selectAndAdvance<K extends keyof FormData>(key: K, value: string) {
     set(key, value);
     setTimeout(() => {
+      trackEvent("apply_screen_complete", { screen_index: screen });
       setDirection(1);
       setScreen((s) => Math.min(s + 1, TOTAL_SCREENS));
     }, 250);
@@ -130,7 +178,14 @@ export default function ApplyPage() {
     if (!canAdvance()) return;
     setSubmitting(true);
     setError(null);
-    trackEvent("coaching_application_submit", { funding: form.funding, budget: form.budget });
+    submittedRef.current = true;
+    const timeOnFormSec = Math.round((Date.now() - startedAt.current) / 1000);
+    trackEvent("coaching_application_submit", {
+      funding: form.funding,
+      budget: form.budget,
+      screen_count: TOTAL_SCREENS,
+      time_on_form_sec: timeOnFormSec,
+    });
     try {
       const res = await fetch("/api/apply", {
         method: "POST",

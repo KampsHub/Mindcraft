@@ -2,7 +2,6 @@ import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 import { sendServerEvent, syntheticClientId } from "@/lib/ga-measurement-protocol";
 
-const PRODUCT_ID = "prod_UD4pfH1qmOP8jX";
 const AMOUNT_CENTS = 30000; // $300
 
 export async function POST(req: NextRequest) {
@@ -27,7 +26,10 @@ export async function POST(req: NextRequest) {
         {
           price_data: {
             currency: "usd",
-            product: PRODUCT_ID,
+            product_data: {
+              name: "IEQ9 Enneagram Assessment + 1-hour debrief",
+              description: "Scientifically validated Enneagram assessment plus a 1-hour live debrief with a certified professional coach.",
+            },
             unit_amount: AMOUNT_CENTS,
           },
           quantity: 1,

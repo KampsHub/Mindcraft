@@ -210,21 +210,27 @@ function EnneagramCard({ program }: { program: string }) {
         fontFamily: body, fontSize: 14, color: colors.textPrimary,
         lineHeight: 1.65, margin: "0 0 12px 0",
       }}>
-        The Enneagram is a personality model that maps nine cognitive and emotional patterns. Where Myers-Briggs sorts you by preference, the Enneagram looks at what motivates you under pressure — and what your blind spots cost you when the stakes are high.
+        The Enneagram is a personality model that maps nine cognitive and emotional patterns. Where Myers-Briggs sorts you by preference, the Enneagram looks at what actually motivates you under pressure — and what your blind spots cost you when the stakes are high.
       </p>
       <p style={{
         fontFamily: body, fontSize: 14, color: colors.textPrimary,
         lineHeight: 1.65, margin: "0 0 12px 0",
       }}>
-        The <strong>IEQ9</strong> from Integrative9 is the only Enneagram assessment that meets standard psychometric validity criteria — 175 questions, internal consistency above 0.85 across all nine type scales, validated across 100,000+ administrations. It&rsquo;s used by ICF-credentialed coaches and Fortune 500 leadership development programs.
+        The <strong>IEQ9</strong> is the only Enneagram assessment that meets standard psychometric validity criteria. It&rsquo;s used by ICF-credentialed coaches and Fortune 500 leadership development programs.
+      </p>
+      <p style={{
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 8px 0",
+      }}>
+        You&rsquo;ll receive:
       </p>
       <ul style={{
         fontFamily: body, fontSize: 14, color: colors.textPrimary,
         lineHeight: 1.65, margin: "0 0 16px 18px", padding: 0,
       }}>
-        <li>A 30-page report on your dominant type, your two wings, your tritype, and how you shift under stress vs security</li>
-        <li>A 1-hour live debrief with Stefanie to translate the report into something specific to where you are right now</li>
-        <li>Your results then weight every exercise in your daily program toward what your type actually needs</li>
+        <li>A 30-page report on your motivations, behaviors under stress and in security, ways of expression, and communication &amp; conflict style</li>
+        <li>A 1-hour live debrief with a certified professional coach to translate the report into something specific to where you are right now</li>
+        <li>Your results then find influence in your daily program and what you need</li>
       </ul>
 
       {/* Slot picker — pick your debrief time before paying */}

@@ -11,7 +11,6 @@ import FadeIn from "@/components/FadeIn";
 import { colors, fonts } from "@/lib/theme";
 import GoalSlider from "@/components/GoalSlider";
 import ProgramSwitcher from "@/components/ProgramSwitcher";
-import UpsellSection from "@/app/dashboard/UpsellSection";
 import NPSPrompt from "@/components/NPSPrompt";
 import ThenVsNowCard from "@/components/ThenVsNowCard";
 import { trackEvent } from "@/components/GoogleAnalytics";
@@ -1770,12 +1769,8 @@ function WeeklyReviewPage() {
         </FadeIn>
       )}
 
-      {/* ── Go deeper — upsells ── */}
-      <UpsellSection
-        showEnneagram={!hasEnneagram}
-        programSlug={enrollment.programs?.slug || "parachute"}
-        onNavigate={(path) => router.push(path)}
-      />
+      {/* Upsells removed from /weekly-review (insights page) per feedback.
+          Still rendered on /dashboard. */}
     </PageShell>
   );
 }

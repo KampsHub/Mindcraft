@@ -13,7 +13,7 @@ export default function FloatingActions() {
   const pathname = usePathname();
   const [showBugModal, setShowBugModal] = useState(false);
   const [showCoachModal, setShowCoachModal] = useState(false);
-  const [hovered, setHovered] = useState<"bug" | "coach" | "journal" | null>(null);
+  const [hovered, setHovered] = useState<"bug" | "coach" | "journal" | "search" | null>(null);
 
   const hidePencil = pathname.startsWith("/day/") || pathname === "/mindful-journal";
 
@@ -29,7 +29,20 @@ export default function FloatingActions() {
         gap: 10,
         zIndex: 1000,
       }}>
-        {/* Coach contact — top */}
+        {/* Search — top */}
+        <FAB
+          icon={<SearchIcon />}
+          label="Search"
+          hovered={hovered === "search"}
+          onHover={(h) => setHovered(h ? "search" : null)}
+          onClick={() => router.push("/search")}
+          size={40}
+          bg={colors.bgSurface}
+          border={colors.borderDefault}
+          iconColor={colors.textSecondary}
+        />
+
+        {/* Coach contact */}
         <FAB
           icon={<ChatPersonIcon />}
           label="Ask a coach"
@@ -190,6 +203,15 @@ function ChatPersonIcon() {
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       <circle cx="12" cy="9" r="2" />
       <path d="M8 14c0-1.5 1.8-3 4-3s4 1.5 4 3" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
   );
 }

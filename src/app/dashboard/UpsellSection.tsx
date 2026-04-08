@@ -71,9 +71,9 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
           </div>
 
           <p style={{
-            fontFamily: display, fontSize: 12, fontWeight: 600,
-            color: colors.textPrimary, marginBottom: 14, letterSpacing: "0.04em",
-            textTransform: "uppercase",
+            fontFamily: display, fontSize: 26, fontWeight: 700,
+            color: colors.textPrimary, margin: "0 0 18px 0",
+            letterSpacing: "-0.02em", textAlign: "center",
           }}>
             Go deeper
           </p>
@@ -88,9 +88,9 @@ export default function UpsellSection({ showEnneagram, programSlug, onNavigate }
       <div style={{ marginTop: 36 }}>
         <div style={{ height: 1, backgroundColor: colors.borderSubtle, marginBottom: 24 }} />
         <p style={{
-          fontFamily: display, fontSize: 12, fontWeight: 600,
-          color: colors.textPrimary, marginBottom: 14, letterSpacing: "0.04em",
-          textTransform: "uppercase",
+          fontFamily: display, fontSize: 26, fontWeight: 700,
+          color: colors.textPrimary, margin: "0 0 18px 0",
+          letterSpacing: "-0.02em", textAlign: "center",
         }}>
           Go deeper
         </p>

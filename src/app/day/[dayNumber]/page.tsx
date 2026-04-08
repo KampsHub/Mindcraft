@@ -6,6 +6,7 @@ import PageShell from "@/components/PageShell";
 import FadeIn from "@/components/FadeIn";
 import PhaseIndicator from "@/components/PhaseIndicator";
 import BreathingCircle from "@/components/BreathingCircle";
+import WeeklyProgressPanel from "@/components/WeeklyProgressPanel";
 import { colors, fonts, space, text, radii } from "@/lib/theme";
 import { useDaySession } from "./useDaySession";
 import TellTab from "./TellTab";
@@ -145,6 +146,16 @@ function DailyFlowPage() {
           </p>
         </div>
       </FadeIn>
+
+      {/* Program progress panel — Day 7 / 14 / 21 / 30 */}
+      {(s.dayNumber % 7 === 0 || s.dayNumber === 30) && s.enrollment && (
+        <FadeIn preset="fade" delay={0.05} triggerOnMount>
+          <WeeklyProgressPanel
+            enrollmentId={s.enrollment.id}
+            dayNumber={s.dayNumber}
+          />
+        </FadeIn>
+      )}
 
       {/* Phase indicator */}
       <FadeIn preset="fade" delay={0.1} triggerOnMount>

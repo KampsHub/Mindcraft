@@ -88,3 +88,61 @@ Decisions Stefanie needs to make. Each one blocks at least one Claude task.
 | 10 | Email templates → React Email migration | Yes (proper template management with dashboard preview, ~2-3 hours) / No (keep the inline-string + shell helper approach) | Stefanie | Long-term email maintainability |
 | 11 | Supabase Pro upgrade ($25/mo) | Needed for direct video uploads to Storage. Currently on Free. | Stefanie | Direct video upload feature |
 | 12 | Coach invite email — restore the route's email send? | Currently the route still creates the `coach_clients` DB row but doesn't send an email to the invitee. Should they get an email when a coach adds them? | Stefanie | Coach invite UX |
+
+---
+
+## 🚧 April 7, 2026 — Day-flow redesign follow-through
+
+Everything below is queued from Stefanie's "just such terrible design — fix it" session. The session ended mid-sequence; list is in priority order.
+
+### CRITICAL — currently fabricated / broken
+1. **Real Google Calendar Free/Busy integration for `/api/coach/slots`.** Currently the route hardcodes 9am / 12pm / 3pm PT × next 14 weekdays and only excludes rows in `coach_blocked_slots`. Stefanie noticed "this looks fabricated" — it is. Needs OAuth or service-account access to her Google Calendar appointment schedule so the slots reflect her real availability.
+
+### Day-flow rebuild — continuing the redesign
+2. **Do section split** — `Learn` (framework teaching) vs `Practice` (exercises). Restructure `DoTab.tsx` so the framework is taught before the exercise, not mashed together.
+3. **Every day ≥2 non-journal interactive primitives** — seed-script pass across all 30 days × 3 programs (Parachute, Jetstream, Basecamp). Stefanie: "where are all the interactive exercises we have seen before? These are ALL journal related and it's no fun. Make sure that you include at least two interactive exercises."
+4. **AUDIO RIP sweep beyond TellTab** — `DoTab.tsx`, `weekly-review`, `monthly-summary`, anywhere `VoiceToText` / `SpeechRecognition` / `GuidedExerciseFlow` / "talk to your coach" / "walk through these" still exists. Stefanie 3:39 PM: "REMOVE ANY FORM OF AUDIO."
+
+### Voice + content integrity
+5. **N3 — hedged-voice systemic fix.** Strengthen `src/app/api/process-journal/route.ts` system prompt with explicit wrong/right examples AND add a post-processor guard that rejects or rewrites declarative neuroscience claims. Stefanie: "we talked about this before" — prompt-only enforcement has now failed twice, needs a guard.
+6. **N4 — Inner Critic Dialogue → `dialogueSequence` primitive.** Currently rendered as a `guided` single-textarea exercise. Update the seed data in `scripts/seed-parachute-program.ts` (and the jetstream/basecamp equivalents if they share the exercise).
+7. **N1 — ship the parked `ExerciseCard.tsx` edit** removing the binary "Was this exercise useful? Yes / Not for me" prompt. The in-flight edit was made in an earlier session; check `git status` or re-do it.
+8. **N6 — italic AI insight typography sweep beyond DoneTab.** Grep for `fontStyle: "italic"` across `src/` — anywhere AI-generated output is rendered it should be `textPrimary`, normal weight, same size as body copy.
+
+### Bigger ideas Stefanie greenlit (schema + multi-file work)
+9. **BIG IDEA A — Journal that remembers.** Turn the AI journal loop from stateless into continuity-aware.
+   - New table `user_memory(user_id, type, content, source_day, source_kind, last_referenced_at, active)` — `type` is `'pattern' | 'commitment' | 'saboteur' | 'value' | 'turning_point'`.
+   - Migration SQL file in `supabase/`.
+   - Backfill script that walks every existing journal + exercise completion and seeds memory rows.
+   - `/api/process-journal` rewrite: fetch top 8 memory rows (active + recent + type-diverse) via SQL, inject into prompt as "here's what you already know about this person," parse a `memory_update` JSON block from the Claude response, write new rows + mark resolved.
+   - System prompt rewrite: continuity-first, must reference at least one memory row if genuinely relevant, hedged voice enforced.
+   - Voice integration failure Stefanie called out ("the voice feels generic") is downstream of this — the AI has no memory of who it's talking to. Fixing this fixes voice.
+10. **BIG IDEA B — Coach inbox (opt-in, written-only).** Give Stefanie structural presence in the product without violating data-sharing.
+    - Schema: `journal_entries.shared_with_coach` boolean + new `coach_replies` table.
+    - "Share this with Stefanie" button on every journal entry + insight, with consent copy. NEW written-only surface — do NOT bolt onto the existing (now-removed) voice CTA.
+    - Crisis-triggered share prompt: when `urgency_level === "high"` the user sees a card offering one-tap consent to share with Stefanie, 24h reply window.
+    - `/admin/coach-inbox` page that lists shared entries, lets Stefanie write a 2–3 sentence reply inline.
+    - Email notification to Stefanie when a new item hits the queue.
+    - Display coach reply attached to the original entry in the user app.
+    - Pricing hook: bundle 2 free shares per program as the upsell path into paid coaching.
+11. **BIG IDEA C — Final Insights as 4-section progress report.** Replace the current generic AI summary on Day 30 with a structured document built from the user's own data.
+    - Section 1: "Saboteurs that ran me + which lost ground" — uses `user_memory` + journal frequency scan across weeks 1–4.
+    - Section 2: "Values under pressure" — Day 14 ranks vs later journal decision moments, AI maps which values got honored vs compromised.
+    - Section 3: "One phrase that captures what shifted" — AI picks the user's own words from the entry with most movement (first vs last journal). Editable — user can pick a different phrase.
+    - Section 4: "Commitments tracking" — `living` / `drifting` / `let go` statuses pulled from `user_memory` where `type = 'commitment'`.
+    - Header: 4.a #2 — "Did this program deliver what you originally wanted?" Yes / Partially / No, tied to the Day-1 goal answer.
+    - PDF export via `react-pdf` or print stylesheet. This is the artifact users take to therapy / coaching / their next job.
+12. **4.a #3** — Add `program_outcome_self_reported` column on `program_enrollments` (enum: `achieved` / `partially` / `not_achieved` / `no_response`). Capture the user's answer to the Day-30 question. This becomes the gold-standard success metric in GA4 alongside `program_completed`.
+
+### Schema migrations needed (not yet written or not yet run)
+- `supabase/coach-availability.sql` — **written, needs to be run in Supabase SQL Editor.** Creates `coach_blocked_slots` for Stefanie to mark dates she's unavailable.
+- `supabase/user-memory.sql` — **not yet written.** For BIG IDEA A.
+- `supabase/coach-inbox.sql` — **not yet written.** For BIG IDEA B (`journal_entries.shared_with_coach` column + `coach_replies` table).
+- `supabase/program-outcome-self-reported.sql` — **not yet written.** For 4.a #3.
+
+### Context notes for next Claude
+- Stefanie wants speed. Don't ask clarifying questions unless truly blocked; ship, iterate, let her react.
+- Audio is permanently gone. Do not re-introduce any voice / walk-through / LiveKit / SpeechRecognition surface anywhere, under any framing.
+- When the AI generates text, it MUST use hedged language ("this may help," "it sounds like," "one way to read it"), not declarative ("this activates," "this is why"). See CLAUDE.md voice rule.
+- Every exercise must produce an artifact the user can revisit, not just a reflection. See CLAUDE.md exercise content rules.
+- Dashboard slot picker (`/api/coach/slots`) is fabricated — flag this in every conversation where it comes up until the real Google Calendar integration ships.

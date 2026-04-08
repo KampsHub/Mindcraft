@@ -64,25 +64,37 @@ Before shipping any exercise, run these 11 checks. The full explanation of each 
 
 For the full rules (content coherence, primitive-as-pedagogy, design-from-the-screen-inward, cognitive load, primitives to watch, best practices by exercise type), see `exercise-content-rules.md`.
 
-## Visual standards
+## Design system — "Oceanic Precision / The Nautical Monolith"
 
-- All text on authenticated pages: white (`#ffffff`), not grey
-- Body text: minimum 15-16px
-- No box shadows on cards
-- Content panels: semi-transparent (`rgba(51, 51, 57, 0.5)`) with backdrop blur
-- No animated blobs when background images are active
-- Background images: static (no fade-in animation), cover entire page
+**Full source of truth**: [content/design-system.md](./design-system.md) — adopted 2026-04-08, supersedes the previous warm-SaaS aesthetic. Existing UI needs migration — tracked in `product/plans/TODO-REMAINING.md`.
 
-## Design reference targets (aspire to this level of craft)
+### Creative north star
 
-- **Headspace** — gold standard for wellness app design. Custom illustrations, warm palettes, Lottie animations that feel hand-drawn, every screen intentional.
-- **Brilliant.org** — interactive diagrams that feel alive, dark mode with vibrant accents. The visualizations ARE the product.
-- **Linear** — benchmark for UI polish. Subtle gradients, micro-animations on every state change.
-- **Duolingo** — chunked micro-lessons, immediate feedback, celebration moments, color-coded progress.
-- **Calm** — atmospheric, minimal chrome, the design disappears so the content breathes.
-- **Woebot** — conversational CBT, exercises embedded in chat flow.
+**The Nautical Monolith** — high-end editorial tension between the dark ocean and surgical maritime instruments. Structural permanence, extreme legibility, architectural depth. Large-scale typography as structure, not just content.
 
-**Sweet spot for Mindcraft**: Brilliant.org + Headspace + Linear — warm but precise, interactive but not overwhelming, delightful but not distracting.
+### Immutable rules (summary — full details in design-system.md)
+
+1. **0px border-radius everywhere.** Every corner. No exceptions. Even 2px ruins the precision.
+2. **No 1px dividers for sectioning.** Use background color shifts (`surface` → `surface-container-low` → `surface-container-high`) to create a "carved" look, not a "sketched" look.
+3. **No grey body text.** All body copy uses `tertiary` (#FFFFFF). Only `on_surface_variant` (#d0c5af) for low-priority metadata.
+4. **No standard drop shadows.** Depth comes from tonal layering (stacking `surface-container-low` hosting `surface-container-high` children). Ambient shadow only on true modals: `0px 24px 48px rgba(0,0,0,0.5)`.
+5. **Glassmorphism only for floating headers/nav rails.** `surface` at 80% opacity + 20px backdrop blur.
+6. **Primary CTAs use the gradient glint.** Linear gradient from `primary` (#ffe9b0) top-left to `primary_container` (#f2ca50) bottom-right.
+7. **Manrope typography.** Display for hero moments, labels in all caps with +0.05em tracking for instrument-panel feel.
+8. **Asymmetry is the default.** Left-align text; let imagery and data bleed off the right edge.
+
+### Quick token reference
+
+- Base layer: `#131313` (surface)
+- Void / sunken inputs: `#0e0e0e` (surface-container-lowest)
+- First card layer: `#1c1b1b` (surface-container-low)
+- Elevated cards: `#2a2a2a` (surface-container-high)
+- Primary CTA bg: `#f2ca50` with `#6b5500` text
+- Secondary CTA bg: `#2e4d5f` with `#9dbcd3` text
+- Data Rail accent: `#8FAEC4`
+- All body text: `#FFFFFF`
+
+See [design-system.md](./design-system.md) for the full token table, component specs, and the do's/don'ts.
 
 ---
 

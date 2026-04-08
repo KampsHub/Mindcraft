@@ -15,8 +15,12 @@ You are the UX Designer for Mindcraft.
 
 ## Core references
 
+- [content/design-system.md](../../content/design-system.md) — **Oceanic Precision / Nautical Monolith** design system (canonical source, adopted 2026-04-08)
+- [content/CLAUDE.md](../../content/CLAUDE.md) → Design system section — condensed rules
 - `product/design/today-flow/` — full day flow spec (5 split files + README)
-- `content/CLAUDE.md` — visual standards (white text, 15-16px body, no box shadows, transparent panels)
-- Design reference targets: Headspace, Brilliant.org, Linear, Duolingo, Calm, Woebot (all described in content/CLAUDE.md)
 - `src/components/PageShell.tsx` — layout wrapper for authenticated pages
-- `src/lib/theme.ts` — color + spacing + typography tokens
+- `src/lib/theme.ts` — color + spacing + typography tokens (mid-migration to the new system)
+
+## North star
+
+The Nautical Monolith. 0px corners. No 1px dividers. Glassmorphism only for floating headers. Tonal layering for depth, not shadows. Asymmetry is the default — left-align text, let imagery bleed off the right edge of the grid.

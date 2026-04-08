@@ -146,3 +146,60 @@ Everything below is queued from Stefanie's "just such terrible design — fix it
 - When the AI generates text, it MUST use hedged language ("this may help," "it sounds like," "one way to read it"), not declarative ("this activates," "this is why"). See CLAUDE.md voice rule.
 - Every exercise must produce an artifact the user can revisit, not just a reflection. See CLAUDE.md exercise content rules.
 - Dashboard slot picker (`/api/coach/slots`) is fabricated — flag this in every conversation where it comes up until the real Google Calendar integration ships.
+
+---
+
+## 🎨 Design system migration — "Oceanic Precision / Nautical Monolith"
+
+Adopted 2026-04-08. Canonical source: `content/design-system.md`. Replaces the previous warm Headspace/Brilliant/Linear aesthetic with a high-end editorial, dark-monolith system.
+
+### Scope of the migration
+
+Every shipped surface needs to be audited against the new system. The big changes:
+
+1. **0px border-radius everywhere** — currently shipping with rounded corners (radii.md, radii.lg, radii.full). Every `borderRadius: N` or `radii.*` token needs review.
+2. **No 1px dividers for sectioning** — current code uses `border: 1px solid ${colors.borderDefault}` on cards and panels. Replace with background tonal shifts between `surface`, `surface-container-low`, `surface-container-high`.
+3. **No grey body text** — currently mixing `textPrimary`, `textSecondary`, `textMuted`. New system: all body copy is `tertiary` (#FFFFFF); only `on_surface_variant` (#d0c5af) for low-priority metadata.
+4. **Theme token migration** — `src/lib/theme.ts` still has the old palette (coral, plum, bgDeep, textPrimary, textSecondary, textMuted, borderDefault). New tokens: `surface`, `surface-container-lowest/low/high/highest`, `surface-bright`, `primary`, `primary_container`, `on_primary_container`, `secondary`, `secondary_container`, `on_secondary_container`, `tertiary`, `on_surface_variant`, `outline_variant`.
+5. **Primary CTA gradient glint** — currently solid coral. New system: linear gradient `#ffe9b0 → #f2ca50` for "metallic instrumentation" feel.
+6. **Glassmorphism for nav/floating headers** — `surface` at 80% opacity + 20px backdrop blur.
+7. **Manrope typography** — currently using Inter/Arial. Swap to Manrope. Display hero with letter-spacing -0.02em. Labels in all caps with +0.05em tracking.
+8. **Tonal layering for depth** — remove all `box-shadow` on cards; depth comes from stacking `surface-container-low` hosting `surface-container-high` children.
+9. **Signature Data Rail component** — vertical sidebar using `secondary` (#8FAEC4) for precision metadata.
+
+### Sequencing (recommended)
+
+**Wave 1 — Theme foundation** (must land first, everything depends on it)
+- [ ] Rewrite `src/lib/theme.ts` with the new token set. Keep the old token names as aliases pointing at new values so existing code doesn't break during migration.
+- [ ] Install Manrope via `next/font` or `@fontsource/manrope`. Update `src/app/layout.tsx`.
+- [ ] Update `src/app/globals.css` with the new CSS variables.
+
+**Wave 2 — Authenticated shell** (biggest surface-area impact, user-facing every session)
+- [ ] `PageShell.tsx` — remove transparent panels, rework for tonal layering
+- [ ] `Nav.tsx` — glassmorphism (80% surface + 20px blur)
+- [ ] `BottomNav.tsx` — same
+- [ ] `FloatingActions.tsx` — sharp corners, new color tokens
+- [ ] Dashboard page — `UpsellSection`, header, greeting, cards. Remove radii, replace divider borders with tonal shifts.
+- [ ] Day flow — `TellTab`, `DoTab`, `DoneTab`, `BreathingCircle`, `WeeklyProgressPanel`. Hardest one — lots of surfaces.
+
+**Wave 3 — Exercise primitives** (24 components in `src/components/exercises/primitives/`)
+- [ ] Each primitive gets a 0px radius pass, new tokens, and the Data Rail component where metadata displays
+- [ ] This is probably 2–3 days of focused work
+
+**Wave 4 — Marketing pages** (homepage, parachute, jetstream, basecamp)
+- [ ] Full redesign: the current pages are the friendliest part of the current aesthetic and change the most. Likely needs a fresh design pass, not just token swaps.
+
+**Wave 5 — Emails**
+- [ ] The in-flight email refactor is paused at shell + welcome. Restart with the new system — serif Georgia is the OLD direction, the new system is Manrope + dark background. Confirm with Stefanie before resuming.
+
+### Decisions needed before starting
+
+- [ ] **Which wave to start?** Theme foundation is mandatory first; after that, is the priority the dashboard or the day flow?
+- [ ] **Email direction conflict**: the email refactor was paused mid-stream with a "white background, serif Georgia" direction. The new design system is "dark background, Manrope, Nautical Monolith." These are incompatible. Pick one before resuming the email work.
+- [ ] **Scope of the rewrite**: is this a token-swap migration (minimize code changes, maximize visual consistency) or a rewrite (each surface gets redesigned against the new system)?
+- [ ] **Go-live strategy**: big-bang launch when all waves are done, or ship wave by wave with a visible aesthetic inconsistency during the migration?
+
+### Out of scope (Phase 2)
+
+- The existing UI migration is a major project. It should NOT block feature work. Ship the design-system.md + CLAUDE.md pointer + subagent updates today (done), then sequence the migration against real priorities.
+- The 24 exercise primitives are the highest-risk surface because each one has custom visual logic. Audit them in Wave 3 only after theme tokens + authenticated shell are stable.

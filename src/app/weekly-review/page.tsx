@@ -1425,8 +1425,8 @@ function WeeklyReviewPage() {
                                 }}>
                                   {ex.custom_framing && (
                                     <p style={{
-                                      fontSize: 13, color: colors.textSecondary, margin: "14px 0 12px 0",
-                                      lineHeight: 1.5, fontFamily: body, fontStyle: "italic",
+                                      fontSize: 14, color: colors.textPrimary, margin: "14px 0 12px 0",
+                                      lineHeight: 1.5, fontFamily: body,
                                       paddingLeft: 12, borderLeft: `3px solid ${colors.coral}`,
                                     }}>
                                       {ex.custom_framing}

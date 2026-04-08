@@ -472,9 +472,7 @@ export default function MindfulJournalPage() {
   const [groundingResponses, setGroundingResponses] = useState(GROUNDING_LEVELS);
 
   /* Voice recording state */
-  const [micListening, setMicListening] = useState(false);
-  const micRecognitionRef = useRef<any>(null);
-  const micIntentRef = useRef(false);
+  // Mic/voice state removed — no audio surfaces.
 
   /* AI Mirror (Improvement #2) */
   const [mirrorText, setMirrorText] = useState<string | null>(null);
@@ -764,99 +762,23 @@ export default function MindfulJournalPage() {
                       `}</style>
                     </div>
 
-                    <div style={{ position: "relative" }}>
-                      <textarea
-                        value={entry}
-                        onChange={(e) => setEntry(e.target.value)}
-                        placeholder="Write freely. What's present for you right now?"
-                        rows={8}
-                        style={{
-                          width: "100%", padding: "18px 50px 18px 18px", fontSize: 15, lineHeight: 1.7,
-                          border: `1px solid ${colors.borderDefault}`, borderRadius: 14,
-                          resize: "vertical", outline: "none", boxSizing: "border-box",
-                          fontFamily: body, backgroundColor: colors.bgInput,
-                          color: colors.textPrimary, transition: "border-color 0.2s",
-                        }}
-                        onFocus={(e) => { e.target.style.borderColor = colors.coral; }}
-                        onBlur={(e) => { e.target.style.borderColor = colors.borderDefault; }}
-                        disabled={loading}
-                      />
-                      {/* Voice input button */}
-                      {!loading && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (micListening) {
-                              // User explicitly stops — clear intent
-                              micIntentRef.current = false;
-                              if (micRecognitionRef.current) {
-                                try { micRecognitionRef.current.stop(); } catch { /* */ }
-                                micRecognitionRef.current = null;
-                              }
-                              setMicListening(false);
-                              return;
-                            }
-                            try {
-                              const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-                              if (!SpeechRecognition) { alert("Voice not supported in this browser"); return; }
-                              const recognition = new SpeechRecognition();
-                              recognition.continuous = true;
-                              recognition.interimResults = true;
-                              recognition.lang = "en-US";
-                              recognition.onresult = (event: any) => {
-                                for (let i = event.resultIndex; i < event.results.length; i++) {
-                                  if (event.results[i].isFinal) {
-                                    const transcript = event.results[i][0].transcript;
-                                    setEntry((prev) => prev ? prev + " " + transcript : transcript);
-                                    const detected = autoSelectFromText(transcript);
-                                    if (detected > 0) {
-                                      showToast(`Auto-detected ${detected} feeling${detected !== 1 ? "s" : ""} from your voice entry.`);
-                                    }
-                                  }
-                                }
-                              };
-                              recognition.onerror = () => { /* handled by onend */ };
-                              recognition.onend = () => {
-                                // Auto-restart if user hasn't explicitly stopped
-                                if (micIntentRef.current && micRecognitionRef.current) {
-                                  try { recognition.start(); return; } catch { /* fall through */ }
-                                }
-                                setMicListening(false);
-                                micRecognitionRef.current = null;
-                              };
-                              micIntentRef.current = true;
-                              micRecognitionRef.current = recognition;
-                              recognition.start();
-                              setMicListening(true);
-                            } catch { /* ignore */ }
-                          }}
-                          title={micListening ? "Stop recording" : "Use voice input"}
-                          style={{
-                            position: "absolute", right: 12, bottom: 12,
-                            width: 36, height: 36, borderRadius: "50%",
-                            border: "none",
-                            backgroundColor: micListening ? colors.error : colors.bgElevated,
-                            color: micListening ? colors.textPrimary : colors.textMuted,
-                            cursor: "pointer",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            boxShadow: micListening ? `0 0 16px ${colors.errorWash}` : "none",
-                            transition: "all 0.2s",
-                          }}
-                        >
-                          {micListening ? (
-                            <svg width={14} height={14} viewBox="0 0 24 24" fill={colors.textPrimary}>
-                              <rect x="6" y="6" width="12" height="12" rx="2" />
-                            </svg>
-                          ) : (
-                            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                              <line x1="12" x2="12" y1="19" y2="22" />
-                            </svg>
-                          )}
-                        </button>
-                      )}
-                    </div>
+                    {/* Voice input removed per testing feedback "REMOVE ANY FORM OF AUDIO". */}
+                    <textarea
+                      value={entry}
+                      onChange={(e) => setEntry(e.target.value)}
+                      placeholder="Write freely. What's present for you right now?"
+                      rows={8}
+                      style={{
+                        width: "100%", padding: "18px", fontSize: 15, lineHeight: 1.7,
+                        border: `1px solid ${colors.borderDefault}`, borderRadius: 14,
+                        resize: "vertical", outline: "none", boxSizing: "border-box",
+                        fontFamily: body, backgroundColor: colors.bgInput,
+                        color: colors.textPrimary, transition: "border-color 0.2s",
+                      }}
+                      onFocus={(e) => { e.target.style.borderColor = colors.coral; }}
+                      onBlur={(e) => { e.target.style.borderColor = colors.borderDefault; }}
+                      disabled={loading}
+                    />
 
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
                       <span style={{ fontSize: 12, color: colors.textMuted, fontFamily: body }}>

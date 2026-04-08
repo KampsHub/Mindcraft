@@ -9,7 +9,32 @@ import { extractMemories, getRelevantMemories, formatMemoriesForPrompt } from "@
 import { STANDARD_VOICE } from "@/lib/coaching-voice";
 import { sendServerEvent, syntheticClientId } from "@/lib/ga-measurement-protocol";
 
-const PROCESS_SYSTEM_PROMPT = `You are the coaching companion for a structured development program. You receive:
+const PROCESS_SYSTEM_PROMPT = `## VOICE RULE — HARD CONSTRAINT (read this first)
+
+You are a coach, not an authority. The user is the expert on their own experience. You offer a lens, not a diagnosis. Every observation, pattern, or interpretation you write MUST use hedged language.
+
+BANNED patterns — never write any of these, anywhere in your JSON output:
+- "The pattern is..." / "The pattern here is..." / "Your pattern is..."
+- "You are [doing/feeling/experiencing X]" as a declaration
+- "This activates the prefrontal cortex" / "This rewires..." / "This trains your brain to..."
+- "Research shows..." / "Studies prove..." / "Science has shown..."
+- "What's really happening here is..." / "The truth is..."
+- Any bare neuroscience claim without a named researcher or institution
+
+REQUIRED patterns — use these instead:
+- "It sounds like..." / "It looks like..." / "One way to read this is..."
+- "You might be noticing..." / "It could be that..."
+- "This may help..." / "This can give your nervous system a chance to..."
+- "Approaches like this one have shown in other contexts that..."
+- Name specific researchers when making neuroscience claims: "Matthew Lieberman's research at UCLA suggests..." / "Peter Gollwitzer at NYU found..."
+
+This rule applies to EVERY field in your JSON output — reading, pattern_challenge.description, pattern_challenge.pattern, why_now, why_this_works, coaching_questions, reframe, sequence_suggestion. No exceptions.
+
+If you catch yourself writing a declarative sentence about the user's inner state, stop and rewrite it with a hedge. "You're protecting yourself" → "It sounds like there might be some protection happening here."
+
+---
+
+You are the coaching companion for a structured development program. You receive:
 1. Today's free-flow journal entry
 2. The full frameworks library (350+ exercises across 5 modalities)
 3. Recent exercise history (to avoid repeats)
@@ -370,6 +395,37 @@ Analyze the journal content and select the best overflow exercises for this clie
         { status: 500 }
       );
     }
+
+    // Voice post-processor guard — soften any declarative neuroscience /
+    // authority-voice phrases that slipped past the system prompt. This is a
+    // deterministic rewrite layer so prompt drift can't break the voice rule.
+    const hedgePhrase = (s: string | undefined): string | undefined => {
+      if (!s || typeof s !== "string") return s;
+      let out = s;
+      // Declarative neuroscience / mechanism claims
+      out = out.replace(/\bThis activates the prefrontal cortex\b/gi, "This may help your prefrontal cortex get ahead of the automatic response");
+      out = out.replace(/\bThis rewires\b/gi, "This may help reshape");
+      out = out.replace(/\bThis trains your brain to\b/gi, "This may help train your brain to");
+      out = out.replace(/\b[Rr]esearch shows\b/gi, "research suggests");
+      out = out.replace(/\b[Ss]tudies prove\b/gi, "studies suggest");
+      out = out.replace(/\b[Ss]cience has shown\b/gi, "research in this area suggests");
+      // Declarative pattern statements
+      out = out.replace(/^The pattern is /g, "One way to read the pattern is ");
+      out = out.replace(/^Your pattern is /g, "One pattern that might be showing up is ");
+      out = out.replace(/^What's really happening here is /gi, "One way to read what's happening is ");
+      return out;
+    };
+    const walk = (obj: unknown): unknown => {
+      if (typeof obj === "string") return hedgePhrase(obj) ?? obj;
+      if (Array.isArray(obj)) return obj.map(walk);
+      if (obj && typeof obj === "object") {
+        const next: Record<string, unknown> = {};
+        for (const [k, v] of Object.entries(obj)) next[k] = walk(v);
+        return next;
+      }
+      return obj;
+    };
+    result = walk(result) as typeof result;
 
     // Extract memories from this session (non-blocking, uses Haiku)
     extractMemories(user.id, enrollmentId, dayNumber, journalContent, textBlock.text).catch((err) => console.warn("Memory extraction failed:", err));

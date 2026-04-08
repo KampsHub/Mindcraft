@@ -462,7 +462,7 @@ export default function DoTab({
               </div>
               {coachingQuestions.map((q, i) => (
                 <div key={i} style={{ marginBottom: i < coachingQuestions.length - 1 ? 20 : 0 }}>
-                  <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 10px 0", fontStyle: "italic" }}>
+                  <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 10px 0" }}>
                     {q}
                   </p>
                   <textarea
@@ -532,15 +532,15 @@ export default function DoTab({
               <p style={{ ...textPreset.body, color: colors.textPrimary, margin: "0 0 4px 0", fontWeight: 600 }}>
                 {patternChallenge.challenge}
               </p>
-              <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0, fontStyle: "italic" }}>
-                Counter-move: {patternChallenge.counter_move}
+              <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
+                <strong>Counter-move:</strong> {patternChallenge.counter_move}
               </p>
             </div>
           )}
 
           {/* Sequence suggestion */}
           {isRevealed("reading") && sequenceSuggestion && (
-            <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: `0 0 ${space[6]}px 0`, fontStyle: "italic" }}>
+            <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: `0 0 ${space[6]}px 0` }}>
               {sequenceSuggestion}
             </p>
           )}
@@ -759,7 +759,7 @@ export default function DoTab({
 
               <p style={{
                 ...textPreset.secondary, color: colors.coral, fontWeight: 600,
-                fontStyle: "italic", margin: "0 0 16px 0",
+                margin: "0 0 16px 0",
               }}>
                 {frameworkAnalysis.reflection_prompt}
               </p>

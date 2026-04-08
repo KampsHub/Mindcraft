@@ -1,0 +1,89 @@
+# Content — Voice & Tone
+
+Loaded when Claude is writing or reviewing user-facing copy, AI prompts, exercise framing, or any text that reaches the user.
+
+## Files in this folder
+
+- **`coaching-style-guide.md`** — full voice canon: rules, principles, "never say" list, system prompt patterns, crisis detection protocol. Single source of truth for tone.
+- **`copy-review-tone-guide.md`** — UX copy strategy for users at breaking points (laid off, PIP, overwhelmed).
+- **`exercise-content-rules.md`** — the full pedagogical ruleset for exercise design. Dense. Loaded only when editing exercises. Referenced by the `exercise-design` skill.
+
+## Voice — core rules
+
+- Warm but not sweet. Direct but not cold.
+- Talk TO the person ("you"), never ABOUT them ("the client")
+- Quote the user's actual words — never fabricate or paraphrase quotes
+- Match their emotional register
+
+### Coach voice, not authority voice (HARD RULE)
+
+Don't tell the user what happened to them or why they feel what they feel. Never state interpretations as fact. Use language that invites rather than declares: "it sounds like," "maybe," "could it be that," "you might notice," "this may help you…" The user is the expert on their own experience — the coach offers a lens, not a diagnosis.
+
+- **Wrong:** "That reaction landed so hard because what she said and what you heard got tangled together."
+- **Right:** "That reaction might have landed so hard because what she said and what you heard got tangled together."
+- **Wrong:** "Naming the pattern activates the prefrontal cortex and reduces the automatic response."
+- **Right:** "Naming a pattern may help your prefrontal cortex get ahead of the automatic response — Matthew Lieberman's research at UCLA suggests that putting words to emotional experiences can reduce their intensity."
+
+### Neuroscience & research claims
+
+Users are often in crisis — overwhelmed, short on time, looking for relief. They want to understand WHY this exercise is relevant NOW and HOW it will help. Connecting to how their brain and nervous system get relief is powerful ("this may help you think more clearly," "this can give your nervous system a chance to settle"). But every claim needs backing:
+
+- If you can name the researcher or institution, do it: "Jon Kabat-Zinn's MBSR research at UMass Medical Center suggests…"
+- If you can't name the source, use hedged language: "mindfulness approaches like this one have shown in other contexts that…" or "this type of practice may help…"
+- Never state neuroscience mechanisms as fact without attribution. "The prefrontal cortex gets to do its job" is a claim — back it up or soften it.
+
+## Journal processing (`/api/process-journal`)
+
+- Reading: 3-5 sentences MAX, not paragraphs
+- Only quote words the user ACTUALLY wrote
+- No clinical labels, diagnostic language, or motivational filler
+
+## Prompts & exercises (short list — full rules in `exercise-content-rules.md`)
+
+- Every prompt that references a concept (e.g. "seven disruptions") must include context explaining what it means
+- Seed prompts support a `context` field — use it for any concept-heavy questions
+- Days 1-3 are onboarding/intake — label exercises as "Today's Exercise" not "Coaching Plan"
+- Day 4+ uses "From Your Coaching Plan" and "Matched to Your Journal"
+- Never use jargon like "overflow" in user-facing copy
+
+### Exercise content — the 11-item checklist
+
+Before shipping any exercise, run these 11 checks. The full explanation of each lives in `exercise-content-rules.md`; this is the checklist:
+
+1. What is the **specific learning point** in one sentence?
+2. Does `whyThis` **teach** the framework, not just mention it?
+3. Does the primitive **deliver the point**, or just create busywork?
+4. Does the instruction describe the **outcome**, not just the mechanic?
+5. Does `whyThis` use the user's **actual words** from the scenario?
+6. Does `prePopulated` data come from the **scenario**, not a template?
+7. Does the exercise **end with the user having something new** (reframe, skill, pattern, plan)?
+8. If the exercise promises something, does the **primitive actually deliver it**?
+9. For named frameworks (Gottman, NVC, IFS, ACT, DBT, Kegan & Lahey, Polyvagal), does it **teach the framework**?
+10. Were the exercises designed **back-to-front** — payoff first, then scenario?
+11. **Did you render the exercise in the preview and look at it** before writing content? Never write in isolation from the primitive's rendered state.
+
+For the full rules (content coherence, primitive-as-pedagogy, design-from-the-screen-inward, cognitive load, primitives to watch, best practices by exercise type), see `exercise-content-rules.md`.
+
+## Visual standards
+
+- All text on authenticated pages: white (`#ffffff`), not grey
+- Body text: minimum 15-16px
+- No box shadows on cards
+- Content panels: semi-transparent (`rgba(51, 51, 57, 0.5)`) with backdrop blur
+- No animated blobs when background images are active
+- Background images: static (no fade-in animation), cover entire page
+
+## Design reference targets (aspire to this level of craft)
+
+- **Headspace** — gold standard for wellness app design. Custom illustrations, warm palettes, Lottie animations that feel hand-drawn, every screen intentional.
+- **Brilliant.org** — interactive diagrams that feel alive, dark mode with vibrant accents. The visualizations ARE the product.
+- **Linear** — benchmark for UI polish. Subtle gradients, micro-animations on every state change.
+- **Duolingo** — chunked micro-lessons, immediate feedback, celebration moments, color-coded progress.
+- **Calm** — atmospheric, minimal chrome, the design disappears so the content breathes.
+- **Woebot** — conversational CBT, exercises embedded in chat flow.
+
+**Sweet spot for Mindcraft**: Brilliant.org + Headspace + Linear — warm but precise, interactive but not overwhelming, delightful but not distracting.
+
+---
+
+Back to root: [CLAUDE.md](../CLAUDE.md)

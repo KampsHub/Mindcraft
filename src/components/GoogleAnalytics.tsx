@@ -11,7 +11,7 @@ import Script from "next/script";
  * Usage: Add <GoogleAnalytics /> to your root layout.
  *
  * Fire events via the trackEvent / setUserId / setUserProperties helpers below.
- * The full event catalog lives in docs/analytics-events.md.
+ * The full event catalog lives in analytics/analytics-events.md.
  */
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;

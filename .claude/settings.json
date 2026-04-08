@@ -1,0 +1,17 @@
+{
+  "$schema": "https://claude.com/schema/code-settings.json",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/tsc-gate.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,157 @@
+# Mindcraft Feature Index
+#
+# Structured map of every shipped product area, its current status, the code
+# that implements it, the docs that describe it, and the skills Claude should
+# invoke when working on it.
+#
+# This file gives Claude a structured shortcut so it doesn't have to grep
+# prose to understand the product state. Keep it current.
+
+version: 1
+updated: 2026-04-08
+
+features:
+
+  parachute_program:
+    status: live
+    description: 30-day layoff recovery program
+    slug: parachute
+    owner: Stefanie
+    docs:
+      - product/prd/PRD-CURRENT-STATE.md
+    code_refs:
+      - src/app/parachute/page.tsx
+      - scripts/seed-parachute-program.ts
+    skills: [exercise-design, coaching-voice]
+
+  jetstream_program:
+    status: live
+    description: 30-day PIP navigation program
+    slug: jetstream
+    owner: Stefanie
+    docs:
+      - product/prd/PRD-CURRENT-STATE.md
+    code_refs:
+      - src/app/jetstream/page.tsx
+      - scripts/seed-jetstream-program.ts
+    skills: [exercise-design, coaching-voice]
+
+  basecamp_program:
+    status: live
+    description: 30-day new role confidence program
+    slug: basecamp
+    owner: Stefanie
+    docs:
+      - product/prd/PRD-CURRENT-STATE.md
+    code_refs:
+      - src/app/basecamp/page.tsx
+      - scripts/seed-basecamp-program.ts
+    skills: [exercise-design, coaching-voice]
+
+  enneagram_upsell:
+    status: live
+    description: "IEQ9 assessment + 1-hour debrief upsell; post-payment routes through /enneagram/book to public Google appointment schedule"
+    owner: Stefanie
+    docs:
+      - product/prd/PRD-CURRENT-STATE.md
+    code_refs:
+      - src/app/dashboard/UpsellSection.tsx
+      - src/app/api/coach/slots/route.ts
+      - src/app/api/checkout/enneagram/route.ts
+      - src/app/enneagram/book/page.tsx
+      - src/app/enneagram/welcome/page.tsx
+    skills: [coaching-voice]
+    known_issues:
+      - "Slot picker uses hardcoded 8/9:30/11/12:30/14/15:30 PT grid matching her real Google Appointment Schedule. No live sync — update SLOT_TIMES constants if the schedule changes."
+      - "Deep-link query param for pre-filling a slot on Google's page is not publicly documented; customer picks again on Google's page. One extra click."
+
+  coaching_upsell:
+    status: live
+    description: 1:1 Coaching upsell with identity-threat framing
+    owner: Stefanie
+    docs:
+      - product/prd/PRD-CURRENT-STATE.md
+    code_refs:
+      - src/app/dashboard/UpsellSection.tsx
+      - src/app/apply/page.tsx
+    skills: [coaching-voice]
+
+  day_flow:
+    status: live
+    description: "Daily Tell/Do/Done loop: journal → AI processing → exercises → summary"
+    owner: Stefanie
+    docs:
+      - product/design/today-flow/
+    code_refs:
+      - src/app/day/[dayNumber]/page.tsx
+      - src/app/day/[dayNumber]/TellTab.tsx
+      - src/app/day/[dayNumber]/DoTab.tsx
+      - src/app/day/[dayNumber]/DoneTab.tsx
+      - src/app/day/[dayNumber]/useDaySession.ts
+    skills: [exercise-design, coaching-voice, hedged-voice-audit]
+
+  journal_processing:
+    status: live
+    description: "AI journal reader that produces state_analysis, pattern_challenge, coaching_questions, reframe, overflow_exercises"
+    owner: Stefanie
+    code_refs:
+      - src/app/api/process-journal/route.ts
+    skills: [coaching-voice, hedged-voice-audit]
+    known_issues:
+      - "Voice drift to declarative neuroscience claims historically a problem — mitigated by the deterministic post-processor guard in the route."
+
+  weekly_progress_panel:
+    status: live
+    description: "Inline goals + insights panel shown on Day 7/14/21/30 instead of a separate /weekly-review page navigation"
+    code_refs:
+      - src/components/WeeklyProgressPanel.tsx
+      - src/app/day/[dayNumber]/page.tsx
+    skills: [coaching-voice]
+
+  dashboard:
+    status: live
+    description: "Authenticated dashboard with greeting, program card(s), upsell section, and floating action column"
+    code_refs:
+      - src/app/dashboard/page.tsx
+      - src/app/dashboard/UpsellSection.tsx
+      - src/components/FloatingActions.tsx
+    skills: [coaching-voice]
+
+  intake:
+    status: live
+    description: "Multi-step intake flow: attribution → program → intake → consent → complete"
+    code_refs:
+      - src/app/intake/page.tsx
+    skills: [coaching-voice]
+
+  analytics_instrumentation:
+    status: live
+    description: "GA4 event instrumentation via client trackEvent + server sendServerEvent (Measurement Protocol)"
+    docs:
+      - analytics/analytics-events.md
+      - analytics/analytics-tracking.md
+    code_refs:
+      - src/components/GoogleAnalytics.tsx
+      - src/lib/ga-measurement-protocol.ts
+
+  user_memory:
+    status: schema-only
+    description: "BIG IDEA A: journal that remembers. Schema exists; pipeline wire + backfill deferred."
+    docs:
+      - product/plans/TODO-REMAINING.md
+    code_refs:
+      - supabase/user-memory.sql
+
+  coach_inbox:
+    status: schema-only
+    description: "BIG IDEA B: opt-in sharing of journal entries with Stefanie + written coach replies. Schema exists; UI deferred."
+    docs:
+      - product/plans/TODO-REMAINING.md
+    code_refs:
+      - supabase/coach-inbox.sql
+
+  final_insights_report:
+    status: planned
+    description: "BIG IDEA C: Day 30 final insights as 4-section progress report (saboteurs / values / phrase / commitments) + PDF export"
+    docs:
+      - product/plans/TODO-REMAINING.md

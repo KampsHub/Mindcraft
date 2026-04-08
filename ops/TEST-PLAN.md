@@ -650,3 +650,69 @@ After you complete payment → signup → intake, I verify every table:
 6. Test edge cases (section 9)
 7. Test visual/UX (section 8) — 🤖 can do most of this independently
 8. Data audit (section 7) — 🤖 after you've completed the happy path
+
+---
+
+## Advancing a Test Account Through the Program
+
+Fast-forward any test account through days of the program without
+completing each one manually. Useful for testing Day 7 (weekly progress
+panel), Day 14/21 (mid-program insights), or Day 30 (program completion
++ outcome self-report).
+
+### Canonical script
+
+`scripts/advance-stefanie-to-day-7.sql` — hardcoded to
+`stefanie.kamps@gmail.com` and Day 7 as the default example. Copy and
+adjust the email + target day for other scenarios.
+
+### How to run
+
+1. Open Supabase → SQL Editor → New query
+2. Paste the contents of `scripts/advance-stefanie-to-day-7.sql`
+3. Adjust the email in the `WHERE u.email = '…'` line if needed
+4. Adjust the target day: change `generate_series(2, 6)` and `current_day = 7`
+5. Click **Run**
+6. Reload the dashboard in the test account — the target day is now active
+
+### What the script does
+
+- Finds the most recent active enrollment for the target email
+- Inserts `daily_sessions` rows for every skipped day with placeholder
+  content (journal, themes, analysis, summary, completed_steps `[1,2,3,4,5]`,
+  `day_rating = 4`, `completed_at` set to past timestamps)
+- Bumps `program_enrollments.current_day` to the target day
+- Uses `ON CONFLICT DO UPDATE` so it's safe to re-run
+- Wraps in `BEGIN; … COMMIT;` so it's atomic
+
+### Dry-run first
+
+Change the last line from `COMMIT;` to `ROLLBACK;` to see what it would
+do without persisting.
+
+### Reversing
+
+```sql
+DELETE FROM public.daily_sessions
+ WHERE enrollment_id = '<enrollment_id>'
+   AND day_number BETWEEN <lower> AND <upper>;
+
+UPDATE public.program_enrollments
+   SET current_day = <original_day>
+ WHERE id = '<enrollment_id>';
+```
+
+### Caveats
+
+- The placeholder content doesn't trigger the AI pipeline, so any
+  feature that reads `step_3_analysis` or `step_5_summary` and expects
+  real AI output will see the placeholder strings. Fine for visual
+  testing, not for testing downstream AI behavior.
+- The `weekly_reviews` table is NOT populated by this script, so the
+  WeeklyProgressPanel on Day 7/14/21/30 will show goals but no
+  week-over-week insights. If you need insights too, generate a weekly
+  review through the normal flow on Day 7 or seed the `weekly_reviews`
+  table separately.
+- RLS policies require the `client_id` column to match `auth.uid()`
+  when inserting via the client SDK, but the SQL Editor runs as a
+  privileged role and bypasses RLS. This is the intended dev workflow.

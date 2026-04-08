@@ -609,6 +609,22 @@ export default function DoTab({
           );
         })()}
 
+        {/* ─── PRACTICE section header ─── */}
+        {(programDay.coaching_exercises && programDay.coaching_exercises.length > 0) || overflowExercises.length > 0 ? (
+          <div style={{ marginBottom: space[4], marginTop: space[5] }}>
+            <p style={{
+              fontFamily: display, fontSize: 11, fontWeight: 700,
+              letterSpacing: "0.14em", textTransform: "uppercase",
+              color: colors.coral, margin: "0 0 4px 0",
+            }}>
+              Practice
+            </p>
+            <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: 0, opacity: 0.85 }}>
+              Exercises chosen for where you are today.
+            </p>
+          </div>
+        ) : null}
+
         {/* Coaching Plan Exercises (Required) */}
         {programDay.coaching_exercises && programDay.coaching_exercises.length > 0 && (
           <div style={{ marginBottom: space[6] }}>
@@ -705,6 +721,22 @@ export default function DoTab({
               </motion.div>
             ))}
             </StaggerContainer>
+          </div>
+        )}
+
+        {/* ─── LEARN section header ─── */}
+        {(loadingFramework || frameworkAnalysis) && (
+          <div style={{ marginBottom: space[4], marginTop: space[5] }}>
+            <p style={{
+              fontFamily: display, fontSize: 11, fontWeight: 700,
+              letterSpacing: "0.14em", textTransform: "uppercase",
+              color: colors.coral, margin: "0 0 4px 0",
+            }}>
+              Learn
+            </p>
+            <p style={{ ...textPreset.secondary, color: colors.textPrimary, margin: 0, opacity: 0.85 }}>
+              A framework that might help you read what&rsquo;s happening.
+            </p>
           </div>
         )}
 

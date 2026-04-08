@@ -636,7 +636,18 @@ export default function DoTab({
                 onComplete={async (responses, rating) =>
                   await handleExerciseCompleteTracked(ex.name, "coaching_plan", undefined, responses, rating, ex.custom_framing)
                 }
-                onPark={() => {}}
+                onPark={async () => {
+                  // Persist the park as an exercise_completions row tagged
+                  // _parked so the dashboard "Parked" tab can find it.
+                  const name = (ex as { name?: string; framework_name?: string }).name
+                    ?? (ex as { name?: string; framework_name?: string }).framework_name
+                    ?? "exercise";
+                  const type = (ex as { framework_name?: string }).framework_name ? "overflow" : "coaching_plan";
+                  await handleExerciseCompleteTracked(
+                    name, type, undefined, { _parked: "true" }, null,
+                    (ex as { custom_framing?: string }).custom_framing,
+                  );
+                }}
                 onSkip={() => handleExerciseCompleteTracked(ex.name, "coaching_plan", undefined, { _skipped: "true" }, null, ex.custom_framing)}
               />
               </motion.div>
@@ -677,7 +688,18 @@ export default function DoTab({
                     responses, rating, ex.custom_framing, ex.framework_id
                   )
                 }
-                onPark={() => {}}
+                onPark={async () => {
+                  // Persist the park as an exercise_completions row tagged
+                  // _parked so the dashboard "Parked" tab can find it.
+                  const name = (ex as { name?: string; framework_name?: string }).name
+                    ?? (ex as { name?: string; framework_name?: string }).framework_name
+                    ?? "exercise";
+                  const type = (ex as { framework_name?: string }).framework_name ? "overflow" : "coaching_plan";
+                  await handleExerciseCompleteTracked(
+                    name, type, undefined, { _parked: "true" }, null,
+                    (ex as { custom_framing?: string }).custom_framing,
+                  );
+                }}
                 onSkip={() => handleExerciseCompleteTracked(ex.framework_name, "overflow", ex.modality, { _skipped: "true" }, null, ex.custom_framing, ex.framework_id)}
               />
               </motion.div>

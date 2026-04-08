@@ -117,6 +117,17 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
         }));
       }
     }
+
+    // Split out explicitly-parked rows (responses._parked === "true").
+    // These are completed-table rows but belong in the Parked tab.
+    const explicitlyParked = completed.filter((e) => {
+      const r = (e as { responses?: Record<string, unknown> }).responses;
+      return r && r._parked === "true";
+    });
+    completed = completed.filter((e) => {
+      const r = (e as { responses?: Record<string, unknown> }).responses;
+      return !(r && r._parked === "true");
+    });
     setCompletedExercises(completed);
 
     const { data: programDays } = await supabase
@@ -128,14 +139,24 @@ export default function ExercisesSection({ user, enrollment }: ExercisesSectionP
 
     if (programDays) {
       const completedNames = new Set(completed.map((e) => e.framework_name));
+      // Also pull names of explicitly-parked rows so we surface them as parked.
+      const explicitlyParkedNames = new Set(explicitlyParked.map((e) => e.framework_name));
       const parked: typeof parkedExercises = [];
+      const seen = new Set<string>();
 
       (programDays as ProgramDay[]).forEach((pd) => {
-        // Only show parked exercises for days the user actually completed
-        if (!completedDays.has(pd.day_number)) return;
+        // Show parked exercises from any day past the user's current_day,
+        // not only days with completed_at — fixes the bug where explicitly
+        // parked exercises never appeared in the Parked tab.
         if (pd.coaching_exercises && Array.isArray(pd.coaching_exercises)) {
           pd.coaching_exercises.forEach((ce) => {
-            if (!completedNames.has(ce.name)) {
+            const isExplicit = explicitlyParkedNames.has(ce.name);
+            const isUncompleted =
+              completedDays.has(pd.day_number) && !completedNames.has(ce.name) && !isExplicit;
+            if (isExplicit || isUncompleted) {
+              const key = `${pd.day_number}__${ce.name}`;
+              if (seen.has(key)) return;
+              seen.add(key);
               parked.push({
                 name: ce.name,
                 day_number: pd.day_number,

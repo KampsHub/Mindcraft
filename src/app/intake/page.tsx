@@ -270,15 +270,46 @@ export default function IntakePage() {
             ))}
           </div>
 
+          {/* Friendly intro card so the user feels welcomed before the AI flow.
+              Per testing feedback: "Add something in the Intake section that
+              makes the user feel welcome. They basically immediately get into
+              an experience with an AI." */}
+          <div style={{
+            padding: "20px 22px", marginBottom: 24,
+            borderRadius: 14,
+            backgroundColor: colors.bgSurface,
+            border: `1px solid ${colors.borderDefault}`,
+          }}>
+            <p style={{
+              fontFamily: display, fontSize: 11, fontWeight: 700,
+              letterSpacing: "0.12em", textTransform: "uppercase",
+              color: colors.coral, margin: "0 0 6px 0",
+            }}>
+              Welcome
+            </p>
+            <p style={{
+              fontFamily: body, fontSize: 15, color: colors.textPrimary,
+              lineHeight: 1.65, margin: "0 0 6px 0",
+            }}>
+              Glad you&rsquo;re here. The next few questions help us shape your program around <em>you</em> — your situation, what you want, what you&rsquo;ve already tried.
+            </p>
+            <p style={{
+              fontFamily: body, fontSize: 14, color: colors.textPrimary,
+              lineHeight: 1.65, margin: 0, opacity: 0.85,
+            }}>
+              No right answers. Take your time. You can always come back and edit later.
+            </p>
+          </div>
+
           <h1 style={{
-            fontFamily: display, fontSize: 32, fontWeight: 700,
+            fontFamily: display, fontSize: 30, fontWeight: 700,
             letterSpacing: "-0.03em", color: colors.textPrimary, margin: "0 0 8px 0",
           }}>
             Where did you hear about us?
           </h1>
           <p style={{
-            fontSize: 15, color: colors.textMuted, marginBottom: 28,
-            lineHeight: 1.6, fontFamily: body,
+            fontSize: 15, color: colors.textPrimary, marginBottom: 28,
+            lineHeight: 1.6, fontFamily: body, opacity: 0.85,
           }}>
             Just curious — helps us know what&apos;s working.
           </p>

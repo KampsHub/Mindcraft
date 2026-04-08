@@ -204,7 +204,7 @@ function EnneagramCard({ program }: { program: string }) {
         color: colors.textPrimary, margin: "0 0 10px 0",
         letterSpacing: "-0.01em",
       }}>
-        Add the Enneagram
+        Personality Deep Dive
       </p>
       <p style={{
         fontFamily: body, fontSize: 14, color: colors.textPrimary,

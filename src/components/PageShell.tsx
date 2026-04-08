@@ -79,38 +79,21 @@ export default function PageShell({
   maxWidth = 720,
   showBlobs = true,
   blobVariant = "default",
-  showBgImage = false,
+  // showBgImage prop is now ignored — bg images removed per testing feedback
+  // ("remove the light grey background"). All pages render on bgDeep.
+  showBgImage: _ignoredBgImageProp = false,
   programSlug,
 }: PageShellProps) {
   const positions = blobPositions[blobVariant];
 
-  // Pick a background image — rotates daily, computed immediately to avoid flash
-  const bgImage = showBgImage ? (() => {
-    const pool = PROGRAM_BG_IMAGES[programSlug || "parachute"] || PROGRAM_BG_IMAGES.parachute;
-    const now = new Date();
-    const localDay = now.getFullYear() * 366 + now.getMonth() * 31 + now.getDate();
-    return pool[localDay % pool.length];
-  })() : null;
+  // Background images permanently disabled per testing feedback.
+  void _ignoredBgImageProp;
+  void programSlug;
 
   return (
     <div style={{ backgroundColor: colors.bgDeep, minHeight: "100vh", fontFamily: body, position: "relative", overflow: "hidden" }}>
-      {/* Background image */}
-      {showBgImage && bgImage && (
-        <div
-          style={{
-            position: "absolute",
-            top: 0, left: 0, right: 0, bottom: 0,
-            backgroundImage: `url(${bgImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center top",
-            backgroundRepeat: "no-repeat",
-            pointerEvents: "none",
-            zIndex: 0,
-          }}
-        />
-      )}
 
-      {showBlobs && !showBgImage && (
+      {showBlobs && (
         <>
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
@@ -139,20 +122,7 @@ export default function PageShell({
       <div style={{ position: "relative", zIndex: 1 }}>
         <Nav />
         <div className="page-content-mobile page-shell-inner" style={{ maxWidth, margin: "0 auto", padding: `${space[7]}px ${space[5]}px 80px`, position: "relative" }}>
-          {showBgImage ? (
-            <div className="content-panel-inner" style={{
-              backgroundColor: "rgba(51, 51, 57, 0.88)",
-              borderRadius: radii.lg,
-              padding: `${space[6]}px ${space[5]}px`,
-              border: `1px solid rgba(255, 255, 255, 0.06)`,
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-            }}>
-              {children}
-            </div>
-          ) : (
-            children
-          )}
+          {children}
         </div>
 
       </div>
@@ -161,7 +131,7 @@ export default function PageShell({
       <FloatingActions />
 
       {/* Footer */}
-      <footer style={{ padding: `${space[7]}px ${space[5]}px`, borderTop: showBgImage ? "none" : `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>
+      <footer style={{ padding: `${space[7]}px ${space[5]}px`, borderTop: `1px solid ${colors.borderSubtle}`, position: "relative", zIndex: 1 }}>
         <div style={{
           maxWidth, margin: "0 auto",
           display: "flex", alignItems: "center", justifyContent: "center",

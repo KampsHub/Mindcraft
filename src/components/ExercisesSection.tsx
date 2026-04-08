@@ -58,8 +58,8 @@ const modalityColors: Record<string, { bg: string; text: string; label: string }
 
 const typeLabels: Record<string, { label: string; color: string }> = {
   coaching_plan: { label: "Coaching Plan", color: colors.coral },
-  overflow: { label: "Matched to Journal", color: "#6366f1" },
-  framework_analysis: { label: "Framework", color: "#3b82f6" },
+  overflow: { label: "Matched to Journal", color: colors.coral },
+  framework_analysis: { label: "Framework", color: colors.coral },
 };
 
 interface ExercisesSectionProps {

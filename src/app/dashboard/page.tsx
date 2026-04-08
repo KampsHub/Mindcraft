@@ -11,7 +11,6 @@ import ProgramCard from "./ProgramCard";
 import CloseEarlyCard from "@/components/CloseEarlyCard";
 import UpsellSection from "./UpsellSection";
 import { colors, fonts, space, text, radii } from "@/lib/theme";
-import ExercisesSection from "@/components/ExercisesSection";
 import BottomNav from "@/components/BottomNav";
 import AnalyticsSessionBoundary from "@/components/AnalyticsSessionBoundary";
 import { trackEvent } from "@/components/GoogleAnalytics";
@@ -616,20 +615,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* ── Exercises section (hidden until first day is completed) ── */}
-        {enrollments.length > 0 && enrollments[0].enrollment.current_day >= 1 && (
-          <FadeIn preset="fade" delay={0.12} triggerOnMount>
-            <ExercisesSection
-              user={user}
-              enrollment={enrollments[0]?.enrollment ? {
-                id: enrollments[0].enrollment.id,
-                program_id: enrollments[0].enrollment.program_id,
-                current_day: enrollments[0].enrollment.current_day,
-                programs: enrollments[0].enrollment.programs,
-              } : null}
-            />
-          </FadeIn>
-        )}
+        {/* Exercises section removed from dashboard per testing feedback. */}
 
         {/* ── Quick links — 3 per row, glassmorphic with per-card accent ── */}
         <FadeIn preset="fade" delay={0.15} triggerOnMount>

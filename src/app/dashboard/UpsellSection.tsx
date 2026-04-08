@@ -373,17 +373,45 @@ function CoachingCard({
       </span>
       <p style={{
         fontFamily: display, fontSize: 18, fontWeight: 700,
-        color: colors.textPrimary, margin: "0 0 8px 0",
+        color: colors.textPrimary, margin: "0 0 10px 0",
         letterSpacing: "-0.01em",
       }}>
         1:1 Coaching
       </p>
       <p style={{
-        fontFamily: body, fontSize: 13, color: colors.textPrimary,
-        lineHeight: 1.6, margin: "0 0 20px 0", flex: 1,
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 12px 0",
       }}>
-        The program builds the foundation. A coach can further accelerate it — catching blind spots in real time, pushing back when you're stuck in a loop, and helping you rehearse the conversations you're avoiding. Includes a personal Enneagram assessment to sharpen the work.
+        The program gives you the structure, the frameworks, and a systemic approach — including an artificial assistant that picks up patterns across everything you share. But career transitions have a way of hiding the most important things from you.
       </p>
+      <p style={{
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 12px 0",
+      }}>
+        Research in cognitive psychology shows that when your (professional) identity is under threat — like during an acutely stressful transition — your brain filters information to protect the story you already believe about yourself (Kahan, 2017; Sherman &amp; Cohen, 2006). You&rsquo;re not thinking objectively. That&rsquo;s not a character flaw. It&rsquo;s how the brain responds to identity threat.
+      </p>
+      <p style={{
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 16px 0",
+      }}>
+        A professional coach is trained to see that and work with it. Every month such gap goes unnoticed may cost you more than coaching does.
+      </p>
+      <p style={{
+        fontFamily: body, fontSize: 14, fontWeight: 600, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 8px 0",
+      }}>
+        Add a dedicated expert coach and you&rsquo;ll get:
+      </p>
+      <ul style={{
+        fontFamily: body, fontSize: 14, color: colors.textPrimary,
+        lineHeight: 1.65, margin: "0 0 20px 18px", padding: 0,
+      }}>
+        <li>1:1 sessions with a professionally credentialed coach — trained, examined, and not self-appointed</li>
+        <li>A validated personality deep dive (Enneagram) before the first session, so your coach directly knows how you handle stress, conflict, and decisions</li>
+        <li>Coaching insights fed back into your daily program, so it adjusts to what&rsquo;s real, not what you expected</li>
+        <li>A second pair of eyes on the patterns you can&rsquo;t see yourself repeating</li>
+        <li>A safe space to practice the hard conversations before they&rsquo;re real — severance, PIP, negotiation, asking for what you&rsquo;re worth</li>
+      </ul>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <motion.button
           whileHover={{ scale: 1.04 }}

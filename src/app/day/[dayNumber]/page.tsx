@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageShell from "@/components/PageShell";
 import FadeIn from "@/components/FadeIn";
@@ -26,6 +26,9 @@ export default function DailyFlowPageWrapper() {
 
 function DailyFlowPage() {
   const s = useDaySession();
+  // Day 30 outcome self-report (4.a #3)
+  const [outcomeSaved, setOutcomeSaved] = useState<"achieved" | "partially" | "not_achieved" | null>(null);
+  const [outcomeSaving, setOutcomeSaving] = useState(false);
 
   // Analytics: day_started (fires once per mount), day_1_started (once ever per enrollment),
   // day_mid_abandon on unmount if user left without completing.
@@ -309,6 +312,72 @@ function DailyFlowPage() {
                   ? "You made it through the full program. Take a moment to review your journey and see how far you've come."
                   : "Take a moment to review your progress, check in on your goals, and see what insights emerged this week."}
               </p>
+
+              {/* Day 30 outcome self-report (4.a #3) */}
+              {s.dayNumber === 30 && (
+                <div style={{ marginBottom: 20, textAlign: "left" }}>
+                  <p style={{
+                    fontFamily: display, fontSize: 13, fontWeight: 700,
+                    color: colors.textPrimary, margin: "0 0 10px 0",
+                    textAlign: "center",
+                  }}>
+                    Did this program deliver what you originally wanted?
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {([
+                      { value: "achieved", label: "Yes — it delivered" },
+                      { value: "partially", label: "Partially — in some ways" },
+                      { value: "not_achieved", label: "No — it didn't" },
+                    ] as const).map((opt) => {
+                      const selected = outcomeSaved === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          disabled={outcomeSaving || !!outcomeSaved}
+                          onClick={async () => {
+                            if (!s.enrollment) return;
+                            setOutcomeSaving(true);
+                            try {
+                              await s.supabase
+                                .from("program_enrollments")
+                                .update({
+                                  program_outcome_self_reported: opt.value,
+                                  program_outcome_reported_at: new Date().toISOString(),
+                                })
+                                .eq("id", s.enrollment.id);
+                              setOutcomeSaved(opt.value);
+                              trackEvent("program_outcome_reported", {
+                                outcome: opt.value,
+                                program: s.enrollment.programs?.slug ?? "unknown",
+                              });
+                            } catch {
+                              // silent — user can retry
+                            } finally {
+                              setOutcomeSaving(false);
+                            }
+                          }}
+                          style={{
+                            padding: "10px 14px",
+                            borderRadius: 100,
+                            border: `1.5px solid ${selected ? colors.coral : colors.borderDefault}`,
+                            backgroundColor: selected ? colors.coralWash : "transparent",
+                            color: colors.textPrimary,
+                            fontFamily: body,
+                            fontSize: 14,
+                            cursor: outcomeSaved ? "default" : "pointer",
+                            textAlign: "center",
+                            transition: "all 0.18s",
+                            opacity: outcomeSaved && !selected ? 0.5 : 1,
+                          }}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <motion.button
                   whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(196, 148, 58, 0.4)" }}

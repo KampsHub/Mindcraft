@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
         ...(selectedSlotLabel ? { selected_slot_label: String(selectedSlotLabel) } : {}),
       },
       expires_at: Math.floor(Date.now() / 1000) + 60 * 30,
-      success_url: `${baseUrl}/enneagram/welcome?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${baseUrl}/enneagram/book?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/dashboard`,
     });
 

@@ -1,19 +1,35 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-// Returns the next 14 weekdays × 3 fixed slots (9:00, 12:00, 15:00 PT),
-// minus any rows in coach_blocked_slots that Stefanie has marked unavailable.
+// Slot rules mirror Stefanie's real Google Appointment Schedule
+// (AcZssZ1GvZttZdK4XHfuoTQ0LRKf0IVVPjxJV4XRkKLdQ7_wS5fK4WR-Wjjn95OyMp-lpcy8QtqOT-zs):
+//   • 60-minute appointments
+//   • 6 slots per day at 8:00, 9:30, 11:00, 12:30, 14:00, 15:30 PT
+//   • Weekdays only (Mon–Fri)
+//   • 72-hour minimum advance booking
+//   • Timezone: America/Los_Angeles
 //
-// v2 (follow-up): replace this generator with a real Google Calendar
-// Free/Busy lookup so the slots reflect her actual calendar.
+// These constants are verified against the live public booking page. If
+// Stefanie changes her Google Appointment Schedule, update SLOT_TIMES +
+// SLOT_LABELS here to match. Real-time sync would require the Google
+// Calendar Appointment Schedules API (restricted availability, OAuth only)
+// or scraping the public page (slot data is not in the anonymous HTML —
+// it loads client-side with cookies, so server-side scraping isn't viable).
+//
+// Write-back: when a customer pays, they are redirected through
+// /enneagram/book to Stefanie's public appointment schedule URL, where
+// Google handles the calendar insert natively. No OAuth needed on our end.
 
-const SLOT_TIMES = ["09:00", "12:00", "15:00"] as const;
+const SLOT_TIMES = ["08:00", "09:30", "11:00", "12:30", "14:00", "15:30"] as const;
 type SlotTime = (typeof SLOT_TIMES)[number];
 
 const SLOT_LABELS: Record<SlotTime, string> = {
-  "09:00": "9:00 AM PT",
-  "12:00": "12:00 PM PT",
-  "15:00": "3:00 PM PT",
+  "08:00": "8:00 AM PT",
+  "09:30": "9:30 AM PT",
+  "11:00": "11:00 AM PT",
+  "12:30": "12:30 PM PT",
+  "14:00": "2:00 PM PT",
+  "15:30": "3:30 PM PT",
 };
 
 function formatDate(d: Date): string {
@@ -30,23 +46,20 @@ function dayLabel(d: Date): string {
 function generateSlots(daysAhead = 14) {
   const slots: Array<{ id: string; date: string; time: SlotTime; dayLabel: string; timeLabel: string }> = [];
 
-  // Per Stefanie's calendar rule: no bookings within the next 72 hours.
-  // (This rule is also enforced inside her Google Calendar appointment schedule.)
+  // 72-hour advance rule (matches Stefanie's Google Appointment Schedule).
   const earliest = new Date();
   earliest.setTime(earliest.getTime() + 72 * 60 * 60 * 1000);
 
-  // Walk forward day by day until we have `daysAhead` calendar days past the cutoff.
   const start = new Date();
   start.setHours(0, 0, 0, 0);
 
-  for (let i = 0; i < daysAhead + 5; i++) {
+  for (let i = 0; i < daysAhead + 7; i++) {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
     const dow = d.getDay(); // 0 = Sun, 6 = Sat
     if (dow === 0 || dow === 6) continue;
 
     for (const time of SLOT_TIMES) {
-      // Build the actual datetime for this slot in PT and skip if before the 72h cutoff.
       const [hh, mm] = time.split(":").map(Number);
       const slotDate = new Date(d);
       slotDate.setHours(hh, mm, 0, 0);
@@ -60,7 +73,7 @@ function generateSlots(daysAhead = 14) {
         timeLabel: SLOT_LABELS[time],
       });
     }
-    if (slots.length >= daysAhead * 3) break;
+    if (slots.length >= daysAhead * SLOT_TIMES.length) break;
   }
   return slots;
 }
@@ -69,8 +82,9 @@ export async function GET() {
   try {
     const slots = generateSlots(14);
 
-    // Fetch blocked slots from Supabase. Use the public anon client — this
-    // table is read-only and contains no PII.
+    // Fetch blocked slots from Supabase. Stefanie can insert rows here
+    // to manually block times she doesn't want to offer (one-off admin
+    // holds beyond her standard availability).
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 

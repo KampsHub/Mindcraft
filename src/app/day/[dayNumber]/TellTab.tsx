@@ -6,6 +6,7 @@ import FadeIn from "@/components/FadeIn";
 import { trackEvent } from "@/components/GoogleAnalytics";
 import FlagButton from "@/components/FlagButton";
 // VoiceToText / GuidedExerciseFlow imports removed — no audio surfaces in day flow.
+import ChatCoach from "@/components/ChatCoach";
 import { colors, fonts, space, text as textPreset, radii } from "@/lib/theme";
 import { useProgressiveReveal } from "@/hooks/useProgressiveReveal";
 import type { createClient } from "@/lib/supabase";
@@ -513,30 +514,46 @@ export default function TellTab({
           padding: space[5],
         }}
       >
-        {/* Thought inspiration — compact prompts */}
-        {programDay.seed_prompts && programDay.seed_prompts.length > 0 && (
+        {/* Coach assistant kick-off — chat mechanism (same component used in
+            Read/Chat). The first coach message is the day's seed prompts so
+            the user can write into the chat directly instead of into a blank
+            textarea. Each user message is appended to journalContent so that
+            "Watcha think?" can pass the full conversation to process-journal. */}
+        {programDay.seed_prompts && programDay.seed_prompts.length > 0 && !journalSaved && (
           <div style={{ marginBottom: space[6] }}>
-            <p style={{
-              ...textPreset.caption, color: colors.textSecondary,
-              margin: "0 0 8px 0",
-            }}>
-              Thought Inspiration
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: space[3] }}>
-              {expandedPrompts.map((sp, i) => (
-                <div key={i} style={{
-                  padding: `${space[3]}px ${space[4]}px`,
-                  backgroundColor: colors.bgElevated,
-                  borderRadius: radii.md,
-                }}>
-                  <p style={{ ...textPreset.body, color: colors.textPrimary, margin: 0 }}>
-                    {sp.expanded || sp.prompt}
-                  </p>
-                </div>
-              ))}
-            </div>
-            {/* "Walk through these in writing" button removed per testing feedback —
-                no audio/voice/walk-through CTA. Users journal directly below. */}
+            <ChatCoach
+              initialMessage={(() => {
+                const intro = "A few questions to start with — pick whichever lands. You can write to me freely; I'll listen first, then ask one back.";
+                const prompts = expandedPrompts
+                  .map((sp, i) => `${i + 1}. ${sp.expanded || sp.prompt}`)
+                  .join("\n\n");
+                return `${intro}\n\n${prompts}`;
+              })()}
+              placeholder="Write what's coming up…"
+              showComplete={false}
+              onSend={async (message, history) => {
+                // Append the user's message to journalContent so saveJournal()
+                // sends the full conversation to process-journal.
+                setJournalContent((prev) => prev ? `${prev}\n\n${message}` : message);
+
+                const conversationContext = history
+                  .slice(-6)
+                  .map((m) => `${m.role === "user" ? "User" : "Coach"}: ${m.content}`)
+                  .join("\n\n");
+                const fullEntry = `## Conversation so far\n${conversationContext}\n\n## Latest message\n${message}`;
+                try {
+                  const res = await fetch("/api/reflect", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ entry: fullEntry, stream: false }),
+                  });
+                  const data = await res.json();
+                  return data.reflection || data.error || "Tell me a little more about that.";
+                } catch {
+                  return "I'm having trouble responding right now — keep writing if you can, and I'll catch up.";
+                }
+              }}
+            />
           </div>
         )}
 
@@ -565,31 +582,9 @@ export default function TellTab({
           />
         </div>
 
-        {/* Journal input — text only (audio/voice input removed per testing feedback) */}
-        <textarea
-          value={journalContent}
-          onChange={(e) => setJournalContent(e.target.value)}
-          disabled={journalSaved}
-          placeholder="Write freely. What's coming up? What are you noticing?"
-          style={{
-            width: "100%",
-            minHeight: 180,
-            padding: "16px",
-            ...textPreset.body,
-            border: journalSaved
-              ? `1px solid ${colors.coral}`
-              : `1px solid ${colors.borderDefault}`,
-            borderRadius: radii.md,
-            resize: "vertical",
-            outline: "none",
-            boxSizing: "border-box",
-            color: colors.textPrimary,
-            backgroundColor: journalSaved ? "rgba(196, 148, 58, 0.08)" : colors.bgInput,
-            transition: "border-color 0.2s, background-color 0.2s",
-          }}
-          onFocus={(e) => { if (!journalSaved) e.target.style.borderColor = colors.coral; }}
-          onBlur={(e) => { if (!journalSaved) e.target.style.borderColor = colors.borderDefault; }}
-        />
+        {/* Standalone journal textarea removed — the ChatCoach above is now
+            the primary writing surface. The "Watcha think?" button below
+            sends the accumulated chat + freeflow text to process-journal. */}
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
           <span style={{ ...textPreset.caption, color: colors.textPrimary }}>
@@ -598,16 +593,16 @@ export default function TellTab({
 
           {!journalSaved ? (
             <motion.button
-              whileHover={journalContent.trim() && !savingJournal ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
-              whileTap={journalContent.trim() && !savingJournal ? { scale: 0.97 } : {}}
+              whileHover={(journalContent.trim() || freeFlowText.trim()) && !savingJournal ? { scale: 1.04, boxShadow: "0 8px 24px rgba(0,0,0,0.25)" } : {}}
+              whileTap={(journalContent.trim() || freeFlowText.trim()) && !savingJournal ? { scale: 0.97 } : {}}
               onClick={handleSaveJournalTracked}
-              disabled={!journalContent.trim() || savingJournal}
+              disabled={(!journalContent.trim() && !freeFlowText.trim()) || savingJournal}
               style={{
                 padding: "12px 28px", fontSize: 14, fontWeight: 600,
-                color: !journalContent.trim() || savingJournal ? colors.textPrimary : colors.bgDeep,
-                backgroundColor: !journalContent.trim() || savingJournal ? colors.bgElevated : colors.coral,
+                color: (!journalContent.trim() && !freeFlowText.trim()) || savingJournal ? colors.textPrimary : colors.bgDeep,
+                backgroundColor: (!journalContent.trim() && !freeFlowText.trim()) || savingJournal ? colors.bgElevated : colors.coral,
                 border: "none", borderRadius: 100,
-                cursor: !journalContent.trim() || savingJournal ? "not-allowed" : "pointer",
+                cursor: (!journalContent.trim() && !freeFlowText.trim()) || savingJournal ? "not-allowed" : "pointer",
                 fontFamily: display, letterSpacing: "0.01em",
                 transition: "background-color 0.2s",
               }}
